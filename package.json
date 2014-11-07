@@ -1,0 +1,26 @@
+{
+  "name": "tiger-prawn",
+  "version": "0.1.0",
+  "description": "a admin panel ui",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dianjoy/tiger-prawn.git"
+  },
+  "keywords": [
+    "admin",
+    "bootstrap"
+  ],
+  "author": "Meathill <lujia.zhai@dianjoy.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dianjoy/tiger-prawn/issues"
+  },
+  "homepage": "https://github.com/Dianjoy/tiger-prawn",
+  "devDependencies": {
+    "grunt": "^0.4.5"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "tiger-prawn",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Dianjoy/tiger-prawn",
+  "authors": [
+    "Meathill <lujia.zhai@dianjoy.com>"
+  ],
+  "description": "a admin panel ui framework",
+  "main": "index.html",
+  "keywords": [
+    "admin",
+    "bootstrap"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.0",
+    "font-awesome": "~4.2.0"
+  },
+  "devDependencies": {
+    "bootstrap-sass": "twbs/bootstrap-sass#~3.3.0"
+  }
+}
