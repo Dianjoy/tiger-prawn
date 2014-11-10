@@ -1,0 +1,153 @@
+@charset "UTF-8"
+@import "../../bower_components/colors/sass/variables"
+@import "../define"
+
+#navbar-side
+  background-color: $sidebar-background-color
+  color: $white
+  position: absolute
+  width: $sidebar-width
+  top: $topbar-height
+  left: 0
+  bottom: 0
+  z-index: 15
+
+
+.side-nav
+  float: none
+  margin: 0
+  padding: 0
+  border-bottom: 1px solid lighten($sidebar-background-color, 5%)
+
+  a
+    color: $navbar-color
+
+    &:hover
+      color: $white
+
+    i
+      width: 20px
+
+  > li
+    float: none
+    border-top: 1px solid lighten($sidebar-background-color, 5%)
+    border-bottom: 1px solid darken($sidebar-background-color, 5%)
+
+    &:first-child
+      border-top: none
+
+    > a
+      .caret
+        float: right
+        margin-top: 10px
+
+      &:hover
+        background: darken($sidebar-background-color, 5%)
+        background: rgba(0, 0, 0, 0.075)
+        color: $white
+
+  .navbar-user
+    padding: 15px
+
+    span
+      font-size: 12px
+      line-height: 18px
+
+    img
+      background-color: $white
+      float: left
+      width: 40px
+      height: 40px
+      margin-right: $gap-s
+      margin-bottom: $gap-xs
+
+    h4
+      line-height: 40px
+      margin-bottom: $gap-xs
+
+    label
+      font-size: 12px
+
+  .nav
+    background-color: darken($sidebar-background-color, 10%)
+    font-size: 12px
+    line-height: 20px
+
+    a:active,
+    a:focus,
+    a:hover
+      background-color: darken($sidebar-background-color, 5%)
+
+    i
+      text-align: center
+
+  .sub-nav
+    background: #555
+    list-style-type: none
+
+    > li
+      background: none
+      list-style-type: none
+      padding: 0
+
+      > a
+        display: block
+        color: #FFF
+
+        &:hover
+          text-decoration: none
+          background-color: #4d4d4d
+          border-radius: 5px
+
+        i
+          margin-right: .65em
+
+      &.active > a
+        text-decoration: none
+        background-color: #4d4d4d
+        border-radius: 5px
+
+    .divider
+      height: 1px
+      margin: 5px 0
+      overflow: hidden
+      background: #666
+
+.dropdown-submenu
+  position: relative
+
+  &:hover > .dropdown-menu
+    display: block
+
+  &.pull-left > .dropdown-menu
+    left: -100%
+    margin-left: 10px
+    -webkit-border-radius: 6px 0 6px 6px
+    -moz-border-radius: 6px 0 6px 6px
+    border-radius: 6px 0 6px 6px
+
+  > .dropdown-menu
+    top: 0
+    left: 100%
+    margin-top: -6px
+    border-radius: 0 6px 6px 0
+
+  > a:after
+    display: block
+    content: " "
+    float: right
+    width: 0
+    height: 0
+    border-color: transparent
+    border-style: solid
+    border-width: 5px 0 5px 5px
+    border-left-color: #CCC
+    margin-top: 5px
+    margin-right: -10px
+
+  &:hover > a:after
+    border-left-color: #FFF
+
+  .pull-left
+    float: none
+

@@ -22,7 +22,8 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.0",
-    "font-awesome": "~4.2.0"
+    "font-awesome": "~4.2.0",
+    "colors": "~2.0.0"
   },
   "devDependencies": {
     "bootstrap-sass": "twbs/bootstrap-sass#~3.3.0"

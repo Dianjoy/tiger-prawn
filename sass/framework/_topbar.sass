@@ -1,0 +1,24 @@
+@charset "UTF-8"
+
+@import "../../bower_components/colors/sass/variables"
+@import "../define"
+
+#navbar-top
+  background-color: $topbar-background-color
+  border-color: darken($topbar-background-color, 5%)
+  color: $navbar-color
+
+  .navbar-brand
+    color: $white
+    text-indent: 36px
+    background: url(../img/logo.png) no-repeat 7px center
+    background-size: 36px auto
+
+  .nav > li > a
+    color: $navbar-color
+
+    &:hover,
+    &:active,
+    &.active
+      background-color: lighten($topbar-background-color, 10%)
+      color: $white

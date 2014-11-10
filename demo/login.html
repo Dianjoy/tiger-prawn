@@ -9,24 +9,71 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="format-detection" content="telephone=no" />
-  <link rel="apple-touch-icon-precomposed" href="{{img_url}}/img/logo-57.png" /> <!--默认 57x57 像素-->
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{img_url}}/img/logo-72.png" /> <!--iPad 1 72x72 像素-->
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{img_url}}/img/logo-114.png" /> <!--iPhone 4 114x114 像素-->
+  <link rel="apple-touch-icon-precomposed" href="../img/logo-57.png" /> <!--默认 57x57 像素-->
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../img/logo-72.png" /> <!--iPad 1 72x72 像素-->
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../img/logo-114.png" /> <!--iPhone 4 114x114 像素-->
 
   <!-- for Windows 8 -->
   <meta name="msapplication-TileColor" content="#888"/> <!-- Windows 8 磁贴颜色 -->
-  <meta name="msapplication-TileImage" content="{{img_url}}/img/logo-512.png"/>
+  <meta name="msapplication-TileImage" content="../img/logo-512.png"/>
 
   <!-- favicon -->
-  <link rel="shortcut icon" type="image/png" href="{{img_url}}/img/fav.png" />
+  <link rel="shortcut icon" type="image/png" href="../img/fav.png" />
 
-  <title>登录</title>
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <title>登录点乐广告自助平台（测试版）3</title>
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../css/login.css">
   <link>
 </head>
 <body>
+
+<div id="login-container">
+  <div id="logo">
+    <a href="/login">
+      <img src="../img/logo.png" alt="Logo" />
+    </a>
+  </div>
+
+  <div id="login">
+
+    <h3>开创移动广告新纪元！</h3>
+
+    <h5>请登录</h5>
+
+    <form id="login-form" action="index.html" class="form" method="post">
+      <input type="hidden" name="hash" value="" id="hash">
+
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" class="form-control" id="username" placeholder="用户名" name="username" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" class="form-control" id="password" placeholder="密码" name="password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="verifycode">验证码</label>
+        <div class="input-group">
+          <span class="input-group-addon"><img src="{{login.verify-code}}" alt="验证码" title="点击刷新" id="verify-code" /></span>
+          <input type="text" maxLength="4" size="4" name="verifycode" id="verifycode" class="form-control" placeholder="验证码" autofocus required />
+        </div>
+      </div>
+
+      <div class="form-group">
+
+        <button id="login-btn" class="btn btn-primary btn-block">登录 &nbsp; <i class="fa fa-play-circle"></i></button>
+
+      </div>
+    </form>
+
+
+    <a href="mailto:{{admin.mail}}" class="btn btn-default"><i class="fa fa-envelope"></i> 忘记密码请联系客服</a>
+
+  </div> <!-- /#login -->
+</div> <!-- /#login-container -->
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

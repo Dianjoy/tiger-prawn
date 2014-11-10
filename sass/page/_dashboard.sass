@@ -1,0 +1,82 @@
+@charset "UTF-8"
+
+@import "../define"
+@import "../../bower_components/colors/sass/variables"
+
+.dashboard-stats
+
+  .circle-title,
+  .dashboard-stat-content,
+  .more
+    background-color: $silver
+    color: lighten($silver, 50%)
+
+  .circle-title
+    border: 3px solid rgba(255, 255, 255, 0.3)
+    border-radius: 100%
+    display: block
+    margin: 0 auto -40px
+    width: 80px
+    height: 80px
+    position: relative
+    line-height: 80px
+    text-align: center
+
+  .dashboard-stat-content
+    padding: 50px 0 10px
+    text-align: center
+
+    h3
+      font-size: 1em
+      line-height: 2em
+      margin: 0
+
+    p
+      font-size: 2em
+      margin: 0
+
+  .more
+    background-color: darken($silver, 10%)
+    display: block
+    line-height: 2em
+    text-align: center
+
+  .stat-primary
+    .circle-title,
+    .dashboard-stat-content,
+    .more
+      background-color: $topbar-background-color
+      color: lighten($topbar-background-color, 50%)
+
+    .more
+      background-color: darken($topbar-background-color, 10%)
+
+  .stat-secondary
+    .circle-title,
+    .dashboard-stat-content,
+    .more
+      background-color: $green
+      color: lighten($green, 50%)
+
+    .more
+      background-color: darken($green, 10%)
+
+  .stat-tertiary
+    .circle-title,
+    .dashboard-stat-content,
+    .more
+      background-color: $orange
+      color: lighten($orange, 50%)
+
+    .more
+      background-color: darken($orange, 10%)
+
+  .stat-quartus
+    .circle-title,
+    .dashboard-stat-content,
+    .more
+      background-color: $blue
+      color: lighten($blue, 50%)
+
+    .more
+      background-color: darken($blue, 10%)
