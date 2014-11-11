@@ -1,0 +1,56 @@
+@charset "UTF-8"
+
+@import "../../bower_components/colors/sass/variables"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+
+table
+  background-color: $white
+
+  .platform
+    display: inline-block
+    font-family: 'FontAwesome'
+    line-height: 18px
+
+  .label
+    font-size: 100%
+
+    &.status-0
+      background: #468847
+
+    &.status-1
+      background: #999
+
+    &.level
+      background: #9B59B6
+
+    &.weight
+      background: #FF9933
+
+    + .label
+      margin-left: 0.5em
+
+  th .label
+    margin-left: 0.5em
+
+  tr.show
+    display: table-row !important
+
+  td.btn-group
+    display: table-cell
+    white-space: nowrap
+    font-size: 0
+
+    .btn
+      float: none
+
+  + .pagination
+    margin: 0
+
+.label-ch
+  background: $label-info-bg
+
+.label-ad
+  background: $label-success-bg
+
+.table-header
+  margin-bottom: 1em

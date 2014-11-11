@@ -4,6 +4,9 @@
 
 .portlet
 
+  + .portlet
+    margin-top: 2em
+
   .portlet-leading
     background-color: $silver
     color: $white
@@ -18,8 +21,13 @@
     background-color: $white
     border: 1px solid $silver
     border-top: none
+    padding: 14px
     min-height: 100px
 
+    > *:last-child
+      margin-bottom: 0
+
+// colors
 .portlet-green
   .portlet-leading
     background-color: $green
@@ -32,4 +40,11 @@
     background-color: $blue
 
   .portlet-body
-    border-color: $green
+    border-color: $blue
+
+.portlet-orange
+  .portlet-leading
+    background-color: $orange
+
+  .portlet-body
+    border-color: $orange

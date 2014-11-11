@@ -5,6 +5,9 @@
 
 @charset "UTF-8"
 
+// overwrite bootstrap
+@import "bootstrap"
+
 // frameworks
 @import "framework/general"
 @import "framework/topbar"
@@ -14,6 +17,12 @@
 
 // components
 @import "component/portlet"
+@import "component/icon-list"
+@import "../bower_components/mh-simple-uploader/css/style"
 
 // pages
 @import "page/dashboard"
+
+// extend
+@import "component/table"
+@import "component/breadcrumb"
