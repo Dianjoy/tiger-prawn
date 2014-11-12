@@ -101,6 +101,20 @@
     <li class="active">添加广告</li>
   </ul>
   <div id="sub-page dashboard">
+    <div class="form-inline table-header">
+      <div class="form-group">
+        <label for="pagesize">每页显示：</label>
+        <select class="form-control" id="pagesize">
+          <option selected>10</option>
+          <option>20</option>
+          <option>50</option>
+        </select>
+      </div>
+      <div class="form-group pull-right">
+        <label for="search-query">搜索：</label>
+        <input type="search" class="form-control" id="search-query">
+      </div>
+    </div>
     <table class="table table-bordered table-hover responsive-table smart-table" data-fix-head="true">
       <thead>
       <tr>
@@ -109,9 +123,7 @@
         <th><a class="order" href="#job_num">日投放量</a></th>
         <th><a class="order" href="#num">今日余量</a></th>
         <th><a class="order" href="#job_time">投放时间</a></th>
-        <th><a class="order" href="#seq">排序</a></th>
         <th><a class="order" href="#real">实际价格</a></th>
-        <th><a class="order" href="#task_cost">深度任务成本</a></th>
         <th>状态</th>
         <th><a class="order" href="#ctime">创建时间</a></th>
         <th><a class="order" href="#mtime">状态变更时间</a></th>
@@ -129,18 +141,13 @@
         <td data-title="日投放量"><a href="ad/job-edit.php?id=944b22e9ee1bf9d06b58ab281474a0a6" class="popup" title="调整日投放量">20000</a></td>
         <td data-title="今日余量"><a href="ad/money-edit.php?id=944b22e9ee1bf9d06b58ab281474a0a6" class="popup" title="调整今日余量">16821</a></td>
         <td data-title="投放时间"><a href="ad/job-edit.php?id=944b22e9ee1bf9d06b58ab281474a0a6" class="popup" title="调整投放时间">00:01</a></td>
-        <td data-title="排序"><a href="ad/seq-edit.php?id=944b22e9ee1bf9d06b58ab281474a0a6" class="popup seq-com-sogou-sogouinput" title="调整排序">310</a></td>
         <td data-title="实际价格"><a href="#/stat/daily-ad/2014-11-04/2014-11-10/944b22e9ee1bf9d06b58ab281474a0a6">3</a></td>
-        <td data-title="深度任务成本">0</td>
         <td data-title="状态">
           <a class="label status-0 popup" href="ad/status-edit.php?id=944b22e9ee1bf9d06b58ab281474a0a6" title="上线">
             ON
           </a>
-          <a class="label level popup" href="ad/update_ad_level.php?id=944b22e9ee1bf9d06b58ab281474a0a6" title="调整广告等级">墙 1</a>
           <span class="platform"></span>
           <a href="ad/comment-edit.php?id=944b22e9ee1bf9d06b58ab281474a0a6" class="popup" title="编辑注释"><i class="fa fa-info-circle fa-lg"></i></a>
-          <a href="ad/update_weight.php?id=944b22e9ee1bf9d06b58ab281474a0a6" class="label popup weight" title="修改推广权重">1</a>
-          <i class="fa fa-tasks"></i>
         </td>
         <td data-title="创建时间">2014-09-19</td>
         <td data-title="状态变更时间">2014-11-10</td>
@@ -151,11 +158,6 @@
           </button>
           <ul class="dropdown-menu">
             <li><a href="#/ad/edit/944b22e9ee1bf9d06b58ab281474a0a6"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-            <li><a href="ad/action_ad.php?m=copyad&amp;id=944b22e9ee1bf9d06b58ab281474a0a6"><i class="fa fa-copy fa-fw"></i> 复制广告</a></li>
-            <li><a href="ad/adjob.php?id=944b22e9ee1bf9d06b58ab281474a0a6&amp;list=1" class="popup" title="点乐 搜狗输入法 计划任务"><i class="fa fa-bell fa-fw"></i> 计划任务</a></li>
-            <li><a href="ad/adblack.php?id=944b22e9ee1bf9d06b58ab281474a0a6" class="popup" title="点乐 搜狗输入法 黑名单"><i class="fa fa-minus-circle fa-fw"></i> 黑名单</a></li>
-            <li><a href="ad/addrules.php?id=944b22e9ee1bf9d06b58ab281474a0a6&amp;list=1" class="popup" title="点乐 搜狗输入法 添加排序规则"><i class="fa fa-sort fa-fw"></i> 排序规则</a></li>
-            <li><a href="ad/task.php?id=944b22e9ee1bf9d06b58ab281474a0a6" class="popup"><i class="fa fa-tasks fa-fw"></i> 深度任务</a></li>
             <li><a href="ad/action_ad.php?m=del&amp;id=944b22e9ee1bf9d06b58ab281474a0a6" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
           </ul>
         </td>
@@ -170,18 +172,13 @@
         <td data-title="日投放量"><a href="ad/job-edit.php?id=a70c20995dc5beb2b2b4b461926a4b9c" class="popup" title="调整日投放量">0</a></td>
         <td data-title="今日余量"><a href="ad/money-edit.php?id=a70c20995dc5beb2b2b4b461926a4b9c" class="popup" title="调整今日余量">0</a></td>
         <td data-title="投放时间"><a href="ad/job-edit.php?id=a70c20995dc5beb2b2b4b461926a4b9c" class="popup" title="调整投放时间">08:00</a></td>
-        <td data-title="排序"><a href="ad/seq-edit.php?id=a70c20995dc5beb2b2b4b461926a4b9c" class="popup seq-com-jumei-iphone" title="调整排序">202</a></td>
         <td data-title="实际价格"><a href="#/stat/daily-ad/2014-11-04/2014-11-10/a70c20995dc5beb2b2b4b461926a4b9c">0</a></td>
-        <td data-title="深度任务成本">0</td>
         <td data-title="状态">
           <a class="label status-0 popup" href="ad/status-edit.php?id=a70c20995dc5beb2b2b4b461926a4b9c" title="上线">
             ON
           </a>
-          <a class="label level popup" href="ad/update_ad_level.php?id=a70c20995dc5beb2b2b4b461926a4b9c" title="调整广告等级">墙 3</a>
           <span class="platform"></span>
           <a href="ad/comment-edit.php?id=a70c20995dc5beb2b2b4b461926a4b9c" class="popup" title="编辑注释"><i class="fa fa-info-circle fa-lg"></i></a>
-          <a href="ad/update_weight.php?id=a70c20995dc5beb2b2b4b461926a4b9c" class="label popup weight" title="修改推广权重">1</a>
-          <i class="fa fa-tasks"></i>
         </td>
         <td data-title="创建时间">2014-11-11</td>
         <td data-title="状态变更时间">2014-11-11</td>
@@ -192,11 +189,6 @@
           </button>
           <ul class="dropdown-menu">
             <li><a href="#/ad/edit/a70c20995dc5beb2b2b4b461926a4b9c"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-            <li><a href="ad/action_ad.php?m=copyad&amp;id=a70c20995dc5beb2b2b4b461926a4b9c"><i class="fa fa-copy fa-fw"></i> 复制广告</a></li>
-            <li><a href="ad/adjob.php?id=a70c20995dc5beb2b2b4b461926a4b9c&amp;list=1" class="popup" title="奥菲 聚美优品 计划任务"><i class="fa fa-bell fa-fw"></i> 计划任务</a></li>
-            <li><a href="ad/adblack.php?id=a70c20995dc5beb2b2b4b461926a4b9c" class="popup" title="奥菲 聚美优品 黑名单"><i class="fa fa-minus-circle fa-fw"></i> 黑名单</a></li>
-            <li><a href="ad/addrules.php?id=a70c20995dc5beb2b2b4b461926a4b9c&amp;list=1" class="popup" title="奥菲 聚美优品 添加排序规则"><i class="fa fa-sort fa-fw"></i> 排序规则</a></li>
-            <li><a href="ad/task.php?id=a70c20995dc5beb2b2b4b461926a4b9c" class="popup"><i class="fa fa-tasks fa-fw"></i> 深度任务</a></li>
             <li><a href="ad/action_ad.php?m=del&amp;id=a70c20995dc5beb2b2b4b461926a4b9c" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
           </ul>
         </td>
@@ -211,18 +203,13 @@
         <td data-title="日投放量"><a href="ad/job-edit.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="popup" title="调整日投放量">0</a></td>
         <td data-title="今日余量"><a href="ad/money-edit.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="popup" title="调整今日余量">9905</a></td>
         <td data-title="投放时间"><a href="ad/job-edit.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="popup" title="调整投放时间">08:00</a></td>
-        <td data-title="排序"><a href="ad/seq-edit.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="popup seq-com-gome-gomeEShop" title="调整排序">203</a></td>
         <td data-title="实际价格"><a href="#/stat/daily-ad/2014-11-04/2014-11-10/260ed1ea3ff3e85b55062c8f1f6e3ecc">2.2</a></td>
-        <td data-title="深度任务成本">0</td>
         <td data-title="状态">
           <a class="label status-0 popup" href="ad/status-edit.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" title="上线">
             ON
           </a>
-          <a class="label level popup" href="ad/update_ad_level.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" title="调整广告等级">墙 3</a>
           <span class="platform"></span>
           <a href="ad/comment-edit.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="popup" title="编辑注释"><i class="fa fa-info-circle fa-lg"></i></a>
-          <a href="ad/update_weight.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="label popup weight" title="修改推广权重">1</a>
-          <i class="fa fa-tasks"></i>
         </td>
         <td data-title="创建时间">2014-11-07</td>
         <td data-title="状态变更时间">2014-11-11</td>
@@ -233,11 +220,6 @@
           </button>
           <ul class="dropdown-menu">
             <li><a href="#/ad/edit/260ed1ea3ff3e85b55062c8f1f6e3ecc"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-            <li><a href="ad/action_ad.php?m=copyad&amp;id=260ed1ea3ff3e85b55062c8f1f6e3ecc"><i class="fa fa-copy fa-fw"></i> 复制广告</a></li>
-            <li><a href="ad/adjob.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc&amp;list=1" class="popup" title="勤诚互动 国美在线 计划任务"><i class="fa fa-bell fa-fw"></i> 计划任务</a></li>
-            <li><a href="ad/adblack.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="popup" title="勤诚互动 国美在线 黑名单"><i class="fa fa-minus-circle fa-fw"></i> 黑名单</a></li>
-            <li><a href="ad/addrules.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc&amp;list=1" class="popup" title="勤诚互动 国美在线 添加排序规则"><i class="fa fa-sort fa-fw"></i> 排序规则</a></li>
-            <li><a href="ad/task.php?id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="popup"><i class="fa fa-tasks fa-fw"></i> 深度任务</a></li>
             <li><a href="ad/action_ad.php?m=del&amp;id=260ed1ea3ff3e85b55062c8f1f6e3ecc" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
           </ul>
         </td>
@@ -252,18 +234,13 @@
         <td data-title="日投放量"><a href="ad/job-edit.php?id=15056eb902aa1f5cc979ce6cc376c115" class="popup" title="调整日投放量">0</a></td>
         <td data-title="今日余量"><a href="ad/money-edit.php?id=15056eb902aa1f5cc979ce6cc376c115" class="popup" title="调整今日余量">969</a></td>
         <td data-title="投放时间"><a href="ad/job-edit.php?id=15056eb902aa1f5cc979ce6cc376c115" class="popup" title="调整投放时间">08:00</a></td>
-        <td data-title="排序"><a href="ad/seq-edit.php?id=15056eb902aa1f5cc979ce6cc376c115" class="popup seq-com-haobao-xmxcy" title="调整排序">234</a></td>
         <td data-title="实际价格"><a href="#/stat/daily-ad/2014-11-04/2014-11-10/15056eb902aa1f5cc979ce6cc376c115">0</a></td>
-        <td data-title="深度任务成本">0</td>
         <td data-title="状态">
           <a class="label status-0 popup" href="ad/status-edit.php?id=15056eb902aa1f5cc979ce6cc376c115" title="上线">
             ON
           </a>
-          <a class="label level popup" href="ad/update_ad_level.php?id=15056eb902aa1f5cc979ce6cc376c115" title="调整广告等级">墙 3</a>
           <span class="platform"></span>
           <a href="ad/comment-edit.php?id=15056eb902aa1f5cc979ce6cc376c115" class="popup" title="编辑注释"><i class="fa fa-info-circle fa-lg"></i></a>
-          <a href="ad/update_weight.php?id=15056eb902aa1f5cc979ce6cc376c115" class="label popup weight" title="修改推广权重">1</a>
-          <i class="fa fa-tasks"></i>
         </td>
         <td data-title="创建时间">2014-11-11</td>
         <td data-title="状态变更时间">0000-00-00</td>
@@ -274,11 +251,6 @@
           </button>
           <ul class="dropdown-menu">
             <li><a href="#/ad/edit/15056eb902aa1f5cc979ce6cc376c115"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-            <li><a href="ad/action_ad.php?m=copyad&amp;id=15056eb902aa1f5cc979ce6cc376c115"><i class="fa fa-copy fa-fw"></i> 复制广告</a></li>
-            <li><a href="ad/adjob.php?id=15056eb902aa1f5cc979ce6cc376c115&amp;list=1" class="popup" title="青绿水色 明星衣橱 计划任务"><i class="fa fa-bell fa-fw"></i> 计划任务</a></li>
-            <li><a href="ad/adblack.php?id=15056eb902aa1f5cc979ce6cc376c115" class="popup" title="青绿水色 明星衣橱 黑名单"><i class="fa fa-minus-circle fa-fw"></i> 黑名单</a></li>
-            <li><a href="ad/addrules.php?id=15056eb902aa1f5cc979ce6cc376c115&amp;list=1" class="popup" title="青绿水色 明星衣橱 添加排序规则"><i class="fa fa-sort fa-fw"></i> 排序规则</a></li>
-            <li><a href="ad/task.php?id=15056eb902aa1f5cc979ce6cc376c115" class="popup"><i class="fa fa-tasks fa-fw"></i> 深度任务</a></li>
             <li><a href="ad/action_ad.php?m=del&amp;id=15056eb902aa1f5cc979ce6cc376c115" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
           </ul>
         </td>
@@ -293,17 +265,13 @@
         <td data-title="日投放量"><a href="ad/job-edit.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="popup" title="调整日投放量">200</a></td>
         <td data-title="今日余量"><a href="ad/money-edit.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="popup" title="调整今日余量">-25</a></td>
         <td data-title="投放时间"><a href="ad/job-edit.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="popup" title="调整投放时间">06:00</a></td>
-        <td data-title="排序"><a href="ad/seq-edit.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="popup seq-com-taou-NeiTui" title="调整排序">150</a></td>
         <td data-title="实际价格"><a href="#/stat/daily-ad/2014-11-04/2014-11-10/999c0a6d2e2f76a9576a52a6a0bfcfa4" style="font-style: italic;">0</a></td>
-        <td data-title="深度任务成本">0</td>
         <td data-title="状态">
           <a class="label status-0 popup" href="ad/status-edit.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" title="上线">
             ON
           </a>
-          <a class="label level popup" href="ad/update_ad_level.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" title="调整广告等级">墙 3</a>
           <span class="platform"></span>
           <a href="ad/comment-edit.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="popup" title="编辑注释"><i class="fa fa-info-circle fa-lg"></i></a>
-          <a href="ad/update_weight.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="label popup weight" title="修改推广权重">1</a>
           <i class="fa fa-tasks"></i>
         </td>
         <td data-title="创建时间">2013-12-31</td>
@@ -315,11 +283,6 @@
           </button>
           <ul class="dropdown-menu">
             <li><a href="#/ad/edit/999c0a6d2e2f76a9576a52a6a0bfcfa4"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-            <li><a href="ad/action_ad.php?m=copyad&amp;id=999c0a6d2e2f76a9576a52a6a0bfcfa4"><i class="fa fa-copy fa-fw"></i> 复制广告</a></li>
-            <li><a href="ad/adjob.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4&amp;list=1" class="popup" title="点乐 脉脉 计划任务"><i class="fa fa-bell fa-fw"></i> 计划任务</a></li>
-            <li><a href="ad/adblack.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="popup" title="点乐 脉脉 黑名单"><i class="fa fa-minus-circle fa-fw"></i> 黑名单</a></li>
-            <li><a href="ad/addrules.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4&amp;list=1" class="popup" title="点乐 脉脉 添加排序规则"><i class="fa fa-sort fa-fw"></i> 排序规则</a></li>
-            <li><a href="ad/task.php?id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="popup"><i class="fa fa-tasks fa-fw"></i> 深度任务</a></li>
             <li><a href="ad/action_ad.php?m=del&amp;id=999c0a6d2e2f76a9576a52a6a0bfcfa4" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
           </ul>
         </td>
@@ -334,18 +297,13 @@
         <td data-title="日投放量"><a href="ad/job-edit.php?id=339fb77dcc238fdbddcd473ac50ac0b1" class="popup" title="调整日投放量">0</a></td>
         <td data-title="今日余量"><a href="ad/money-edit.php?id=339fb77dcc238fdbddcd473ac50ac0b1" class="popup" title="调整今日余量">1432</a></td>
         <td data-title="投放时间"><a href="ad/job-edit.php?id=339fb77dcc238fdbddcd473ac50ac0b1" class="popup" title="调整投放时间">08:00</a></td>
-        <td data-title="排序"><a href="ad/seq-edit.php?id=339fb77dcc238fdbddcd473ac50ac0b1" class="popup seq-com-jumei-iphone" title="调整排序">202</a></td>
         <td data-title="实际价格"><a href="#/stat/daily-ad/2014-11-04/2014-11-10/339fb77dcc238fdbddcd473ac50ac0b1">1.5</a></td>
-        <td data-title="深度任务成本">0</td>
         <td data-title="状态">
           <a class="label status-0 popup" href="ad/status-edit.php?id=339fb77dcc238fdbddcd473ac50ac0b1" title="上线">
             ON
           </a>
-          <a class="label level popup" href="ad/update_ad_level.php?id=339fb77dcc238fdbddcd473ac50ac0b1" title="调整广告等级">墙 3</a>
           <span class="platform"></span>
           <a href="ad/comment-edit.php?id=339fb77dcc238fdbddcd473ac50ac0b1" class="popup" title="编辑注释"><i class="fa fa-info-circle fa-lg"></i></a>
-          <a href="ad/update_weight.php?id=339fb77dcc238fdbddcd473ac50ac0b1" class="label popup weight" title="修改推广权重">1</a>
-          <i class="fa fa-tasks"></i>
         </td>
         <td data-title="创建时间">2014-11-10</td>
         <td data-title="状态变更时间">2014-11-11</td>
@@ -356,11 +314,6 @@
           </button>
           <ul class="dropdown-menu">
             <li><a href="#/ad/edit/339fb77dcc238fdbddcd473ac50ac0b1"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-            <li><a href="ad/action_ad.php?m=copyad&amp;id=339fb77dcc238fdbddcd473ac50ac0b1"><i class="fa fa-copy fa-fw"></i> 复制广告</a></li>
-            <li><a href="ad/adjob.php?id=339fb77dcc238fdbddcd473ac50ac0b1&amp;list=1" class="popup" title="博瑞掌讯 聚美优品 计划任务"><i class="fa fa-bell fa-fw"></i> 计划任务</a></li>
-            <li><a href="ad/adblack.php?id=339fb77dcc238fdbddcd473ac50ac0b1" class="popup" title="博瑞掌讯 聚美优品 黑名单"><i class="fa fa-minus-circle fa-fw"></i> 黑名单</a></li>
-            <li><a href="ad/addrules.php?id=339fb77dcc238fdbddcd473ac50ac0b1&amp;list=1" class="popup" title="博瑞掌讯 聚美优品 添加排序规则"><i class="fa fa-sort fa-fw"></i> 排序规则</a></li>
-            <li><a href="ad/task.php?id=339fb77dcc238fdbddcd473ac50ac0b1" class="popup"><i class="fa fa-tasks fa-fw"></i> 深度任务</a></li>
             <li><a href="ad/action_ad.php?m=del&amp;id=339fb77dcc238fdbddcd473ac50ac0b1" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
           </ul>
         </td>
@@ -375,18 +328,13 @@
         <td data-title="日投放量"><a href="ad/job-edit.php?id=74752dca612fb42fda4d1449a8f78502" class="popup" title="调整日投放量">0</a></td>
         <td data-title="今日余量"><a href="ad/money-edit.php?id=74752dca612fb42fda4d1449a8f78502" class="popup" title="调整今日余量">9000</a></td>
         <td data-title="投放时间"><a href="ad/job-edit.php?id=74752dca612fb42fda4d1449a8f78502" class="popup" title="调整投放时间">08:00</a></td>
-        <td data-title="排序"><a href="ad/seq-edit.php?id=74752dca612fb42fda4d1449a8f78502" class="popup seq-com-gome-gomeEShop" title="调整排序">203</a></td>
         <td data-title="实际价格"><a href="#/stat/daily-ad/2014-11-04/2014-11-10/74752dca612fb42fda4d1449a8f78502">0</a></td>
-        <td data-title="深度任务成本">0</td>
         <td data-title="状态">
           <a class="label status-0 popup" href="ad/status-edit.php?id=74752dca612fb42fda4d1449a8f78502" title="上线">
             ON
           </a>
-          <a class="label level popup" href="ad/update_ad_level.php?id=74752dca612fb42fda4d1449a8f78502" title="调整广告等级">墙 3</a>
           <span class="platform"></span>
           <a href="ad/comment-edit.php?id=74752dca612fb42fda4d1449a8f78502" class="popup" title="编辑注释"><i class="fa fa-info-circle fa-lg"></i></a>
-          <a href="ad/update_weight.php?id=74752dca612fb42fda4d1449a8f78502" class="label popup weight" title="修改推广权重">1</a>
-          <i class="fa fa-tasks"></i>
         </td>
         <td data-title="创建时间">2014-11-11</td>
         <td data-title="状态变更时间">2014-11-11</td>
@@ -397,11 +345,6 @@
           </button>
           <ul class="dropdown-menu">
             <li><a href="#/ad/edit/74752dca612fb42fda4d1449a8f78502"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-            <li><a href="ad/action_ad.php?m=copyad&amp;id=74752dca612fb42fda4d1449a8f78502"><i class="fa fa-copy fa-fw"></i> 复制广告</a></li>
-            <li><a href="ad/adjob.php?id=74752dca612fb42fda4d1449a8f78502&amp;list=1" class="popup" title="趣米 国美在线 计划任务"><i class="fa fa-bell fa-fw"></i> 计划任务</a></li>
-            <li><a href="ad/adblack.php?id=74752dca612fb42fda4d1449a8f78502" class="popup" title="趣米 国美在线 黑名单"><i class="fa fa-minus-circle fa-fw"></i> 黑名单</a></li>
-            <li><a href="ad/addrules.php?id=74752dca612fb42fda4d1449a8f78502&amp;list=1" class="popup" title="趣米 国美在线 添加排序规则"><i class="fa fa-sort fa-fw"></i> 排序规则</a></li>
-            <li><a href="ad/task.php?id=74752dca612fb42fda4d1449a8f78502" class="popup"><i class="fa fa-tasks fa-fw"></i> 深度任务</a></li>
             <li><a href="ad/action_ad.php?m=del&amp;id=74752dca612fb42fda4d1449a8f78502" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
           </ul>
         </td>
@@ -416,18 +359,13 @@
         <td data-title="日投放量"><a href="ad/job-edit.php?id=d718a688537cd714181d70fcb6661ea7" class="popup" title="调整日投放量">0</a></td>
         <td data-title="今日余量"><a href="ad/money-edit.php?id=d718a688537cd714181d70fcb6661ea7" class="popup" title="调整今日余量">3822</a></td>
         <td data-title="投放时间"><a href="ad/job-edit.php?id=d718a688537cd714181d70fcb6661ea7" class="popup" title="调整投放时间">08:00</a></td>
-        <td data-title="排序"><a href="ad/seq-edit.php?id=d718a688537cd714181d70fcb6661ea7" class="popup seq-com-gome-gomeEShop" title="调整排序">203</a></td>
         <td data-title="实际价格"><a href="#/stat/daily-ad/2014-11-04/2014-11-10/d718a688537cd714181d70fcb6661ea7">2</a></td>
-        <td data-title="深度任务成本">0</td>
         <td data-title="状态">
           <a class="label status-0 popup" href="ad/status-edit.php?id=d718a688537cd714181d70fcb6661ea7" title="上线">
             ON
           </a>
-          <a class="label level popup" href="ad/update_ad_level.php?id=d718a688537cd714181d70fcb6661ea7" title="调整广告等级">墙 3</a>
           <span class="platform"></span>
           <a href="ad/comment-edit.php?id=d718a688537cd714181d70fcb6661ea7" class="popup" title="编辑注释"><i class="fa fa-info-circle fa-lg"></i></a>
-          <a href="ad/update_weight.php?id=d718a688537cd714181d70fcb6661ea7" class="label popup weight" title="修改推广权重">1</a>
-          <i class="fa fa-tasks"></i>
         </td>
         <td data-title="创建时间">2014-10-24</td>
         <td data-title="状态变更时间">2014-11-11</td>
@@ -438,17 +376,23 @@
           </button>
           <ul class="dropdown-menu">
             <li><a href="#/ad/edit/d718a688537cd714181d70fcb6661ea7"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-            <li><a href="ad/action_ad.php?m=copyad&amp;id=d718a688537cd714181d70fcb6661ea7"><i class="fa fa-copy fa-fw"></i> 复制广告</a></li>
-            <li><a href="ad/adjob.php?id=d718a688537cd714181d70fcb6661ea7&amp;list=1" class="popup" title="心果 国美在线 计划任务"><i class="fa fa-bell fa-fw"></i> 计划任务</a></li>
-            <li><a href="ad/adblack.php?id=d718a688537cd714181d70fcb6661ea7" class="popup" title="心果 国美在线 黑名单"><i class="fa fa-minus-circle fa-fw"></i> 黑名单</a></li>
-            <li><a href="ad/addrules.php?id=d718a688537cd714181d70fcb6661ea7&amp;list=1" class="popup" title="心果 国美在线 添加排序规则"><i class="fa fa-sort fa-fw"></i> 排序规则</a></li>
-            <li><a href="ad/task.php?id=d718a688537cd714181d70fcb6661ea7" class="popup"><i class="fa fa-tasks fa-fw"></i> 深度任务</a></li>
             <li><a href="ad/action_ad.php?m=del&amp;id=d718a688537cd714181d70fcb6661ea7" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
           </ul>
         </td>
       </tr>
       </tbody>
     </table>
+    <nav class="pull-right">
+      <ul class="pagination">
+        <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i> 上一页</a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#"><i class="fa fa-chevron-right"></i> 下一页</a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
