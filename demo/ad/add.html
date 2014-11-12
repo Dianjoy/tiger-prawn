@@ -101,7 +101,11 @@
     <li class="active">添加广告</li>
   </ul>
   <div id="sub-page dashboard">
-    <form class="form-horizontal" action="./" method="post" enctype="multipart/form-data">
+    <form class="form-horizontal Android" action="./" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="m" value="{{m}}" id="form-method" />
+      <input type="hidden" name="apply" value="{{apply}}"/>
+      <input type="hidden" name="id" value="{{id}}" id="adid" />
+      <input type="hidden" name="ad_sdk_type" value="1">
       <fieldset>
         <a name="basic-info"></a>
         <legend>基础信息</legend>
@@ -127,21 +131,6 @@
             <input type="text" name="ad_name" id="ad_name" value="{{ad_name}}" class="form-control" required />
           </div>
         </div>
-        <div class="form-group Android ad-sdk-type">
-          <label class="col-sm-2 control-label">推广方式</label>
-          <div class="col-sm-10">
-            <input type="radio" name="ad_sdk_type" value="1" title="ad_list" id="ad_list" />
-            <label for="ad_list">积分墙</label>
-            <input type="radio" name="ad_sdk_type" value="2" title="push" id="push" />
-            <label for="push">推送</label>
-            <input type="radio" name="ad_sdk_type" value="4" title="push wap" id="wap" />
-            <label for="wap">WAP页广告</label>
-            <input type="radio" name="ad_sdk_type" value="5" title="ad_list" id="ad_list_low" />
-            <label for="ad_list_low">低价广告</label>
-            <input type="radio" name="ad_sdk_type" value="6" title="ad_list" id="ad_list_custom" />
-            <label for="ad_list_custom">自定义广告</label>
-          </div>
-        </div>
         <div class="form-group">
           <label class="col-sm-2 control-label" for="ad_type">广告类型</label>
           <div class="col-sm-10">
@@ -156,12 +145,6 @@
         <div class="form-group">
           <label class="col-sm-2 control-label" for="ad_text">广告语</label>
           <div class="col-sm-10">
-            <p class="push">
-              <input type="text" value="{{setup_tips}}" class="form-control push-replace" placeholder="主标题" data-for="setup_tips" />
-            </p>
-            <p class="push">
-              <input type="text" value="{{ad_text}}" class="form-control push-replace" placeholder="副标题" data-for="ad_text" />
-            </p>
             <input type="text" name="ad_text" id="ad_text" value="{{ad_text}}" class="form-control" />
           </div>
         </div>
@@ -253,57 +236,12 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2 control-label" for="banner_url">原生广告截图</label>
-          <div class="col-sm-10">
-            <button type="button" class="upload-button btn btn-default">
-              <i class="fa fa-picture-o"></i> 上传图片（{{picfoots}}）
-            </button>
-            <input type="file" id="banner_url" class="hidden" accept="image/jpeg, image/png, image/gif" />
-            <input type="hidden" name="banner_url" value="{{banner_url}}" />
-            <p class="help-block simple">
-              {{#banner_url}}
-              <img class="preview" src="../{{banner_url}}"  height="30" />
-              {{/banner_url}}
-            </p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="ad_large_shoot">大尺寸广告图</label>
-          <div class="col-sm-10">
-            <button type="button" class="upload-button btn btn-default">
-              <i class="fa fa-picture-o"></i> 上传图片（{{picfoots}}）
-            </button>
-            <input type="file" id="ad_large_shoot" class="hidden" accept="image/jpeg, image/png, image/gif" />
-            <input type="hidden" name="ad_large_shoot" value="{{ad_large_shoot}}" />
-            <p class="help-block simple">
-              {{#ad_large_shoot}}
-              <img class="preview" src="../{{ad_large_shoot}}"  height="30" />
-              {{/ad_large_shoot}}
-            </p>
-          </div>
-        </div>
-        <div class="form-group">
           <label class="col-sm-2 control-label">付费类型</label>
           <div class="col-sm-10">
             <input type="radio" name="cpc_cpa" value="cpa" id="cpa" />
             <label for="cpa">CPA</label>
             <input type="radio" name="cpc_cpa" value="cpc" id="cpc" />
             <label for="cpc">CPC</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="step_rmb">扣分（单位分）</label>
-          <div class="col-sm-10">
-            <input type="number" name="step_rmb" id="step_rmb" value="{{step_rmb}}" class="form-control" required="required"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="seq_rmb">排序</label>
-          <div class="col-sm-10">
-            <input type="number" name="seq_rmb" id="seq_rmb" value="{{seq_rmb}}" value="{{seq_rmb}}" class="form-control" />
-            <p class="help-block">
-              可不填，默认与扣分值一样
-            </p>
           </div>
         </div>
         <div class="form-group">
@@ -330,52 +268,26 @@
         </div>
         <div class="form-group app">
           <label class="col-sm-2 control-label" for="active_time">激活时间</label>
-          <div class="col-sm-10 input-group">
-            <span class="input-group-addon">打开</span>
-            <input type="number" name="active_time" id="active_time" value="{{active_time}}" value="0" class="form-control" />
-            <span class="input-group-addon">秒后扣钱</span>
+          <div class="col-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon">打开</span>
+              <input type="number" name="active_time" id="active_time" value="{{active_time}}" value="0" class="form-control" />
+              <span class="input-group-addon">秒后扣钱</span>
+            </div>
+
           </div>
         </div>
         <div class="form-group app">
           <label class="col-sm-2 control-label" for="before_tips">安装提示</label>
-          <div class="col-sm-10 input-group">
-            <span class="input-group-addon">请</span>
-            <input type="text" name="before_tips" id="before_tips" value="{{before_tips}}" class="form-control" maxlength="8" placeholder="如：安装并激活应用" />
-            <span class="input-group-addon">，可轻松获得奖励！</span>
+          <div class="col-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon">请</span>
+              <input type="text" name="before_tips" id="before_tips" value="{{before_tips}}" class="form-control" maxlength="8" placeholder="如：安装并激活应用" />
+              <span class="input-group-addon">，可轻松获得奖励！</span>
+            </div>
           </div>
           <div class="col-sm-10 col-sm-offset-2">
             <p class="help-block">仅限8个汉字</p>
-          </div>
-        </div>
-        <div class="form-group Android ad_list">
-          <label class="col-sm-2 control-label" for="setup_tips">未扣钱提示</label>
-          <div class="col-sm-10">
-            <input type="text" name="setup_tips" id="setup_tips" value="{{setup_tips}}" class="form-control" />
-          </div>
-        </div>
-        <div class="form-group Android ad_list app">
-          <label class="col-sm-2 control-label" for="share_text">分享提示</label>
-          <div class="col-sm-10">
-            <input maxlength="30" type="text" name="share_text" id="share_text" value="{{share_text}}" class="form-control" />
-          </div>
-        </div>
-        <div class="form-group ad_list apk_permission">
-          <label class="col-sm-2 control-label">安装权限</label>
-          <div class="col-sm-10">
-            <input type="radio" name="has_permission" value="1" data-class="permission" id="permission-check" />
-            <label for="permission-check">有</label>
-            <input type="radio" name="has_permission" value="0" data-class="permission" id="permission-none" />
-            <label for="permission-none">无</label>
-          </div>
-        </div>
-        <div class="form-group ad_list permission">
-          <label class="col-sm-2 control-label">权限选择</label>
-          <div class="col-sm-10 item-grid">
-            {{#permission}}
-            <input type="checkbox" name='permission[]' value="{{key}}" id="{{interface}}" {{checked}} />
-            <label for="{{interface}}">{{value}}</label>
-            {{/permission}}
-            <hr />
           </div>
         </div>
         <div class="form-group os_black">
@@ -419,80 +331,30 @@
         <div class="form-group">
           <label class="col-sm-2 control-label" for="job_num">日投放量</label>
           <div class="col-sm-10">
-            {{#job_after_tomorrow}}该广告有自定义的计划任务，<a href="ad/adjob.php?id={{id}}&list=1" class="popup">请直接修改计划任务</a>{{/job_after_tomorrow}}
-            {{^job_after_tomorrow}}
             <input maxlength="30" type="number" name="job_num" id="job_num" value="{{job_num}}" class="form-control" {{^job_edit}}disabled{{/job_edit}}/>
-            {{/job_after_tomorrow}}
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">投放时间</label>
-          <div class="col-sm-10">
-            {{#job_after_tomorrow}}该广告有自定义的计划任务，<a href="ad/adjob.php?id={{id}}&list=1" class="popup">请直接修改计划任务</a>{{/job_after_tomorrow}}
-            {{^job_after_tomorrow}}
-            <div class="col-sm-5">
-              <select name="job_h" class="form-control" id="job_h" {{^job_edit}}disabled{{/job_edit}}>
-              {{#hours}}
-              <option value="{{.}}">{{.}}</option>
-              {{/hours}}
-              </select>
-            </div>
-            <div class="col-sm-5">
-              <select name="job_i" class="form-control" {{^job_edit}}disabled{{/job_edit}}>
-              {{#mins}}
-              <option value="{{.}}">{{.}}</option>
-              {{/mins}}
-              </select>
-            </div>
-            {{/job_after_tomorrow}}
+          <div class="col-sm-5">
+            <select name="job_h" class="form-control" id="job_h" {{^job_edit}}disabled{{/job_edit}}>
+            {{#hours}}
+            <option value="{{.}}">{{.}}</option>
+            {{/hours}}
+            </select>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="off_ymd" class="col-sm-2 control-label">下线时间</label>
-          <div>
-            <div class="col-sm-2">
-              <input type="checkbox" name="job_off[]" value="1" id="job_off" {{#job_off}}checked="checked"{{/job_off}} {{^job_edit}}disabled{{/job_edit}}/>
-              <label for="job_off">定时下线</label>
-            </div>
-            <div class="col-sm-4 form-group">
-              <input type="date" name="off_ymd" id="off_ymd" value="{{off_ymd}}" size="12" class="date form-control" readonly {{^job_edit}}disabled{{/job_edit}}/>
-            </div>
-            <div class="col-sm-2">
-              <select name="off_h" class="form-control" {{^job_edit}}disabled{{/job_edit}}>
-              {{#hours}}
-              <option value="{{.}}">{{.}}</option>
-              {{/hours}}
-              </select>
-            </div>
-            <div class="col-sm-2">
-              <select name="off_i" class="form-control" {{^job_edit}}disabled{{/job_edit}}>
-              {{#mins}}
-              <option value="{{.}}">{{.}}</option>
-              {{/mins}}
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="put_level">投放级别</label>
-          <div class="col-sm-10">
-            <select name="put_level" id="put_level" class="form-control">
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
+          <div class="col-sm-5">
+            <select name="job_i" class="form-control" {{^job_edit}}disabled{{/job_edit}}>
+            {{#mins}}
+            <option value="{{.}}">{{.}}</option>
+            {{/mins}}
             </select>
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2 control-label">IMSI</label>
-          <div class="col-sm-10">
-            <input type="radio" name="put" value="0" id="put-all" />
-            <label for="put-all">全投放</label>
-            <input type="radio" name="put" value="1" id="put-imsi" />
-            <label for="put-imsi">只投放有</label>
+          <label class="col-sm-2 control-label">总计投放</label>
+          <div class="col-sm-6">
+            <p class="form-control-static">100 / &yen; 100.00</p>
           </div>
         </div>
         <div class="form-group">
