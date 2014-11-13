@@ -28,7 +28,9 @@ $(function () {
   context
     .mapValue('me', me)
     .mapValue('body', body);
-  context.inject(tp.component.Manager);
+  context
+    .inject(tp.component.Manager)
+    .inject(tp.service.Manager);
 
   // routers
   context.createInstance(tp.router.Base);

@@ -6,5 +6,6 @@ var tp = {
   model: {},
   view: {},
   controller: {},
-  component: {}
+  component: {},
+  service: {}
 };
