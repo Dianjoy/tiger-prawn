@@ -20,16 +20,36 @@
   <!-- favicon -->
   <link rel="shortcut icon" type="image/png" href="{{img_url}}/img/fav.png" />
 
-  <title>范例</title>
+  <title>点乐广告自助平台（测试版）</title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="bower_components/animate.css/animate.min.css">
+  <link rel="stylesheet" href="bower_components/morris/morris.css">
   <link rel="stylesheet" href="css/style.css">
   <link>
 </head>
 <body>
 
+<div id="page-preloader" class="">
+  <p><img src="img/logo.png" class="img-circle"></p>
+  <p><i class="fa fa-spinner fa-spin"></i> 点乐广告自助后台</p>
+</div>
+
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/raphael/raphael-min.js"></script>
+<script src="bower_components/morris/morris.min.js"></script>
+<script src="bower_components/handlebars/handlebars.min.js"></script>
+<script src="bower_components/underscore/underscore-min.js"></script>
+<script src="bower_components/backbone/backbone.js"></script>
+<script src="bower_components/nervenet/nervenet.min.js"></script>
+<script src="js/define.js"></script>
+<script src="js/config.js"></script>
+<script src="js/router/Base.js"></script>
+<script src="js/model/Me.js"></script>
+<script src="js/component/Manager.js"></script>
+<script src="js/view/DataSyncView.js"></script>
+<script src="js/view/Body.js"></script>
 <script src="js/index.js"></script>
 </body>
 </html>
