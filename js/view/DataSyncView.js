@@ -5,13 +5,17 @@
 ;(function (ns) {
   ns.DataSyncView = Backbone.View.extend({
     displayProcessing: function () {
-      this.$el.addClass('processing')
-        .find('button:not([type])').prop('disabled', true)
-        .find('i').addClass('fa-spin fa-spinner');
+      this.$el.addClass('processing');
+      this.submit
+        .prop('disabled', true)
+        .find('i').hide()
+        .end().prepend('<i class="fa fa-spin fa-spinner"></i>');
     },
     displayResult: function (isSuccess, msg, icon) {
-      msg = (icon ? '<i class="fa ' + icon + '"></i> ' : '') + msg;
-      this.$('.fa-spin').removeClass('fa-spin fa-spinner');
+      msg = (icon ? '<i class="fa fa-' + icon + '"></i> ' : '') + msg;
+      this.submit
+        .find('i:hidden').show()
+        .end().find('.fa-spin').remove();
       this.$el.removeClass('processing');
       this.$('button:not([type])').prop('disabled', false);
       this.$('.alert-msg')

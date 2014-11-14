@@ -57,7 +57,6 @@
       });
     },
     clear: function (el) {
-      el.popover('destroy');
       var components = el.data('components');
       if (!components || components.length === 0) {
         return;
@@ -88,7 +87,7 @@
       if (isCustom) {
         return custom + arr.join('/') + '.js';
       }
-      if (arr[0] === 'dianjoy') {
+      if (arr[0] === 'tp') {
         arr = arr.slice(1);
       }
       return 'js/' + arr.join('/') + '.js';

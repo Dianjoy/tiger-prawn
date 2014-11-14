@@ -8,7 +8,11 @@
     $body: null,
     $me: null,
     routes: {
-      'user/:page': 'showUserPage'
+      'user/:page': 'showUserPage',
+      'dashboard': 'showDashboard'
+    },
+    showDashboard: function () {
+      this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
     },
     showUserPage: function (page) {
       if (page === 'logout') {

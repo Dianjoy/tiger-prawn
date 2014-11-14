@@ -1,5 +1,29 @@
-;(function (ns) {
-  'use strict';
+'use strict';
+(function (ns) {
+  function showErrorPopup(target, msgs) {
+    if (msgs.length === 0) {
+      return;
+    }
+    msgs = _.isArray(msgs) ? msgs : [msgs];
+    var html = msgs.join('<br />');
+    $(target)
+      .popover({
+        trigger: 'manual',
+        title: '表单填写有误',
+        content: html,
+        html: true
+      })
+      .popover('show')
+      .one('focus', function () {
+        $(this)
+          .off('.popover')
+          .removeData('popover')
+          .siblings('.popover').remove()
+          .end().closest('.form-group').removeClass('error');
+      })
+      .closest('.form-group').addClass('error');
+  }
+
   ns.SmartForm = tp.view.DataSyncView.extend({
     $context: null,
     $router: null,
@@ -7,19 +31,58 @@
       "blur input,textarea,select": "input_blurHandler",
       'focus input': 'input_focusHandler',
       "click .upload-button": "uploadButton_clickHandler",
-      "change input[type=file]": "fileUploader_changeHandler",
       'submit': 'submitHandler'
     },
     initialize: function () {
       this.submit = this.getSubmit();
-      this.submit.toggleClass('disabled', this.$(':invalid').length !== 0);
-      this.model.on('change', this.model_changeHandler, this);
       this.$context.mapEvent('table-rendered', this.searchedHandler, this);
     },
     remove: function () {
       this.model.off(null, null, this);
       this.$context.removeEvent('table-rendered', this.searchedHandler);
       Backbone.View.prototype.remove.call(this);
+    },
+    validate: function () {
+      // 验证表单项是否合乎要求
+      var elements = this.el.elements;
+      if (this.$el.hasClass('uploading')) {
+        this.$('.upload-button').push('上传文件中，请稍候');
+      }
+      // 验证两次输入的密码是否一致
+      if ('newpassword' in elements && elements.newpassword.value !== elements.repassword.value) {
+        showErrorPopup(elements.repassword, '两次密码不一致哟，麻烦检查下吧');
+        return false;
+      }
+
+      return true;
+    },
+    checkInput: function (input) {
+      // 验证必填项
+      if (input.prop('required') && input.val() === '') {
+        return '此项为必填项，您好像漏掉了哟';
+      }
+      // 验证内容
+      var pattern = input.attr('pattern');
+      if (pattern && input.val() !== '' && !RegExp(pattern).test(input.val())) {
+        return '填写格式有误，麻烦您检查并重新填写';
+      }
+      // 验证数值
+      if (/number/i.test(input.attr('type')) && (input.attr('min') !== undefined || input.attr('max') !== undefined)) {
+        var value = Number(input.val());
+        if (isNaN(value)) {
+          return '此项只能输入数字';
+        }
+        if (input.attr('min') !== undefined && value < input.attr('min')
+          || input.attr('max') !== undefined && value > input.attr('max')) {
+          return '数值超出规定范围';
+        }
+      }
+      // 验证密码
+      if (input.attr('type') === 'password' && !/^[0-9a-zA-Z$!^#_@%&*.]{6,16}$/.test(input.val())) {
+        return '密码应为6~16个字符，包含字母、数字、特殊符号等';
+      }
+
+      return '';
     },
     createUploader: function (sibling) {
       var data = $(sibling).data()
@@ -37,145 +100,9 @@
       }
       return submit;
     },
-    fileUploader_changeHandler: function(event) {
-      var input = $(event.currentTarget)
-        , button = input.siblings('.upload-button')
-        , progress = input.siblings('.progress').removeClass('hide')
-        , data = button.data()
-        , preview = $(data.preview)
-        , field = $(data.field)
-        , validate = data.validate;
-      if (!input[0].hasOwnProperty('files') || input[0].files.length === 0) {
-        return;
-      }
-
-      // 校验文件类型
-      var spec = data.accept
-        , file = input[0].files[0];
-      if (spec && file) {
-        var reg = new RegExp(spec, 'i');
-        if (!reg.test(file.type) && !reg.test(file.name)) {
-          var types = spec.slice(3, -2).split('|');
-          button.addClass('btn-danger')
-            .find('i').addClass('fa-times');
-          alert('文件类型不匹配，请上传扩展名为' + types.join('，') + '的文件\n（手工修改不算哦）');
-          return;
-        }
-      }
-      button
-        .prop('disabled', true)
-        .addClass('disabled')
-        .removeClass('btn-success btn-danger')
-        .find('i')
-          .removeClass('fa-times fa-check')
-          .addClass("fa-spin fa-spinner");
-      this.$el.addClass('loading');
-      
-      if (!dianjoy.service.Manager.autoUpload) {
-        return;
-      }
-      var uploader = dianjoy.service.Manager.upload(file, {
-        id: this.model.id || '',
-        type: data.type
-      }, this);
-      uploader.bar = progress;
-      uploader.button = button;
-      uploader.preview = preview.length ? preview : null;
-      uploader.field = field;
-      uploader.filename = file.name;
-      uploader.isSrc = /image|video/i.test(file.type);
-      uploader.on('success', this.fileUpload_successHandler, uploader);
-      uploader.on('progress', this.fileUpload_progressHandler, uploader);
-      uploader.on('error', this.fileUpload_errorHandler, uploader);
-
-      // 添加样式
-      this.$el.addClass('uploading');
-
-      // 是否需要md5和大小校验
-      if (validate) {
-        var spark = new SparkMD5.ArrayBuffer()
-          , reader = new FileReader();
-        reader.onload = function () {
-          spark.append(this.result);
-          uploader.md5 = spark.end();
-        };
-        uploader.size = file.size;
-        reader.readAsArrayBuffer(file);
-      }
-    },
-    fileUpload_errorHandler: function (response) {
-      this.bar.children()
-        .addClass('progress-bar-danger')
-        .end().fadeOut(function () {
-          $(this).addClass('hide').children().removeClass('progress-bar-danger');
-        })
-        .closest('form').removeClass('uploading');
-
-      this.preview.append('<p class="text-danger">' + response.msg + '</p>');
-
-      this.button
-        .prop('disabled', false)
-        .removeClass('disabled')
-        .addClass('btn-success')
-        .find('i')
-          .removeClass('fa-spin fa-spinner')
-          .addClass('fa-times');
-      this.button.closest('form').removeClass('loading');
-      this.off();
-    },
-    fileUpload_progressHandler: function(loaded, total) {
-      var progress = (loaded / total * 100 >> 0) + '%';
-      this.bar.children()
-        .width(progress)
-        .text(progress);
-    },
-    fileUpload_successHandler: function(response) {
-      // 校验MD5
-      if (this.md5 && (this.size !== response.size || this.md5 !== response.md5)) {
-        alert('上传后文件校验未通过，请重新上传');
-        return;
-      }
-
-      // 隐藏进度条，去掉样式
-      this.bar.children()
-        .addClass('progress-bar-success')
-        .end().fadeOut(function () {
-          $(this).addClass('hide').children().removeClass('progress-bar-success');
-        })
-        .closest('form').removeClass('uploading');
-
-      // 生成缩略图或链接
-      if (this.preview) {
-        if (this.isSrc) {
-          this.preview.html('<img src="' + response.url + '" class="img-thumbnail">');
-        } else {
-          this.preview.html('<a href="' + src + '">' + this.filename + '</a> 已上传');
-        }
-      }
-
-      if (this.field.hasClass('multiple')) {
-        var imgs = this.field.val() === '' ? [] : _.filter(this.field.val().split(','));
-        if (imgs.indexOf(response.url) === -1) {
-          imgs.push(response.url);
-        }
-        this.field.val(imgs.join(','));
-      } else {
-        this.field.val(response.url);
-      }
-
-      this.button
-        .prop('disabled', false)
-        .removeClass('disabled')
-        .addClass('btn-success')
-        .find('i')
-          .removeClass("fa-spin fa-spinner")
-          .addClass('fa-check');
-      this.button.closest('form').removeClass('loading');
-      this.off();
-    },
     input_blurHandler: function(event) {
       var target = $(event.currentTarget)
-        , msg = dianjoy.form.checkInput(target);
+        , msg = this.checkInput(target);
       if (msg) {
         this.$('input').tooltip('destroy');
         target.tooltip({
@@ -184,15 +111,9 @@
           trigger: 'manual'
         }).tooltip('show');
       }
-      this.submit.toggleClass('disabled', this.$(':invalid').length !== 0);
     },
     input_focusHandler: function(event) {
       $(event.currentTarget).tooltip('destroy');
-    },
-    model_changeHandler: function (model) {
-      if ('keyword' in model.changed && model.changed.keyword === undefined) {
-        this.displayResult(true);
-      }
     },
     submit_successHandler: function(response) {
       if ('go_to_url' in response) {
@@ -202,12 +123,12 @@
           router.navigate(response.go_to_url);
         }, 3000);
       }
-      this.model.set(_.omit(response, 'code', 'msg'));
       this.displayResult(true, response.msg, 'smile-o');
       this.$el.trigger('form-success');
     },
     submit_errorHandler: function(xhr, status, error) {
-      this.displayResult(false, xhr.msg || error, 'frown-o');
+      var error = tp.Error.getAjaxMessage(xhr, status, error);
+      this.displayResult(false, error.message, error.icon);
     },
     uploadButton_clickHandler: function(event) {
       var uploader = this.createUploader(event.currentTarget);
@@ -247,10 +168,10 @@
       this.displayProcessing();
 
       // ajax提交类型的
-      var isPass = dianjoy.form.checkForm(this.el);
+      var isPass = this.validate();
       if (this.$el.hasClass('ajax') && isPass) {
         var data = this.$el.serialize();
-        dianjoy.service.Manager.call(action, data, {
+        tp.service.Manager.call(action, data, {
           success: this.submit_successHandler,
           error: this.submit_errorHandler,
           context: this,

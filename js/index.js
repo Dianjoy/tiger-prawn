@@ -6,11 +6,16 @@ $(function () {
   });
 
   function isLogin() {
-    Backbone.history.start({
+    body.start(true);
+    var route = Backbone.history.start({
       root: '/tiger-prawn/'
     });
+    if (!route) {
+      location.hash = '#/dashboard';
+    }
   }
   function notLogin() {
+    body.start();
     location.hash = '#/user/login'
     Backbone.history.start({
       root: '/tiger-prawn'

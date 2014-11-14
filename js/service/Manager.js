@@ -4,6 +4,7 @@
 'use strict';
 ;(function (ns) {
   var manager = {
+    $body: null,
     $me: null,
     call: function (url, data, options) {
       options = options || {};
@@ -17,6 +18,9 @@
         dataType: 'json',
         type: options.method || 'post',
         cache: false,
+        xhrFields: {
+          withCredentials: true
+        },
         success: function (response) {
           if (response.code === 0) {
             onSuccess.call(context, response);
@@ -40,7 +44,7 @@
     onError: function (xhr, status, error) {
       console.log(xhr, status, error);
       if (status === 401) {
-        this.$subPage.load(webURL + 'page/permission_error.html');
+        this.$body.load('page/error.html');
       }
     },
     onProgress: function (loaded, total) {

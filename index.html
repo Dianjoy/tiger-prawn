@@ -28,12 +28,90 @@
   <link rel="stylesheet" href="css/style.css">
   <link>
 </head>
-<body>
+<body class="full-page">
 
-<div id="page-preloader" class="">
+<div id="page-preloader">
   <p><img src="img/logo.png" class="img-circle"></p>
   <p><i class="fa fa-spinner fa-spin"></i> 点乐广告自助后台</p>
 </div>
+
+<nav class="navbar navbar-fixed-top" role="navigation" id="navbar-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-inner">
+        <span class="sr-only">导航栏</span>
+        <i class="fa fa-bars"></i>
+      </button>
+      <a class="navbar-brand" href="/">点乐广告自助平台</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbar-top-inner">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><i class="fa fa-envelope"></i></a></li>
+        <li><a href="#"><i class="fa fa-tasks"></i></a></li>
+        <li><a href="#"><i class="fa fa-bell"></i></a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Meathill <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="profile.html"><i class="fa fa-user fa-fw"></i> 我的账户</a></li>
+            <li><a href="settings.html"><i class="fa fa-cog fa-fw"></i> 设置</a></li>
+            <li><a href="recharge.html"><i class="fa fa-fw fa-money"></i> 充值</a></li>
+            <li class="divider"></li>
+            <li><a href="logout"><i class="fa fa-fw fa-sign-out"></i> 退出</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<nav class="navbar-side" role="navigation" id="navbar-side">
+  <ul id="navbar-side-inner" class="nav navbar-nav side-nav">
+    <li class="navbar-user">
+      <img src="img/logo.png" class="img-circle">
+      <h4>Meathill</h4>
+      <span class="pull-right">充值</span>
+      <label>您的余额：65/100</label>
+      <progress value="65" max="100">65%</progress>
+    </li>
+    <li><a href="./index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
+    <li>
+      <a href="#" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#sidebar-ad">
+        <i class="fa fa-flag"></i> 广告 <span class="caret"></span>
+      </a>
+      <ul class="nav collapse" id="sidebar-ad">
+        <li><a href="./ad/add.html"><i class="fa fa-plus"></i> 创建广告</a></li>
+        <li><a href="./ad/index.html"><i class="fa fa-list"></i> 全部广告</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#sidebar-stat">
+        <i class="fa fa-line-chart"></i> 统计 <span class="caret"></span>
+      </a>
+      <ul class="nav collapse" id="sidebar-stat">
+        <li><a href="./stat/">当日统计</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<div id="content">
+  <header class="page-header">
+    <h1>首页 <small>新近数据统计</small></h1>
+  </header>
+  <ul class="breadcrumb page-breadcrumb">
+    <li class="active">首页</li>
+  </ul>
+  <div id="page-container">
+  </div>
+</div>
+
+<footer id="footer">
+  <a class="pull-right top-button" href="#"><i class="fa fa-arrow-up"></i> 返回顶部</a>
+  <p>点乐广告自助平台（测试版） &copy; 2014 <a href="http://www.dianjoy.com">Dianjoy</a>. 保留一切权利。</p>
+</footer>
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -42,14 +120,18 @@
 <script src="bower_components/handlebars/handlebars.min.js"></script>
 <script src="bower_components/underscore/underscore-min.js"></script>
 <script src="bower_components/backbone/backbone.js"></script>
+<script src="bower_components/moment/min/moment-with-locales.min.js"></script>
 <script src="bower_components/nervenet/nervenet.min.js"></script>
 <script src="js/define.js"></script>
 <script src="js/config.js"></script>
 <script src="js/router/Base.js"></script>
-<script src="js/model/Me.js"></script>
 <script src="js/component/Manager.js"></script>
 <script src="js/service/Manager.js"></script>
+<script src="js/utils/error.js"></script>
+<script src="js/model/Dashboard.js"></script>
+<script src="js/model/Me.js"></script>
 <script src="js/view/DataSyncView.js"></script>
+<script src="js/view/Loader.js"></script>
 <script src="js/view/Body.js"></script>
 <script src="js/index.js"></script>
 </body>
