@@ -179,6 +179,11 @@
         return false;
       }
 
+      if (this.$el.hasClass('model-editor') && isPass) {
+        this.model.save();
+        return false;
+      }
+
       // 原则上当然尽量都整成ajax的
       // 不过暂时改不过来，所以需要上传图片的表单都直接提交
       return isPass;

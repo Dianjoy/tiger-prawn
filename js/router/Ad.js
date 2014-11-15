@@ -12,10 +12,14 @@
       "ad/:id": "edit"
     },
     create: function () {
-
+      var model = new tp.model.AD();
+      this.$body.load('page/ad/edit.hbs', model);
     },
     edit: function (id) {
-
+      var model = new tp.model.AD({
+        id: id
+      });
+      this.$body.load('page/ad/edit.hbs', model);
     },
     list: function () {
       this.$body.load('page/ad/list.html');

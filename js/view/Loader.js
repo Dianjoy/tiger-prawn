@@ -19,7 +19,7 @@
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
       var $el = this.$el;
       setTimeout(function () {
-        tp.component.Manager.check($el);
+        tp.component.Manager.check($el, this.model);
       }, 0);
     },
     model_syncHandler: function () {
