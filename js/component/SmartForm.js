@@ -38,7 +38,6 @@
       this.$context.mapEvent('table-rendered', this.searchedHandler, this);
     },
     remove: function () {
-      this.model.off(null, null, this);
       this.$context.removeEvent('table-rendered', this.searchedHandler);
       Backbone.View.prototype.remove.call(this);
     },

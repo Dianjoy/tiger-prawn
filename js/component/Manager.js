@@ -5,8 +5,8 @@
   ns.Manager = {
     $context: null,
     map: {
-      '.smart-table': 'dianjoy.component.SmartTable',
-      '.smart-navbar': 'dianjoy.component.SmartNavbar',
+      '.smart-table': 'tp.component.SmartTable',
+      '.smart-navbar': 'tp.component.SmartNavbar',
       '.smart-info': 'dianjoy.component.SmartInfo',
       '.smart-list': 'dianjoy.component.SmartList',
       '.smart-slide': 'dianjoy.component.SmartSlide',

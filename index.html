@@ -47,9 +47,9 @@
 
     <div class="collapse navbar-collapse" id="navbar-top-inner">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><i class="fa fa-envelope"></i></a></li>
-        <li><a href="#"><i class="fa fa-tasks"></i></a></li>
-        <li><a href="#"><i class="fa fa-bell"></i></a></li>
+        <li class="pit"><a href="#"><i class="fa fa-envelope"></i></a></li>
+        <li class="pit"><a href="#"><i class="fa fa-tasks"></i></a></li>
+        <li class="pit"><a href="#"><i class="fa fa-bell"></i></a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             Meathill <span class="caret"></span>
@@ -72,9 +72,9 @@
     <li class="navbar-user">
       <img src="img/logo.png" class="img-circle">
       <h4>Meathill</h4>
-      <span class="pull-right">充值</span>
-      <label>您的余额：65/100</label>
-      <progress value="65" max="100">65%</progress>
+      <span class="pull-right pit">充值</span>
+      <label class="pit">您的余额：65/100</label>
+      <progress value="65" max="100" class="pit">65%</progress>
     </li>
     <li><a href="./index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
     <li>
@@ -82,8 +82,8 @@
         <i class="fa fa-flag"></i> 广告 <span class="caret"></span>
       </a>
       <ul class="nav collapse" id="sidebar-ad">
-        <li><a href="./ad/add.html"><i class="fa fa-plus"></i> 创建广告</a></li>
-        <li><a href="./ad/index.html"><i class="fa fa-list"></i> 全部广告</a></li>
+        <li><a href="#/ad/create"><i class="fa fa-plus"></i> 创建广告</a></li>
+        <li><a href="#/ad/"><i class="fa fa-list"></i> 全部广告</a></li>
       </ul>
     </li>
     <li>
@@ -91,7 +91,7 @@
         <i class="fa fa-line-chart"></i> 统计 <span class="caret"></span>
       </a>
       <ul class="nav collapse" id="sidebar-stat">
-        <li><a href="./stat/">当日统计</a></li>
+        <li><a href="#/stat/">当日统计</a></li>
       </ul>
     </li>
   </ul>
@@ -113,6 +113,25 @@
   <p>点乐广告自助平台（测试版） &copy; 2014 <a href="http://www.dianjoy.com">Dianjoy</a>. 保留一切权利。</p>
 </footer>
 
+<script type="text/x-handlebars-template" id="popup">
+  <div class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+          <h4 class="modal-title">{{title}}</h4>
+        </div>
+        <div class="modal-body">{{{content}}}</div>
+        <div class="modal-footer">
+          {{#if confirm}}<button class="btn btn-primary"><i class="fa fa-check"></i> {{confirm}}</button>{{/if}}
+          {{#if cancel}}<button class="btn btn-default">{{cancel}}</button>{{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/raphael/raphael-min.js"></script>
@@ -124,13 +143,19 @@
 <script src="bower_components/nervenet/nervenet.min.js"></script>
 <script src="js/define.js"></script>
 <script src="js/config.js"></script>
+<script src="js/adapter/backbone.js"></script>
 <script src="js/router/Base.js"></script>
+<script src="js/router/AD.js"></script>
 <script src="js/component/Manager.js"></script>
 <script src="js/service/Manager.js"></script>
+<script src="js/popup/Manager.js"></script>
+<script src="js/utils/utils.js"></script>
 <script src="js/utils/error.js"></script>
 <script src="js/model/Dashboard.js"></script>
 <script src="js/model/Me.js"></script>
+<script src="js/model/ListCollection.js"></script>
 <script src="js/view/DataSyncView.js"></script>
+<script src="js/popup/Base.js"></script>
 <script src="js/view/Loader.js"></script>
 <script src="js/view/Body.js"></script>
 <script src="js/index.js"></script>

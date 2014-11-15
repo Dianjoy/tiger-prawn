@@ -34,11 +34,14 @@ $(function () {
     .mapValue('me', me)
     .mapValue('body', body);
   context
+    .inject(me)
     .inject(tp.component.Manager)
+    .inject(tp.popup.Manager)
     .inject(tp.service.Manager);
 
   // routers
   context.createInstance(tp.router.Base);
+  context.createInstance(tp.router.AD);
 
   // 验证用户身份
   me.fetch({

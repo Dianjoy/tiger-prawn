@@ -7,7 +7,8 @@
     login: {
       welcome: '欢迎使用点乐广告自助平台',
       admin: 'service@dianjoy.com',
-      verify: ns.API + 'showimg.php'
+      verify: ns.API + 'showimg.php',
+      className: 'login'
     }
   };
 }(Nervenet.createNameSpace('tp')));

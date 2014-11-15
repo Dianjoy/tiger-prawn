@@ -23,7 +23,6 @@
           model: data,
           className: data.className
         });
-        page.once('ready', this.loadCompleteHandler);
         this.container.append(page.$el);
       } else {
         this.container.load(url, this.loadCompleteHandler);
@@ -37,9 +36,12 @@
       this.$('button').prop('disabled', bl);
     },
     start: function (showFramework) {
+      this.isStart = true;
       this.$('#page-preloader').remove();
       if (showFramework) {
-        this.$el.removeClass('full-page');
+        tp.popup.Manager.removePopup();
+        this.$el.removeClass('full-page')
+          .find('.login').remove();
       }
     },
     loadCompleteHandler: function (response, status) {

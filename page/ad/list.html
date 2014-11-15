@@ -1,0 +1,84 @@
+<div class="form-inline table-header">
+  <div class="form-group">
+    <label for="pagesize">每页显示：</label>
+    <select class="form-control" id="pagesize">
+      <option selected>10</option>
+      <option>20</option>
+      <option>50</option>
+    </select>
+  </div>
+  <div class="form-group pull-right">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query">
+  </div>
+</div>
+
+<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/">
+  <thead>
+  <tr>
+    <th class="filter">管理名 </th>
+    <th><a class="order" href="#step">单价</a></th>
+    <th><a class="order" href="#job_num">每日投放</a></th>
+    <th><a class="order" href="#num">今日尚余</a></th>
+    <th><a class="order" href="#job_time">开始时间</a></th>
+    <th><a class="order" href="#real">实际价格</a></th>
+    <th>状态</th>
+    <th><a class="order" href="#ctime">创建时间</a></th>
+    <th><a class="order" href="#mtime">状态变更时间</a></th>
+    <th>操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{#each list}}
+    <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}}" id="{{id}}">
+      <td data-title="管理名">
+        {{#has_channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/has_channel}}
+        <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
+        {{cid}}
+      </td>
+      <td data-title="单价"><a href="ad/step-edit.php?id={{id}}" class="popup step-{{packname}}" title="调整单价">{{step_rmb}}</a></td>
+      <td data-title="每日投放"><a href="ad/job-edit.php?id={{id}}" class="popup" title="调整日投放量">{{job_num}}</a></td>
+      <td data-title="今日尚余"><a href="ad/money-edit.php?id={{id}}" class="popup" title="调整今日余量">{{num}}</a></td>
+      <td data-title="开始时间"><a href="ad/job-edit.php?id={{id}}" class="popup" title="调整投放时间">{{job_time}}</a></td>
+      <td data-title="实际价格"><a href="#/stat/daily-ad/{{start}}/{{end}}/{{id}}" {{#real_style}}style="font-style: italic;"{{/real_style}}>{{real}}</a></td>
+      <td data-title="状态">
+        <a class="label status-{{status}} popup" href="ad/status-edit.php?id={{id}}" title="{{#is_online}}上线{{/is_online}}{{^is_online}}已下线{{/is_online}}">
+          {{#is_online}}ON{{/is_online}}{{^is_online}}OFF{{/is_online}}
+        </a>
+        <a href="ad/comment-edit.php?id={{id}}" class="popup" title="{{others}}"><i class="fa fa-info-circle fa-lg"></i></a>
+      </td>
+      <td data-title="创建时间">{{create_time}}</td>
+      <td data-title="状态变更时间">{{status_time}}</td>
+      <td data-title="操作" class="btn-group">
+        <a href="ad/addetail.php?id={{id}}" class="btn btn-primary popup" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-list"></i> 属性</a>
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="#/ad/edit/{{id}}"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
+          <li><a href="ad/action_ad.php?m=del&id={{id}}" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
+        </ul>
+      </td>
+    </tr>
+    {{/each}}
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
+  </tr>
+  </tfoot>
+</table>
+
+<nav class="pull-right">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+      <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+    </script>
+  </ul>
+</nav>

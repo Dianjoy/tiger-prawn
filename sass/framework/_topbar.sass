@@ -10,9 +10,19 @@
 
   .navbar-brand
     color: $white
-    text-indent: 36px
     background: url(../img/logo.png) no-repeat 7px center
     background-size: 36px auto
+    text-indent: 36px
+    position: relative
+
+    &:after
+      content: 'alpha'
+      display: block
+      position: absolute
+      top: $gap-s
+      right: -$gap-p
+      color: $aqua
+      font-size: 8px
 
   .nav > li > a
     color: $navbar-color
