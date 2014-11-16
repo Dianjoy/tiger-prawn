@@ -42,6 +42,7 @@ $(function () {
   // routers
   context.createInstance(tp.router.Base);
   context.createInstance(tp.router.AD);
+  context.createInstance(tp.router.Stat);
 
   // 验证用户身份
   me.fetch({

@@ -6,7 +6,7 @@
   ns.Loader = Backbone.View.extend({
     tagName: 'div',
     initialize: function (options) {
-      if (this.model instanceof Backbone.Model) {
+      if (this.model instanceof Backbone.Model && !options.hasData) {
         this.model.once('sync', this.model_syncHandler, this);
         this.model.fetch();
       } else {

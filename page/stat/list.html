@@ -1,0 +1,58 @@
+<div class="form-inline table-header">
+  <div class="form-group">
+    <label for="pagesize">每页显示：</label>
+    <select class="form-control" id="pagesize">
+      <option selected>10</option>
+      <option>20</option>
+      <option>50</option>
+    </select>
+  </div>
+  <div class="form-group pull-right">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query">
+  </div>
+</div>
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagination=".pagination" data-pagesize="10">
+  <thead>
+  <tr>
+    <th>广告名</th>
+    <th>状态</th>
+    <th>推广数量</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{#each list}}
+    <tr>
+      <td data-title="管理名">
+        <a href="#ch-{{cid}}" class="label label-ch">{{channel}}</a>
+        <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
+        {{ctime}} {{channel_id}}
+      </td>
+      <td data-title="状态">
+        <span class="fa fa-android text-{{pick status 'info' 'success'}}"></span>
+      </td>
+      <td data-title="推广数量">{{device1}}</td>
+    </tr>
+    {{/each}}
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="3">
+      <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
+    </td>
+  </tr>
+  </tfoot>
+</table>
+<nav class="pull-right">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+      <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+    </script>
+  </ul>
+</nav>

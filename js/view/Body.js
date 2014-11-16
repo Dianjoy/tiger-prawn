@@ -11,8 +11,7 @@
     clear: function () {
       tp.component.Manager.clear(this.$el);
     },
-    load: function (url, data, isFull) {
-      this.setDisabled(true);
+    load: function (url, data, isFull, hasData) {
       this.clear();
       this.$el.toggleClass('full-page', !!isFull);
 
@@ -21,7 +20,8 @@
         var page = new tp.view.Loader({
           template: url,
           model: data,
-          className: data.className
+          className: data.className,
+          hasData: hasData
         });
         this.container.append(page.$el);
       } else {
@@ -31,9 +31,10 @@
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
     },
-    setDisabled: function (bl) {
-      this.$('a.btn').toggleClass('disabled', bl);
-      this.$('button').prop('disabled', bl);
+    setFramework: function (classes) {
+      this.$el.removeClass(this.lastClass)
+        .addClass(classes);
+      this.lastClass = classes;
     },
     start: function (showFramework) {
       this.isStart = true;

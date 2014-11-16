@@ -78,7 +78,7 @@
     </li>
     <li><a href="./index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
     <li>
-      <a href="#" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#sidebar-ad">
+      <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#sidebar-ad">
         <i class="fa fa-flag"></i> 广告 <span class="caret"></span>
       </a>
       <ul class="nav collapse" id="sidebar-ad">
@@ -87,7 +87,7 @@
       </ul>
     </li>
     <li>
-      <a href="#" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#sidebar-stat">
+      <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#sidebar-stat">
         <i class="fa fa-line-chart"></i> 统计 <span class="caret"></span>
       </a>
       <ul class="nav collapse" id="sidebar-stat">
@@ -103,6 +103,28 @@
   </header>
   <ul class="breadcrumb page-breadcrumb">
     <li class="active">首页</li>
+    <li class="pull-right date-range">
+      <div class="dropdown">
+        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="data-range-btn">
+          <i class="fa fa-calendar"></i>
+          日期选择：2014-11-11
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="data-range-btn">
+          <li><a href="#">当日</a></li>
+          <li><a href="#">昨天</a></li>
+          <li><a href="#">一周内</a></li>
+          <li><a href="#">一月内</a></li>
+          <li class="divider"></li>
+          <li class="range">
+            <label for="stat-range-start-date">开始日期</label>
+            <input type="date" class="form-control" name="start-date" value="2014-11-11" id="stat-range-start-date">
+            <label for="stat-range-end-date">结束日期</label>
+            <input type="date" class="form-control" name="end-date" value="2014-11-11" id="stat-range-end-date">
+          </li>
+        </ul>
+      </div>
+    </li>
   </ul>
   <div id="page-container">
   </div>
@@ -144,13 +166,16 @@
 <script src="js/define.js"></script>
 <script src="js/config.js"></script>
 <script src="js/adapter/backbone.js"></script>
+<script src="js/adapter/handlebars.js"></script>
 <script src="js/router/Base.js"></script>
 <script src="js/router/AD.js"></script>
+<script src="js/router/Stat.js"></script>
 <script src="js/component/Manager.js"></script>
 <script src="js/service/Manager.js"></script>
 <script src="js/popup/Manager.js"></script>
 <script src="js/utils/utils.js"></script>
 <script src="js/utils/error.js"></script>
+<script src="js/model/AD.js"></script>
 <script src="js/model/Dashboard.js"></script>
 <script src="js/model/Me.js"></script>
 <script src="js/model/ListCollection.js"></script>

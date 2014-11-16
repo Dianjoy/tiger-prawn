@@ -3,10 +3,9 @@
  * Created by meathill on 14/11/15.
  */
 (function (h) {
-  h.registerHelper('ifs', function (value1, value2, options) {
-    if (value1 && value2) {
-      return options.fn(this);
-    }
-    return options.inverse(this);
+  // 从后面给的值中挑出一个
+  h.registerHelper('pick', function (value) {
+    var options = Array.prototype.slice.call(arguments, 1);
+    return options[value];
   });
 }(Handlebars));

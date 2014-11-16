@@ -296,8 +296,6 @@
         <label for="province-all">全国</label>
         <input type="radio" name="province_type" value="1" data-class="provinces" id="province-province" />
         <label for="province-province">分省</label>
-        <input type="radio" name="province_type" value="2" data-class="provinces" id="province-city" />
-        <label for="province-city">精确到市（暂不开放）</label>
       </div>
     </div>
     <div class="form-group ad_list provinces">
@@ -403,16 +401,6 @@
           {{#advertisers}}
           <option value="{{key}}">{{value}}</option>
           {{/advertisers}}
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="owner">商务人员</label>
-      <div class="col-sm-10">
-        <select name="owner" id="owner" class="form-control" required="required">
-          {{#sales}}
-          <option value="{{key}}">{{value}}</option>
-          {{/sales}}
         </select>
       </div>
     </div>

@@ -3,28 +3,34 @@
 @import "../../bower_components/colors/sass/variables"
 
 .breadcrumb
-  .pull-right:before
-    content: ''
+  .date-range
     display: none
 
-  .dropdown
-    margin-top: -8px
-    margin-right: -15px
+    &:before
+      content: ''
+      display: none
 
-    > button
-      background: $olive
-      border: none
-      color: $white
-      line-height: 31px
-      text-align: center
-      width: 240px
+    .has-date-range &
+      display: block
 
-    .dropdown-menu
-      width: 240px
+    .dropdown
+      margin-top: -8px
+      margin-right: -15px
 
-  .range
-    padding: 0 20px 10px
+      > button
+        background: $olive
+        border: none
+        color: $white
+        line-height: 31px
+        text-align: center
+        width: 240px
 
-    label
-      line-height: 2.5em
-      margin-bottom: 0
+      .dropdown-menu
+        width: 240px
+
+    .range
+      padding: 0 20px 10px
+
+      label
+        line-height: 2.5em
+        margin-bottom: 0
