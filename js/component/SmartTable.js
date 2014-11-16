@@ -65,6 +65,54 @@
     }
   });
 
+  var DATE_FORMAT = 'YYYY-MM-DD';
+  var Ranger = Backbone.View.extend({
+    events: {
+      'click .shortcut': 'shortcut_clickHandler',
+      'click .range input': 'input_clickHandler',
+      'click .range button': 'range_clickHandler'
+    },
+    initialize: function () {
+      this.$('.date').datetimepicker({
+        defaultDate: moment().format(DATE_FORMAT),
+        pickTime: false
+      });
+    },
+    remove: function () {
+      this.stopListening();
+      this.el = this.$el = this.model = null;
+      return this;
+    },
+    input_clickHandler: function (event) {
+      event.stopPropagation();
+    },
+    range_clickHandler: function () {
+      var start = this.$('[name=start]').val()
+        , end = this.$('[name=end]').val();
+      this.$('.shortcut').removeClass('active');
+      this.$('.label').text(start + ' - ' + end);
+      this.model.set({
+        start: start,
+        end: end
+      });
+    },
+    shortcut_clickHandler: function (event) {
+      var item = $(event.currentTarget)
+        , start = item.data('start')
+        , end = item.data('end');
+      item.addClass('active')
+        .siblings().removeClass('active');
+      start = moment().add(start, 'days').format(DATE_FORMAT);
+      end = moment().add(end, 'days').format(DATE_FORMAT);
+      this.model.set({
+        start: start,
+        end: end
+      });
+      this.$('.label').text(item.text());
+      event.preventDefault();
+    }
+  });
+
   ns.SmartTable = Backbone.View.extend({
     $context: null,
     $router: null,
@@ -119,12 +167,33 @@
         this.$('tbody').sortable();
       }
 
+      // 调整每页数量
+      if ('pagesizeController' in init) {
+        this.pagesizeController = $(init.pagesizeController);
+        this.pagesizeController.val(this.collection.pagesize);
+        this.pagesizeController.on('change', _.bind(this.pagesize_changeHandler, this));
+      }
+
+      // 起止日期
+      if ('ranger' in init) {
+        this.ranger = new Ranger({
+          el: init.ranger,
+          model: this.model
+        });
+      }
+
       this.collection.fetch(_.extend(this.filter, this.model.pick('page', 'keyword')));
     },
     remove: function () {
       if (this.pagination) {
         this.pagination.off();
         this.pagination.remove();
+      }
+      if (this.pagesizeController) {
+        this.pagesizeController.off('change');
+      }
+      if (this.ranger) {
+        this.ranger.remove();
       }
       this.collection.off();
       tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
@@ -243,10 +312,12 @@
       });
     },
     model_changeHandler: function (model) {
-      if ('page' in model.changed || 'keyword' in  model.changed) {
-        this.filter = _.extend(this.filter, _.pick(model.changed, 'page', 'keyword'));
-        this.collection.fetch(this.filter);
-      }
+      this.filter = _.extend(this.filter, model.changed);
+      this.collection.fetch(this.filter);
+    },
+    pagesize_changeHandler: function (event) {
+      this.collection.setPagesize(event.target.value);
+      this.collection.fetch(this.filter);
     },
     star_changeHandler: function (event) {
       var target = $(event.currentTarget)

@@ -11,7 +11,7 @@
     });
   var Collection = ns.ListCollection = Backbone.Collection.extend({
       total: 0,
-      pagesize: null,
+      pagesize: 10,
       param: {},
       isLoading: false,
       model: Model,
@@ -23,9 +23,8 @@
         if (options.url) {
           this.url = options.url;
         }
-        if (options.pagesize) {
-          this.pagesize = options.pagesize;
-        }
+        var size = localStorage.getItem(location.hash + '-pagesize');
+        this.pagesize = size || options.pagesize || this.pagesize;
       },
       fetch: function (param) {
         if (this.isLoading) {
@@ -44,6 +43,10 @@
         this.isLoading = false;
         this.total = _.isArray(response) ? response.length : response.total;
         return _.isArray(response) ? response : response.list;
+      },
+      setPagesize: function (size) {
+        this.pagesize = size;
+        localStorage.setItem(location.hash + '-pagesize', size);
       }
     });
   Collection.createInstance = function (models, options) {

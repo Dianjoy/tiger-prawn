@@ -22,6 +22,7 @@
 
   <title>点乐广告自助平台（测试版）</title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="bower_components/animate.css/animate.min.css">
   <link rel="stylesheet" href="bower_components/morris/morris.css">
@@ -107,20 +108,27 @@
       <div class="dropdown">
         <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="data-range-btn">
           <i class="fa fa-calendar"></i>
-          日期选择：2014-11-11
+          日期选择：<span class="label">（默认）</span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="data-range-btn">
-          <li><a href="#">当日</a></li>
-          <li><a href="#">昨天</a></li>
-          <li><a href="#">一周内</a></li>
-          <li><a href="#">一月内</a></li>
+          <li class="shortcut" data-start="0" data-end="0"><a href="javascript:void(0);">今天</a></li>
+          <li class="shortcut" data-start="-1" data-end="-1"><a href="javascript:void(0);">昨天</a></li>
+          <li class="shortcut" data-start="-7" data-end="0"><a href="javascript:void(0);">一周内</a></li>
+          <li class="shortcut" data-start="-30" data-end="0"><a href="javascript:void(0);">一月内</a></li>
           <li class="divider"></li>
           <li class="range">
             <label for="stat-range-start-date">开始日期</label>
-            <input type="date" class="form-control" name="start-date" value="2014-11-11" id="stat-range-start-date">
+            <div class="input-group date">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              <input type="date" class="form-control" name="start" value="2014-11-11" id="stat-range-start-date" data-date-format="YYYY-MM-DD">
+            </div>
             <label for="stat-range-end-date">结束日期</label>
-            <input type="date" class="form-control" name="end-date" value="2014-11-11" id="stat-range-end-date">
+            <div class="input-group date">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              <input type="date" class="form-control" name="end" value="2014-11-11" id="stat-range-end-date" data-date-format="YYYY-MM-DD">
+            </div>
+            <button type="button" class="btn btn-primary btn-block"><i class="fa fa-play"></i> 检索</button>
           </li>
         </ul>
       </div>
@@ -162,6 +170,7 @@
 <script src="bower_components/underscore/underscore-min.js"></script>
 <script src="bower_components/backbone/backbone.js"></script>
 <script src="bower_components/moment/min/moment-with-locales.min.js"></script>
+<script src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script src="bower_components/nervenet/nervenet.min.js"></script>
 <script src="js/define.js"></script>
 <script src="js/config.js"></script>

@@ -13,7 +13,8 @@
     },
     load: function (url, data, isFull, hasData) {
       this.clear();
-      this.$el.toggleClass('full-page', !!isFull);
+      this.$el.toggleClass('full-page', !!isFull)
+        .removeClass(this.lastClass);
 
       // html or hbs
       if (/.hbs$/.test(url)) {
@@ -32,8 +33,7 @@
       ga('send', 'pageview', url);
     },
     setFramework: function (classes) {
-      this.$el.removeClass(this.lastClass)
-        .addClass(classes);
+      this.$el.addClass(classes);
       this.lastClass = classes;
     },
     start: function (showFramework) {

@@ -7,12 +7,15 @@
       <option>50</option>
     </select>
   </div>
-  <div class="form-group pull-right">
-    <label for="search-query">搜索：</label>
-    <input type="search" class="form-control" id="search-query">
-  </div>
+  <form class="navbar-form navbar-right keyword-form">
+    <div class="form-group">
+      <input type="search" class="form-control" name="query" placeholder="关键词">
+    </div>
+    <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+  </form>
+
 </div>
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagination=".pagination" data-pagesize="10">
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range">
   <thead>
   <tr>
     <th>广告名</th>

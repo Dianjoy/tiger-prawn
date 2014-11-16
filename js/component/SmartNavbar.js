@@ -9,7 +9,7 @@
     initialize: function () {
       var cid = this.$el.data('collection-id');
       if (cid) {
-        this.collection = dianjoy.model.ListCollection.createInstance(null, {
+        this.collection = tp.model.ListCollection.createInstance(null, {
           id: cid
         });
       }
