@@ -13,7 +13,7 @@
     },
     create: function () {
       var model = new tp.model.AD();
-      this.$body.load('page/ad/edit.hbs', model, false, true);
+      this.$body.load('page/ad/edit.hbs', model);
     },
     edit: function (id) {
       var model = new tp.model.AD({
@@ -23,6 +23,7 @@
     },
     list: function () {
       this.$body.load('page/ad/list.html');
+      this.$body.setFramework('has-date-range');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));

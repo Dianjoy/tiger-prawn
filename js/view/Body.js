@@ -24,7 +24,7 @@
           className: data.className,
           hasData: hasData
         });
-        this.container.append(page.$el);
+        this.container.html(page.$el);
       } else {
         this.container.load(url, this.loadCompleteHandler);
       }

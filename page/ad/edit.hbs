@@ -65,7 +65,7 @@
     <a href="{{ad_url_full}}" class="help-inline btn-link" target="_blank">原链接</a>
   </span>
         {{/ad_url}}
-        <input type="file" class="hidden" id="ad_url" data-accept="\.(apk|ipa)$" data-validate="true" />
+        <input type="file" class="hide" id="ad_url" data-accept="\.(apk|ipa)$" data-validate="true" />
         <div class="help-block app">
           <div class="btn-group btn-group-sm ad_url" data-toggle="buttons-radio">
             <button type="button" class="btn btn-default active" value="file">安装包</button>
@@ -130,7 +130,7 @@
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">付费类型</label>
-      <div class="col-sm-10">
+      <div class="col-sm-10 select-button">
         <input type="radio" name="cpc_cpa" value="cpa" id="cpa" />
         <label for="cpa">CPA</label>
         <input type="radio" name="cpc_cpa" value="cpc" id="cpc" />
@@ -183,39 +183,6 @@
         <p class="help-block">仅限8个汉字</p>
       </div>
     </div>
-    <div class="form-group os_black">
-      <label class="col-sm-2 control-label">OS黑名单</label>
-      <div class="col-sm-10">
-        <input type="radio" name="has_os_black" value="1" data-class="ad_os_black" id="os-black-check" />
-        <label for="os-black-check">有</label>
-        <input type="radio" name="has_os_black" value="0" data-class="ad_os_black" id="os-black-none" />
-        <label for="os-black-none">无</label>
-      </div>
-    </div>
-    <div class="form-group ad_os_black">
-      <label class="col-sm-2 control-label">OS比较</label>
-      <div class="col-sm-10">
-        <input type="radio" name='less_or_more' value="-1" id="less" />
-        <label for="less">小于</label>
-        <input type="radio" name='less_or_more' value="0" id="equal" />
-        <label for="equal">等于</label>
-        <input type="radio" name='less_or_more' value="1" id="more" />
-        <label for="more">大于</label>
-      </div>
-    </div>
-    <div class="form-group ad_os_black">
-      <label class="col-sm-2 control-label">OS选择</label>
-      <div class="col-sm-10">
-        {{#android_os}}
-        <input type="radio" name='android_os_black' value="{{value}}" id="android-{{value}}" class="Android" {{checked}}/>
-        <label for="android-{{value}}" class="Android">{{value}}</label>
-        {{/android_os}}
-        {{#iphone_os}}
-        <input type="radio" name='iphone_os_black' value="{{value}}" id="ios-{{value}}" class="iPhone" {{checked}}/>
-        <label for="ios-{{value}}" class="iPhone">{{value}}</label>
-        {{/iphone_os}}
-      </div>
-    </div>
   </fieldset>
 
   <fieldset>
@@ -224,20 +191,20 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="job_num">日投放量</label>
       <div class="col-sm-10">
-        <input maxlength="30" type="number" name="job_num" id="job_num" value="{{job_num}}" class="form-control" {{^job_edit}}disabled{{/job_edit}}/>
+        <input maxlength="30" type="number" name="job_num" id="job_num" value="{{job_num}}" class="form-control"/>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">投放时间</label>
       <div class="col-sm-5">
-        <select name="job_h" class="form-control" id="job_h" {{^job_edit}}disabled{{/job_edit}}>
+        <select name="job_h" class="form-control" id="job_h">
         {{#hours}}
         <option value="{{.}}">{{.}}</option>
         {{/hours}}
         </select>
       </div>
       <div class="col-sm-5">
-        <select name="job_i" class="form-control" {{^job_edit}}disabled{{/job_edit}}>
+        <select name="job_i" class="form-control">
         {{#mins}}
         <option value="{{.}}">{{.}}</option>
         {{/mins}}
@@ -252,7 +219,7 @@
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">投放网络</label>
-      <div class="col-sm-10">
+      <div class="col-sm-10 select-button">
         <input type="radio" name='put_net' value="0" id="put-net-all" />
         <label for="put-net-all">全投放</label>
         <input type="radio" name='put_net' value="1" id="put-net-wifi" />
@@ -263,7 +230,7 @@
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">投放运营商</label>
-      <div class="col-sm-10">
+      <div class="col-sm-10 select-button">
         {{#net_type}}
         <input type="checkbox" name="net_type[]" value="{{code}}" id="net-type-{{name}}" {{checked}} />
         <label for="net-type-{{name}}">{{name}}</label>
@@ -272,7 +239,7 @@
     </div>
     <div class="form-group global">
       <label class="col-sm-2 control-label">海外投放</label>
-      <div class="col-sm-10">
+      <div class="col-sm-10 select-button">
         <input type="radio" name="oversea" value="0" data-class="nations" id="oversea-in" />
         <label for="oversea-in">国内</label>
         <input type="radio" name="oversea" value="1" data-class="nations" id="oversea-out" />
@@ -281,7 +248,7 @@
     </div>
     <div class="form-group nations">
       <label class="col-sm-2 control-label">国家和地区选择</label>
-      <div class="col-sm-10 item-grid">
+      <div class="col-sm-10 select-button select-button-group">
         {{#countries}}
         <input type="checkbox" name="countries[]" value="{{code}}" id="country-{{NAME}}" {{checked}} />
         <label for="country-{{NAME}}">{{NAME}}</label>
@@ -291,7 +258,7 @@
     </div>
     <div class="form-group ad_list domestic">
       <label class="col-sm-2 control-label">投放区域</label>
-      <div class="col-sm-10">
+      <div class="col-sm-10 select-button">
         <input type="radio" name="province_type" value="0" data-class="provinces" id="province-all" />
         <label for="province-all">全国</label>
         <input type="radio" name="province_type" value="1" data-class="provinces" id="province-province" />
@@ -300,7 +267,7 @@
     </div>
     <div class="form-group ad_list provinces">
       <label class="col-sm-2 control-label">省份选择</label>
-      <div class="col-sm-10 item-grid">
+      <div class="col-sm-10 select-button select-button-group">
         {{#provinces}}
         <input type="checkbox" name='provinces[]' value="{{key}}" id="province-{{value}}" {{checked}} />
         <label for="province-{{value}}">{{value}}</label>
@@ -310,7 +277,7 @@
     </div>
     <div class="form-group iPhone">
       <label class="col-sm-2 control-label">投放目标：越狱</label>
-      <div class="col-sm-10">
+      <div class="col-sm-10 select-button">
         <input type="radio" name="put_jb" value="0" id="put-jb-all" checked />
         <label for="put-jb-all">全部设备</label>
         <input type="radio" name="put_jb" value="1" id="put-jb-only" />
@@ -319,7 +286,7 @@
     </div>
     <div class="form-group iPhone">
       <label class="col-sm-2 control-label">投放目标：iPad/iPhone</label>
-      <div class="col-sm-10">
+      <div class="col-sm-10 select-button">
         <input type="radio" name="put_ipad" value="0" id="put-ipad-all" checked />
         <label for="put-ipad-all">iPad + iPhone</label>
         <input type="radio" name="put_ipad" value="1" id="put-ipad-ipad" />
@@ -352,7 +319,7 @@
     <div class="form-group iPhone tech">
       <label class="col-sm-2 control-label" for="process_name">进程名</label>
       <div class="col-sm-10">
-        <input type="text" name="process_name" id="process_name" value="{{process_name}}" class="form-control" {{^is_android}}required="required"{{/is_android}}/>
+        <input type="text" name="process_name" id="process_name" value="{{process_name}}" class="form-control"/>
       </div>
     </div>
     <div class="form-group iPhone tech">

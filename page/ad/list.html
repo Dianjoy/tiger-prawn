@@ -31,7 +31,7 @@
   <tbody>
   <script type="text/x-handlebars-template">
     {{#each list}}
-    <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}}" id="{{id}}">
+    <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}} {{packname}}" id="{{id}}">
       <td data-title="管理名">
         {{#has_channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/has_channel}}
         <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
@@ -43,8 +43,8 @@
       <td data-title="开始时间"><a href="ad/job-edit.php?id={{id}}" class="popup" title="调整投放时间">{{job_time}}</a></td>
       <td data-title="实际价格"><a href="#/stat/daily-ad/{{start}}/{{end}}/{{id}}" {{#real_style}}style="font-style: italic;"{{/real_style}}>{{real}}</a></td>
       <td data-title="状态">
-        <a class="label status-{{status}} popup" href="ad/status-edit.php?id={{id}}" title="{{#is_online}}上线{{/is_online}}{{^is_online}}已下线{{/is_online}}">
-          {{#is_online}}ON{{/is_online}}{{^is_online}}OFF{{/is_online}}
+        <a class="label status-{{status}} popup" href="ad/status-edit.php?id={{id}}" title="{{pick status '上线' '已下线'}}">
+          {{pick status 'ON' 'OFF'}}
         </a>
         <a href="ad/comment-edit.php?id={{id}}" class="popup" title="{{others}}"><i class="fa fa-info-circle fa-lg"></i></a>
       </td>

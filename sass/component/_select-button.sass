@@ -1,0 +1,52 @@
+@charset "UTF-8"
+
+@import "../define"
+@import "../../bower_components/colors/sass/variables"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/mixins"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/buttons"
+@import "../../bower_components/font-awesome/scss/variables"
+
+.select-button
+  input[type=radio],
+  input[type=checkbox]
+    display: none
+
+    + label
+      @extend .btn
+      @include button-variant($btn-default-color, $btn-default-bg, $btn-default-border)
+
+  &:checked + label
+    @include button-variant($btn-success-color, $btn-success-bg, $btn-success-border)
+    padding-left: 25px
+
+    &:before
+      content: $fa-var-check
+      font-family: 'FontAwesome'
+      position: absolute
+      top: 3px
+      left: 8px
+
+.select-button-group
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+
+  label
+    min-width: 100px
+    order: 2
+
+  hr
+    order: 1
+    display: none
+    margin: 0 0 $gap-s
+
+  input[type=radio]:checked,
+  input[type=checkbox]:checked
+
+    + label
+      order: 0
+
+    ~ hr
+      display: block
+      width: 100%
