@@ -179,8 +179,25 @@
         return false;
       }
 
+      // 编辑model的
       if (this.$el.hasClass('model-editor') && isPass) {
-        this.model.save();
+        var attr = {};
+        _.each($.serializeArray(this.$el), function (element) {
+          if (element.value === '') {
+            return;
+          }
+          if (attr[element.name] !== undefined) {
+            if (!_.isArray(attr[element.name])) {
+              attr[element.name] = [attr[element.name]];
+            }
+            attr[element.name].push(element.value);
+          } else {
+            attr[element.name] = this.value;
+          }
+        }, this);
+        this.model.save(attr, {
+          patch: true
+        });
         return false;
       }
 
