@@ -39,7 +39,7 @@
       this.$el
         .removeClass('Android iPhone')
         .addClass(event.target.innerText);
-      $('#process_name').prop('required', false);
+      this.$('#process_name').prop('required', false);
       if (event.target.innerText == 'iPhone') {
         $('#process_name').prop('required', true);
         $('#feedback').val(4);

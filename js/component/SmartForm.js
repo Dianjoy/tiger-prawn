@@ -36,6 +36,12 @@
     initialize: function () {
       this.submit = this.getSubmit();
       this.$context.mapEvent('table-rendered', this.searchedHandler, this);
+
+      // init uploader
+      this.$('.uploader').each(function () {
+        var options = $(this).data()
+          , uploader = new meathill.SimpleUploader(this, options);
+      });
     },
     remove: function () {
       this.$context.removeEvent('table-rendered', this.searchedHandler);
@@ -182,17 +188,18 @@
       // 编辑model的
       if (this.$el.hasClass('model-editor') && isPass) {
         var attr = {};
-        _.each($.serializeArray(this.$el), function (element) {
+        _.each(this.$el.serializeArray(), function (element) {
           if (element.value === '') {
             return;
           }
-          if (attr[element.name] !== undefined) {
-            if (!_.isArray(attr[element.name])) {
-              attr[element.name] = [attr[element.name]];
+          var key = element.name.replace('[]', '');
+          if (attr[key] !== undefined) {
+            if (!_.isArray(attr[key])) {
+              attr[key] = [attr[key]];
             }
-            attr[element.name].push(element.value);
+            attr[key].push(element.value);
           } else {
-            attr[element.name] = this.value;
+            attr[key] = element.value;
           }
         }, this);
         this.model.save(attr, {

@@ -14,12 +14,17 @@
     create: function () {
       var model = new tp.model.AD();
       this.$body.load('page/ad/edit.hbs', model);
+      this.$body.setFramework('ad');
     },
     edit: function (id) {
+      if (this.$body.hasClass('ad')) {
+        return;
+      }
       var model = new tp.model.AD({
         id: id
       });
       this.$body.load('page/ad/edit.hbs', model);
+      this.$body.setFramework('ad');
     },
     list: function () {
       this.$body.load('page/ad/list.html');
