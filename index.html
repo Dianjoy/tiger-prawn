@@ -144,7 +144,7 @@
 </footer>
 
 <script type="text/x-handlebars-template" id="popup">
-  <div class="modal fade">
+  <div class="modal modal-styled fade">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -155,6 +155,26 @@
         <div class="modal-footer">
           {{#if confirm}}<button class="btn btn-primary"><i class="fa fa-check"></i> {{confirm}}</button>{{/if}}
           {{#if cancel}}<button class="btn btn-default">{{cancel}}</button>{{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+<script type="text/x-handlebars-template" id="editor-popup">
+  <div class="modal modal-styled fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">编辑</h4>
+        </div>
+        <div class="modal-body">
+          <div class="info"></div>
+          <div class="alert alert-msg" style="display: none"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" form="prop-editor"><i class="fa fa-check"></i> 保存</button>
+          <button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> 取消</button>
         </div>
       </div>
     </div>
@@ -186,12 +206,14 @@
 <script src="js/popup/Manager.js"></script>
 <script src="js/utils/utils.js"></script>
 <script src="js/utils/error.js"></script>
+<script src="js/controller/editModelCommand.js"></script>
 <script src="js/model/AD.js"></script>
 <script src="js/model/Dashboard.js"></script>
 <script src="js/model/Me.js"></script>
 <script src="js/model/ListCollection.js"></script>
 <script src="js/view/DataSyncView.js"></script>
 <script src="js/popup/Base.js"></script>
+<script src="js/popup/Editor.js"></script>
 <script src="js/view/Loader.js"></script>
 <script src="js/view/Body.js"></script>
 <script src="js/index.js"></script>

@@ -1,0 +1,16 @@
+<div class="form-group">
+  <label for="editor-popup-search">添加新标签：</label>
+  <div class="form-group input-group">
+    <input type="text" name="query" class="form-control" id="editor-popup-search" autofocus>
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-default add-button"><i class="fa fa-plus"></i></button>
+    </span>
+  </div>
+</div>
+<h4>已有标签</h4>
+<div class="form-group item-grid label-button tags">
+  ${#each value}
+    <input type="checkbox" id="prop-${id}" name="prop[]" value="${id}" checked class="item"><label for="prop-${id}" class="item-label">${tag}</label>
+  ${/each}
+  ${#unless append}<hr />${/unless}
+</div>

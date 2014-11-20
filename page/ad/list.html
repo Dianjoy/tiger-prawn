@@ -20,8 +20,6 @@
     <th><a class="order" href="#step">单价</a></th>
     <th><a class="order" href="#job_num">每日投放</a></th>
     <th><a class="order" href="#num">今日尚余</a></th>
-    <th><a class="order" href="#job_time">开始时间</a></th>
-    <th><a class="order" href="#real">实际价格</a></th>
     <th>状态</th>
     <th><a class="order" href="#ctime">创建时间</a></th>
     <th><a class="order" href="#mtime">状态变更时间</a></th>
@@ -37,28 +35,23 @@
         <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
         {{cid}}
       </td>
-      <td data-title="单价"><a href="ad/step-edit.php?id={{id}}" class="popup step-{{packname}}" title="调整单价">{{step_rmb}}</a></td>
-      <td data-title="每日投放"><a href="ad/job-edit.php?id={{id}}" class="popup" title="调整日投放量">{{job_num}}</a></td>
-      <td data-title="今日尚余"><a href="ad/money-edit.php?id={{id}}" class="popup" title="调整今日余量">{{num}}</a></td>
-      <td data-title="开始时间"><a href="ad/job-edit.php?id={{id}}" class="popup" title="调整投放时间">{{job_time}}</a></td>
-      <td data-title="实际价格"><a href="#/stat/daily-ad/{{start}}/{{end}}/{{id}}" {{#real_style}}style="font-style: italic;"{{/real_style}}>{{real}}</a></td>
+      <td data-title="单价"><a href="#step_rmb" class="edit" title="调整单价">{{step_rmb}}</a></td>
+      <td data-title="每日投放"><a href="#job_num" class="edit" title="调整日投放量">{{job_num}}</a></td>
+      <td data-title="今日尚余"><a href="#today_left" class="edit" title="调整今日余量">{{today_left}}</a></td>
       <td data-title="状态">
-        <a class="label status-{{status}} popup" href="ad/status-edit.php?id={{id}}" title="{{pick status '上线' '已下线'}}">
+        <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}">
           {{pick status 'ON' 'OFF'}}
         </a>
-        <a href="ad/comment-edit.php?id={{id}}" class="popup" title="{{others}}"><i class="fa fa-info-circle fa-lg"></i></a>
+        <a href="#comment" data-type="text" class="edit" title="{{others}}"><i class="fa fa-info-circle fa-lg"></i></a>
       </td>
       <td data-title="创建时间">{{create_time}}</td>
       <td data-title="状态变更时间">{{status_time}}</td>
-      <td data-title="操作" class="btn-group">
-        <a href="ad/addetail.php?id={{id}}" class="btn btn-primary popup" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-list"></i> 属性</a>
-        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li><a href="#/ad/edit/{{id}}"><i class="fa fa-edit fa-fw"></i> 修改</a></li>
-          <li><a href="ad/action_ad.php?m=del&id={{id}}" class="delete-button"><i class="fa fa-trash-o fa-fw"></i> 删除</a></li>
-        </ul>
+      <td data-title="操作">
+        <div class="btn-group">
+          <a href="#/ad/{{id}}" class="btn btn-primary popup" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
+          <button class="btn btn-danger delete-button"><i class="fa fa-trash-o fa-fw"></i></button>
+        </div>
+
       </td>
     </tr>
     {{/each}}

@@ -1,0 +1,13 @@
+<div class="form-group">
+  <label for="editor-popup-input">{{label}}</label>
+  <p id="{{prop}}-preview">
+    <img src="{{#if value}}{{value}}{{else}}./img/image.png{{/if}}" class="img-thumbnail">
+  </p>
+  <div class="progress hide">
+    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+      <span>0%</span>
+    </div>
+  </div>
+  <input type="hidden" name="prop" value="{{value}}" id="{{prop}}-field">
+  <button type="button" class="btn btn-info upload-button" data-type="{{prop}}" data-preview="#{{prop}}-preview" data-field="#{{prop}}-field" data-accept="image/*"><i class="fa fa-upload"></i> 上传</button>
+</div>

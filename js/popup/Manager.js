@@ -10,12 +10,13 @@
     , editor;
 
   var Klass = Backbone.View.extend({
+    $context: null,
     events: {
-      'click .popup': 'popup_clickHandler',
-      'show.bs.modal .modal': 'popup_showHandler'
+      'click .popup': 'popup_clickHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('#popup').remove().html());
+      this.editor = Handlebars.compile(this.$('#editor-popup').remove().html());
     },
     postConstruct: function () {
       if (popup) {
@@ -37,8 +38,10 @@
         editor.model = model;
         editor.collection = collection;
       } else {
+        var editor = $(this.editor(options));
+        this.$el.append(editor);
         editor = this.$context.createInstance(ns.Editor, {
-          el: '#edit-popup',
+          el: editor,
           model: model,
           collection: collection
         });
@@ -64,11 +67,6 @@
       });
       ga('send', 'event', 'popup', 'popup', event.currentTarget.href);
       event.preventDefault();
-    },
-    popup_showHandler: function (event) {
-      popup = popup || this.$context.createInstance(ns.Base, {
-        el: event.currentTarget
-      });
     }
   });
 

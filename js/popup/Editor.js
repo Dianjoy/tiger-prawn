@@ -6,7 +6,7 @@
 
   var timeout;
 
-  ns.Editor = dianjoy.view.DataSyncView.extend({
+  ns.Editor = tp.view.DataSyncView.extend({
     $context: null,
     form: null,
     events: {
@@ -21,7 +21,7 @@
     initUI: function (options) {
       if (options) {
         this.options = options;
-        $.get(webURL + 'template/popup-' + options.type + '.hbs', _.bind(this.loadCompleteHandler, this));
+        $.get('template/popup-' + options.type + '.hbs', _.bind(this.loadCompleteHandler, this));
       }
       this.$('.modal-body').append('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
     },
@@ -155,10 +155,10 @@
 
       // 用组件适配用户操作
       this.$('[type=datetime]').datetimepicker();
-      dianjoy.component.Manager.check(this.$el, this.model);
+      tp.component.Manager.check(this.$el, this.model);
     },
     hiddenHandler: function () {
-      dianjoy.component.Manager.clear(this.$el);
+      tp.component.Manager.clear(this.$el);
       this.trigger('hidden');
       clearTimeout(timeout);
     },
@@ -167,4 +167,4 @@
       this.$('.alert-msg').hide();
     }
   });
-}(Nervenet.createNameSpace('dianjoy.popup')));
+}(Nervenet.createNameSpace('tp.popup')));

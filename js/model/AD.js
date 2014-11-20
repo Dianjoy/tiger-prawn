@@ -29,8 +29,10 @@
     },
     parse: function (response, options) {
       this.url = this.url.replace('init', '');
-      this.options = response.options;
-      this.options.API = tp.API;
+      if (this.options) {
+        this.options = response.options;
+        this.options.API = tp.API;
+      }
       return response.ad;
     },
     toJSON: function (options) {

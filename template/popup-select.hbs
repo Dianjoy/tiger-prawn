@@ -1,0 +1,23 @@
+<div class="form-group">
+  <label for="editor-popup-input">{{label}}</label>
+  <label for="editor-popup-select">选择现有类型：</label>
+  <div class="input-group">
+    <span class="input-group-addon">
+      <input type="radio" name="prop-radio" value="select" id="editor-popup-select" checked>
+    </span>
+    <select class="form-control" name="prop-select">
+      {{#each options}}
+        <option value="{{id}}">{{label}}</option>
+      {{/each}}
+    </select>
+  </div>
+  {{#if addNew}}
+    <label for="editor-popup-new">或新建类型：</label>
+    <div class="input-group">
+      <span class="input-group-addon">
+        <input type="radio" name="prop-radio" value="input" id="editor-popup-new">
+      </span>
+      <input type="text" class="form-control" name="prop-input">
+    </div>
+  {{/if}}
+</div>
