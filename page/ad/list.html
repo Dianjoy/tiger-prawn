@@ -13,11 +13,11 @@
   </div>
 </div>
 
-<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/">
+<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".date-range">
   <thead>
   <tr>
     <th class="filter">管理名 </th>
-    <th><a class="order" href="#step">单价</a></th>
+    <th><a class="order" href="#quote_rmb">报价</a></th>
     <th><a class="order" href="#job_num">每日投放</a></th>
     <th><a class="order" href="#num">今日尚余</a></th>
     <th>状态</th>
@@ -31,15 +31,15 @@
     {{#each list}}
     <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}} {{packname}}" id="{{id}}">
       <td data-title="管理名">
-        {{#has_channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/has_channel}}
+        {{#channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/channel}}
         <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
         {{cid}}
       </td>
-      <td data-title="单价"><a href="#step_rmb" class="edit" title="调整单价">{{step_rmb}}</a></td>
+      <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价">{{quote_rmb}}</a></td>
       <td data-title="每日投放"><a href="#job_num" class="edit" title="调整日投放量">{{job_num}}</a></td>
       <td data-title="今日尚余"><a href="#today_left" class="edit" title="调整今日余量">{{today_left}}</a></td>
       <td data-title="状态">
-        <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}">
+        <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}" data-type="status">
           {{pick status 'ON' 'OFF'}}
         </a>
         <a href="#comment" data-type="text" class="edit" title="{{others}}"><i class="fa fa-info-circle fa-lg"></i></a>
@@ -49,9 +49,8 @@
       <td data-title="操作">
         <div class="btn-group">
           <a href="#/ad/{{id}}" class="btn btn-primary popup" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
-          <button class="btn btn-danger delete-button"><i class="fa fa-trash-o fa-fw"></i></button>
+          <button class="btn btn-danger delete-button" {{#if has_transfer}}disabled title="此广告已跑量，不能删除，只能申请下线" {{/if}}><i class="fa fa-trash-o fa-fw"></i></button>
         </div>
-
       </td>
     </tr>
     {{/each}}

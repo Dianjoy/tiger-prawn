@@ -1,0 +1,39 @@
+@charset "UTF-8"
+
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+@import "../../bower_components/colors/sass/variables"
+
+input[type=checkbox].switch
+  display: none
+
+  + label
+    cursor: pointer
+    display: inline-block
+    background-color: $well-bg
+    border: 1px solid $btn-default-border
+    border-radius: 24px
+    width: 50px
+    height: 24px
+    position: relative
+    transition: all 0.2s
+    vertical-align: middle
+
+    &:after
+      content: ''
+      background-color: $white
+      border: 1px solid $btn-default-border
+      border-radius: 1.4em
+      width: 20px
+      height: 20px
+      position: absolute
+      top: 1px
+      left: 1px
+      transition: all 0.2s
+
+  &:checked + label
+    background-color: $btn-success-bg
+    border-color: $btn-success-color
+
+    &:after
+      left: 27px
+      border: none

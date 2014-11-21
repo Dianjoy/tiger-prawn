@@ -28,7 +28,6 @@
     },
     list: function () {
       this.$body.load('page/ad/list.html');
-      this.$body.setFramework('has-date-range');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));

@@ -23,6 +23,7 @@
         this.options = options;
         $.get('template/popup-' + options.type + '.hbs', _.bind(this.loadCompleteHandler, this));
       }
+      this.submit = this.$('.btn-primary');
       this.$('.modal-body').append('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
     },
     hide: function (delay) {

@@ -162,11 +162,6 @@
         });
       }
 
-      // 允许对表格排序
-      if (this.$el.hasClass('sortable')) {
-        this.$('tbody').sortable();
-      }
-
       // 调整每页数量
       if ('pagesizeController' in init) {
         this.pagesizeController = $(init.pagesizeController);
