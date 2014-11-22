@@ -16,7 +16,7 @@
 <table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".date-range">
   <thead>
   <tr>
-    <th class="filter">管理名 </th>
+    <th class="filter">管理名</th>
     <th><a class="order" href="#quote_rmb">报价</a></th>
     <th><a class="order" href="#job_num">每日投放</a></th>
     <th><a class="order" href="#num">今日尚余</a></th>
@@ -35,20 +35,18 @@
         <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
         {{cid}}
       </td>
-      <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价">{{quote_rmb}}</a></td>
-      <td data-title="每日投放"><a href="#job_num" class="edit" title="调整日投放量">{{job_num}}</a></td>
-      <td data-title="今日尚余"><a href="#today_left" class="edit" title="调整今日余量">{{today_left}}</a></td>
+      <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1">{{quote_rmb}}</a></td>
+      <td data-title="每日投放"><a href="#job_num" class="edit" title="调整日投放量" data-type="number" data-min="0">{{job_num}}</a></td>
+      <td data-title="今日尚余"><a href="#today_left" class="edit" title="调整今日余量" data-type="number" data-min="0">{{today_left}}</a></td>
       <td data-title="状态">
-        <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}" data-type="status">
-          {{pick status 'ON' 'OFF'}}
-        </a>
-        <a href="#comment" data-type="text" class="edit" title="{{others}}"><i class="fa fa-info-circle fa-lg"></i></a>
+        <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}" data-type="status" data-deactive="下线" data-active="上线">{{pick status 'ON' 'OFF'}}</a>
       </td>
       <td data-title="创建时间">{{create_time}}</td>
       <td data-title="状态变更时间">{{status_time}}</td>
       <td data-title="操作">
         <div class="btn-group">
-          <a href="#/ad/{{id}}" class="btn btn-primary popup" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
+          <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
+          <a href="#comment" data-type="long-text" class="edit btn btn-info" title="{{others}}"><i class="fa fa-comment"></i></a>
           <button class="btn btn-danger delete-button" {{#if has_transfer}}disabled title="此广告已跑量，不能删除，只能申请下线" {{/if}}><i class="fa fa-trash-o fa-fw"></i></button>
         </div>
       </td>
@@ -62,6 +60,18 @@
   </tr>
   </tfoot>
 </table>
+
+<script type="text/x-handlebars-template" id="editor-info">
+  <table class="table table-bordered">
+    <tbody>
+    <tr>
+      <th>管理名</th>
+      <td>{{channel}} {{ad_name}} {{cid}}</td>
+    </tr>
+    <tr></tr>
+    </tbody>
+  </table>
+</script>
 
 <nav class="pull-right">
   <ul class="pagination">

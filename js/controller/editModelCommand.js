@@ -105,7 +105,7 @@
     // 有可能需要从远程取数据
     if (options.url || options.searchUrl) {
       var init = _.isArray(options.value) ? options.value : null;
-      collection = dianjoy.model.ListCollection.createInstance(init, {url: options.url || options.searchUrl});
+      collection = tp.model.ListCollection.createInstance(init, {url: options.url || options.searchUrl});
       if (options.url && options.autoLoad && !init) {
         collection.pagesize = 0;
         collection.on('reset', collection_resetHandler, this);

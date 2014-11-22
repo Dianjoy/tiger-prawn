@@ -23,6 +23,14 @@
         this.options = options;
         $.get('template/popup-' + options.type + '.hbs', _.bind(this.loadCompleteHandler, this));
       }
+
+      // 补充信息
+      var info = $('#editor-info');
+      if (info.length) {
+        var info = Handlebars.compile(info.html());
+        this.$('.info').html(info(this.model.toJSON()));
+      }
+
       this.submit = this.$('.btn-primary');
       this.$('.modal-body').append('<p align="center"><i class="fa fa-spin fa-spinner fa-4x"></i></p>');
     },
