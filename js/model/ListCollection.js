@@ -6,7 +6,7 @@
   var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
-        return _.omit(response, 'code', 'msg');
+        return _.omit(response.data);
       }
     });
   var Collection = ns.ListCollection = Backbone.Collection.extend({
