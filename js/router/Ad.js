@@ -9,7 +9,8 @@
     routes: {
       "ad(/)": "list",
       "ad/create": "create",
-      "ad/:id": "edit"
+      "ad/:id": "edit",
+      "apply(/)": "listApplies"
     },
     create: function () {
       var model = new tp.model.AD();
@@ -28,6 +29,9 @@
     },
     list: function () {
       this.$body.load('page/ad/list.html');
+    },
+    listApplies: function () {
+      this.$body.load('page/ad/apply.html');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));
