@@ -83,9 +83,9 @@
     attr[params.options.display || params.options.prop] = value;
     collection.create(attr, {wait: true});
   }
-  function onError(error) {
-    console.log(error);
-    popup.displayResult(false, '修改失败，请稍后重试', 'fa-frown-o');
+  function onError(model, xhr, options) {
+    var error = tp.Error.getAjaxMessage(xhr);
+    popup.displayResult(false, error.message, error.icon);
     popup.reset();
   }
   function onSuccess () {

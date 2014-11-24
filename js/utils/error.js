@@ -6,7 +6,7 @@
   ns.Error = {
     getAjaxMessage: function (xhr, status, error) {
       // 服务器错误
-      if (xhr.statusCode().status === 500) {
+      if (xhr.statusCode().status === '500') {
         return {
           message: '服务器错误，请告知管理员',
           icon: 'close'

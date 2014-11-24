@@ -22,6 +22,7 @@
     <th>调整后</th>
     <th>提交时间</th>
     <th>处理时间</th>
+    <th>操作人</th>
     <th>操作</th>
   </tr>
   </thead>
@@ -39,8 +40,11 @@
       <td data-title="调整后">{{after}}</td>
       <td data-title="创建时间">{{create_time}}</td>
       <td data-title="处理时间">{{handle_time}}</td>
+      <td data-title="操作人">{{handler}}</td>
       <td data-title="操作">
+        {{#unless handler}}
         <button class="btn btn-danger delete-button"><i class="fa fa-times"></i> 撤消申请</button>
+        {{/unless}}
       </td>
     </tr>
     {{/each}}

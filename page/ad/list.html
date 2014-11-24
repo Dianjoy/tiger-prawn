@@ -36,10 +36,26 @@
         {{cid}}
       </td>
       <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1">{{quote_rmb}}</a></td>
-      <td data-title="每日投放"><a href="#job_num" class="edit" title="调整日投放量" data-type="number" data-min="0">{{job_num}}</a></td>
-      <td data-title="今日尚余"><a href="#today_left" class="edit" title="调整今日余量" data-type="number" data-min="0">{{today_left}}</a></td>
+      <td data-title="每日投放">
+        {{#if set_job_num}}
+          <span title="申请已提交，等待核准">{{job_num}} / {{set_job_num}}</span>
+        {{else}}
+        <a href="#job_num" class="edit" title="调整日投放量" data-type="number" data-min="0">{{job_num}}</a>
+        {{/if}}
+      </td>
+      <td data-title="今日尚余">
+        {{#if set_today_left}}
+          <span title="申请已提交，等待核准">{{today_left}} / {{set_today_left}}</span>
+        {{else}}
+        <a href="#today_left" class="edit" title="调整今日余量" data-type="number" data-min="0">{{today_left}}</a>
+        {{/if}}
+      </td>
       <td data-title="状态">
+        {{#if set_status}}
+          <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
+        {{else}}
         <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}" data-type="status" data-deactive="下线" data-active="上线">{{pick status 'ON' 'OFF'}}</a>
+        {{/if}}
       </td>
       <td data-title="创建时间">{{create_time}}</td>
       <td data-title="状态变更时间">{{status_time}}</td>
