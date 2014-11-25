@@ -29,7 +29,7 @@
     },
     parse: function (response, options) {
       this.url = this.url.replace('init', '');
-      if (this.options) {
+      if (response.options) {
         this.options = response.options;
         this.options.API = tp.API;
       }
