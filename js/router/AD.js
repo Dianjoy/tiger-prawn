@@ -18,7 +18,7 @@
       this.$body.setFramework('ad');
     },
     edit: function (id) {
-      if (this.$body.hasClass('ad')) {
+      if (this.$body.$el.hasClass('ad')) {
         return;
       }
       var model = new tp.model.AD({

@@ -42,7 +42,7 @@
       }
       return _.extend(json, this.options);
     },
-    id_changeHandler: function (id) {
+    id_changeHandler: function (model, id) {
       location.hash = '#/ad/' + id;
     }
   });

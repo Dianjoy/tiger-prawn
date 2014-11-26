@@ -51,10 +51,14 @@
         {{/if}}
       </td>
       <td data-title="状态">
+        {{#if is_ready}} {{! 可以操作上下线}}
         {{#if set_status}}
-          <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
+        <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
         {{else}}
         <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}" data-type="status" data-deactive="下线" data-active="上线" data-open="0">{{pick status 'ON' 'OFF'}}</a>
+        {{/if}}
+        {{else}} {{! 不可以操作}}
+        <span class="label status-{{status}}">{{pick status '拒绝' '等待'}}</span>
         {{/if}}
       </td>
       <td data-title="创建时间">{{create_time}}</td>
