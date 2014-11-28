@@ -16,7 +16,12 @@
     },
     showUserPage: function (page) {
       if (page === 'logout') {
-        return this.$me.destroy();
+        return this.$me.destroy({
+          success: function (model) {
+            model.clear();
+            location.hash = '#/user/login';
+          }
+        });
       }
       tp.config.login.api = this.$me.url;
       this.$body.load('page/' + page + '.hbs', tp.config.login, true);

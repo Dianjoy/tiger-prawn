@@ -7,6 +7,7 @@
       this.framework = this.$('.framework');
       this.container = this.$('#page-container');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
+      this.model.on('change:fullname', this.model_nameChangeHandler, this);
     },
     clear: function () {
       tp.component.Manager.clear(this.$el);
@@ -52,6 +53,9 @@
         tp.component.Manager.check(this.$el);
       }
       this.trigger('load:complete');
+    },
+    model_nameChangeHandler: function (model, name) {
+      this.$('.username').html(name);
     }
   });
 }(Nervenet.createNameSpace('tp.view')));

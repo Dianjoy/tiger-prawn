@@ -8,6 +8,9 @@
     initialize: function () {
       this.on('change:id', this.id_changeHandler, this);
     },
+    parse: function (response) {
+      return response.me;
+    },
     id_changeHandler: function (id) {
       if (id) {
         this.$body.start(true);

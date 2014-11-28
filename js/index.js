@@ -26,7 +26,8 @@ $(function () {
   var context = Nervenet.createContext()
     , me = new tp.model.Me()
     , body = new tp.view.Body({
-      el: 'body'
+      el: 'body',
+      model: me
     });
 
   // map values
