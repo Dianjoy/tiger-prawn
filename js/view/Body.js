@@ -3,6 +3,9 @@
  */
 ;(function (ns) {
   ns.Body = Backbone.View.extend({
+    events: {
+      'change [type=range]': 'range_changeHandler'
+    },
     initialize: function () {
       this.framework = this.$('.framework');
       this.container = this.$('#page-container');
@@ -56,6 +59,9 @@
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
+    },
+    range_changeHandler: function (event) {
+      $(event.target).next().html(event.target.value);
     }
   });
 }(Nervenet.createNameSpace('tp.view')));

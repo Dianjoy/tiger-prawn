@@ -39,11 +39,10 @@
       this.$el
         .removeClass('Android iPhone')
         .addClass(event.target.innerText);
-      this.$('#process_name').prop('required', false);
-      if (event.target.innerText == 'iPhone') {
-        $('#process_name').prop('required', true);
-        $('#feedback').val(4);
-      }
+      var is_ios = this.$el.hasClass('iPhone');
+      this.$('#process_name').prop('required', is_ios);
+      $('#feedback').val(function () { return is_ios ? 4 : this.value});
+      $('#app-uploader').data('accept', is_ios ? '*.ipa' : '*.apk');
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
