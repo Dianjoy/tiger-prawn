@@ -187,7 +187,8 @@
 
       // 编辑model的
       if (this.$el.hasClass('model-editor') && isPass) {
-        var attr = {};
+        var attr = {}
+          , self = this;
         _.each(this.$el.serializeArray(), function (element) {
           if (element.value === '') {
             return;
@@ -203,7 +204,13 @@
           }
         }, this);
         this.model.save(attr, {
-          patch: true
+          patch: true,
+          success: function (model, response) {
+            self.submit_successHandler(response);
+          },
+          error: function (model, response) {
+            self.submit_errorHandler(response);
+          }
         });
         return false;
       }
