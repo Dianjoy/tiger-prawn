@@ -57,9 +57,11 @@
       <div class="portlet-body">
         <ul class="list-group icon-list-group">
           {{#each record}}
-            <li class="list-group-item list-group-item-{{pick status 'info' 'success'}}">
-              <i class="fa fa-{{pick status 'play' 'check'}}"></i>
-              <a href="#/ad/{{id}}">{{channel}} {{ad_name}}</a> 于 {{status_time}} <strong>{{pick status '上线' '完成下线'}}</strong>
+            <li class="list-group-item list-group-item-{{pick status 'info' 'success' 'warning'}}">
+              <i class="fa fa-{{pick status 'play' 'check' 'pause'}}"></i>
+              <a href="#/ad/{{id}}">{{channel}} {{ad_name}}</a>
+              {{#if is_checked}}于 {{status_time}}{{/if}}
+              <strong>{{pick status '上线' '完成下线' '等待审核'}}</strong>
             </li>
           {{/each}}
         </ul>

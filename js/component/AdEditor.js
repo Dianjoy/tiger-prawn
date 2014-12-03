@@ -11,7 +11,8 @@
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
       'click .platform label': 'platformButton_clickHandler',
-      'click .ad_url button': 'adURLButton_clickHandler'
+      'click .ad_url button': 'adURLButton_clickHandler',
+      'change .domestic input': 'area_changeHandler'
     },
     initialize: function () {
       var init = this.model.pick(_.keys(this.model.defaults));
@@ -34,6 +35,10 @@
       $(event.target).closest('.form-group')
         .removeClass('file url')
         .addClass(event.target.value);
+    },
+    area_changeHandler: function (event) {
+      var target = $(event.target);
+      this.$el.toggleClass(target.data('class'), target.val() === '1');
     },
     platformButton_clickHandler: function (event) {
       this.$el

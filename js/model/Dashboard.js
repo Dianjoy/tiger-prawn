@@ -7,6 +7,11 @@
     className: 'dashboard',
     url: tp.API + 'dashboard/',
     parse: function (resposne) {
+      if ('record' in resposne.data) {
+        _.each(resposne.data.record, function (item, i) {
+          item.is_checked = item.status < 2;
+        });
+      }
       return resposne.data;
     }
   });
