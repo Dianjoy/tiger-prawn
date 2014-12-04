@@ -19,16 +19,15 @@
       feedback: 2,
       cycle: 2
     },
-    url: tp.API + 'ad/',
+    urlRoot: tp.API + 'ad/',
     initialize: function () {
       if (this.isNew()) {
         this.isEmpty = true;
-        this.url += 'init';
+        this.urlRoot += 'init';
       }
       this.on('change:id', this.id_changeHandler, this);
     },
     parse: function (response, options) {
-      this.url = this.url.replace('init', '');
       if (response.options) {
         this.options = response.options;
         this.options.API = tp.API;
@@ -44,6 +43,7 @@
     },
     id_changeHandler: function (model, id) {
       location.hash = '#/ad/' + id;
+      this.urlRoot = tp.API + 'ad/';
     }
   });
 }(Nervenet.createNameSpace('tp.model')));
