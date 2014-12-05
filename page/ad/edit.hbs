@@ -55,7 +55,7 @@
       <label class="col-sm-2 control-label" for="ad_url">广告链接</label>
       <div class="col-sm-4 uploader" data-url="{{API}}file/" data-need-validate="true" data-accept="*.apk" id="app-uploader" data-name="ad_url">
         {{#if ad_url}}
-          <a href="{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
+          <a href="{{API}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
         {{else}}
           <div class="su-placeholder">
             请上传文件。
@@ -70,7 +70,7 @@
         <div class="well well-small app file">
           <h4>安装包上传记录</h4>
           {{#each apk_history}}
-            <i class="fa fa-time"></i> <a href="../{{url}}">{{upload_user}} 于 {{upload_time}} 上传</a><br />
+            <i class="fa fa-time"></i> <a href="{{API}}{{url}}">{{upload_user}} 于 {{upload_time}} 上传</a><br />
           {{/each}}
         </div>
       </div>
@@ -97,7 +97,7 @@
       <label class="col-sm-2 control-label" for="pic_path">广告LOGO</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="pic_path">
         {{#if pic_path}}
-          <img src="{{pic_path}}" class="img-thumbnail">
+          <img src="{{API}}{{pic_path}}" class="img-thumbnail">
         {{else}}
           <div class="su-placeholder">
             请上传文件。
@@ -114,7 +114,7 @@
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="ad_shoot">
         {{#if shoots}}
           {{#each shoots}}
-            <img src="../{{.}}" class="img-thumbnail">
+            <img src="{{../API}}{{.}}" class="img-thumbnail">
           {{/each}}
         {{else}}
           <div class="su-placeholder">

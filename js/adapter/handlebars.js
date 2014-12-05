@@ -5,7 +5,7 @@
 (function (h) {
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value) {
-    var options = Array.prototype.slice.call(arguments, 1);
+    var options = Array.prototype.slice.call(arguments, 1, -1);
     return options[value];
   });
 }(Handlebars));
