@@ -33,12 +33,6 @@
         </select>
       </div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="ad_text">广告语</label>
-      <div class="col-sm-10">
-        <input type="text" name="ad_text" id="ad_text" value="{{ad_text}}" class="form-control" />
-      </div>
-    </div>
     <div class="form-group app">
       <label class="col-sm-2 control-label">广告描述</label>
       <div class="col-sm-10">
@@ -55,11 +49,9 @@
       <label class="col-sm-2 control-label" for="ad_url">广告链接</label>
       <div class="col-sm-4 uploader" data-url="{{API}}file/" data-need-validate="true" data-accept="*.apk" id="app-uploader" data-name="ad_url">
         {{#if ad_url}}
-          <a href="{{API}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
+        <a href="{{API}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
         {{else}}
-          <div class="su-placeholder">
-            请上传文件。
-          </div>
+        <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
         {{/if}}
         <label class="btn btn-info btn-block su-upload-button">
           <i class="fa fa-upload"></i> 选择文件
@@ -99,9 +91,7 @@
         {{#if pic_path}}
           <img src="{{API}}{{pic_path}}" class="img-thumbnail">
         {{else}}
-          <div class="su-placeholder">
-            请上传文件。
-          </div>
+          <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
         {{/if}}
         <label class="btn btn-info btn-block su-upload-button">
           <i class="fa fa-upload"></i> 选择文件
@@ -117,9 +107,7 @@
             <img src="{{../API}}{{.}}" class="img-thumbnail">
           {{/each}}
         {{else}}
-          <div class="su-placeholder">
-            请上传文件。
-          </div>
+          <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
         {{/if}}
         <label class="btn btn-info btn-block su-upload-button">
           <i class="fa fa-upload"></i> 选择文件
@@ -127,65 +115,17 @@
         <input type="hidden" name="ad_shoot" value="{{ad_shoot}}" class="su-url">
       </div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">付费类型</label>
-      <div class="col-sm-10 select-button">
-        <input type="radio" name="cpc_cpa" value="cpa" id="cpa" />
-        <label for="cpa">CPA</label>
-        <input type="radio" name="cpc_cpa" value="cpc" id="cpc" />
-        <label for="cpc">CPC</label>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="ratio">渠道扣点</label>
-      <div class="col-sm-10">
-        <input type="range" min="0.0001" max="1" step="0.0001" name="ratio" id="ratio" value="{{ratio}}" />
-        <span class="help-inline">1</span>
-      </div>
-    </div>
+  </fieldset>
+
+  <fieldset>
+    <a name="tou"></a>
+    <legend>投放信息</legend>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="quote_rmb">广告主报价</label>
       <div class="col-sm-10">
         <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required="required" />
       </div>
     </div>
-    <div class="form-group ad_list">
-      <label class="col-sm-2 control-label">广告类别</label>
-      <div class="col-sm-10 select-button">
-        {{#each cates}}
-        <input type="radio" name="cate" value="{{key}}" id="cate-{{value}}" />
-        <label for="cate-{{value}}">{{value}}</label>
-        {{/each}}
-      </div>
-    </div>
-    <div class="form-group app">
-      <label class="col-sm-2 control-label" for="active_time">激活时间</label>
-      <div class="col-sm-6">
-        <div class="input-group">
-          <span class="input-group-addon">打开</span>
-          <input type="number" name="active_time" id="active_time" value="{{active_time}}" value="0" class="form-control" />
-          <span class="input-group-addon">秒后扣钱</span>
-        </div>
-      </div>
-    </div>
-    <div class="form-group app">
-      <label class="col-sm-2 control-label" for="before_tips">安装提示</label>
-      <div class="col-sm-6">
-        <div class="input-group">
-          <span class="input-group-addon">请</span>
-          <input type="text" name="before_tips" id="before_tips" value="{{before_tips}}" class="form-control" maxlength="8" placeholder="如：安装并激活应用" />
-          <span class="input-group-addon">，可轻松获得奖励！</span>
-        </div>
-      </div>
-      <div class="col-sm-10 col-sm-offset-2">
-        <p class="help-block">仅限8个汉字</p>
-      </div>
-    </div>
-  </fieldset>
-
-  <fieldset>
-    <a name="tou"></a>
-    <legend>投放信息</legend>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="job_num">日投放量</label>
       <div class="col-sm-10">
@@ -196,17 +136,6 @@
       <label class="col-sm-2 control-label" for="total_num">总计投放</label>
       <div class="col-sm-10">
         <input type="number" name="total_num" id="total_num" value="{{total_num}}" class="form-control">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">投放网络</label>
-      <div class="col-sm-10 select-button">
-        <input type="radio" name='put_net' value="0" id="put-net-all" />
-        <label for="put-net-all">全投放</label>
-        <input type="radio" name='put_net' value="1" id="put-net-wifi" />
-        <label for="put-net-wifi">只投放wifi</label>
-        <input type="radio" name='put_net'  value="2" id="put-net-3g" />
-        <label for="put-net-3g">只投放3g</label>
       </div>
     </div>
     <div class="form-group">
@@ -257,27 +186,6 @@
         <label for="put-ipad-iphone">只投iPhone</label>
       </div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="ip">绑定广告主IP</label>
-      <div class="col-sm-10">
-        <input type="text" name="ip" id="ip" value="{{ip}}" class="form-control" />
-        <p class="help-block">
-          绑定IP后将不在校验验证码。多个IP可以用“;”分割，最多可以绑定12个的IP。
-        </p>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="salt">加分校验码</label>
-      <div class="col-sm-10">
-        <input type="text" name="salt" id="salt" value="{{salt}}" class="form-control" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="click_url">点击通知地址</label>
-      <div class="col-sm-10">
-        <input type="text" name="click_url" id="click_url" value="{{click_url}}" class="form-control" />
-      </div>
-    </div>
     <div class="form-group iPhone tech">
       <label class="col-sm-2 control-label" for="process_name">进程名</label>
       <div class="col-sm-10">
@@ -320,6 +228,13 @@
       <label class="col-sm-2 control-label" for="cid">渠道号</label>
       <div class="col-sm-10">
         <input type="text" name="cid" id="cid" value="{{cid}}" class="form-control" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="ratio">渠道扣点</label>
+      <div class="col-sm-10">
+        <input type="range" min="0.0001" max="1" step="0.0001" name="ratio" id="ratio" value="{{ratio}}" />
+        <span class="help-inline">1</span>
       </div>
     </div>
     <div class="form-group">
