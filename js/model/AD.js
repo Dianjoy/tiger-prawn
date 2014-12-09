@@ -31,6 +31,7 @@
       if (response.options) {
         this.options = response.options;
         this.options.API = tp.API;
+        this.options.UPLOAD = tp.UPLOAD;
       }
       return response.ad;
     },

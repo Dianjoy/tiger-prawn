@@ -49,7 +49,7 @@
       <label class="col-sm-2 control-label" for="ad_url">广告链接</label>
       <div class="col-sm-4 uploader" data-url="{{API}}file/" data-need-validate="true" data-accept="*.apk" id="app-uploader" data-name="ad_url">
         {{#if ad_url}}
-        <a href="{{API}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
+        <a href="{{UPLOAD}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
         {{else}}
         <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
         {{/if}}
@@ -89,7 +89,7 @@
       <label class="col-sm-2 control-label" for="pic_path">广告LOGO</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="pic_path">
         {{#if pic_path}}
-          <img src="{{API}}{{pic_path}}" class="img-thumbnail">
+          <img src="{{UPLOAD}}{{pic_path}}" class="img-thumbnail">
         {{else}}
           <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
         {{/if}}
@@ -104,7 +104,7 @@
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="ad_shoot">
         {{#if shoots}}
           {{#each shoots}}
-            <img src="{{../API}}{{.}}" class="img-thumbnail">
+            <img src="{{../UPLOAD}}{{.}}" class="img-thumbnail">
           {{/each}}
         {{else}}
           <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
