@@ -12,7 +12,8 @@
       'blur [name=ad_url]': 'adURL_blurHandler',
       'click .platform label': 'platformButton_clickHandler',
       'click .ad_url button': 'adURLButton_clickHandler',
-      'change .domestic input': 'area_changeHandler'
+      'change .domestic input': 'area_changeHandler',
+      'change #feedback': 'feedback_changeHandler'
     },
     initialize: function () {
       var init = this.model.pick(_.keys(this.model.defaults));
@@ -39,6 +40,9 @@
     area_changeHandler: function (event) {
       var target = $(event.target);
       this.$el.toggleClass(target.data('class'), target.val() === '1');
+    },
+    feedback_changeHandler: function (event) {
+      this.$el.toggleClass('show-feedback-detail', event.target.value === '2');
     },
     platformButton_clickHandler: function (event) {
       this.$el

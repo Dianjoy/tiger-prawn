@@ -263,14 +263,16 @@
       this.$context.trigger('table-ready');
     },
     deleteButton_clickHandler: function (event) {
-      if (!confirm('确定删除么？')) {
+      var target = $(event.currentTarget)
+        , msg = target.data('msg');
+      msg = msg || '确定删除么？';
+      if (!confirm(msg)) {
         return;
       }
-      var target = $(event.currentTarget)
-        , tr = target.closest('tr');
+      var id = target.closest('tr').attr('id');
       target.prop('disabled', true)
         .find('i').addClass('fa-spin fa-spinner');
-      this.collection.get(tr.attr('id')).destroy({
+      this.collection.get(id).destroy({
         wait: true,
         error: function (model, response) {
           target.prop('disabled', false)
