@@ -51,9 +51,13 @@
     clear();
   }
   function onSubmit() {
-    var value = popup.value()
+    var value = popup.getValue()
       , attr = {};
     popup.displayProcessing();
+    // 如果有附言
+    if (params.options.message) {
+      attr['message'] = popup.getMessage();
+    }
     // 没有选项集，就不需要转化
     if (params.options.type === 'tags' || !collection) {
       attr[params.prop] = value;

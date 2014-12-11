@@ -18,7 +18,7 @@
       'click .add-button': 'addButton_clickHandler',
       'mousedown .input-group': 'inputGroup_mouseDownHandler'
     },
-    initUI: function (options) {
+    render: function (options) {
       if (options) {
         this.options = options;
         $.get('template/popup-' + options.type + '.hbs', _.bind(this.loadCompleteHandler, this));
@@ -57,7 +57,7 @@
       if ($(this.el.elements).filter('[type=submit], button').not('button[type]').prop('disabled')) {
         return;
       }
-      this.trigger('submit', this.value());
+      this.trigger('submit', this.getValue());
     },
     search: function () {
       var keyword = this.$('[type=search]').val();
@@ -67,7 +67,10 @@
       this.collection.fetch({keyword: keyword, from: 'editor'});
       this.$('[type=search], .search-button').prop('disabled', true);
     },
-    value: function () {
+    getMessage: function () {
+      return this.$('[name=message]').val();
+    },
+    getValue: function () {
       // 由radio确定从哪里取值
       var radio = this.$('[name=prop-radio]');
       if (radio.length) {
@@ -137,7 +140,7 @@
     loadCompleteHandler: function (data) {
       this.template = Handlebars.compile(data);
       this.$('p').remove();
-      var form = $('<form class="editor fake" id="prop-editor"></form>').appendTo(this.$('.modal-body'));
+      var form = $('<form class="editor fake" id="prop-editor"></form>').insertAfter(this.$('.alert-msg'));
       form.html(this.template(this.options));
 
       var html = this.$('.item-grid').html();

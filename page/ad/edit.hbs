@@ -219,6 +219,16 @@
     <a name="channel-area"></a>
     <legend>渠道信息</legend>
     <div class="form-group">
+      <label class="col-sm-2 control-label" for="owner">负责人</label>
+      <div class="col-sm-4 col-xs-6">
+        <select class="form-control" name="owner">
+          {{#each sales}}
+          <option value="{{key}}">{{value}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
       <label class="col-sm-2 control-label" for="channel">渠道名称</label>
       <div class="col-sm-10">
         <input type="text" name="channel" id="channel" value="{{channel}}" class="form-control" />
@@ -279,6 +289,15 @@
       <label class="col-sm-2 control-label" for="pwd">密码</label>
       <div class="col-sm-10">
         <input type="password" name="pwd" id="pwd" value="{{pwd}}" class="form-control" />
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>杂项</legend>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="others">备注</label>
+      <div class="col-sm-10">
+        <textarea name="others" class="form-control" rows="2" id="others">{{others}}</textarea>
       </div>
     </div>
   </fieldset>

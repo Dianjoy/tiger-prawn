@@ -46,7 +46,7 @@
           collection: collection
         });
       }
-      editor.initUI(options);
+      editor.render(options);
       editor.$el.modal('show');
       return editor;
     },

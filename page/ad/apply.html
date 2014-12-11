@@ -18,10 +18,11 @@
   <tr>
     <th class="filter">管理名</th>
     <th>针对</th>
-    <th>调整前</th>
-    <th>调整后</th>
+    <th>调整前后</th>
     <th>提交时间</th>
+    <th>附言</th>
     <th>处理时间</th>
+    <th>回复</th>
     <th>操作人</th>
     <th>操作</th>
   </tr>
@@ -36,10 +37,11 @@
         {{cid}}
       </td>
       <td data-title="针对">{{attr}}</td>
-      <td data-title="调整前">{{before}}</td>
-      <td data-title="调整后">{{after}}</td>
-      <td data-title="创建时间">{{create_time}}</td>
-      <td data-title="处理时间">{{handle_time}}</td>
+      <td data-title="调整前后">{{#if before}}{{before}} / {{/if}}{{after}}</td>
+      <td data-title="提交时间"><time datetime="{{create_time}}">{{create_time}}</time></td>
+      <td data-title="附言">{{send_msg}}</td>
+      <td data-title="处理时间"><time datetime="{{handle_time}}">{{handle_time}}</time></td>
+      <td data-title="回复">{{reply_msg}}</td>
       <td data-title="操作人">{{handler}}</td>
       <td data-title="操作">
         {{#unless handler}}
@@ -52,7 +54,7 @@
   </tbody>
   <tfoot class="waiting">
   <tr>
-    <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
+    <td colspan="9"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
   </tr>
   </tfoot>
 </table>

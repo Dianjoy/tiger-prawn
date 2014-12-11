@@ -35,10 +35,14 @@
 
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
+
+      return this;
     },
-    setFramework: function (classes) {
+    setFramework: function (classes, title) {
       this.$el.addClass(classes);
       this.lastClass = classes;
+      this.$('#content h1').text(title);
+      return this;
     },
     start: function (showFramework) {
       this.isStart = true;

@@ -14,8 +14,9 @@
     },
     create: function () {
       var model = new tp.model.AD();
-      this.$body.load('page/ad/edit.hbs', model);
-      this.$body.setFramework('ad');
+      this.$body
+        .load('page/ad/edit.hbs', model)
+        .setFramework('ad', '创建广告');
     },
     edit: function (id) {
       if (this.$body.$el.hasClass('ad')) {
@@ -24,14 +25,19 @@
       var model = new tp.model.AD({
         id: id
       });
-      this.$body.load('page/ad/edit.hbs', model);
-      this.$body.setFramework('ad');
+      this.$body
+        .load('page/ad/edit.hbs', model)
+        .setFramework('ad', '编辑广告');
     },
     list: function () {
-      this.$body.load('page/ad/list.html');
+      this.$body
+        .load('page/ad/list.html')
+        .setFramework('ad', '我的广告');
     },
     listApplies: function () {
-      this.$body.load('page/ad/apply.html');
+      this.$body
+        .load('page/ad/apply.html')
+        .setFramework('apply', '我的申请');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));

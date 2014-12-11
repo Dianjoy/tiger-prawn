@@ -5,3 +5,9 @@
   <label for="editor-popup-input" class="switch"></label>
   {{#if active}}<label>{{active}}</label>{{/if}}
 </div>
+{{#if message}}
+<div class="form-group">
+  <label for="editor-message">附言</label>
+  <textarea id="editor-message" class="form-control" rows="2"></textarea>
+</div>
+{{/if}}

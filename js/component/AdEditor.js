@@ -42,7 +42,7 @@
       this.$el.toggleClass(target.data('class'), target.val() === '1');
     },
     feedback_changeHandler: function (event) {
-      this.$el.toggleClass('show-feedback-detail', event.target.value === '2');
+      this.$el.toggleClass('show-feedback-detail', event.target.value === '2' || event.target.value === '3');
     },
     platformButton_clickHandler: function (event) {
       this.$el
