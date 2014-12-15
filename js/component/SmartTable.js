@@ -113,6 +113,27 @@
     }
   });
 
+  var Search = Backbone.View.extend({
+    events: {
+      'keydown': 'keydownHandler'
+    },
+    start: function () {
+      this.$el.prop('readonly', false);
+      this.spinner && this.spinner.remove();
+    },
+    keydownHandler: function (event) {
+      if (event.keyCode === 13 && event.target.value != '') {
+        this.model.set({
+          keyword: event.target.value,
+          page: 0
+        });
+        this.$el.prop('readonly', true);
+        this.spinner = $('<span class="fa fa-spin fa-spinner"></span>');
+        this.spinner.insertAfter(this.$el);
+      }
+    }
+  });
+
   ns.SmartTable = Backbone.View.extend({
     $context: null,
     $router: null,
@@ -151,7 +172,12 @@
       this.model.on('change', this.model_changeHandler, this);
 
       // 启用搜索
-      this.$context.mapEvent('search', this.searchHandler, this);
+      if ('search' in init) {
+        this.search = new Search({
+          el: init.search,
+          model: this.model
+        });
+      }
 
       // 翻页
       if ('pagesize' in init && init.pagesize > 0) {
@@ -215,6 +241,9 @@
       this.$('select.edit').val(function () {
         return $(this).attr('value');
       });
+      if (this.search) {
+        this.search.start();
+      }
       if (this.pagination) {
         this.pagination.setTotal(this.collection.total);
       }
@@ -335,15 +364,6 @@
         , id = target.closest('tr').attr('id');
       this.collection.get(id).save(prop, value, {patch: true});
       event.preventDefault();
-    },
-    searchHandler: function (keyword) {
-      this.filter.page = 0;
-      this.filter.keyword = keyword;
-      this.model.set({
-        page: 0,
-        keyword: keyword
-      });
-      this.collection.fetch(this.filter);
     },
     sortUpdateHandler: function (event, ui) {
       var item = ui.item
