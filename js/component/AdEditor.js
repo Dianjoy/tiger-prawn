@@ -13,6 +13,7 @@
       'click .platform label': 'platformButton_clickHandler',
       'click .ad_url button': 'adURLButton_clickHandler',
       'change .domestic input': 'area_changeHandler',
+      'change .isp input': 'isp_changeHandler',
       'change #feedback': 'feedback_changeHandler'
     },
     initialize: function () {
@@ -43,6 +44,24 @@
     },
     feedback_changeHandler: function (event) {
       this.$el.toggleClass('show-feedback-detail', event.target.value === '2' || event.target.value === '3');
+    },
+    isp_changeHandler: function (event) {
+      var target = $(event.target)
+        , value = event.target.value
+        , checked = event.target.checked;
+      if (checked) { // 选中
+        if (value === '0') { // 选中了全部
+          target.siblings().prop('checked', false);
+        } else { // 选中了某个ISP
+          target.siblings().first().prop('checked', false);
+        }
+      } else { // 取消选中
+        if (value === '0') {
+          target.siblings().prop('checked', true);
+        } else if (target.siblings().filter(':checked').length === 0) {
+          target.siblings().first().prop('checked', true);
+        }
+      }
     },
     platformButton_clickHandler: function (event) {
       this.$el
