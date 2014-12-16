@@ -16,10 +16,10 @@
       var model = new tp.model.AD();
       this.$body
         .load('page/ad/edit.hbs', model)
-        .setFramework('ad', '创建广告');
+        .setFramework('ad ad-new', '创建广告');
     },
     edit: function (id) {
-      if (this.$body.$el.hasClass('ad')) {
+      if (this.$body.$el.hasClass('ad-new')) {
         return;
       }
       var model = new tp.model.AD({
@@ -32,7 +32,7 @@
     list: function () {
       this.$body
         .load('page/ad/list.html')
-        .setFramework('ad', '我的广告');
+        .setFramework('ad ad-list', '我的广告');
     },
     listApplies: function () {
       this.$body
