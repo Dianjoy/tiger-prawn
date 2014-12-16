@@ -17,10 +17,12 @@
     },
     render: function () {
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
-      var $el = this.$el
+      var self = this
+        , $el = this.$el
         , model = this.model;
       setTimeout(function () {
         tp.component.Manager.check($el, model);
+        self.trigger('complete');
       }, 0);
     },
     model_syncHandler: function () {

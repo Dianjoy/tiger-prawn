@@ -17,6 +17,7 @@
   <thead>
   <tr>
     <th class="filter">管理名</th>
+    <th>负责人</th>
     <th><a class="order" href="#quote_rmb">报价</a></th>
     <th><a class="order" href="#job_num">每日投放</a></th>
     <th><a class="order" href="#num">今日尚余</a></th>
@@ -31,10 +32,11 @@
     {{#each list}}
     <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}} {{packname}}" id="{{id}}">
       <td data-title="管理名">
-        {{#channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/channel}}
+        {{#if channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/if}}
         <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
         {{cid}}
       </td>
+      <td data-title="负责人">{{execute_owner}}</td>
       <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-message="true" data-refresh="true">{{quote_rmb}}</a></td>
       <td data-title="每日投放">
         {{#if set_job_num}}
