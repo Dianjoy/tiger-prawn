@@ -48,15 +48,21 @@
     <div class="form-group file">
       <label class="col-sm-2 control-label" for="ad_url">广告链接</label>
       <div class="col-sm-4 uploader" data-url="{{API}}file/" data-need-validate="true" data-accept="*.apk" id="app-uploader" data-name="ad_url">
-        {{#if ad_url}}
-        <a href="{{UPLOAD}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
-        {{else}}
-        <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
-        {{/if}}
+        <div class="btn-group su-tabs">
+          <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
+          <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络地址</button>
+        </div>
+        <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中..">
+          {{#if ad_url}}
+            <div class="su-item">
+              <a href="{{UPLOAD}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
+            </div>
+          {{/if}}
+        </div>
         <label class="btn btn-info btn-block su-upload-button">
           <i class="fa fa-upload"></i> 选择文件
         </label>
-        <input type="hidden" name="ad_url" value="{{ad_url}}" class="su-url">
+        <input type="hidden" name="ad_url" value="{{ad_url}}" class="su-url form-control">
       </div>
       <div class="col-sm-6">
         <div class="well well-small app file">
@@ -88,11 +94,13 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pic_path">广告LOGO</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="pic_path">
-        {{#if pic_path}}
-          <img src="{{UPLOAD}}{{pic_path}}" class="img-thumbnail">
-        {{else}}
-          <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
-        {{/if}}
+        <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中..">
+          {{#if pic_path}}
+            <div class="su-item">
+              <img src="{{UPLOAD}}{{pic_path}}" class="img-thumbnail">
+            </div>
+          {{/if}}
+        </div>
         <label class="btn btn-info btn-block su-upload-button">
           <i class="fa fa-upload"></i> 选择文件
         </label>
@@ -101,14 +109,16 @@
     </div>
     <div class="form-group app">
       <label class="col-sm-2 control-label" for="ad_shoot">广告截图</label>
-      <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="ad_shoot">
-        {{#if shoots}}
-          {{#each shoots}}
-            <img src="{{../UPLOAD}}{{.}}" class="img-thumbnail">
-          {{/each}}
-        {{else}}
-          <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中.."></div>
-        {{/if}}
+      <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="ad_shoot" data-multiple="true" data-append="true">
+        <div class="su-placeholder su-grid col-2 su-removable" data-initial="可上传多个文件。" data-progress="上传文件中..">
+          {{#if shoots}}
+            {{#each shoots}}
+              <div class="su-item">
+                <img src="{{../UPLOAD}}{{.}}" class="img-thumbnail">
+              </div>
+            {{/each}}
+          {{/if}}
+        </div>
         <label class="btn btn-info btn-block su-upload-button">
           <i class="fa fa-upload"></i> 选择文件
         </label>

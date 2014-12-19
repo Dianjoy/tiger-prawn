@@ -9,7 +9,7 @@
     initialize: function () {
       this.framework = this.$('.framework');
       this.container = this.$('#page-container');
-      this.loading = this.$('#page-loading').remove();
+      this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
       this.model.on('change:fullname', this.model_nameChangeHandler, this);
     },
