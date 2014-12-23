@@ -5,26 +5,14 @@ $(function () {
     new Morris.Line(data);
   });
 
-  function isLogin() {
-    body.start(true);
-    var route = Backbone.history.start({
-      root: '/tiger-prawn/'
-    });
-    if (!route) {
-      location.hash = '#/dashboard';
-    }
-  }
-  function notLogin() {
-    body.start();
-    location.hash = '#/user/login'
-    Backbone.history.start({
-      root: '/tiger-prawn'
-    });
-  }
-
   // start here
   var context = Nervenet.createContext()
     , me = new tp.model.Me()
+    , notice = new tp.model.Notice()
+    , message = new tp.view.Message({
+      el: '.system-notice',
+      collection: notice
+    })
     , body = new tp.view.Body({
       el: 'body',
       model: me
@@ -47,10 +35,7 @@ $(function () {
   context.createInstance(tp.router.Stat);
 
   // 验证用户身份
-  me.fetch({
-    success: isLogin,
-    error: notLogin
-  });
+  me.check();
 
   // GA
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

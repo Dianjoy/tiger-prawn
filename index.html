@@ -2,7 +2,7 @@
 <html>
 <head lang="cn">
   <meta charset="UTF-8">
-  <meta name="viewport" content="initial-scale=1.0,user-scale=no,width=device-width">
+  <meta name="viewport" content="initial-scale=1.0,user-scalable=no,width=device-width">
 
   <!-- for iOS desktop -->
   <meta name="apple-mobile-web-app-title" content="点乐广告自助平台（测试版）">
@@ -48,16 +48,31 @@
 
     <div class="collapse navbar-collapse" id="navbar-top-inner">
       <ul class="nav navbar-nav navbar-right">
-        <li class="pit"><a href="#"><i class="fa fa-envelope"></i></a></li>
         <li class="pit"><a href="#"><i class="fa fa-tasks"></i></a></li>
-        <li class="pit"><a href="#"><i class="fa fa-bell"></i></a></li>
+        <li class="dropdown system-notice">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-bell"></i>
+          </a>
+          <ul class="dropdown-menu message-list" role="menu">
+            <li role="presentation" class="dropdown-header">系统通知</li>
+            <script type="text/x-handlebars-template">
+              <li class="alarm" id="msg-{{id}}">
+                <input type="checkbox" name="check" value="{{id}}" {{#if status}}checked{{/if}} />
+                <a href="{{handler}}" {{#if is_popup}}class="popup"{{/if}} {{#if is_external}}target="_blank"{{/if}}>
+                [{{description}}] <strong>{{name}}</strong> <small class="text-muted">{{create_time}}</small>
+                </a>
+              </li>
+            </script>
+          </ul>
+        </li>
+        <li class="pit"><a href="#"><i class="fa fa-envelope"></i></a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <span class="username"></span> <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
             <li class="pit"><a href="#/my/profile"><i class="fa fa-user fa-fw"></i> 我的账户</a></li>
-            <li class="pit"><a href="#/my/settings"><i class="fa fa-cog fa-fw"></i> 设置</a></li>
+            <li><a href="#/my/settings"><i class="fa fa-cog fa-fw"></i> 设置</a></li>
             <li class="pit"><a href="#/my/recharge"><i class="fa fa-fw fa-money"></i> 充值</a></li>
             <li class="divider"></li>
             <li><a href="#/user/logout"><i class="fa fa-fw fa-sign-out"></i> 退出</a></li>
@@ -217,10 +232,12 @@
 <script src="js/model/Dashboard.js"></script>
 <script src="js/model/Me.js"></script>
 <script src="js/model/ListCollection.js"></script>
+<script src="js/model/Notice.js"></script>
 <script src="js/view/DataSyncView.js"></script>
 <script src="js/popup/Base.js"></script>
 <script src="js/popup/Editor.js"></script>
 <script src="js/view/Loader.js"></script>
+<script src="js/view/Message.js"></script>
 <script src="js/view/Body.js"></script>
 <script src="js/index.js"></script>
 </body>

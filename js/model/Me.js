@@ -11,6 +11,12 @@
     parse: function (response) {
       return response.me;
     },
+    check: function () {
+      this.fetch({
+        success: _.bind(this.onSuccess, this),
+        error: _.bind(this.onError, this)
+      });
+    },
     id_changeHandler: function (id) {
       if (id) {
         this.$body.start(true);
@@ -33,6 +39,22 @@
           location.hash = '#/user/login';
         }
       }
+    },
+    onSuccess: function () {
+      this.$body.start(true);
+      var route = Backbone.history.start({
+        root: '/tiger-prawn/'
+      });
+      if (!route) {
+        location.hash = '#/dashboard';
+      }
+    },
+    onError: function () {
+      this.$body.start();
+      location.hash = '#/user/login';
+      Backbone.history.start({
+        root: '/tiger-prawn'
+      });
     }
   });
 }(Nervenet.createNameSpace('tp.model')));

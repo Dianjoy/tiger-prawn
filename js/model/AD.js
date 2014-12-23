@@ -3,6 +3,8 @@
  */
 'use strict';
 (function (ns) {
+  var OWNER = 'ad_owner';
+
   ns.AD = Backbone.Model.extend({
     className: 'ad ad-edit',
     defaults: {
@@ -33,7 +35,19 @@
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
       }
+      if ('owner' in response.ad && !response.ad.owner) {
+        response.ad.owner = Number(localStorage.getItem(OWNER));
+      }
       return response.ad;
+    },
+    save: function (key, value, options) {
+      if (key === 'owner' && value) {
+        localStorage.setItem(OWNER, value);
+      }
+      if (key.owner) {
+        localStorage.setItem(OWNER, key.owner);
+      }
+      return Backbone.Model.prototype.save.call(this, key, value, options);
     },
     toJSON: function (options) {
       var json = Backbone.Model.prototype.toJSON.call(this, options);

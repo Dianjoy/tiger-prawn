@@ -10,7 +10,7 @@
       "ad(/)": "list",
       "ad/create": "create",
       "ad/:id": "edit",
-      "apply(/)": "listApplies"
+      "apply(/:id)": "listApplies"
     },
     create: function () {
       var model = new tp.model.AD();
@@ -34,7 +34,7 @@
         .load('page/ad/list.html')
         .setFramework('ad ad-list', '我的广告');
     },
-    listApplies: function () {
+    listApplies: function (id) {
       this.$body
         .load('page/ad/apply.html')
         .setFramework('apply', '我的申请');

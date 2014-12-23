@@ -32,3 +32,34 @@
     &.active
       background-color: lighten($topbar-background-color, 10%)
       color: $white
+
+  .nav .open > a
+    background-color: lighten($topbar-background-color, 10%)
+
+  .system-notice
+    .dropdown-toggle
+      span
+        position: absolute
+        top: $gap-s
+        right: 0
+        background-color: $red
+        border-radius: 100%
+        color: $white
+        font-size: 10px
+        text-align: center
+        line-height: 20px
+        width: 20px
+
+    .alarm
+      padding: 0 $gap-l
+      white-space: nowrap
+
+      input:checked + a
+        text-decoration: line-through
+
+        strong
+          font-weight: normal
+
+      > a
+        display: inline-block
+        padding: 3px 0
