@@ -23,7 +23,8 @@
     <th><a class="order" href="#num">今日尚余</a></th>
     <th>状态</th>
     <th><a class="order" href="#ctime">创建时间</a></th>
-    <th><a class="order" href="#mtime">状态变更时间</a></th>
+    <th><a class="order" href="#mtime">变更时间</a></th>
+    <th>备注</th>
     <th>操作</th>
   </tr>
   </thead>
@@ -63,12 +64,12 @@
         <span class="label status-{{status}}">{{pick status '拒绝' '等待'}}</span>
         {{/if}}
       </td>
-      <td data-title="创建时间">{{create_time}}</td>
-      <td data-title="状态变更时间">{{status_time}}</td>
+      <td data-title="创建时间"><time datetime="{{create_time}}">{{substring create_time 5 11}}</time></td>
+      <td data-title="变更时间"><time datetime="{{status_time}}">{{substring status_time 5 11}}</time></td>
+      <td data-title="备注"><a href="#others" data-type="long-text" class="edit">{{others}}</a></td>
       <td data-title="操作">
         <div class="btn-group">
           <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
-          <a href="#comment" data-type="long-text" class="edit btn btn-info" title="{{others}}"><i class="fa fa-comment"></i></a>
           <button class="btn btn-danger delete-button" {{#if has_transfer}}disabled title="此广告已跑量，不能删除，只能申请下线" {{/if}}><i class="fa fa-trash-o fa-fw"></i></button>
         </div>
       </td>

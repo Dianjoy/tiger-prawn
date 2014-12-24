@@ -8,4 +8,8 @@
     var options = Array.prototype.slice.call(arguments, 1, -1);
     return options[value];
   });
+  // substring
+  h.registerHelper('substring', function (value, start, end) {
+    return value.substr(start, end);
+  });
 }(Handlebars));

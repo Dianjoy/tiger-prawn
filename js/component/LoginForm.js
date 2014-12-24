@@ -5,14 +5,14 @@
 (function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {
-      'click verify-code': 'verifyCode_clickHandler'
+      'click .verify-code': 'verifyCode_clickHandler'
     },
     verifyCode_clickHandler: function (event) {
       var src = event.target.src
         , offset = src.indexOf('?ts=')
         , time = Date.now();
       src = offset === -1 ? src + '?ts=' + time : src.replace(/\?ts=\d+$/, '?ts=' + time);
-      even.target.src = src;
+      event.target.src = src;
     }
   });
 }(Nervenet.createNameSpace('tp.component')));

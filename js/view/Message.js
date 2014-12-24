@@ -7,7 +7,9 @@
     fragment: '',
     events: {
       'click input': 'input_clickHandler',
-      'change [name=check]': 'check_changeHandler'
+      'change [name=check]': 'check_changeHandler',
+      'animationend': 'animationEndHandler',
+      'webkitAnimationEnd': 'animationEndHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
@@ -25,7 +27,11 @@
       }
       if (total !== 0) {
         this.label = $('<span>' + (total > 10 ? '10+' : total) + '</span>').appendTo(this.button);
+        this.button.find('i').addClass('animated swing');
       }
+    },
+    animationEndHandler: function (event) {
+      $(event.target).removeClass('animated swing');
     },
     check_changeHandler: function (event) {
       var id = event.target.value;
