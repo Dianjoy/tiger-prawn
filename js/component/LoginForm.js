@@ -5,7 +5,7 @@
 (function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {
-      'click .verify-code': 'verifyCode_clickHandler'
+      'click #verify-code': 'verifyCode_clickHandler'
     },
     verifyCode_clickHandler: function (event) {
       var src = event.target.src
