@@ -8,6 +8,7 @@ var ga = null
     view: {},
     controller: {},
     component: {},
+    notification: {},
     service: {},
     utils: {}
   };

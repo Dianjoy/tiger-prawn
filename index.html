@@ -164,6 +164,22 @@
   <p>点乐广告自助平台（测试版） &copy; 2014 <a href="http://www.dianjoy.com">Dianjoy</a>. 保留一切权利。</p>
 </footer>
 
+<ul id="growl">
+  <script type="text/x-handlebars-template">
+    <li class="growlitem" style="display: none" id="growl-item-{{id}}">
+      <button data-dismiss="alert" data-target="#growl-item-{{id}}" class="close" type="button">&times;</button>
+      <div class="growl-item-inner">
+        <h4 class="growl-item-header">{{title}}</h4>
+        {{#if handler}}
+        <a href="{{handler}}">[{{description}}] <strong>{{name}}</strong> <small class="text-muted">{{substring create_time 5 11}}</small></a>
+        {{else}}
+        <i class="fa-envelope-o"></i> 以及其他 <strong>{{left}}</strong> 条新消息，请及时处理。
+        {{/if}}
+      </div>
+    </li>
+  </script>
+</ul>
+
 <script type="text/x-handlebars-template" id="popup">
   <div class="modal modal-styled fade">
     <div class="modal-dialog">
@@ -233,11 +249,13 @@
 <script src="js/model/Me.js"></script>
 <script src="js/model/ListCollection.js"></script>
 <script src="js/model/Notice.js"></script>
+<script src="js/notification/Panel.js"></script>
+<script src="js/notification/Growl.js"></script>
+<script src="js/notification/Manager.js"></script>
 <script src="js/view/DataSyncView.js"></script>
 <script src="js/popup/Base.js"></script>
 <script src="js/popup/Editor.js"></script>
 <script src="js/view/Loader.js"></script>
-<script src="js/view/Message.js"></script>
 <script src="js/view/Body.js"></script>
 <script src="js/index.js"></script>
 </body>

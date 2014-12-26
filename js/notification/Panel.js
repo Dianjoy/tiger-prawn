@@ -3,7 +3,7 @@
  */
 'use strict';
 (function (ns) {
-  ns.Message = Backbone.View.extend({
+  ns.Panel = Backbone.View.extend({
     fragment: '',
     events: {
       'click input': 'input_clickHandler',
@@ -60,4 +60,4 @@
       event.stopPropagation();
     }
   });
-}(Nervenet.createNameSpace('tp.view')));
+}(Nervenet.createNameSpace('tp.notification')));

@@ -9,14 +9,11 @@ $(function () {
   var context = Nervenet.createContext()
     , me = new tp.model.Me()
     , notice = new tp.model.Notice()
-    , message = new tp.view.Message({
-      el: '.system-notice',
-      collection: notice
-    })
     , body = new tp.view.Body({
       el: 'body',
       model: me
     });
+  tp.notification.Manager.init(notice);
 
   // map values
   context
