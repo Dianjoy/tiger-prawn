@@ -11,9 +11,6 @@
 
   var Klass = Backbone.View.extend({
     $context: null,
-    events: {
-      'click .popup': 'popup_clickHandler'
-    },
     initialize: function () {
       this.template = Handlebars.compile(this.$('#popup').remove().html());
       this.editor = Handlebars.compile(this.$('#editor-popup').remove().html());
@@ -52,21 +49,6 @@
     },
     removePopup: function () {
       popup && popup.remove();
-    },
-    popup_clickHandler: function (event) {
-      var target = $(this),
-        data = target.data(),
-        hasConfirm = 'confirm' in data ? data.confirm : true,
-        hasCancel = 'cancel' in data ? data.cancel : true;
-      ns.Manager.popup({
-        title: this.title || target.text(),
-        content: this.href,
-        hasConfirm: hasConfirm,
-        hasCancel: hasCancel,
-        isRemote: true
-      });
-      ga('send', 'event', 'popup', 'popup', event.currentTarget.href);
-      event.preventDefault();
     }
   });
 

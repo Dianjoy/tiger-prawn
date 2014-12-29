@@ -1,5 +1,6 @@
-;(function (ns) {
-  'use strict';
+'use strict';
+(function (ns) {
+  var DATE_FORMAT = 'YYYY-MM-DD';
 
   var Pager = Backbone.View.extend({
     events: {
@@ -65,7 +66,6 @@
     }
   });
 
-  var DATE_FORMAT = 'YYYY-MM-DD';
   var Ranger = Backbone.View.extend({
     events: {
       'click .shortcut': 'shortcut_clickHandler',
@@ -129,7 +129,7 @@
         });
         this.$el.prop('readonly', true);
         this.spinner = $('<span class="fa fa-spin fa-spinner"></span>');
-        this.spinner.insertAfter(this.$el);
+        this.spinner.insertAfter(this.$e);
       }
     }
   });
@@ -137,6 +137,7 @@
   ns.SmartTable = Backbone.View.extend({
     $context: null,
     $router: null,
+    fragment: '',
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
@@ -146,29 +147,21 @@
       'change .stars input': 'star_changeHandler',
       'sortupdate': 'sortUpdateHandler'
     },
-    initialize: function () {
+    initialize: function (options) {
       this.template = Handlebars.compile(this.$('script').html().replace(/\s{2,}|\n/g, ''));
-      var init = this.$el.data()
-        , options = {
-          url: init.url.replace('{{API}}', tp.API),
-          pagesize: init.pagesize || 10
-        };
+      var init = this.$el.data();
+      options = _.extend({pagesize: 10}, options, init, {url: init.url.replace('{{API}}', tp.API)});
       this.filter = tp.utils.decodeURLParam(init.filter);
       this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
-      if ('id' in init) {
-        options.model = tp.model.ListCollection.prototype.model.extend({idAttribute: init.id});
-      }
-      if ('collectionId' in init) {
-        options.id = init.collectionId;
-      }
+
       this.collection = tp.model.ListCollection.createInstance(null, options);
-      this.collection.on('reset', this.collection_resetHandler, this);
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
+      this.collection.on('sync', this.collection_syncHandler, this);
 
       // 通过页面中介来实现翻页等功能
-      this.model = new Backbone.Model();
+      this.model = this.model || new Backbone.Model();
       this.model.on('change', this.model_changeHandler, this);
 
       // 启用搜索
@@ -182,9 +175,9 @@
       // 翻页
       if ('pagesize' in init && init.pagesize > 0) {
         this.pagination = new Pager({
-          el: init && 'pagination' in init ? init.pagination : this.$('.pager'),
+          el: 'pagination' in init ? init.pagination : this.$('.pager'),
           model: this.model,
-          pagesize: init.pagesize
+          pagesize: options.pagesize
         });
       }
 
@@ -207,7 +200,6 @@
     },
     remove: function () {
       if (this.pagination) {
-        this.pagination.off();
         this.pagination.remove();
       }
       if (this.pagesizeController) {
@@ -216,31 +208,14 @@
       if (this.ranger) {
         this.ranger.remove();
       }
-      this.collection.off();
-      tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
+      this.collection.off(null, null, this);
       this.model.off(null, null, this);
-      this.$context.removeEvent('search', this.searchHandler);
+      tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
       this.$('.waiting').hide();
-      this.$('tbody').html(this.template({list: this.collection.toJSON()}));
-      var items = this.$('tbody').children();
-      this.collection.each(function (model, i) {
-        if (i > items.length - 1) {
-          return;
-        }
-        if (!model.id) {
-          items[i].id = model.cid;
-        }
-      });
-      // TODO: 暂时没有想到更好的办法，将来用handlebars的helper来处理表单的选中吧
-      this.$('.stars').each(function () {
-        $(this).find('input[value=' + $(this).data('value') + ']').prop('checked', true);
-      });
-      this.$('select.edit').val(function () {
-        return $(this).attr('value');
-      });
+      this.$('tbody').append(this.fragment);
       if (this.search) {
         this.search.start();
       }
@@ -253,11 +228,7 @@
       this.collection.add(this.model.pick(this.include));
     },
     collection_addHandler: function (model) {
-      var item = $(this.template({list: [model.toJSON()]}));
-      item.attr('id', function () {
-        return model.id || model.cid;
-      }).addClass('animated flash');
-      this.$('tbody')[this.$('.add-row-button').length ? 'append' : 'prepend'](item);
+      this.fragment += this.template(model.toJSON());
     },
     collection_changeHandler: function (model) {
       var changed = model.changed
@@ -270,8 +241,8 @@
       for (var prop in changed) {
         target = tr.find('[href=#' + prop + ']');
         if (target.data('refresh')) {
-          var tr = $(this.template({list: [model.toJSON()]}))
-            , index = target.closest('td').index();
+          var index = target.closest('td').index();
+          tr = $(this.template({list: [model.toJSON()]}))
           target.parent().replaceWith(tr.children().eq(index));
         } else if (target.children().is('img')) {
           target.children('img').attr('src', changed[prop]);
@@ -287,7 +258,7 @@
         $(this).remove();
       })
     },
-    collection_resetHandler: function () {
+    collection_syncHandler: function () {
       this.render();
       this.$context.trigger('table-ready');
     },

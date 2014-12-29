@@ -21,13 +21,14 @@
     render: function (options) {
       if (options) {
         this.options = options;
-        $.get('template/popup-' + options.type + '.hbs', _.bind(this.loadCompleteHandler, this));
+        var template = options.form ? 'page/' + options.form : ('template/popup-' + options.type);
+        $.get(template + '.hbs', _.bind(this.loadCompleteHandler, this));
       }
 
       // 补充信息
       var info = $('#editor-info');
       if (info.length) {
-        var info = Handlebars.compile(info.html());
+        info = Handlebars.compile(info.html());
         this.$('.info').html(info(this.model.toJSON()));
       }
 
@@ -72,7 +73,8 @@
     },
     getValue: function () {
       // 由radio确定从哪里取值
-      var radio = this.$('[name=prop-radio]');
+      var radio = this.$('[name=prop-radio]')
+        , value;
       if (radio.length) {
         return this.$('[name=prop-' + radio.filter(':checked').val() + ']').val();
       }
@@ -80,8 +82,8 @@
       // 开关基本只用0，1，但有些时候0表示开，有些时候1表示开……比如广告在线情况
       // 所以这里根据checkbox的值，取反
       if (this.options.type === 'status') {
-        var checkbox = this.$('input')
-          , value = Number(checkbox.val());
+        var checkbox = this.$('input');
+        value = Number(checkbox.val());
         return Number(checkbox.prop('checked') ? value : !value);
       }
       // 正常取值
@@ -89,7 +91,7 @@
       if (items.length === 1) {
         return items.val();
       }
-      var value = [];
+      value = [];
       items.filter(':checked').each(function () {
         value.push(this.value);
       });

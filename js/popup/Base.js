@@ -32,6 +32,7 @@
         show: true,
         remote: options.remote
       });
+      this.options = options;
     },
     hide: function () {
       var modal = this.$el;

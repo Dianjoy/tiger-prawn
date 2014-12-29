@@ -5,8 +5,6 @@
 (function (ns) {
   var hidden
     , notification = Notification
-      || webkitNotification
-      || mozNotification
       || new MockNotification();
   if ('hidden' in document) {
     hidden = 'hidden';

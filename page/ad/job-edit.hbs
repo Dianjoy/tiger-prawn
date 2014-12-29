@@ -1,0 +1,19 @@
+<table class="table table-bordered">
+  <tr>
+    <th>{{channel}} {{ad_name}} {{cid}}</th>
+  </tr>
+</table>
+<form class="model-editor" action="{{API}}apply/" method="post">
+  <div class="form-group">
+    <label for="editor-popup-input">调整每日限量</label>
+    <input type="number" min="0" step="1" name="set_job_num" class="form-control" id="editor-popup-input" value="{{set_job_num}}" autofocus />
+  </div>
+  <div class="form-group">
+    <label><input type="checkbox" name="set_rmb" value="true" checked> 同步修改今日余量</label>
+    <p class="help-block">系统会计算和以前每日限量的差值，合并到今日余量中。</p>
+  </div>
+  <div class="form-group">
+    <label for="editor-message">附言</label>
+    <textarea id="editor-message" class="form-control" rows="2" name="message"></textarea>
+  </div>
+</form>

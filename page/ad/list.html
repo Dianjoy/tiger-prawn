@@ -30,7 +30,6 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
-    {{#each list}}
     <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}} {{packname}}" id="{{id}}">
       <td data-title="管理名">
         {{#if channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/if}}
@@ -43,7 +42,7 @@
         {{#if set_job_num}}
           <span title="申请已提交，等待核准">{{job_num}} / {{set_job_num}}</span>
         {{else}}
-        <a href="#job_num" class="edit" title="调整日投放量" data-type="number" data-min="0" data-message="true" data-refresh="true">{{job_num}}</a>
+        <a href="page/ad/job-edit.hbs" class="popup" title="调整日投放量" data-refresh="true" data-title="调整每日投放量">{{job_num}}</a>
         {{/if}}
       </td>
       <td data-title="今日尚余">
@@ -74,7 +73,6 @@
         </div>
       </td>
     </tr>
-    {{/each}}
   </script>
   </tbody>
   <tfoot class="waiting">

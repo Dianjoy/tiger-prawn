@@ -17,7 +17,6 @@
       pagesize: 10,
       param: {},
       isLoading: false,
-      model: Model,
       initialize: function(models, options) {
         Backbone.Collection.prototype.initialize.call(this, models, options);
         if (!options) {
@@ -35,7 +34,6 @@
         }
         param = param || {};
         Backbone.Collection.prototype.fetch.call(this, {
-          reset: true,
           data: _.extend(param, {
             pagesize: this.pagesize
           })
@@ -53,20 +51,23 @@
       }
     });
   Collection.createInstance = function (models, options) {
-    if (!('id' in options)) {
+    options.Model = 'idAttribute' in options ? Model.extend({
+      idAttribute: options.idAttribute
+    }) : Model;
+    var collection;
+    if (!('collectionId' in options)) {
       return new Collection(models, options);
     }
-    if (options.id in collections) {
-      var collection = collections[options.id];
+    if (options.collectionId in collections) {
+      collection = collections[options.collectionId];
       if (collection.length === 0 && models) {
         collection.reset(models);
       }
-      return collection;
     } else {
-      var collection = new Collection(models, options);
-      collections[options.id] = collection;
-      return collection;
+      collection = new Collection(models, options);
+      collections[options.collectionId] = collection;
     }
+    return collection;
   };
   Collection.destroyInstance = function (id) {
     if (id in collections) {
