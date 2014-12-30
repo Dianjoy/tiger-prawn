@@ -129,22 +129,22 @@
         });
         this.$el.prop('readonly', true);
         this.spinner = $('<span class="fa fa-spin fa-spinner"></span>');
-        this.spinner.insertAfter(this.$e);
+        this.spinner.insertAfter(this.$el);
       }
     }
   });
 
   ns.SmartTable = Backbone.View.extend({
     $context: null,
-    $router: null,
     fragment: '',
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
-      'click .status-button': 'statusButton_clickHandler',
       'click .edit': 'edit_clickHandler',
-      'change .edit': 'edit_changeHandler',
+      'click .popup': 'popup_clickHandler',
+      'change select.edit': 'select_changeHandler',
       'change .stars input': 'star_changeHandler',
+      'change .status-button': 'statusButton_clickHandler',
       'sortupdate': 'sortUpdateHandler'
     },
     initialize: function (options) {
@@ -216,6 +216,7 @@
     render: function () {
       this.$('.waiting').hide();
       this.$('tbody').append(this.fragment);
+      this.fragment = '';
       if (this.search) {
         this.search.start();
       }
@@ -224,25 +225,48 @@
       }
       this.$context.trigger('table-rendered');
     },
-    addRowButton_clickHandler: function () {
-      this.collection.add(this.model.pick(this.include));
+    saveModel: function (target, id, prop, value) {
+      target.prop('disabled', true);
+      this.collection.get(id).save(prop, value, {
+        patch: true,
+        wait: true,
+        success: function () {
+          target.prop('disabled', false);
+        }
+      });
     },
-    collection_addHandler: function (model) {
+    addRowButton_clickHandler: function (event) {
+      var prepend = $(event.currentTarget).data('prepend');
+      this.collection.add(this.model.pick(this.include), {
+        immediately: true,
+        prepend: !!prepend
+      });
+    },
+    collection_addHandler: function (model, collection, options) {
       this.fragment += this.template(model.toJSON());
+      if (options.immediately) {
+        var item = $(this.fragment);
+        item.attr('id', model.id || model.cid);
+        this.$('tbody')[options.prepend ? 'prepend' : 'append'](item);
+        this.fragment = '';
+      }
     },
     collection_changeHandler: function (model) {
       var changed = model.changed
         , tr = this.$('#' + ('id' in changed ? model.cid : model.id))
         , target;
       if ('id' in changed) {
-        tr.replaceWith(this.template({list: [model.toJSON()]}));
+        tr.replaceWith(this.template(model.toJSON()));
         return;
       }
       for (var prop in changed) {
+        if (!changed.hasOwnProperty(prop)) {
+          continue;
+        }
         target = tr.find('[href=#' + prop + ']');
         if (target.data('refresh')) {
           var index = target.closest('td').index();
-          tr = $(this.template({list: [model.toJSON()]}))
+          tr = $(this.template(model.toJSON()));
           target.parent().replaceWith(tr.children().eq(index));
         } else if (target.children().is('img')) {
           target.children('img').attr('src', changed[prop]);
@@ -253,14 +277,18 @@
         }
       }
     },
-    collection_removeHandler: function (model) {
-      this.$('#' + (model.id || model.cid)).fadeOut(function () {
-        $(this).remove();
-      })
+    collection_removeHandler: function (model, collection, options) {
+      var item = this.$('#' + (model.id || model.cid));
+      if (options.fadeOut) {
+        item.fadeOut(function () {
+          $(this).remove();
+        })
+      } else {
+        item.remove();
+      }
     },
     collection_syncHandler: function () {
       this.render();
-      this.$context.trigger('table-ready');
     },
     deleteButton_clickHandler: function (event) {
       var target = $(event.currentTarget)
@@ -273,6 +301,7 @@
       target.prop('disabled', true)
         .find('i').addClass('fa-spin fa-spinner');
       this.collection.get(id).destroy({
+        fadeOut: true,
         wait: true,
         error: function (model, response) {
           target.prop('disabled', false)
@@ -300,14 +329,6 @@
       this.$context.trigger('edit-model', model, prop, options);
       event.preventDefault();
     },
-    edit_changeHandler: function (event) {
-      var target = $(event.currentTarget)
-        , id = target.closest('tr').attr('id')
-        , prop = target.attr('name');
-      this.collection.get(id).save(prop, target.val(), {
-        patch: true
-      });
-    },
     model_changeHandler: function (model) {
       this.filter = _.extend(this.filter, model.changed);
       this.collection.fetch(this.filter);
@@ -316,25 +337,35 @@
       this.collection.setPagesize(event.target.value);
       this.collection.fetch(this.filter);
     },
+    popup_clickHandler: function (event) {
+      var id = $(event.currentTarget).closest('tr').attr('id')
+        , model = this.collection.get(id);
+      tp.popup.Manager.popup({
+        title: '编辑',
+        content: event.currentTarget.href,
+        confirm: '修改',
+        cancel: '取消',
+        isRemote: true,
+        model: model
+      });
+      event.preventDefault();
+    },
+    select_changeHandler: function (event) {
+      var target = $(event.currentTarget)
+        , id = target.closest('tr').attr('id');
+      this.saveModel(target, id, target.attr('name'), target.val());
+    },
     star_changeHandler: function (event) {
       var target = $(event.currentTarget)
-        , id = target.closest('tr').attr('id')
-        , model = this.collection.get(id);
-      model.save({
-        remark: target.val()
-      }, {
-        wait: true,
-        patch: true
-      });
+        , id = target.closest('tr').attr('id');
+      this.saveModel(target.add(target.siblings('.star')), id, target.attr('name'), target.val());
     },
     statusButton_clickHandler: function (event) {
       var target = $(event.currentTarget)
-        , prop = event.currentTarget.hash.substr(1)
         , data = _.extend({active: 1, deactive: 0}, target.data())
-        , value = target.hasClass('active') ? data.deactive : data.active
+        , value = target.prop('checked') ? data.deactive : data.active
         , id = target.closest('tr').attr('id');
-      this.collection.get(id).save(prop, value, {patch: true});
-      event.preventDefault();
+      this.saveModel(target, id, target.attr('name'), value);
     },
     sortUpdateHandler: function (event, ui) {
       var item = ui.item

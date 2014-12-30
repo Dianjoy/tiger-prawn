@@ -15,6 +15,7 @@
       'hidden.bs.modal': 'hiddenHandler',
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
+      'keydown textarea': 'textarea_keydownHandler',
       'form-success': 'form_successHandler'
     },
     initialize: function (options) {
@@ -23,16 +24,15 @@
           .find('.modal-body').html(placeholder);
         if (/\.hbs$/i.test(options.content)) {
           $.get(options.content, _.bind(this.template_successHandler, this));
-          options.isRemote = false;
+          options.remote = false;
         } else {
-          options.isRemote = options.content;
+          options.remote = options.content;
         }
       }
       this.$el.modal({
         show: true,
         remote: options.remote
       });
-      this.options = options;
     },
     hide: function () {
       var modal = this.$el;
@@ -55,8 +55,16 @@
     },
     template_successHandler: function (response) {
       this.template = Handlebars.compile(response);
-      this.$('.modal-body').html(this.template(this.options.data));
+      this.$('.modal-body').html(this.template(_.extend({
+        urlRoot: this.model.collection.url
+      }, this.model.toJSON())));
       this.onLoadComplete();
+    },
+    textarea_keydownHandler: function (event) {
+      if (event.keyCode === 13 && event.ctrlKey) {
+        $(event.target).closest('form').submit();
+        event.preventDefault();
+      }
     },
     hiddenHandler: function () {
       tp.component.Manager.clear(this.$el);

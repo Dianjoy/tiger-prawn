@@ -5,7 +5,7 @@
   'use strict';
 
   var timeout;
-
+  // TODO 找时间改成工厂模式
   ns.Editor = tp.view.DataSyncView.extend({
     $context: null,
     form: null,

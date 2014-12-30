@@ -101,7 +101,7 @@
         , submit = this.$(selector);
       if (submit.length === 0) {
         var id = this.$el.attr('id');
-        submit = $(selector).filter('[for=' + id + ']');
+        submit = $(selector).filter('[form=' + id + ']');
       }
       return submit;
     },

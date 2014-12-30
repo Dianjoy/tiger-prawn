@@ -190,8 +190,8 @@
         </div>
         <div class="modal-body">{{{content}}}</div>
         <div class="modal-footer">
-          {{#if confirm}}<button class="btn btn-primary"><i class="fa fa-check"></i> {{confirm}}</button>{{/if}}
-          {{#if cancel}}<button class="btn btn-default">{{cancel}}</button>{{/if}}
+          {{#if confirm}}<button class="btn btn-primary" form="popup-form"><i class="fa fa-check"></i> {{confirm}}</button>{{/if}}
+          {{#if cancel}}<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{cancel}}</button>{{/if}}
         </div>
       </div>
     </div>
@@ -211,7 +211,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary" form="prop-editor"><i class="fa fa-check"></i> 保存</button>
-          <button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> 取消</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> 取消</button>
         </div>
       </div>
     </div>

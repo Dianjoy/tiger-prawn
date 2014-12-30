@@ -33,7 +33,7 @@
     },
     createDesktopNotice: function () {
       if (document[hidden] && notification.permission === 'granted') {
-        new notification('点乐后台通知', {
+        new notification('点乐自助平台通知', {
           icon: 'img/fav.png',
           body: '收到' + this.count + '条通知，请及时处理哟。'
         });
