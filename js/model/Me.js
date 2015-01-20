@@ -16,13 +16,16 @@
         error: _.bind(this.onError, this)
       });
     },
-    id_changeHandler: function (id) {
+    id_changeHandler: function (model, id) {
       if (id) {
         this.$body.start(true);
         tp.notification.Manager.start();
-        var route = Backbone.history.start({
-          root: '/tiger-prawn/'
-        });
+        var route;
+        if (!Backbone.History.started) {
+          route = Backbone.history.start({
+            root: '/tiger-prawn/'
+          });
+        }
         if (!route) {
           location.hash = '#/dashboard';
         }
@@ -41,12 +44,6 @@
         } else {
           location.hash = '#/user/login';
         }
-      }
-    },
-    onSuccess: function () {
-      this.$body.start(true);
-      if (!route) {
-        location.hash = '#/dashboard';
       }
     },
     onError: function () {
