@@ -39,6 +39,12 @@
         });
       }
     },
+    start: function () {
+      this.collection.fetch();
+    },
+    stop: function () {
+      this.collection.stop();
+    },
     collection_addHandler: function () {
       this.count++;
     },
@@ -62,12 +68,6 @@
       ns.Manager = new Manager({
         collection: collection
       });
-    },
-    start: function () {
-      this.collection.fetch();
-    },
-    stop: function () {
-      this.collection.stop();
     }
   };
 }(Nervenet.createNameSpace('tp.notification')));
