@@ -13,7 +13,6 @@
     },
     check: function () {
       this.fetch({
-        success: _.bind(this.onSuccess, this),
         error: _.bind(this.onError, this)
       });
     },
@@ -21,7 +20,10 @@
       if (id) {
         this.$body.start(true);
         tp.notification.Manager.start();
-        if (location.hash === '#/user/login') {
+        var route = Backbone.history.start({
+          root: '/tiger-prawn/'
+        });
+        if (!route) {
           location.hash = '#/dashboard';
         }
       } else {
@@ -43,10 +45,6 @@
     },
     onSuccess: function () {
       this.$body.start(true);
-      tp.notification.Manager.start();
-      var route = Backbone.history.start({
-        root: '/tiger-prawn/'
-      });
       if (!route) {
         location.hash = '#/dashboard';
       }
