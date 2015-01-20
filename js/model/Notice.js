@@ -3,15 +3,25 @@
  */
 'use strict';
 (function (ns) {
-  var TIMEOUT = 60000; // 60s取一次
+  var TIMEOUT = 60000
+    , autoNext = false; // 60s取一次
 
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
     url: tp.API + 'notice/',
     initialize: function () {
       this.on('sync', this.syncHandler, this);
-      this.refresh();
-      this.refresh = _.bind(this.refresh, this);
+      this.fetch = _.bind(this.fetch, this);
+    },
+    fetch: function (options) {
+      autoNext = true;
+      options = _.extend({
+        data: {
+          latest: this.latest
+        },
+        remove: false
+      }, options);
+      Backbone.Collection.prototype.fetch.call(this, options);
     },
     parse: function (response) {
       for (var i = 0, len = response.list.length; i < len; i++) {
@@ -20,16 +30,14 @@
       }
       return response.list;
     },
-    refresh: function () {
-      this.fetch({
-        data: {
-          latest: this.latest
-        },
-        remove: false
-      });
+    stop: function () {
+      autoNext = false;
+      clearTimeout(TIMEOUT);
     },
     syncHandler: function () {
-      setTimeout(this.refresh, TIMEOUT);
+      if (autoNext) {
+        setTimeout(this.fetch, TIMEOUT);
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.model')));

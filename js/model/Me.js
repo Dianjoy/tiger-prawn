@@ -20,6 +20,7 @@
     id_changeHandler: function (id) {
       if (id) {
         this.$body.start(true);
+        tp.notification.Manager.start();
         if (location.hash === '#/user/login') {
           location.hash = '#/dashboard';
         }
@@ -42,6 +43,7 @@
     },
     onSuccess: function () {
       this.$body.start(true);
+      tp.notification.Manager.start();
       var route = Backbone.history.start({
         root: '/tiger-prawn/'
       });
