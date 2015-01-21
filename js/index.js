@@ -32,7 +32,7 @@ $(function () {
   context.createInstance(tp.router.Stat);
 
   // 验证用户身份
-  me.check();
+  me.fetch();
 
   // GA
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -8,13 +8,13 @@
     initialize: function () {
       this.on('change:id', this.id_changeHandler, this);
     },
+    fetch: function (options) {
+      Backbone.Model.prototype.fetch.call(this, _.extend({
+        error: _.bind(this.onError, this)
+      }, options));
+    },
     parse: function (response) {
       return response.me;
-    },
-    check: function () {
-      this.fetch({
-        error: _.bind(this.onError, this)
-      });
     },
     id_changeHandler: function (model, id) {
       if (id) {
@@ -26,11 +26,11 @@
             root: '/tiger-prawn/'
           });
         }
-        if (!route) {
+        if (!route || /^#\/user\/\w+$/.test(location.hash)) {
           location.hash = '#/dashboard';
         }
       } else {
-        if (this.$body.isStart) {
+        if (this.$body.isStart && location.hash !== '#/user/logout') {
           var login = tp.config.login;
           login.welcome = '登录已失效，请重新登录';
           login.api = this.url;
