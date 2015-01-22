@@ -30,8 +30,8 @@
     events: {
       "blur input,textarea,select": "input_blurHandler",
       'focus input': 'input_focusHandler',
-      "click .upload-button": "uploadButton_clickHandler",
-      'submit': 'submitHandler'
+      'submit': 'submitHandler',
+      'click .collapsible legend': 'legend_clickHandler'
     },
     initialize: function () {
       this.submit = this.getSubmit();
@@ -39,8 +39,8 @@
 
       // init uploader
       this.$('.uploader').each(function () {
-        var options = $(this).data()
-          , uploader = new meathill.SimpleUploader(this, options);
+        var options = $(this).data();
+        new meathill.SimpleUploader(this, options);
       });
     },
     remove: function () {
@@ -68,7 +68,7 @@
       }
       // 验证内容
       var pattern = input.attr('pattern');
-      if (pattern && input.val() !== '' && !RegExp(pattern).test(input.val())) {
+      if (pattern && input.val() !== '' && !new RegExp(pattern).test(input.val())) {
         return '填写格式有误，麻烦您检查并重新填写';
       }
       // 验证数值
@@ -89,13 +89,6 @@
 
       return '';
     },
-    createUploader: function (sibling) {
-      var data = $(sibling).data()
-        , accept = 'accept' in data ? 'accept="' + data.accept + '"' : ''
-        , uploader = $('<input type="file" class="hidden" ' + accept + '>');
-      uploader.insertAfter(sibling);
-      return uploader;
-    },
     getSubmit: function () {
       var selector = 'button:not([type=button]), input[type=submit]'
         , submit = this.$(selector);
@@ -105,7 +98,7 @@
       }
       return submit;
     },
-    input_blurHandler: function(event) {
+    input_blurHandler: function (event) {
       var target = $(event.currentTarget)
         , msg = this.checkInput(target);
       if (msg) {
@@ -117,8 +110,11 @@
         }).tooltip('show');
       }
     },
-    input_focusHandler: function(event) {
+    input_focusHandler: function (event) {
       $(event.currentTarget).tooltip('destroy');
+    },
+    legend_clickHandler: function (event) {
+      $(event.currentTarget).toggleClass('collapsed');
     },
     submit_successHandler: function(response) {
       if ('go_to_url' in response) {
@@ -132,17 +128,18 @@
       this.$el.trigger('form-success');
     },
     submit_errorHandler: function(xhr, status, error) {
-      var error = tp.Error.getAjaxMessage(xhr, status, error);
+      error = tp.Error.getAjaxMessage(xhr, status, error);
       this.displayResult(false, error.message, error.icon);
-    },
-    uploadButton_clickHandler: function(event) {
-      var uploader = this.createUploader(event.currentTarget);
-      uploader.click();
     },
     searchedHandler: function () {
       this.displayResult(true);
     },
     submitHandler: function(event) {
+      // 隐藏的表单不提交
+      if (this.$el.is(':hidden')) {
+        return;
+      }
+
       var form = this.el,
           action = form.action;
       // 不需要提交的表单和不能提交
@@ -151,7 +148,7 @@
         return false;
       }
 
-      // 筛选类型的
+      // 筛选类型
       if (this.$el.hasClass('keyword-form')) {
         this.$context.trigger('search', this.$('[name=query]').val());
         this.displayProcessing();
@@ -159,7 +156,7 @@
         return false;
       }
 
-      // 跳转类型的
+      // 跳转类型
       if (action.indexOf('#') !== -1) {
         action = action.substr(action.indexOf('#'));
         action = action.replace(/\/:(\w+)/g, function(str, key) {
@@ -172,7 +169,7 @@
       // 防止多次提交
       this.displayProcessing();
 
-      // ajax提交类型的
+      // ajax提交
       var isPass = this.validate();
       if (this.$el.hasClass('ajax') && isPass) {
         var data = this.$el.serialize();
@@ -185,7 +182,7 @@
         return false;
       }
 
-      // 编辑model的
+      // 编辑model
       if (this.$el.hasClass('model-editor') && isPass) {
         var attr = {}
           , self = this;
@@ -215,8 +212,6 @@
         return false;
       }
 
-      // 原则上当然尽量都整成ajax的
-      // 不过暂时改不过来，所以需要上传图片的表单都直接提交
       return isPass;
     }
   });

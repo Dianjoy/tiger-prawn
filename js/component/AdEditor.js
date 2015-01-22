@@ -11,10 +11,10 @@
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
       'click .platform label': 'platformButton_clickHandler',
-      'click .ad_url button': 'adURLButton_clickHandler',
       'change .domestic input': 'area_changeHandler',
       'change .isp input': 'isp_changeHandler',
-      'change #feedback': 'feedback_changeHandler'
+      'change #feedback': 'feedback_changeHandler',
+      'change #app-uploader [name=ad_url]': 'adURL_changeHandler'
     },
     initialize: function () {
       var init = this.model.pick(_.keys(this.model.defaults));
@@ -33,10 +33,19 @@
         event.target.value = event.target.value.replace(/^https?:\/\//i, IOS_PREFIX);
       }
     },
-    adURLButton_clickHandler: function (event) {
-      $(event.target).closest('.form-group')
-        .removeClass('file url')
-        .addClass(event.target.value);
+    adURL_changeHandler: function (event) {
+      var value = event.target.value;
+      if (!value) {
+        return;
+      }
+      tp.service.Manager.call(tp.API + 'fetch/', {
+        type: 'ad_url',
+        file: value
+      }, {
+        context: this,
+        success: this.fetchFile_successHandler,
+        error: this.fetchFile_errorHandler
+      });
     },
     area_changeHandler: function (event) {
       var target = $(event.target);
@@ -44,6 +53,18 @@
     },
     feedback_changeHandler: function (event) {
       this.$el.toggleClass('show-feedback-detail', event.target.value === '2' || event.target.value === '3');
+    },
+    fetchFile_successHandler: function (response) {
+      alert('服务器抓取文件成功');
+      for (var key in response.form) {
+        if (response.form.hasOwnProperty(key)) {
+          this.$('[name=' + key + ']').val(response.form[key]);
+        }
+      }
+    },
+    fetchFile_errorHandler: function (response) {
+      console.log(response);
+      alert(response.msg);
     },
     isp_changeHandler: function (event) {
       var target = $(event.target)
