@@ -1,0 +1,24 @@
+@charset "UTF-8"
+
+@import "../../bower_components/font-awesome/scss/variables"
+@import "../../bower_components/colors/sass/variables"
+@import "compass/css3/transform"
+
+form
+  fieldset.collapsible
+    legend
+      cursor: pointer
+
+      &:after
+        color: $gray
+        content: $fa-var-caret-down
+        font:
+          family: 'FontAwesome'
+        margin-left: 0.25em
+
+      &.collapsed
+        ~ *
+          display: none
+
+        &:after
+          content: $fa-var-caret-right

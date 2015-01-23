@@ -9,8 +9,8 @@
         <div class="btn-group su-tabs">
           <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
           <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络地址</button>
-          <button type="button" class="btn btn-info"><i class="fa fa-cloud-download"></i> 抓取</button>
         </div>
+        <button type="button" class="btn fetch-button" disabled><i class="fa fa-cloud-download"></i> 抓取</button>
         <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中..">
           {{#if ad_url}}
             <div class="su-item">
@@ -19,7 +19,7 @@
           {{/if}}
         </div>
         <label class="btn btn-info btn-block su-upload-button">
-          <i class="fa fa-upload"></i> 选择文件
+          <i class="fa fa-upload"></i> 选择安装包
         </label>
         <input type="hidden" name="ad_url" value="{{ad_url}}" class="su-url form-control">
       </div>
@@ -107,7 +107,7 @@
           {{/if}}
         </div>
         <label class="btn btn-info btn-block su-upload-button">
-          <i class="fa fa-upload"></i> 选择文件
+          <i class="fa fa-upload"></i> 选择图标
         </label>
         <input type="hidden" name="pic_path" value="{{pic_path}}" class="su-url">
       </div>
@@ -125,7 +125,7 @@
           {{/if}}
         </div>
         <label class="btn btn-info btn-block su-upload-button">
-          <i class="fa fa-upload"></i> 选择文件
+          <i class="fa fa-upload"></i> 选择广告截图
         </label>
         <input type="hidden" name="ad_shoot" value="{{ad_shoot}}" class="su-url">
       </div>
