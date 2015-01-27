@@ -29,7 +29,6 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
-    {{#each list}}
     <tr id="{{id}}" class="ad-{{adid}}">
       <td data-title="管理名">
         {{#channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/channel}}
@@ -49,7 +48,6 @@
         {{/unless}}
       </td>
     </tr>
-    {{/each}}
   </script>
   </tbody>
   <tfoot class="waiting">

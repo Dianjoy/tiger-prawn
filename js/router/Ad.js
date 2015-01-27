@@ -10,7 +10,7 @@
       "ad(/)": "list",
       "ad/create": "create",
       "ad/:id": "edit",
-      "apply(/:id)": "listApplies"
+      "apply/(:id)": "listApplies"
     },
     create: function () {
       var model = new tp.model.AD();
