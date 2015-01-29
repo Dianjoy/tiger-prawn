@@ -2,6 +2,7 @@
 
 @import "../../bower_components/font-awesome/scss/variables"
 @import "../../bower_components/colors/sass/variables"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 @import "compass/css3/transform"
 
 form
@@ -22,3 +23,6 @@ form
 
         &:after
           content: $fa-var-caret-right
+
+  input:valid
+    border-color: $state-success-border

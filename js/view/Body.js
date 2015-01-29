@@ -3,6 +3,7 @@
  */
 ;(function (ns) {
   ns.Body = Backbone.View.extend({
+    $context: null,
     events: {
       'change [type=range]': 'range_changeHandler'
     },
@@ -16,19 +17,19 @@
     clear: function () {
       tp.component.Manager.clear(this.$el);
     },
-    load: function (url, data, isFull, hasData) {
+    load: function (url, data, options) {
+      options = options || {};
       this.clear();
-      this.$el.toggleClass('full-page', !!isFull)
+      this.$el.toggleClass('full-page', !!options.isFull)
         .removeClass(this.lastClass);
 
       // html or hbs
       if (/.hbs$/.test(url)) {
-        var page = new tp.view.Loader({
-          template: url,
-          model: data,
-          className: data.className,
-          hasData: hasData
-        });
+        var klass = options.loader || tp.view.Loader
+          , page = this.$context.createInstance(klass, _.extend({
+            template: url,
+            model: data
+          }, options));
         this.container.html(page.$el);
         page.once('complete', this.page_loadCompleteHandler, this);
       } else {

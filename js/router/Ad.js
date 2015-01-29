@@ -15,18 +15,18 @@
     create: function () {
       var model = new tp.model.AD();
       this.$body
-        .load('page/ad/edit.hbs', model)
+        .load('page/ad/edit.hbs', model, {
+          className: 'ad ad-new',
+          loader: tp.page.AdEditor
+        })
         .setFramework('ad ad-new', '创建广告');
     },
     edit: function (id) {
-      if (this.$body.$el.hasClass('ad-new')) {
-        return;
-      }
       var model = new tp.model.AD({
         id: id
       });
       this.$body
-        .load('page/ad/edit.hbs', model)
+        .load('page/ad/ad.hbs', model, {className: 'ad ad-detail'})
         .setFramework('ad', '编辑广告');
     },
     list: function () {

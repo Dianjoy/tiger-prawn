@@ -4,7 +4,11 @@
 'use strict';
 (function (ns) {
   ns.Loader = Backbone.View.extend({
+    $context: null,
     tagName: 'div',
+    events: {
+      'click .edit': 'edit_clickHandler'
+    },
     initialize: function (options) {
       if (this.model instanceof Backbone.Model && !options.hasData) {
         this.model.once('sync', this.model_syncHandler, this);
@@ -24,6 +28,14 @@
         tp.component.Manager.check($el, model);
         self.trigger('complete');
       }, 0);
+    },
+    edit_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , options = target.data()
+        , prop = event.currentTarget.hash.substr(1);
+      options.label = target.closest('td').prev('th').text();
+      this.$context.trigger('edit-model', this.model, prop, options);
+      event.preventDefault();
     },
     model_syncHandler: function () {
       if (this.template) {

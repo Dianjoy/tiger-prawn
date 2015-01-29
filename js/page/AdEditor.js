@@ -7,7 +7,7 @@
 ;(function (ns) {
   var IOS_PREFIX = 'itms-apps://';
   
-  ns.AdEditor = Backbone.View.extend({
+  ns.AdEditor = tp.view.Loader.extend({
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
       'click .fetch-button': 'fetchButton_clickHandler',
@@ -17,7 +17,9 @@
       'change #feedback': 'feedback_changeHandler',
       'change #app-uploader [name=ad_url]': 'adURL_changeHandler'
     },
-    initialize: function () {
+    render: function () {
+      tp.view.Loader.prototype.render.call(this);
+
       var init = this.model.pick(_.keys(this.model.defaults));
       for (var key in init) {
         if (!init.hasOwnProperty(key)) {
@@ -131,4 +133,4 @@
       $('#app-uploader').data('accept', is_ios ? '*.ipa' : '*.apk');
     }
   });
-}(Nervenet.createNameSpace('tp.component')));
+}(Nervenet.createNameSpace('tp.page')));

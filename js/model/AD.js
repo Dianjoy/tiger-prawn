@@ -6,7 +6,6 @@
   var OWNER = 'ad_owner';
 
   ns.AD = Backbone.Model.extend({
-    className: 'ad ad-edit',
     defaults: {
       ad_app_type: 1,
       ad_type: 0,

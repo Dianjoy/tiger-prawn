@@ -12,7 +12,13 @@
           icon: 'close'
         }
       }
-      var message = ('responseJSON' in xhr ? xhr.responseJSON.msg : null) || error || ''
+      if (xhr.status === 0) {
+        return {
+          message: '连接超时，请检查您的网络。',
+          icon: 'close'
+        }
+      }
+      var message = (xhr.responseJSON ? xhr.responseJSON.msg : null) || error || ''
         , icon = 'frown-o';
       if (status === 'error' && !xhr.responseText) { // 没有返回值，应该是某种服务器出错
         message = '请求服务器失败，请重试。若连续失败，请联系管理员。';

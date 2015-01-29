@@ -21,6 +21,7 @@ $(function () {
     .mapValue('body', body);
   context
     .inject(me)
+    .inject(body)
     .inject(tp.component.Manager)
     .inject(tp.popup.Manager)
     .inject(tp.service.Manager)

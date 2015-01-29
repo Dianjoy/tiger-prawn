@@ -21,7 +21,8 @@
     render: function (options) {
       if (options) {
         this.options = options;
-        var template = options.form ? 'page/' + options.form : ('template/popup-' + options.type);
+        var type = options.type || 'short-text'
+          , template = options.form ? 'page/' + options.form : ('template/popup-' + type);
         $.get(template + '.hbs', _.bind(this.loadCompleteHandler, this));
       }
 

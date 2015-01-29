@@ -13,7 +13,6 @@
       '.morris-chart': 'dianjoy.component.MorrisChart',
       '.article-editor': 'dianjoy.component.ArticleEditor',
       '#login-form': 'tp.component.LoginForm',
-      '#ad-editor': 'tp.component.AdEditor',
       'form': 'tp.component.SmartForm'
     },
     check: function (el, mediator) {

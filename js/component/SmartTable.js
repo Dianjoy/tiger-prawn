@@ -73,10 +73,7 @@
       'click .range button': 'range_clickHandler'
     },
     initialize: function () {
-      this.$('.date').datetimepicker({
-        defaultDate: moment().format(DATE_FORMAT),
-        pickTime: false
-      });
+      this.$('.date').datetimepicker();
     },
     remove: function () {
       this.stopListening();
