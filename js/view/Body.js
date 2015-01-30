@@ -53,7 +53,6 @@
       this.isStart = true;
       this.$('#page-preloader').remove();
       if (showFramework) {
-        tp.popup.Manager.removePopup();
         this.$el.removeClass('full-page')
           .find('.login').remove();
       }

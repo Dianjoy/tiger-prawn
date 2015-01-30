@@ -24,7 +24,9 @@
         });
       }
       tp.config.login.api = this.$me.url;
-      this.$body.load('page/' + page + '.hbs', tp.config.login, true);
+      this.$body.load('page/' + page + '.hbs', tp.config.login, {
+        isFull: true
+      });
       this.$body.setFramework('login');
     }
   });

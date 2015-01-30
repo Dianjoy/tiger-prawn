@@ -26,31 +26,39 @@
       popup = this.$context.createInstance(ns.Base, _.extend({
         el: popup
       }, options));
+      return popup;
     },
-    popupEditor: function (model, options, collection) {
-      if (editor) {
-        if (editor.collection) {
-          editor.collection.off(null, null, editor);
-        }
-        editor.model = model;
-        editor.collection = collection;
-      } else {
-        var editor = $(this.editor(options));
-        this.$el.append(editor);
-        editor = this.$context.createInstance(ns.Editor, {
-          el: editor,
-          model: model,
-          collection: collection
-        });
-      }
-      editor.render(options);
-      editor.$el.modal('show');
+    popupEditor: function (options) {
+      var editor = options.el = $(this.editor(options));
+      this.$el.append(editor);
+      editor = EditorFactory.createEditor(this.$context, options);
       return editor;
-    },
-    removePopup: function () {
-      popup && popup.remove();
     }
   });
+
+  var EditorFactory = {
+    createEditor: function (context, options) {
+      var popup;
+      switch (options.type) {
+        case 'search':
+          popup = context.createInstance(ns.SearchEditor, options);
+          break;
+
+        case 'select':
+          popup = context.createInstance(ns.SelectEditor, options);
+          break;
+
+        case 'tags':
+          popup = context.createInstance(ns.TagsEditor, options);
+          break;
+
+        default:
+          popup = context.createInstance(ns.Editor, options);
+          break;
+      }
+      return popup;
+    }
+  }
 
   var manager = ns.Manager = new Klass({
     el: 'body'

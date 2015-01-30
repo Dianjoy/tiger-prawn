@@ -1,0 +1,135 @@
+<div role="tabpanel" id="ad-detail">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#base-info" aria-controls="base-info" role="tab" data-toggle="tab">基础信息</a></li>
+    <li role="presentation"><a href="#put" aria-controls="put" role="tab" data-toggle="tab">投放信息</a></li>
+    <li role="presentation"><a href="#channel" aria-controls="channel" role="tab" data-toggle="tab">渠道信息</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="base-info" role="tabpanel">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>所属平台</th>
+          <td>{{pick ad_app_type '' 'Android' 'iOS'}}</td>
+        </tr>
+        <tr>
+          <th>广告名</th>
+          <td><a class="edit" href="#ad_name">{{ad_name}}</a></td>
+        </tr>
+        <tr>
+          <th>广告类型</th>
+          <td><a class="edit" href="#ad_type" data-type="select" data-options="ad_types">{{pick ad_type ad_types}}</a></td>
+        </tr>
+        <tr>
+          <th>广告语</th>
+          <td><a class="edit" href="#ad_desc" data-type="long-text">{{ad_desc}}</a></td>
+        </tr>
+        <tr>
+          <th>广告链接</th>
+          <td>
+            <a class="btn btn-default" href="{{ad_url}}" download="{{ad_name}}.{{ext ad_url}}"><i class="fa fa-download"></i> 下载测试</a>
+            <a class="edit btn btn-warning" href="#ad_url" data-type="file"><i class="fa fa-upload"></i> 更换安装包</a>
+          </td>
+        </tr>
+        <tr>
+          <th>广告版本</th>
+          <td><a class="edit" href="#ad_lib">{{ad_lib}}</a></td>
+        </tr>
+        <tr>
+          <th>广告大小</th>
+          <td><a class="edit" href="#ad_size">{{ad_size}}</a></td>
+        </tr>
+        <tr>
+          <th>广告包名</th>
+          <td><a class="edit" href="#pack_name">{{pack_name}}</a></td>
+        </tr>
+        <tr>
+          <th>广告LOGO</th>
+          <td>
+            <a class="edit" href="#pic_path" data-type="img">
+              {{#if pic_path}}<img src="{{pic_path}}" class="img-thumbnail">{{/if}}
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th>广告截图</th>
+          <td>
+            <a class="edit" href="#ad_shoot" data-type="img">
+              {{#each shoots}}
+                <img src="{{../UPLOAD}}{{.}}" class="img-thumbnail">
+              {{/each}}
+            </a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="put" class="tab-pane" role="tabpanel">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>广告主报价</th>
+          <td><a class="edit" href="#quote_rmb" data-type="number">{{quote_rmb}}</a></td>
+        </tr>
+        <tr>
+          <th>日投放量</th>
+          <td><a class="edit" href="#job_num" data-type="number">{{job_num}}</a></td>
+        </tr>
+        <tr>
+          <th>完成条件</th>
+          <td><a class="edit" href="#cate" data-type="select">{{pick cate cates key='key' label='value'}}</a></td>
+        </tr>
+        <tr>
+          <th>投放运营商</th>
+          <td><a class="edit" href="#put_net" data-type="select">{{pick put_net net_types key='code' label='name'}}</a></td>
+        </tr>
+        <tr>
+          <th>投放区域</th>
+          <td>
+            <a class="edit" href="#province_type" data-type="select">{{pick province_type '全国' '分省'}}</a>
+          </td>
+        </tr>
+        {{#if put_province}}
+          <tr>
+            <th>&nbsp;</th>
+            <td>
+              {{#each put_provinces}}<span class="label label-info" id="province-{{id}}">{{value}}</span> {{/each}}
+            </td>
+          </tr>
+        {{/if}}
+      </table>
+    </div>
+    <div id="channel" class="tab-pane" role="tabpanel">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>负责人</th>
+          <td>{{pick owner sales key='key' label='value'}}</td>
+        </tr>
+        <tr>
+          <th>渠道名称</th>
+          <td>{{channel}}</td>
+        </tr>
+        <tr>
+          <th>渠道号</th>
+          <td>{{cid}}</td>
+        </tr>
+        <tr>
+          <th>渠道扣点</th>
+          <td>{{ratio}}</td>
+        </tr>
+        <tr>
+          <th>数据反馈形式</th>
+          <td>{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据'}}</td>
+        </tr>
+        <tr>
+          <th>反馈周期</th>
+          <td>{{pick cycle '' '隔日数据' '一周两次数据' '隔周数据' '隔月数据'}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="alert alert-info">
+      <h4>广告备注</h4>
+      <p>
+        <a href="#others" class="edit" data-type="long-text">{{others}}</a></p>
+    </div>
+  </div>
+</div>

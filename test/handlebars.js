@@ -16,6 +16,17 @@ QUnit.test('pick', function (assert) {
   assert.ok(result2 === 'haha', 'yeah');
 });
 
+QUnit.test('pick in', function (assert) {
+  var html = '{{pick key arr}}'
+    , template = Handlebars.compile(html)
+    , obj = {
+      arr: ['m', 'e', 'a', 't', 'h', 'i', 'l'],
+      key: 3
+    }
+    , result = template(obj);
+  assert.ok(result === 't', 'yes');
+});
+
 QUnit.test('substring', function (assert) {
   var html = '{{substring name "2" "5"}}'
     , template = Handlebars.compile(html)
@@ -24,15 +35,4 @@ QUnit.test('substring', function (assert) {
       }
     , result = template(me);
   assert.ok(result === 'athil', 'oyeah');
-});
-
-QUnit.test('pick in', function (assert) {
-  var html = '{{#pick_in arr}}{{../key}}{{/pick_in}}'
-    , template = Handlebars.compile(html)
-    , obj = {
-      arr: ['m', 'e', 'a', 't', 'h', 'i', 'l'],
-      key: 3
-    }
-    , result = template(obj);
-  assert.ok(result === 't', 'yes');
 });

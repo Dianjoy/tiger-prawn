@@ -55,19 +55,18 @@
       }
     }
   });
-  ns.Manager = {
-    init: function (collection) {
-      var panel = new ns.Panel({
-          el: '.system-notice',
-          collection: collection
-        })
-        , growl = new ns.Growl({
-          el: '#growl',
-          collection: collection
-        });
-      ns.Manager = new Manager({
-        collection: collection
-      });
-    }
-  };
+
+  var collection = new tp.model.Notice()
+    , panel = new ns.Panel({
+      el: '.system-notice',
+      collection: collection
+    })
+    , growl = new ns.Growl({
+      el: '#growl',
+      collection: collection
+    });
+
+  ns.Manager = new Manager({
+    collection: collection
+  });
 }(Nervenet.createNameSpace('tp.notification')));

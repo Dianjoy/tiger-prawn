@@ -1,9 +1,8 @@
 /**
  * Created by meathill on 14-3-19.
  */
+'use strict';
 ;(function (ns) {
-  'use strict';
-
   var collection
     , params
     , popup;
@@ -16,12 +15,10 @@
       error: onError
     });
   }
-  function callPopup(model, options, collection) {
-    popup = tp.popup.Manager.popupEditor(model, options, collection);
-    if (model) {
-      popup.on('submit', onSubmit);
-      popup.once('hidden', onHidden);
-    }
+  function callPopup(options) {
+    popup = tp.popup.Manager.popupEditor(options);
+    popup.once('submit', onSubmit);
+    popup.once('hidden', onHidden);
   }
   function clear() {
     if (collection) {
@@ -99,13 +96,11 @@
 
   ns.editModelCommand = function (model, prop, options) {
     clear();
-    options.prop = prop;
     options.value = model.get(prop) || model.get(options.display);
-    params = {
+    options = _.extend({
       model: model,
-      prop: prop,
-      options: options
-    };
+      prop: prop
+    }, options);
     // 有可能需要从远程取数据
     if (options.url || options.searchUrl) {
       var init = _.isArray(options.value) ? options.value : null;
@@ -121,6 +116,11 @@
       callPopup(model, options, collection);
       return;
     }
-    callPopup(model, options);
+    // model自带备选项
+    if (options.options) {
+      options.collection = model.options[options.options];
+      return callPopup(options);
+    }
+    callPopup(options);
   }
 }(Nervenet.createNameSpace('tp.controller')));

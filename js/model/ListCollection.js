@@ -15,7 +15,6 @@
   var Collection = ns.ListCollection = Backbone.Collection.extend({
       total: 0,
       pagesize: 10,
-      param: {},
       isLoading: false,
       initialize: function(models, options) {
         Backbone.Collection.prototype.initialize.call(this, models, options);
@@ -28,16 +27,16 @@
         var size = localStorage.getItem(location.hash + '-pagesize');
         this.pagesize = size || options.pagesize || this.pagesize;
       },
-      fetch: function (param) {
+      fetch: function (options) {
         if (this.isLoading) {
           return;
         }
-        param = param || {};
-        Backbone.Collection.prototype.fetch.call(this, {
-          data: _.extend(param, {
+        options = _.extend({
+          data: {
             pagesize: this.pagesize
-          })
-        });
+          }
+        }, options);
+        Backbone.Collection.prototype.fetch.call(this, options);
         this.isLoading = true;
       },
       parse: function (response) {
