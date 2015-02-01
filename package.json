@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/Dianjoy/tiger-prawn",
   "devDependencies": {
+    "body-parser": "^1.11.0",
+    "express": "^4.11.1",
     "grunt": "^0.4.5"
   }
 }

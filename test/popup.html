@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <title>测试Popup Editor</title>
+  <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css">
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script type="text/x-handlebars-template" id="editor-popup">
+  <div class="modal modal-styled fade model-editor-popup">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">编辑</h4>
+        </div>
+        <div class="modal-body">
+          <div class="info"></div>
+          <div class="alert alert-msg" style="display: none"></div>
+          <p class="loading"><i class="fa fa-spin fa-spinner fa-4x"></i></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" form="prop-editor" disabled><i class="fa fa-check"></i> 保存</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> 取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+<script type="text/x-handlebars-template" id="popup"></script>
+
+<script type="text/x-handlebars-template" class="editor-info">
+  <table class="table table-bordered">
+    <tr>
+      <th>姓名</th>
+      <td>{{name}}</td>
+    </tr>
+    <tr>
+      <th>年龄</th>
+      <td>{{age}}</td>
+    </tr>
+    <tr>
+      <th>性别</th>
+      <td>{{pick sex '' '男' '女'}}</td>
+    </tr>
+  </table>
+</script>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#buttons">
+        <i class="fa fa-bars"></i>
+      </button>
+      <a class="navbar-brand">编辑类型</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="buttons">
+      <ul class="nav navbar-nav">
+        <li><a href="#name" class="edit">short-text</a></li>
+        <li><a href="#description" class="edit" data-type="long-text">long-text</a></li>
+        <li><a href="#sex" class="edit" data-type="select" data-options="sex" data-label="性别">sex</a></li>
+        <li><a href="#age" class="edit" data-type="number" data-label="年龄">age</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script src="../bower_components/qunit/qunit/qunit.js"></script>
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../bower_components/underscore/underscore-min.js"></script>
+<script src="../bower_components/backbone/backbone.js"></script>
+<script src="../bower_components/nervenet/nervenet.min.js"></script>
+<script src="../bower_components/handlebars/handlebars.min.js"></script>
+<script src="../bower_components/moment/min/moment-with-locales.min.js"></script>
+<script src="../js/adapter/handlebars.js"></script>
+<script src="../js/view/DataSyncView.js"></script>
+<script src="../js/controller/editModelCommand.js"></script>
+<script src="../js/component/SmartForm.js"></script>
+<script src="../js/popup/Manager.js"></script>
+<script src="../js/popup/Editor.js"></script>
+<script src="../js/utils/error.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

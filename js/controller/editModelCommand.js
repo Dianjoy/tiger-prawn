@@ -3,124 +3,16 @@
  */
 'use strict';
 ;(function (ns) {
-  var collection
-    , params
-    , popup;
+  var popup;
 
-  function apply(attr) {
-    params.model.save(attr, {
-      patch: true,
-      wait: true,
-      success: onSuccess,
-      error: onError
-    });
-  }
-  function callPopup(options) {
-    popup = tp.popup.Manager.popupEditor(options);
-    popup.once('submit', onSubmit);
-    popup.once('hidden', onHidden);
-  }
-  function clear() {
-    if (collection) {
-      collection.off(null, collection_addHandler);
-      collection.off(null, collection_resetHandler);
-    }
-    if (popup) {
-      popup.off('submit', onSubmit);
-      popup.off('hidden', onHidden);
-    }
-    collection = params = null;
-  }
-  function collection_addHandler(model) {
-    if (model.get('code') !== 0) {
-      onError(model.get('msg'));
-    } else {
-      apply(_.omit(model.toJSON(), 'id', 'code', 'msg'));
-    }
-  }
-  function collection_resetHandler(collection) {
-    if (params) {
-      params.options.options = collection.toJSON();
-      callPopup(params.model, params.options);
-    }
-  }
-  function onHidden() {
-    clear();
-  }
-  function onSubmit() {
-    var value = popup.getValue()
-      , attr = {};
-    popup.displayProcessing();
-    // 如果有附言
-    if (params.options.message) {
-      attr['message'] = popup.getMessage();
-    }
-    // 没有选项集，就不需要转化
-    if (params.options.type === 'tags' || !collection) {
-      attr[params.prop] = value;
-      apply(attr);
-      return;
-    }
-    // 用户选择了集合里有的
-    if (collection.get(value)) {
-      attr[params.prop] = value;
-      if (params.options.display) {
-        attr[params.options.display] = collection.get(value).get('label');
-      }
-      apply(attr);
-      return;
-    }
-    // 用户输入了集合里有的
-    var model = collection.find(function (model) {
-      return model.get('label') === value;
-    });
-    if (model) {
-      attr[params.prop] = model.id;
-      attr[params.options.display] = value;
-      apply(attr);
-      return;
-    }
-    // 娘滴，真没有，只好新建了
-    attr[params.options.display || params.options.prop] = value;
-    collection.create(attr, {wait: true});
-  }
-  function onError(model, xhr, options) {
-    var error = tp.Error.getAjaxMessage(xhr);
-    popup.displayResult(false, error.message, error.icon);
-    popup.reset();
-  }
-  function onSuccess () {
-    popup.displayResult(true, '修改成功', 'fa-smile-o');
-    popup.hide();
+  function callPopup(model, prop, options) {
+    options.model = model;
+    options.prop = prop;
+    tp.popup.Manager.popupEditor(options);
   }
 
   ns.editModelCommand = function (model, prop, options) {
-    clear();
     options.value = model.get(prop) || model.get(options.display);
-    options = _.extend({
-      model: model,
-      prop: prop
-    }, options);
-    // 有可能需要从远程取数据
-    if (options.url || options.searchUrl) {
-      var init = _.isArray(options.value) ? options.value : null;
-      collection = tp.model.ListCollection.createInstance(init, {url: options.url || options.searchUrl});
-      if (options.url && options.autoLoad && !init) {
-        collection.pagesize = 0;
-        collection.on('reset', collection_resetHandler, this);
-        collection.on('add', collection_addHandler, this);
-        collection.fetch();
-        callPopup();
-        return;
-      }
-      callPopup(model, options, collection);
-      return;
-    }
-    // model自带备选项
-    if (options.options) {
-      options.collection = model.options[options.options];
-      return callPopup(options);
-    }
-    callPopup(options);
+    callPopup(model, prop, options);
   }
 }(Nervenet.createNameSpace('tp.controller')));

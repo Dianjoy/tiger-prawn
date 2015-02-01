@@ -16,7 +16,7 @@
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
       'keydown textarea': 'textarea_keydownHandler',
-      'form-success': 'form_successHandler'
+      'success': 'form_successHandler'
     },
     initialize: function (options) {
       if (options.isRemote) {

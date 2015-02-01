@@ -25,7 +25,6 @@
   }
 
   ns.SmartForm = tp.view.DataSyncView.extend({
-    $context: null,
     $router: null,
     events: {
       "blur input,textarea,select": "input_blurHandler",
@@ -35,7 +34,6 @@
     },
     initialize: function () {
       this.submit = this.getSubmit();
-      this.$context.mapEvent('table-rendered', this.searchedHandler, this);
 
       // init uploader
       this.$('.uploader').each(function () {
@@ -44,7 +42,6 @@
       });
     },
     remove: function () {
-      this.$context.removeEvent('table-rendered', this.searchedHandler);
       Backbone.View.prototype.remove.call(this);
     },
     validate: function () {
@@ -125,14 +122,13 @@
         }, 3000);
       }
       this.displayResult(true, response.msg, 'smile-o');
-      this.$el.trigger('form-success');
+      this.$el.trigger('success');
+      this.trigger('success', response);
     },
     submit_errorHandler: function(xhr, status, error) {
       error = tp.Error.getAjaxMessage(xhr, status, error);
       this.displayResult(false, error.message, error.icon);
-    },
-    searchedHandler: function () {
-      this.displayResult(true);
+      this.trigger('error', xhr, status, error);
     },
     submitHandler: function(event) {
       // 隐藏的表单不提交
@@ -142,16 +138,8 @@
 
       var form = this.el,
           action = form.action;
-      // 不需要提交的表单和不能提交
+      // 不需要提交的表单，或正在提交的表单
       if (this.$el.hasClass('fake') || this.$el.hasClass('loading')) {
-        event.preventDefault();
-        return false;
-      }
-
-      // 筛选类型
-      if (this.$el.hasClass('keyword-form')) {
-        this.$context.trigger('search', this.$('[name=query]').val());
-        this.displayProcessing();
         event.preventDefault();
         return false;
       }

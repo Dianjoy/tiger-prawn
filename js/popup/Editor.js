@@ -12,14 +12,13 @@
     events: {
       'hidden.bs.modal': 'hiddenHandler',
       'keydown': 'keydownHandler',
-      'mousedown .input-group': 'inputGroup_mouseDownHandler',
-      'submit': 'form_submitHandler'
+      'mousedown .input-group': 'inputGroup_mouseDownHandler'
     },
     initialize: function (options) {
       this.submit = this.$('.btn-primary');
       this.options = options;
       var type = options.type || 'short-text'
-        , template = options.form ? 'page/' + options.form : ('template/popup-' + type);
+        , template = tp.path + (options.form ? 'page/' + options.form : ('template/popup-' + type));
       $.get(template + '.hbs', _.bind(this.loadCompleteHandler, this), 'html');
 
       // 补充信息
@@ -33,14 +32,23 @@
     render: function (template) {
       template = Handlebars.compile(template);
       this.$('.loading').remove();
-      var form = $('<form class="editor-form" id="prop-editor"></form>').insertAfter(this.$('.alert-msg'));
-      form.html(template(this.options));
+      this.form = new tp.component.SmartForm({
+        tagName: 'form',
+        id: 'prop-editor',
+        className: 'editor-form model-editor',
+        model: this.model
+      });
+      this.form.$el.html(template(this.options)).insertAfter(this.$('.alert-msg'));
+      this.form.on('success', this.form_successHandler, this);
+      this.form.on('error', this.form_errorHandler, this);
 
       var html = this.$('.item-grid').html();
       if (html) {
         this.template = Handlebars.compile(html);
         this.$('.item-grid').empty();
       }
+
+      this.submit.prop('disabled', false);
     },
     hide: function (delay) {
       delay = delay === undefined ? 3000 : delay;
@@ -49,52 +57,20 @@
         modal.modal('hide');
       }, delay);
     },
-    reset: function () {
-      this.$('.btn-primary').prop('disabled', false)
-        .find('i').removeClass('fa-spin fa-spinner');
+    form_errorHandler: function (xhr, status, error) {
+      this.displayResult(false, error.msg, 'frown-o');
+      this.trigger('error', xhr, status, error);
     },
-    save: function () {
-      if (this.submit.prop('disabled')) {
-        return;
-      }
-      this.trigger('submit', this.form.serializeArray());
-    },
-    getValue: function () {
-      // 由radio确定从哪里取值
-      var radio = this.$('[name=prop-radio]')
-        , value;
-      if (radio.length) {
-        return this.$('[name=prop-' + radio.filter(':checked').val() + ']').val();
-      }
-      // 开关
-      // 开关基本只用0，1，但有些时候0表示开，有些时候1表示开……比如广告在线情况
-      // 所以这里根据checkbox的值，取反
-      if (this.options.type === 'status') {
-        var checkbox = this.$('input');
-        value = Number(checkbox.val());
-        return Number(checkbox.prop('checked') ? value : !value);
-      }
-      // 正常取值
-      var items = this.$('[name=prop], [name="prop[]"]');
-      if (items.length === 1) {
-        return items.val();
-      }
-      value = [];
-      items.filter(':checked').each(function () {
-        value.push(this.value);
-      });
-      return value.join('|');
-    },
-    form_submitHandler: function (event) {
-      this.save();
-      event.preventDefault();
+    form_successHandler: function (response) {
+      this.displayResult(true, response.msg, 'smile-o');
+      this.trigger('success', response);
     },
     inputGroup_mouseDownHandler: function (event) {
       $(event.currentTarget).find('[type=radio]').prop('checked', true);
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13 && event.ctrlKey) {
-        this.save();
+        this.form.submit();
         event.preventDefault();
       }
     },
@@ -102,8 +78,12 @@
       this.render(response);
     },
     hiddenHandler: function () {
-      this.trigger('hidden');
+      this.form.remove();
+      if (this.collection && this.collection instanceof Backbone.Collection) {
+        this.collection.off(null, null, this);
+      }
       clearTimeout(timeout);
+      this.trigger('hidden');
     }
   });
 
@@ -194,15 +174,10 @@
 
   ns.SelectEditor = Editor.extend({
     render: function (response) {
+      this.options.options = this.model.options[this.options.options];
       Editor.prototype.render.call(this, response);
 
-      if (this.options.options.length === 0) {
-        this.$('select')
-          .prop('disabled', true)
-          .html('<option>&lt;没有结果&gt;</option>');
-      } else {
-        this.$('select').val(this.options.value)
-      }
+      this.$('select').val(this.options.value)
     }
   });
 
