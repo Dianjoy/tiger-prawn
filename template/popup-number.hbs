@@ -1,10 +1,5 @@
 <div class="form-group">
   <label for="editor-popup-input">{{label}}</label>
-  <input type="number" {{#if max}}max="{{max}}{{/if}} {{#if min}}min="{{min}}"{{/if}} {{#if step}}step="{{step}}"{{/if}} name="{{prop}}" class="form-control" id="editor-popup-input" value="{{value}}" autofocus />
+  <input type="{{#if range}}range{{else}}number{{/if}}" {{#if max}}max="{{max}}"{{/if}} {{#if min}}min="{{min}}"{{/if}} {{#if step}}step="{{step}}"{{/if}} name="{{prop}}" {{#unless range}}class="form-control"{{/unless}} id="editor-popup-input" value="{{value}}" autofocus />
+  {{#if range}}<span class="help-inline">{{value}}</span>{{/if}}
 </div>
-{{#if message}}
-  <div class="form-group">
-    <label for="editor-message">附言</label>
-    <textarea id="editor-message" class="form-control" rows="2" name="message"></textarea>
-  </div>
-{{/if}}

@@ -33,7 +33,7 @@
       var target = $(event.currentTarget)
         , options = target.data()
         , prop = event.currentTarget.hash.substr(1);
-      options.label = target.closest('td').prev('th').text();
+      options.label = options.label || target.closest('td').prev('th').text();
       this.$context.trigger('edit-model', this.model, prop, options);
       event.preventDefault();
     },

@@ -1,11 +1,9 @@
 /**
  * Created by meathill on 14-9-17.
  */
+'use strict';
 ;(function (ns) {
-  'use strict';
-
   var timeout;
-  // TODO 找时间改成工厂模式
   var Editor = ns.Editor = tp.view.DataSyncView.extend({
     $context: null,
     form: null,
@@ -38,7 +36,7 @@
         className: 'editor-form model-editor',
         model: this.model
       });
-      this.form.$el.html(template(this.options)).insertAfter(this.$('.alert-msg'));
+      this.form.$el.html(template(_.extend(this.model.toJSON(), this.options))).insertAfter(this.$('.alert-msg'));
       this.form.on('success', this.form_successHandler, this);
       this.form.on('error', this.form_errorHandler, this);
 
@@ -174,12 +172,34 @@
 
   ns.SelectEditor = Editor.extend({
     render: function (response) {
-      this.options.options = this.model.options[this.options.options];
+      if (this.options.options) {
+        this.options.options = this.model.options[this.options.options];
+      }
       Editor.prototype.render.call(this, response);
+      if (this.options.list) {
+        this.$('select').html($(this.options.list).html());
+      }
 
       this.$('select').val(this.options.value)
     }
   });
 
+  ns.NumberEditor = Editor.extend({
+    initialize: function (options) {
+      options.range = options.type === 'range';
+      options.type = 'number';
+      Editor.prototype.initialize.call(this, options);
+    }
+  });
 
+  ns.FileEditor = Editor.extend({
+    initialize: function (options) {
+      this.isImage = /image\/\*/.test(options.accept);
+      options.API = tp.API;
+      if (options.multiple) {
+        options.items = options.value.split(',');
+      }
+      Editor.prototype.initialize.call(this, options);
+    }
+  });
 }(Nervenet.createNameSpace('tp.popup')));

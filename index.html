@@ -209,6 +209,12 @@
           <div class="info"></div>
           <div class="alert alert-msg" style="display: none"></div>
           <p class="loading"><i class="fa fa-spin fa-spinner fa-4x"></i></p>
+          {{#if comment}}
+          <div class="form-group">
+            <label for="editor-comment">附言</label>
+            <textarea class="form-control" id="editor-comment" form="prop-editor" name="{{comment}}" rows="2"></textarea>
+          </div>
+          {{/if}}
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary" form="prop-editor" disabled><i class="fa fa-check"></i> 保存</button>
@@ -254,6 +260,7 @@
 <script src="js/notification/Growl.js"></script>
 <script src="js/notification/Manager.js"></script>
 <script src="js/view/DataSyncView.js"></script>
+<script src="js/component/SmartForm.js"></script>
 <script src="js/popup/Base.js"></script>
 <script src="js/popup/Editor.js"></script>
 <script src="js/view/Loader.js"></script>

@@ -40,6 +40,15 @@
     createEditor: function (context, options) {
       var popup;
       switch (options.type) {
+        case 'file':
+          popup = context.createInstance(ns.FileEditor, options);
+          break;
+
+        case 'number':
+        case 'range':
+          popup = context.createInstance(ns.NumberEditor, options);
+          break;
+
         case 'search':
           popup = context.createInstance(ns.SearchEditor, options);
           break;

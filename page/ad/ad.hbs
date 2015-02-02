@@ -28,7 +28,7 @@
           <th>广告链接</th>
           <td>
             <a class="btn btn-default" href="{{ad_url}}" download="{{ad_name}}.{{ext ad_url}}"><i class="fa fa-download"></i> 下载测试</a>
-            <a class="edit btn btn-warning" href="#ad_url" data-type="file"><i class="fa fa-upload"></i> 更换安装包</a>
+            <a class="edit btn btn-warning" href="#ad_url" data-type="file" data-accept="*.apk"><i class="fa fa-upload"></i> 更换安装包</a>
           </td>
         </tr>
         <tr>
@@ -46,7 +46,7 @@
         <tr>
           <th>广告LOGO</th>
           <td>
-            <a class="edit" href="#pic_path" data-type="img">
+            <a class="edit" href="#pic_path" data-type="file" data-accept="image/*">
               {{#if pic_path}}<img src="{{pic_path}}" class="img-thumbnail">{{/if}}
             </a>
           </td>
@@ -54,7 +54,7 @@
         <tr>
           <th>广告截图</th>
           <td>
-            <a class="edit" href="#ad_shoot" data-type="img">
+            <a class="edit" href="#ad_shoot" data-type="file" data-accept="image/*" data-multiple="true" data-append="true">
               {{#each shoots}}
                 <img src="{{../UPLOAD}}{{.}}" class="img-thumbnail">
               {{/each}}
@@ -75,16 +75,16 @@
         </tr>
         <tr>
           <th>完成条件</th>
-          <td><a class="edit" href="#cate" data-type="select">{{pick cate cates key='key' label='value'}}</a></td>
+          <td><a class="edit" href="#cate" data-type="select" data-options="cates">{{pick cate cates key='key' label='value'}}</a></td>
         </tr>
         <tr>
           <th>投放运营商</th>
-          <td><a class="edit" href="#put_net" data-type="select">{{pick put_net net_types key='code' label='name'}}</a></td>
+          <td><a class="edit" href="#put_net" data-type="select" data-options="net_types">{{pick put_net net_types key='code' label='name'}}</a></td>
         </tr>
         <tr>
           <th>投放区域</th>
           <td>
-            <a class="edit" href="#province_type" data-type="select">{{pick province_type '全国' '分省'}}</a>
+            <a class="edit" href="#province_type" data-type="select" data-list="#province_type">{{pick province_type '全国' '分省'}}</a>
           </td>
         </tr>
         {{#if put_province}}
@@ -101,27 +101,27 @@
       <table class="table table-bordered table-striped">
         <tr>
           <th>负责人</th>
-          <td>{{pick owner sales key='key' label='value'}}</td>
+          <td><a href="#owner" class="edit" data-type="select" data-options="sales">{{pick owner sales key='key' label='value'}}</a></td>
         </tr>
         <tr>
           <th>渠道名称</th>
-          <td>{{channel}}</td>
+          <td><a href="#channel" class="edit">{{channel}}</a></td>
         </tr>
         <tr>
           <th>渠道号</th>
-          <td>{{cid}}</td>
+          <td><a href="#cid" class="edit">{{cid}}</a></td>
         </tr>
         <tr>
           <th>渠道扣点</th>
-          <td>{{ratio}}</td>
+          <td><a href="#ratio" class="edit" data-type="range" data-max="1" data-min="0.01" data-step="0.01">{{ratio}}</a></td>
         </tr>
         <tr>
           <th>数据反馈形式</th>
-          <td>{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据'}}</td>
+          <td><a href="#feedback" class="edit" data-type="select" data-list="#feedback">{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据'}}</a></td>
         </tr>
         <tr>
           <th>反馈周期</th>
-          <td>{{pick cycle '' '隔日数据' '一周两次数据' '隔周数据' '隔月数据'}}</td>
+          <td><a href="#cycle" class="edit" data-type="select" data-list="#cycle">{{pick cycle '' '隔日数据' '一周两次数据' '隔周数据' '隔月数据'}}</a></td>
         </tr>
       </table>
     </div>
@@ -133,3 +133,21 @@
     </div>
   </div>
 </div>
+<datalist id="province_type">
+  <option value="0">全国</option>
+  <option value="1">分省</option>
+</datalist>
+<datalist id="feedback">
+  <option value="1">截图</option>
+  <option value="2">官方后台</option>
+  <option value="3">渠道后台</option>
+  <option value="4">API接口</option>
+  <option value="5" class="iPhone">核对mac地址</option>
+  <option value="6">实时数据</option>
+</datalist>
+<datalist id="cycle">
+  <option value="1">隔日数据</option>
+  <option value="2">一周两次数据</option>
+  <option value="3">隔周数据</option>
+  <option value="4">隔月数据</option>
+</datalist>
