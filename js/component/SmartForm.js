@@ -34,21 +34,14 @@
     },
     initialize: function () {
       this.submit = this.getSubmit();
-
-      // init uploader
-      this.$('.uploader').each(function () {
-        var options = $(this).data();
-        new meathill.SimpleUploader(this, options);
-      });
-    },
-    remove: function () {
-      Backbone.View.prototype.remove.call(this);
+      this.initUploader();
     },
     validate: function () {
       // 验证表单项是否合乎要求
       var elements = this.el.elements;
       if (this.$el.hasClass('uploading')) {
-        this.$('.upload-button').push('上传文件中，请稍候');
+        alert('上传文件中，请稍候');
+        return false;
       }
       // 验证两次输入的密码是否一致
       if ('newpassword' in elements && elements.newpassword.value !== elements.repassword.value) {
@@ -94,6 +87,16 @@
         submit = $(selector).filter('[form=' + id + ']');
       }
       return submit;
+    },
+    initUploader: function () {
+      var id = this.model.id;
+      this.$('.uploader').each(function () {
+        var options = $(this).data();
+        options.data = {
+          id: id
+        };
+        new meathill.SimpleUploader(this, options);
+      });
     },
     input_blurHandler: function (event) {
       var target = $(event.currentTarget)

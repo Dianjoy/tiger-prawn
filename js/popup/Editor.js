@@ -62,6 +62,7 @@
     form_successHandler: function (response) {
       this.displayResult(true, response.msg, 'smile-o');
       this.trigger('success', response);
+      this.hide();
     },
     inputGroup_mouseDownHandler: function (event) {
       $(event.currentTarget).find('[type=radio]').prop('checked', true);
@@ -200,6 +201,10 @@
         options.items = options.value.split(',');
       }
       Editor.prototype.initialize.call(this, options);
+    },
+    render: function (response) {
+      Editor.prototype.render.call(this, response);
+      this.form.initUploader();
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));

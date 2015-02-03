@@ -36,7 +36,13 @@
         {{cid}}
       </td>
       <td data-title="针对">{{attr}}</td>
-      <td data-title="调整前后">{{#if before}}{{before}} / {{/if}}{{after}}</td>
+      <td data-title="调整前后">
+        {{#if is_url}}
+        <a href="{{before}}">调整前</a> / <a href="{{after}}">调整后</a>
+        {{else}}
+        {{#if before}}{{before}} / {{/if}}{{after}}
+        {{/if}}
+      </td>
       <td data-title="提交时间"><time datetime="{{create_time}}">{{create_time}}</time></td>
       <td data-title="附言">{{send_msg}}</td>
       <td data-title="处理时间"><time datetime="{{handle_time}}">{{handle_time}}</time></td>

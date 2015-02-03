@@ -34,7 +34,7 @@
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
       }
-      if ('owner' in response.ad && !response.ad.owner) {
+      if (response.ad && !response.ad.owner) {
         response.ad.owner = Number(localStorage.getItem(OWNER));
       }
       return response.ad;
