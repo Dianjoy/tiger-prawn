@@ -3,6 +3,23 @@
 @import "../../bower_components/colors/sass/variables"
 @import "../define"
 
+
+@media screen and (max-width: 768px)
+  #navbar-top-inner
+    position: relative
+    left: 0
+    display: inline-block
+    width: 100%
+    ul li
+      display: inline-block
+      float: right
+
+
+@media screen and (min-width: 768px)
+  .navbar-toggle
+    display: inline
+    margin-left: 20px
+
 #navbar-top
   background-color: $topbar-background-color
   border-color: darken($topbar-background-color, 5%)

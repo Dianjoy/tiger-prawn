@@ -3,37 +3,76 @@
 @import "../define"
 @import "../../bower_components/colors/sass/variables"
 
-#content
-  margin-top: $topbar-height
-  margin-left: $sidebar-width
-  margin-bottom: $footer-height
-  padding: 40px $gap-l 0px
+@media screen and (max-width: 768px)
+  #content
+    margin-top: $topbar-height
+    margin-left: 0
+    margin-bottom: $footer-height
+    padding: 40px $gap-l 0
 
-  > .page-header
-    margin: 0
-
-    h1
+    > .page-header
       margin: 0
 
-  > .breadcrumb
-    background-color: $silver
+      h1
+        margin: 0
 
-#page-loading
-  position: fixed
-  top: $topbar-height
-  left: $sidebar-width
-  right: 0
-  bottom: $footer-height
-  background-color: rgba(0, 0, 0, .6)
+    > .breadcrumb
+      background-color: $silver
 
-  .loading
-    background-color: $white
-    border-radius: 4px
-    font-size: 1.2em
-    line-height: 2.5em
-    width: 200px
-    text-align: center
-    position: absolute
-    top: 45%
-    left: 50%
-    margin-left: -125px
+  #page-loading
+    position: fixed
+    top: $topbar-height
+    left: $sidebar-width
+    right: 0
+    bottom: $footer-height
+    background-color: rgba(0, 0, 0, .6)
+
+    .loading
+      background-color: $white
+      border-radius: 4px
+      font-size: 1.2em
+      line-height: 2.5em
+      width: 200px
+      text-align: center
+      position: absolute
+      top: 45%
+      left: 50%
+      margin-left: -125px
+
+@media screen and (min-width: 768px)
+  #content
+    margin-top: $topbar-height
+    margin-left: $sidebar-width
+    margin-bottom: $footer-height
+    padding: 40px $gap-l 0
+
+
+    > .page-header
+      margin: 0
+
+      h1
+        margin: 0
+
+    > .breadcrumb
+      background-color: $silver
+
+  #page-loading
+    position: fixed
+    top: $topbar-height
+    left: $sidebar-width
+    right: 0
+    bottom: $footer-height
+    background-color: rgba(0, 0, 0, .6)
+
+    .loading
+      background-color: $white
+      border-radius: 4px
+      font-size: 1.2em
+      line-height: 2.5em
+      width: 200px
+      text-align: center
+      position: absolute
+      top: 45%
+      left: 50%
+      margin-left: -125px
+
