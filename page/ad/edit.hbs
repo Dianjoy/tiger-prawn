@@ -32,6 +32,28 @@
         </div>
       </div>
     </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="replace-ad">替换广告</label>
+      <div class="col-sm-1">
+        <input type="checkbox" name="replace" value="1" id="replace-ad" class="switch">
+        <label for="replace-ad"></label>
+      </div>
+      <div class="col-sm-5">
+        <select name="replace-with" disabled class="form-control"></select>
+      </div>
+      <div class="col-sm-1">
+        <label class="control-label">上线时间</label>
+      </div>
+      <div class="col-sm-3">
+        <div class="input-group" id="replace-time">
+          <input type="datetime" name="replace-time" class="form-control date" id="replace-time" disabled>
+          <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+        </div>
+      </div>
+      <p class="help-block col-sm-offset-2 col-sm-10">
+        将选中的广告下线，并新建广告替换之。
+      </p>
+    </div>
   </fieldset>
   <fieldset class="collapsible">
     <a name="basic-info"></a>
@@ -322,15 +344,6 @@
       <label class="col-sm-2 control-label" for="others">备注</label>
       <div class="col-sm-10">
         <textarea name="others" class="form-control" rows="2" id="others">{{others}}</textarea>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="replace-ad">替换广告</label>
-      <div class="col-sm-1">
-        <input type="checkbox" name="replace" value="1" id="replace-ad">
-      </div>
-      <div class="col-sm-5">
-        <select name="replace-with" disabled class="form-control"></select>
       </div>
     </div>
   </fieldset>

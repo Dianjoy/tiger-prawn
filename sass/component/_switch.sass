@@ -1,7 +1,12 @@
 @charset "UTF-8"
 
 @import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+@import "../../bower_components/font-awesome/scss/variables"
+@import "../../bower_components/font-awesome/scss/animated"
 @import "../../bower_components/colors/sass/variables"
+@import "../define"
+@import "compass/css3/animation"
+@import "compass/css3/opacity"
 
 input[type=checkbox].switch
   display: none
@@ -18,7 +23,7 @@ input[type=checkbox].switch
     transition: all 0.2s
     vertical-align: middle
 
-    &:after
+    &:before
       content: ''
       background-color: $white
       border: 1px solid $btn-default-border
@@ -30,10 +35,24 @@ input[type=checkbox].switch
       left: 1px
       transition: all 0.2s
 
-  &:checked + label
-    background-color: $btn-success-bg
-    border-color: $btn-success-color
+    .form-group &
+      margin: $gap-s 0 0
 
-    &:after
-      left: 27px
-      border: none
+  &:checked
+    &:disabled + label
+      @include opacity(0.65)
+      cursor: not-allowed
+
+    & + label
+      background-color: $btn-success-bg
+      border-color: $btn-success-color
+
+      &:before
+        left: 27px
+        border: none
+
+      &.spin:before
+        content: $fa-var-spinner
+        font-family: 'FontAwesome', sans-serif
+        text-align: center
+        @include animation(fa-spin 2s infinite linear)

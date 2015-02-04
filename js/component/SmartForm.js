@@ -89,13 +89,15 @@
       return submit;
     },
     initUploader: function () {
-      var id = this.model.id;
+      var id = this.model.id
+        , self = this;
       this.$('.uploader').each(function () {
         var options = $(this).data();
         options.data = {
           id: id
         };
-        new meathill.SimpleUploader(this, options);
+        var uploader = new meathill.SimpleUploader(this, options);
+        uploader.on('data', self.uploader_dataHandler, self);
       });
     },
     input_blurHandler: function (event) {
@@ -204,6 +206,24 @@
       }
 
       return isPass;
+    },
+    uploader_dataHandler: function (data) {
+      for (var key in data) {
+        if (!data.hasOwnProperty(key)) {
+          return;
+        }
+        var value = data[key]
+          , items = this.$('[name= ' + key + ']').val(value);
+        try {
+          items.length > 0 || this.$('[name=' + key + '][value=' + value + '], [name="' + key + '[]"][value=' + value + ']').prop('checked', true);
+        } catch (e) {
+          console.log('no such item');
+        }
+        if (items.attr('type') === 'hidden') {
+          items.trigger('change');
+        }
+      }
+      this.model.set(data);
     }
   });
 }(Nervenet.createNameSpace('tp.component')));

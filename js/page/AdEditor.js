@@ -12,6 +12,7 @@
       'blur [name=ad_url]': 'adURL_blurHandler',
       'click .fetch-button': 'fetchButton_clickHandler',
       'change [name=ad_app_type]': 'platform_changeHandler',
+      'change #replace-ad': 'replaceAD_changeHandler',
       'change .domestic input': 'area_changeHandler',
       'change .isp input': 'isp_changeHandler',
       'change #feedback': 'feedback_changeHandler',
@@ -67,6 +68,19 @@
     },
     feedback_changeHandler: function (event) {
       this.$el.toggleClass('show-feedback-detail', event.target.value === '2' || event.target.value === '3');
+    },
+    fetchAD_errorHandler: function (xhr, status, err) {
+      alert('加载已有广告失败');
+      this.$('#replace-ad').prop('disabled', false)
+        .next().removeClass('spin');
+    },
+    fetchAD_successHandler: function (response) {
+      var template = Handlebars.compile('{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}')
+        , options = template(response);
+      this.hasAD = true;
+      this.$('[name=replace-with]').html(options);
+      this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', false);
+      this.$('#replace-ad').next().removeClass('spin');
     },
     fetchButton_clickHandler: function () {
       var field = this.$('[name=ad_url]')
@@ -131,6 +145,30 @@
       this.$('#process_name').prop('required', is_ios);
       $('#feedback').val(function () { return is_ios ? 4 : this.value});
       $('#app-uploader').data('accept', is_ios ? '*.ipa' : '*.apk');
+    },
+    replaceAD_changeHandler: function (event) {
+      var replace = event.target.checked
+        , pack_name = this.model.get('pack_name') || this.$('[name=pack_name]').val();
+      if (replace && !pack_name) {
+        alert('包名未知，请先上传安装包，或填写包名');
+        event.target.checked = false;
+        return;
+      }
+      if (replace && !this.hasAD) {
+        tp.service.Manager.call(tp.API + 'ad/', {
+          pack_name: pack_name
+        }, {
+          success: this.fetchAD_successHandler,
+          error: this.fetchAD_errorHandler,
+          context: this,
+          method: 'get'
+        });
+        this.$('#replace-time').datetimepicker();
+        event.target.disabled = true;
+        $(event.target).next().addClass('spin');
+        return;
+      }
+      this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "bootstrap-sass": "twbs/bootstrap-sass#~3.3.2",
-    "mh-simple-uploader": "~0.5.4",
+    "mh-simple-uploader": "~0.5.5",
     "qunit": "~1.17.1"
   }
 }
