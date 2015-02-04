@@ -2,361 +2,172 @@
 @import "../../bower_components/colors/sass/variables"
 @import "../define"
 
-@media screen and (max-width: 768px)
-  #navbar-side
-    background-color: $sidebar-background-color
-    color: $white
-    position: fixed
-    width: $sidebar-width
-    top: $topbar-height
-    left: 0
-    bottom: 0
-    z-index: 15
 
-
-  .side-nav
-    float: none
-    margin: 0
-    padding: 0
-    border-bottom: 1px solid lighten($sidebar-background-color, 5%)
-
-    a
-      color: $navbar-color
-
-      &:hover
-        color: $white
-
-      i
-        width: 20px
-
-    > li
-      float: none
-      border-top: 1px solid lighten($sidebar-background-color, 5%)
-      border-bottom: 1px solid darken($sidebar-background-color, 5%)
-
-      &:first-child
-        border-top: none
-
-      > a
-        .caret
-          float: right
-          margin-top: 10px
-
-        &:hover,
-        &:active,
-        &:focus
-          background: darken($sidebar-background-color, 5%)
-          background: rgba(0, 0, 0, 0.075)
-          color: $white
-
-    .navbar-user
-      padding: 15px
-
-      span
-        font-size: 12px
-        line-height: 18px
-
-      img
-        background-color: $white
-        float: left
-        width: 40px
-        height: 40px
-        margin-right: $gap
-        margin-bottom: $gap
-
-      h4
-        line-height: 40px
-        margin: 0 0 $gap
-
-      label
-        font-size: 12px
-
-      progress
-        width: 100%
-
-    .nav
-      background-color: darken($sidebar-background-color, 10%)
-      font-size: 12px
-      line-height: 20px
-
-      a:active,
-      a:focus,
-      a:hover
-        background-color: darken($sidebar-background-color, 5%)
-
-      i
-        text-align: center
-
-    .sub-nav
-      background: #555
-      list-style-type: none
-
-      > li
-        background: none
-        list-style-type: none
-        padding: 0
-
-        > a
-          display: block
-          color: #FFF
-
-          &:hover
-            text-decoration: none
-            background-color: #4d4d4d
-            border-radius: 5px
-
-          i
-            margin-right: .65em
-
-        &.active > a
-          text-decoration: none
-          background-color: #4d4d4d
-          border-radius: 5px
-
-      .divider
-        height: 1px
-        margin: 5px 0
-        overflow: hidden
-        background: #666
-
-  .dropdown-submenu
-    position: relative
-
-    &:hover > .dropdown-menu
-      display: block
-
-    &.pull-left > .dropdown-menu
-      left: -100%
-      margin-left: 10px
-      -webkit-border-radius: 6px 0 6px 6px
-      -moz-border-radius: 6px 0 6px 6px
-      border-radius: 6px 0 6px 6px
-
-    > .dropdown-menu
-      top: 0
-      left: 100%
-      margin-top: -6px
-      border-radius: 0 6px 6px 0
-
-    > a:after
-      display: block
-      content: " "
-      float: right
-      width: 0
-      height: 0
-      border-color: transparent
-      border-style: solid
-      border-width: 5px 0 5px 5px
-      border-left-color: #CCC
-      margin-top: 5px
-      margin-right: -10px
-
-    &:hover > a:after
-      border-left-color: #FFF
-
-    .pull-left
-      float: none
-
-@media screen and (min-width: 768px)
-  #navbar-side
-    background-color: $sidebar-background-color
-    color: $white
-    position: fixed
-    width: $sidebar-width
-    top: $topbar-height
-    left: 0
-    bottom: 0
-    z-index: 15
-    visibility: visible
-
-
-  .side-nav
-    float: none
-    margin: 0
-    padding: 0
-    border-bottom: 1px solid lighten($sidebar-background-color, 5%)
-
-    a
-      color: $navbar-color
-
-      &:hover
-        color: $white
-
-      i
-        width: 20px
-
-    > li
-      float: none
-      border-top: 1px solid lighten($sidebar-background-color, 5%)
-      border-bottom: 1px solid darken($sidebar-background-color, 5%)
-
-      &:first-child
-        border-top: none
-
-      > a
-        .caret
-          float: right
-          margin-top: 10px
-
-        &:hover,
-        &:active,
-        &:focus
-          background: darken($sidebar-background-color, 5%)
-          background: rgba(0, 0, 0, 0.075)
-          color: $white
-
-    .navbar-user
-      padding: 15px
-
-      span
-        font-size: 12px
-        line-height: 18px
-
-      img
-        background-color: $white
-        float: left
-        width: 40px
-        height: 40px
-        margin-right: $gap
-        margin-bottom: $gap
-
-      h4
-        line-height: 40px
-        margin: 0 0 $gap
-
-      label
-        font-size: 12px
-
-      progress
-        width: 100%
-
-    .nav
-      background-color: darken($sidebar-background-color, 10%)
-      font-size: 12px
-      line-height: 20px
-
-      a:active,
-      a:focus,
-      a:hover
-        background-color: darken($sidebar-background-color, 5%)
-
-      i
-        text-align: center
-
-    .sub-nav
-      background: #555
-      list-style-type: none
-
-      > li
-        background: none
-        list-style-type: none
-        padding: 0
-
-        > a
-          display: block
-          color: #FFF
-
-          &:hover
-            text-decoration: none
-            background-color: #4d4d4d
-            border-radius: 5px
-
-          i
-            margin-right: .65em
-
-        &.active > a
-          text-decoration: none
-          background-color: #4d4d4d
-          border-radius: 5px
-
-      .divider
-        height: 1px
-        margin: 5px 0
-        overflow: hidden
-        background: #666
-
-  .dropdown-submenu
-    position: relative
-
-    &:hover > .dropdown-menu
-      display: block
-
-    &.pull-left > .dropdown-menu
-      left: -100%
-      margin-left: 10px
-      -webkit-border-radius: 6px 0 6px 6px
-      -moz-border-radius: 6px 0 6px 6px
-      border-radius: 6px 0 6px 6px
-
-    > .dropdown-menu
-      top: 0
-      left: 100%
-      margin-top: -6px
-      border-radius: 0 6px 6px 0
-
-    > a:after
-      display: block
-      content: " "
-      float: right
-      width: 0
-      height: 0
-      border-color: transparent
-      border-style: solid
-      border-width: 5px 0 5px 5px
-      border-left-color: #CCC
-      margin-top: 5px
-      margin-right: -10px
-
-    &:hover > a:after
-      border-left-color: #FFF
-
-    .pull-left
-      float: none
+.navbar-side
+  background-color: $sidebar-background-color
+  color: $white
+  width: $sidebar-width
+  height: auto
+  position: absolute
+  top: $topbar-height
+  left: 0
+  bottom: 0
+  z-index: 14
 
 @media screen and (max-width: 768px)
-  .collapse
-    @at-root #navbar-side
-      height: 0
-      visibility: hidden
+  .navbar-side
+    margin-top: 60px
+    left: -9999px
+
   .collapse.in
-    @at-root #navbar-side
-      height: 100%
-      visibility: visible
+    @at-root .navbar-side
+      left: 0px
+      width: 100%
+      height: 220px
 
-@keyframes action
-  from
-    left: -200px
-  to
-    left: 0
 
-@-webkit-keyframes action
-  from
-    left: -200px
-  to
-    left: 0
+.side-nav
+  float: none
+  margin: 0
+  padding: 0
+  border-bottom: 1px solid lighten($sidebar-background-color, 5%)
 
-@-o-keyframes action
-  from
-    left: -200px
-  to
-    left: 0
+  a
+    color: $navbar-color
 
-@-ms-keyframes action
-  from
-    left: -200px
-  to
-    left: 0
+    &:hover
+      color: $white
 
-.collapsing
+    i
+      width: 20px
+
+  > li
+    float: none
+    border-top: 1px solid lighten($sidebar-background-color, 5%)
+    border-bottom: 1px solid darken($sidebar-background-color, 5%)
+
+    &:first-child
+      border-top: none
+
+    > a
+      .caret
+        float: right
+        margin-top: 10px
+
+      &:hover,
+      &:active,
+      &:focus
+        background: darken($sidebar-background-color, 5%)
+        background: $sidebar-background-color
+        color: $white
+
+  .navbar-user
+    padding: 15px
+
+    span
+      font-size: 12px
+      line-height: 18px
+
+    img
+      background-color: $white
+      float: left
+      width: 40px
+      height: 40px
+      margin-right: $gap
+      margin-bottom: $gap
+
+    h4
+      line-height: 40px
+      margin: 0 0 $gap
+
+    label
+      font-size: 12px
+
+    progress
+      width: 100%
+
+  .nav
+    background-color: darken($sidebar-background-color, 10%)
+    font-size: 12px
+    line-height: 20px
+
+    a:active,
+    a:focus,
+    a:hover
+      background-color: darken($sidebar-background-color, 5%)
+
+    i
+      text-align: center
+
+  .sub-nav
+    background: #555
+    list-style-type: none
+
+    > li
+      background: none
+      list-style-type: none
+      padding: 0
+
+      > a
+        display: block
+        color: #FFF
+
+        &:hover
+          text-decoration: none
+          background-color: #4d4d4d
+          border-radius: 5px
+
+        i
+          margin-right: .65em
+
+      &.active > a
+        text-decoration: none
+        background-color: #4d4d4d
+        border-radius: 5px
+
+    .divider
+      height: 1px
+      margin: 5px 0
+      overflow: hidden
+      background: #666
+
+
+
+.dropdown-submenu
   position: relative
-  width: 0
-  height: 100%
-  overflow: hidden
-  -webkit-transition-property: height, visibility
-  -o-transition-property: height, visibility
-  transition-property: height, visibility
-  animation: action
-  -webkit-animation: action
-  -moz-animation: action
-  -o-animation: action
-  -ms-animation: action
+
+  &:hover > .dropdown-menu
+    display: block
+
+  &.pull-left > .dropdown-menu
+    left: -100%
+    margin-left: 10px
+    -webkit-border-radius: 6px 0 6px 6px
+    -moz-border-radius: 6px 0 6px 6px
+    border-radius: 6px 0 6px 6px
+
+  > .dropdown-menu
+    top: 0
+    left: 100%
+    margin-top: -6px
+    border-radius: 0 6px 6px 0
+
+  > a:after
+    display: block
+    content: " "
+    float: right
+    width: 0
+    height: 0
+    border-color: transparent
+    border-style: solid
+    border-width: 5px 0 5px 5px
+    border-left-color: #CCC
+    margin-top: 5px
+    margin-right: -10px
+
+  &:hover > a:after
+    border-left-color: #FFF
+
+  .pull-left
+    float: none
+
