@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html>
-<head lang="cn">
+<html lang="cn">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1.0,user-scalable=no,width=device-width">
 
@@ -46,7 +46,7 @@
       <a class="navbar-brand" href="/">点乐广告自助平台</a>
     </div>
 
-    <div class="collapse navbar-collapse" id="navbar-top-inner">
+    <div id="navbar-top-inner">
       <ul class="nav navbar-nav navbar-right">
         <li class="pit dropdown-list"><a href="#"><i class="fa fa-tasks"></i></a></li>
         <li class="dropdown system-notice dropdown-list">
@@ -71,11 +71,11 @@
             <span class="username"></span> <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li class="pit"><a href="#/my/profile"><i class="fa fa-user fa-fw"></i> 我的账户</a></li>
+            <li class="pit"><a data-toggle="tab" href="#/my/profile"><i class="fa fa-user fa-fw"></i> 我的账户</a></li>
             <li><a href="#/my/settings"><i class="fa fa-cog fa-fw"></i> 设置</a></li>
-            <li class="pit"><a href="#/my/recharge"><i class="fa fa-fw fa-money"></i> 充值</a></li>
+            <li class="pit"><a data-toggle="tab" href="#/my/recharge"><i class="fa fa-fw fa-money"></i> 充值</a></li>
             <li class="divider"></li>
-            <li><a href="#/user/logout"><i class="fa fa-fw fa-sign-out"></i> 退出</a></li>
+            <li><a data-toggle="tab" href="#/user/logout"><i class="fa fa-fw fa-sign-out"></i> 退出</a></li>
           </ul>
         </li>
       </ul>
@@ -83,7 +83,7 @@
   </div>
 </nav>
 
-<nav class="navbar-side" role="navigation" id="navbar-side">
+<nav class="navbar-side navbar-side-left" role="navigation" id="navbar-side">
   <ul id="navbar-side-inner" class="nav navbar-nav side-nav">
     <li class="navbar-user">
       <img src="img/logo.png" class="img-circle">
