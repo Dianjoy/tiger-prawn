@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="bower_components/animate.css/animate.min.css">
-  <link rel="stylesheet" href="bower_components/morris/morris.css">
+  <link rel="stylesheet" href="bower_components/morrisjs/morris.css">
   <link rel="stylesheet" href="css/screen.css" media="screen">
   <link>
 </head>
@@ -39,7 +39,7 @@
 <nav class="navbar navbar-fixed-top" role="navigation" id="navbar-top">
   <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-inner">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-side">
         <span class="sr-only">导航栏</span>
         <i class="fa fa-bars"></i>
       </button>
@@ -48,9 +48,9 @@
 
     <div class="collapse navbar-collapse" id="navbar-top-inner">
       <ul class="nav navbar-nav navbar-right">
-        <li class="pit"><a href="#"><i class="fa fa-tasks"></i></a></li>
-        <li class="dropdown system-notice">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <li class="pit dropdown-list"><a href="#"><i class="fa fa-tasks"></i></a></li>
+        <li class="dropdown system-notice dropdown-list">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <i class="fa fa-bell"></i>
           </a>
           <ul class="dropdown-menu message-list" role="menu">
@@ -65,9 +65,9 @@
             </script>
           </ul>
         </li>
-        <li class="pit"><a href="#"><i class="fa fa-envelope"></i></a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <li class="pit dropdown-list"><a href="#"><i class="fa fa-envelope"></i></a></li>
+        <li class="dropdown dropdown-list">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <span class="username"></span> <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
@@ -229,7 +229,7 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/raphael/raphael-min.js"></script>
-<script src="bower_components/morris/morris.min.js"></script>
+<script src="bower_components/morrisjs/morris.min.js"></script>
 <script src="bower_components/handlebars/handlebars.min.js"></script>
 <script src="bower_components/underscore/underscore-min.js"></script>
 <script src="bower_components/backbone/backbone.js"></script>

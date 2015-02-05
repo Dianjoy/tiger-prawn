@@ -6,7 +6,7 @@
 #content
   margin-top: $topbar-height
   margin-left: $sidebar-width
-  margin-bottom: $footer-height
+  margin-bottom: $footer-height+20
   padding: $gap-l
 
   > .page-header
@@ -17,6 +17,12 @@
 
   > .breadcrumb
     background-color: $silver
+
+@media screen and (max-width: 768px)
+  #content
+    margin-left: 0
+    margin-top: $topbar-height*2
+
 
 #page-loading
   position: fixed
@@ -37,3 +43,9 @@
     top: 45%
     left: 50%
     margin-left: -125px
+
+@media screen and (max-width: 768px)
+  #page-loading
+    left: 0
+    .loading
+      left: 55%

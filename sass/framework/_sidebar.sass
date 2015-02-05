@@ -2,15 +2,27 @@
 @import "../../bower_components/colors/sass/variables"
 @import "../define"
 
-#navbar-side
+.navbar-side
   background-color: $sidebar-background-color
   color: $white
-  position: fixed
   width: $sidebar-width
+  height: auto
+  position: absolute
   top: $topbar-height
   left: 0
   bottom: 0
-  z-index: 15
+  z-index: 14
+
+@media screen and (max-width: 768px)
+  .navbar-side
+    margin-top: 60px
+    visibility: hidden
+
+  .collapse.in
+    @at-root .navbar-side
+      left: 0px
+      width: 100%
+      height: 220px
 
 
 .side-nav
@@ -45,7 +57,7 @@
       &:active,
       &:focus
         background: darken($sidebar-background-color, 5%)
-        background: rgba(0, 0, 0, 0.075)
+        background: $sidebar-background-color
         color: $white
 
   .navbar-user
@@ -118,6 +130,8 @@
       overflow: hidden
       background: #666
 
+
+
 .dropdown-submenu
   position: relative
 
@@ -155,4 +169,3 @@
 
   .pull-left
     float: none
-

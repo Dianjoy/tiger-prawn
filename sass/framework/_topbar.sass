@@ -3,6 +3,30 @@
 @import "../../bower_components/colors/sass/variables"
 @import "../define"
 
+@media screen and (max-width: 768px)
+  .navbar-right
+    display: block
+    float: right
+    clear: both
+  #navbar-top-inner
+    display: block
+    visibility: visible
+    padding-right: 30px
+    & .dropdown-list
+      display: inline-block
+      li
+        color: gray
+  .navbar-nav .open .dropdown-menu
+    position: absolute
+    top: 100%
+    left: auto
+    right: 0
+    background-color: white
+  .navbar-collapse
+    padding: 0
+
+
+
 #navbar-top
   background-color: $topbar-background-color
   border-color: darken($topbar-background-color, 5%)
@@ -63,3 +87,6 @@
       > a
         display: inline-block
         padding: 3px 0
+
+.accordion-toggle
+  background-color: $sidebar-background-color
