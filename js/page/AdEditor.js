@@ -163,7 +163,9 @@
           context: this,
           method: 'get'
         });
-        this.$('#replace-time').datetimepicker();
+        this.$('#replace-time').datetimepicker({
+          format: 'YYYY-MM-DD HH:mm'
+        });
         event.target.disabled = true;
         $(event.target).next().addClass('spin');
         return;

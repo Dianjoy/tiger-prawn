@@ -89,13 +89,13 @@
       return submit;
     },
     initUploader: function () {
-      var id = this.model.id
+      var id = this.model ? this.model.id : ''
         , self = this;
       this.$('.uploader').each(function () {
         var options = $(this).data();
-        options.data = {
-          id: id
-        };
+        if (id) {
+          options.data = {id: id};
+        }
         var uploader = new meathill.SimpleUploader(this, options);
         uploader.on('data', self.uploader_dataHandler, self);
       });
