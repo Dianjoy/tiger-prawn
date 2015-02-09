@@ -13,74 +13,77 @@
   </div>
 </div>
 
-<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".date-range" data-search="#search-query">
-  <thead>
-  <tr>
-    <th class="filter">管理名</th>
-    <th>负责人</th>
-    <th><a class="order" href="#quote_rmb">报价</a></th>
-    <th><a class="order" href="#job_num">每日投放</a></th>
-    <th><a class="order" href="#num">今日尚余</a></th>
-    <th>状态</th>
-    <th><a class="order" href="#ctime">创建时间</a></th>
-    <th><a class="order" href="#mtime">变更时间</a></th>
-    <th>备注</th>
-    <th>操作</th>
-  </tr>
-  </thead>
-  <tbody>
-  <script type="text/x-handlebars-template">
-    <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}} {{packname}}" id="{{id}}">
-      <td data-title="管理名">
-        {{#if channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/if}}
-        <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
-        {{cid}}
-      </td>
-      <td data-title="负责人">{{execute_owner}}</td>
-      <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-message="true" data-refresh="true">{{quote_rmb}}</a></td>
-      <td data-title="每日投放">
-        {{#if set_job_num}}
-          <span title="申请已提交，等待核准">{{job_num}} / {{set_job_num}}</span>
-        {{else}}
-        <a href="page/ad/job-edit.hbs" class="popup" title="调整日投放量" data-refresh="true" data-title="调整每日投放量">{{job_num}}</a>
-        {{/if}}
-      </td>
-      <td data-title="今日尚余">
-        {{#if set_today_left}}
-          <span title="申请已提交，等待核准">{{today_left}} / {{set_today_left}}</span>
-        {{else}}
-        <a href="#today_left" class="edit" title="调整今日余量" data-type="number" data-min="0" data-message="true" data-refresh="true">{{today_left}}</a>
-        {{/if}}
-      </td>
-      <td data-title="状态">
-        {{#if is_ready}} {{! 可以操作上下线}}
-        {{#if set_status}}
-        <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
-        {{else}}
-        <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}" data-type="status" data-deactive="下线" data-active="上线" data-open="0" data-message="true" data-refresh="true">{{pick status 'ON' 'OFF'}}</a>
-        {{/if}}
-        {{else}} {{! 不可以操作}}
-        <span class="label status-{{status}}">{{pick status '拒绝' '等待'}}</span>
-        {{/if}}
-      </td>
-      <td data-title="创建时间"><time datetime="{{create_time}}">{{substring create_time 5 11}}</time></td>
-      <td data-title="变更时间"><time datetime="{{status_time}}">{{substring status_time 5 11}}</time></td>
-      <td data-title="备注"><a href="#others" data-type="long-text" class="edit">{{others}}</a></td>
-      <td data-title="操作">
-        <div class="btn-group">
-          <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
-          <button class="btn btn-danger delete-button" {{#if has_transfer}}disabled title="此广告已跑量，不能删除，只能申请下线" {{/if}}><i class="fa fa-trash-o fa-fw"></i></button>
-        </div>
-      </td>
+<div class="table-responsive">
+  <table class="table table-bordered table-hover responsive-table smart-table " data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".date-range" data-search="#search-query">
+    <thead>
+    <tr>
+      <th class="filter">管理名</th>
+      <th>负责人</th>
+      <th><a class="order" href="#quote_rmb">报价</a></th>
+      <th><a class="order" href="#job_num">每日投放</a></th>
+      <th><a class="order" href="#num">今日尚余</a></th>
+      <th>状态</th>
+      <th><a class="order" href="#ctime">创建时间</a></th>
+      <th><a class="order" href="#mtime">变更时间</a></th>
+      <th>备注</th>
+      <th>操作</th>
     </tr>
-  </script>
-  </tbody>
-  <tfoot class="waiting">
-  <tr>
-    <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
-  </tr>
-  </tfoot>
-</table>
+    </thead>
+    <tbody>
+    <script type="text/x-handlebars-template">
+      <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}} {{packname}}" id="{{id}}">
+        <td data-title="管理名">
+          {{#if channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/if}}
+          <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
+          {{cid}}
+        </td>
+        <td data-title="负责人">{{execute_owner}}</td>
+        <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-message="true" data-refresh="true">{{quote_rmb}}</a></td>
+        <td data-title="每日投放">
+          {{#if set_job_num}}
+          <span title="申请已提交，等待核准">{{job_num}} / {{set_job_num}}</span>
+          {{else}}
+          <a href="page/ad/job-edit.hbs" class="popup" title="调整日投放量" data-refresh="true" data-title="调整每日投放量">{{job_num}}</a>
+          {{/if}}
+        </td>
+        <td data-title="今日尚余">
+          {{#if set_today_left}}
+          <span title="申请已提交，等待核准">{{today_left}} / {{set_today_left}}</span>
+          {{else}}
+          <a href="#today_left" class="edit" title="调整今日余量" data-type="number" data-min="0" data-message="true" data-refresh="true">{{today_left}}</a>
+          {{/if}}
+        </td>
+        <td data-title="状态">
+          {{#if is_ready}} {{! 可以操作上下线}}
+          {{#if set_status}}
+          <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
+          {{else}}
+          <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线'}}" data-type="status" data-deactive="下线" data-active="上线" data-open="0" data-message="true" data-refresh="true">{{pick status 'ON' 'OFF'}}</a>
+          {{/if}}
+          {{else}} {{! 不可以操作}}
+          <span class="label status-{{status}}">{{pick status '拒绝' '等待'}}</span>
+          {{/if}}
+        </td>
+        <td data-title="创建时间"><time datetime="{{create_time}}">{{substring create_time 5 11}}</time></td>
+        <td data-title="变更时间"><time datetime="{{status_time}}">{{substring status_time 5 11}}</time></td>
+        <td data-title="备注"><a href="#others" data-type="long-text" class="edit">{{others}}</a></td>
+        <td data-title="操作">
+          <div class="btn-group">
+            <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
+            <button class="btn btn-danger delete-button" {{#if has_transfer}}disabled title="此广告已跑量，不能删除，只能申请下线" {{/if}}><i class="fa fa-trash-o fa-fw"></i></button>
+          </div>
+        </td>
+      </tr>
+    </script>
+    </tbody>
+    <tfoot class="waiting">
+    <tr>
+      <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
 
 <script type="text/x-handlebars-template" id="editor-info">
   <table class="table table-bordered">

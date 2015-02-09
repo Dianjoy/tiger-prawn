@@ -19,3 +19,39 @@
 
   a
     color: #FC7D6F
+
+@media screen and (max-width: 768px)
+  #footer
+    height: auto
+    position: relative
+    bottom: -100px
+    padding: 0
+    line-height: 20px
+    p
+      padding: 10px
+      position: absolute
+      background-color: $footer-background-color
+    .top-button
+      border-radius: 100px
+      box-shadow: 0 0 10px gray
+      background-color: #ffffff
+      filter: alpha(Opacity=70)
+      -webkit-opacity: 0.6
+      -o-opacity: 0.6
+      -moz-opacity: 0.6
+      -ms-opacity: 0.6
+      opacity: 0.6
+      position: fixed
+      bottom: 20px
+      right: 5px
+      z-index: 16
+      width: 40px
+      height: 40px
+      text-align: center
+      line-height: 38px
+      word-spacing: 20px
+      text-overflow: ellipsis
+      overflow: hidden
+      color: $topbar-background-color
+      &.fa-arrow-up
+        text-indent: 0em

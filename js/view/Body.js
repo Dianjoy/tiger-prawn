@@ -10,6 +10,7 @@
     initialize: function () {
       this.framework = this.$('.framework');
       this.container = this.$('#page-container');
+      //this.footer = this.$('#footer'); 设置一个footer
       this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
       this.model.on('change:fullname', this.model_nameChangeHandler, this);
@@ -55,6 +56,7 @@
       if (showFramework) {
         this.$el.removeClass('full-page')
           .find('.login').remove();
+        //this.$el.find('#footer').remove(); preloader过后，将footer元素移除，以免遮住loading
       }
     },
     model_nameChangeHandler: function (model, name) {
@@ -65,6 +67,7 @@
     },
     page_loadCompleteHandler: function () {
       this.loading.remove();
+      //this.$el.append(this.footer); 完成loading后，将footer添加进去
     },
     loadCompleteHandler: function (response, status) {
       if (status === 'error') {

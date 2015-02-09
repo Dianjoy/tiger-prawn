@@ -7,7 +7,7 @@
   background-color: $sidebar-background-color
   color: $white
   width: $sidebar-width
-  height: auto
+  height: 1000px
   position: absolute
   top: $topbar-height
   left: 0
@@ -16,13 +16,24 @@
 
 @media screen and (max-width: 768px)
   .navbar-side
-    margin-top: 60px
+    height: auto
+    margin-top: 0
+    position: relative
+    top: 0
     visibility: hidden
+    display: none
+  .collapse
+    display: none
   .collapse.in
     @at-root .navbar-side
       left: 0px
       width: 100%
-      height: 220px
+      height: auto
+
+  .side-nav>li>a .caret
+    margin-right: 15px
+
+
 
 
 .side-nav
