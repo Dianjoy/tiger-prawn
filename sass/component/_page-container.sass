@@ -24,3 +24,69 @@
 
   .col-md-3, .col-sm-6
     margin-top: 15px
+
+
+
+  #flip-scroll .cf:after
+    visibility: hidden
+    display: block
+    font-size: 0
+    content: ""
+    clear: both
+    height: 0
+  #flip-scroll * html .cf
+    zoom: 1
+  #flip-scroll *:first-child+html .cf
+    zoom: 1
+
+  #flip-scroll
+    width: 100%
+    border-collapse: collapse
+    border-spacing: 0
+    display: inline-block
+    position: relative
+    white-space: nowrap
+    tr td,tr th
+      white-space: nowrap
+    thead
+      display: block
+      float: left
+      tr
+        display: block
+    tbody
+      display: block
+      width: auto
+      position: relative
+      overflow-x: auto
+      white-space: nowrap
+      tr
+        display: inline-block
+        vertical-align: top
+        border-left: 1px solid #babcbf
+        td
+          &:last-child
+            padding: 0 8px
+    th,td
+      margin: 0
+      vertical-align: top
+      white-space: nowrap
+      &:last-child
+        border-bottom: 1px solid #babcbf
+    th
+      text-align: left
+      display: block
+      border-bottom: 0
+      border-left: 0
+      border-top: 1px solid #ddd
+    td
+      display: block
+      min-height: 37px
+      text-align: left
+      border-left: 0
+      border-right: 0
+      border-bottom: 0
+
+
+
+
+
