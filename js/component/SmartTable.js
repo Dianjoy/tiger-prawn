@@ -147,7 +147,11 @@
     initialize: function (options) {
       this.template = Handlebars.compile(this.$('script').html().replace(/\s{2,}|\n/g, ''));
       var init = this.$el.data();
-      options = _.extend({pagesize: 10}, options, init, {url: init.url.replace('{{API}}', tp.API)});
+      init.url = init.url.replace('{{API}}', tp.API);
+      options = _.extend({
+        pagesize: 10,
+        autoFetch: true
+      }, options, init);
       this.filter = tp.utils.decodeURLParam(init.filter);
       this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
 
@@ -193,7 +197,9 @@
         });
       }
 
-      this.collection.fetch(_.extend(this.filter, this.model.pick('page', 'keyword')));
+      if (options.autoFetch) {
+        this.collection.fetch(_.extend(this.filter, this.model.pick('page', 'keyword')));
+      }
     },
     remove: function () {
       if (this.pagination) {
@@ -328,7 +334,7 @@
     },
     model_changeHandler: function (model) {
       this.filter = _.extend(this.filter, model.changed);
-      this.collection.fetch(this.filter);
+      this.collection.fetch({data: this.filter});
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);

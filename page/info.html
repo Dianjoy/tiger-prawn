@@ -1,0 +1,29 @@
+<div class="form-inline table-header">
+  <div class="form-group pull-right">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query">
+  </div>
+</div>
+
+<table class="table table-bordered table-striped responsive-table smart-table" data-url="{{API}}info/" data-search="#search-query" data-auto-fetch="false">
+  <thead>
+  <tr>
+    <th>广告名</th>
+    <th>创建时间</th>
+    <th>广告主报价</th>
+    <th>上线要求</th>
+    <th>运行状态</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    <tr>
+      <td>{{ad_name}}</td>
+      <td>{{create_time}}</td>
+      <td>&yen;{{quote_rmb}}</td>
+      <td>{{others}}</td>
+      <td>{{result}}</td>
+    </tr>
+  </script>
+  </tbody>
+</table>
