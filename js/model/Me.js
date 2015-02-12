@@ -9,7 +9,7 @@
       this.on('change:id', this.id_changeHandler, this);
     },
     fetch: function (options) {
-        Backbone.Model.prototype.fetch.call(this, _.extend({
+      Backbone.Model.prototype.fetch.call(this, _.extend({
         error: _.bind(this.onError, this)
       }, options));
     },

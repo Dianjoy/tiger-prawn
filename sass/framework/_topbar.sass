@@ -7,44 +7,37 @@
 @media screen and (max-width: 768px)
   #navbar-top
     position: relative
+
   .container-fluid
     padding: 0
+
   .navbar-header
-    padding: 0 15px
+    padding: 0 $gap-p
+
   .navbar-top-inner
-    zoom: 1
-    &:after
-      height: 0
-      display: block
-      visibility: hidden
-      font-size: 0
-      content: ""
-      clear: both
-  #navbar-top-inner
     background-color: #ffffff
     width: 100%
+
   .navbar-right
     float: right
     clear: both
-    margin-right: 15px
+    margin-right: $gap-p
     li
       display: inline-block
+
   .navbar-nav .open .dropdown-menu
     position: absolute
     top: 100%
     left: auto
     right: 0
     background-color: white
-    min-width: 100px
-    line-height: 35px
+
+  .username, .dropdown .caret, i.fa.fa-bell
+    color: #000000
+
   .navbar-fixed-top
     border: 0
-  i.fa.fa-bell
-    color: #333
-  #user-name
-    color: #333
-  #caret
-    color: #333
+
 
 #navbar-top
   background-color: $topbar-background-color

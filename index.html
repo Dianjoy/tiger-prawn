@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cn">
+<html lang="zh-cmn-Hans">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1.0,user-scalable=no,width=device-width">
@@ -39,13 +39,13 @@
 <nav class="navbar navbar-fixed-top" role="navigation" id="navbar-top">
   <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-side">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-side">
         <span class="sr-only">导航栏</span>
         <i class="fa fa-bars"></i>
       </button>
       <a class="navbar-brand" href="/">点乐广告自助平台</a>
     </div>
-    <nav class="navbar-side navbar-side-left" role="navigation" id="navbar-side">
+    <nav class="collapse navbar-side " role="navigation">
       <ul id="navbar-side-inner" class="nav navbar-nav side-nav">
         <li class="navbar-user pit">
           <img src="img/logo.png" class="img-circle">
@@ -76,7 +76,7 @@
       </ul>
     </nav>
 
-    <div id="navbar-top-inner" class="navbar-top-inner">
+    <div class="navbar-top-inner clearfix">
       <ul class="nav navbar-nav navbar-right">
         <li class="pit dropdown-list"><a href="#"><i class="fa fa-tasks"></i></a></li>
         <li class="dropdown system-notice dropdown-list">
@@ -98,7 +98,7 @@
         <li class="pit dropdown-list"><a href="#"><i class="fa fa-envelope"></i></a></li>
         <li class="dropdown dropdown-list">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            <span class="username" id="user-name"></span> <span class="caret" id="caret"></span>
+            <span class="username"></span> <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
             <li class="pit"><a data-toggle="tab" href="#/my/profile"><i class="fa fa-user fa-fw"></i> 我的账户</a></li>
@@ -159,7 +159,7 @@
   </div>
 </div>
 
-<footer id="footer" class="footer">
+<footer id="footer">
   <a class="pull-right top-button" href="#"><i class="fa fa-arrow-up"></i> 返回顶部</a>
   <p>点乐广告自助平台（测试版） &copy; 2014 <a href="http://www.dianjoy.com">Dianjoy</a>. 保留一切权利。</p>
 </footer>
