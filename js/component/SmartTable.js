@@ -119,7 +119,7 @@
       this.spinner && this.spinner.remove();
     },
     keydownHandler: function (event) {
-      if (event.keyCode === 13 && event.target.value != '') {
+      if (event.keyCode === 13) {
         this.model.set({
           keyword: event.target.value,
           page: 0
