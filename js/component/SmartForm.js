@@ -193,6 +193,12 @@
             attr[key] = element.value;
           }
         }, this);
+        this.$('.switch').each(function () {
+          var isNumber = !isNaN(parseInt(this.value))
+            , value = isNumber ? Number(this.value) : this.value;
+          value = this.checked ? value : !value;
+          attr[this.name] = isNumber ? Number(value) : value;
+        });
         this.model.save(attr, {
           patch: true,
           success: function (model, response) {

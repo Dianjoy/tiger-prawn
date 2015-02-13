@@ -56,7 +56,7 @@
       }, delay);
     },
     form_errorHandler: function (xhr, status, error) {
-      this.displayResult(false, error.msg, 'frown-o');
+      this.displayResult(false, error.message, 'frown-o');
       this.trigger('error', xhr, status, error);
     },
     form_successHandler: function (response) {
