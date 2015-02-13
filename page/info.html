@@ -17,17 +17,17 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
-    <tr>
+    <tr id="{{id}}">
       <td>{{ad_name}}</td>
       <td><time datetime="{{create_time}}">{{create_time}}</time></td>
       <td>&yen;{{d100 quote_rmb}}</td>
       <td>{{others}}</td>
       <td>
         {{#if status}}
-        <strong class="text-success">已推广</strong>
+        <strong class="text-success"><i class="fa fa-check"></i> 已推广</strong>
         {{#if payment}}<small class="text-success">（回款率：{{payment_percent}}%）</small>{{/if}}
         {{else}}
-        <strong class="text-danger">未上线</strong>
+        <strong class="text-danger"><i class="fa fa-times"></i> 未上线</strong>
         {{/if}}
       </td>
     </tr>
