@@ -1,5 +1,5 @@
 <div class="form-inline table-header">
-  <div class="form-group pull-right">
+  <div class="form-group">
     <label for="search-query">搜索：</label>
     <input type="search" class="form-control" id="search-query">
   </div>
@@ -19,11 +19,19 @@
   <script type="text/x-handlebars-template">
     <tr>
       <td>{{ad_name}}</td>
-      <td>{{create_time}}</td>
-      <td>&yen;{{quote_rmb}}</td>
+      <td><time datetime="{{create_time}}">{{create_time}}</time></td>
+      <td>&yen;{{d100 quote_rmb}}</td>
       <td>{{others}}</td>
-      <td>{{result}}</td>
+      <td>
+        {{#if status}}已推广{{else}}未上线{{/if}}
+        {{#if payment}}回款率：{{payment_percent}}%{{/if}}
+
+      </td>
     </tr>
   </script>
   </tbody>
 </table>
+
+<div class="alert alert-info">
+  请输入您关心的广告名进行搜索。系统会取出最近的十条相关内容供您参考。
+</div>
