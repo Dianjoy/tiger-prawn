@@ -23,9 +23,12 @@
       <td>&yen;{{d100 quote_rmb}}</td>
       <td>{{others}}</td>
       <td>
-        {{#if status}}已推广{{else}}未上线{{/if}}
-        {{#if payment}}回款率：{{payment_percent}}%{{/if}}
-
+        {{#if status}}
+        <strong class="text-success">已推广</strong>
+        {{#if payment}}<small class="text-success">（回款率：{{payment_percent}}%）</small>{{/if}}
+        {{else}}
+        <strong class="text-danger">未上线</strong>
+        {{/if}}
       </td>
     </tr>
   </script>
