@@ -7,12 +7,14 @@
   background-color: $sidebar-background-color
   color: $white
   width: $sidebar-width
-  height: 100%
-  position: absolute
+  position: fixed
   top: $topbar-height
   left: 0
   bottom: 0
   z-index: 14
+
+.navbar-fixed-top .navbar-collapse
+  max-height: 100%
 
 @media screen and (max-width: 768px)
   .navbar-side
@@ -25,7 +27,13 @@
   .side-nav>li>a .caret
     margin-right: $gap-p
 
+  .navbar-collapse
+    padding: 0
 
+  .container-fluid
+    >.navbar-collapse
+      margin-right: -15px
+      margin-left: 0
 
 
 .side-nav
@@ -33,7 +41,7 @@
   margin: 0
   padding: 0
   border-bottom: 1px solid lighten($sidebar-background-color, 5%)
-
+  background: $sidebar-background-color
   a
     color: $navbar-color
 

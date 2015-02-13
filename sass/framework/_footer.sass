@@ -1,5 +1,6 @@
 @charset "UTF-8"
 @import "../define"
+@import "compass/css3/opacity"
 
 #footer
   background-color: $footer-background-color
@@ -26,33 +27,28 @@
     position: relative
     bottom: 0
     padding: 0
-    line-height: 20px
+    margin-top: -$footer-height
+    line-height: $footer-min-line-height
     p
       width: 100%
       padding: 10px
       position: absolute
       background-color: $footer-background-color
+
     .top-button
-      border-radius: 100px
+      border-radius: 50%
       box-shadow: 0 0 10px gray
       background-color: #ffffff
-      filter: alpha(Opacity=70)
-      -webkit-opacity: 0.6
-      -o-opacity: 0.6
-      -moz-opacity: 0.6
-      -ms-opacity: 0.6
-      opacity: 0.6
+      @include opacity(0.6)
       position: fixed
-      bottom: 20px
+      bottom: $gap-l
       right: 5px
       z-index: 16
-      width: 40px
-      height: 40px
+      width: $footer-height
+      height: $footer-height
       text-align: center
-      line-height: 38px
-      word-spacing: 20px
+      line-height: $footer-height
+      word-spacing: $gap-l
       text-overflow: ellipsis
       overflow: hidden
       color: $topbar-background-color
-      &.fa-arrow-up
-        text-indent: 0em

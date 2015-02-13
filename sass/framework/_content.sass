@@ -7,7 +7,7 @@
 #content
   margin-top: $topbar-height
   margin-left: $sidebar-width
-  margin-bottom: $footer-height + 20px
+  margin-bottom: $footer-height * 2.5
   padding: $gap-l
 
 
@@ -22,11 +22,9 @@
 
 @media screen and (max-width: 768px)
   #content
-    margin-left: 0
-    margin-top: 0
-    margin-bottom: 0
-    padding-bottom: 50px
-    min-height: 720px
+    margin: 0
+    padding-bottom: $topbar-height * 2
+    min-height: 100%
 
 
 #page-loading

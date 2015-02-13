@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<table id="flip-scroll" class="table table-bordered table-hover responsive-table smart-table clearfix" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".date-range" data-search="#search-query">
+<table class="table table-bordered table-hover responsive-table smart-table clearfix" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".date-range" data-search="#search-query">
   <thead>
   <tr>
     <th class="filter">管理名</th>
@@ -40,14 +40,14 @@
       <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-message="true" data-refresh="true">{{quote_rmb}}</a></td>
       <td data-title="每日投放">
         {{#if set_job_num}}
-        <span title="申请已提交，等待核准">{{job_num}} / {{set_job_num}}</span>
+          <span title="申请已提交，等待核准">{{job_num}} / {{set_job_num}}</span>
         {{else}}
         <a href="page/ad/job-edit.hbs" class="popup" title="调整日投放量" data-refresh="true" data-title="调整每日投放量">{{job_num}}</a>
         {{/if}}
       </td>
       <td data-title="今日尚余">
         {{#if set_today_left}}
-        <span title="申请已提交，等待核准">{{today_left}} / {{set_today_left}}</span>
+          <span title="申请已提交，等待核准">{{today_left}} / {{set_today_left}}</span>
         {{else}}
         <a href="#today_left" class="edit" title="调整今日余量" data-type="number" data-min="0" data-message="true" data-refresh="true">{{today_left}}</a>
         {{/if}}

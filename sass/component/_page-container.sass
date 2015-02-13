@@ -23,25 +23,40 @@
   .col-md-3, .col-sm-6
     margin-top: $gap-p
 
+  .responsive-table>tbody>tr>td
+    padding-left: $table-font-size * 7
 
-  thead
+  .responsive-table>tbody>tr>td
+    border-top: 0
+    border-left: 0
+    border-right: 0
+    border-bottom: 1px solid #ddd
+
+  .responsive-table thead
     display: none
 
-  tbody
+  .responsive-table tbody
     display: block
+
+    tr:nth-child(odd)
+      background-color: $table-odd-color
+
     tr
+      display: block
+
       td
         display: block
-        vertical-align: middle
         text-align: left
-        min-height: 37px
-        margin-right: 50%
+        position: relative
+        min-height: 36px
 
       td[data-title]:before
         content: attr(data-title)
-        margin-right: $gap-p
         white-space: nowrap
         text-align: right
         font-size: inherit
-        width: 50%
+        width: $table-font-size * 5
+        position: absolute
+        left: 0
+
 
