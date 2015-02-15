@@ -26,7 +26,7 @@
         this.isEmpty = true;
         this.urlRoot += 'init';
       }
-      this.on('change:id', this.id_changeHandler, this);
+      this.on('sync', this.syncHandler, this);
     },
     parse: function (response, options) {
       if (response.options) {
@@ -55,9 +55,11 @@
       }
       return _.extend(json, this.options);
     },
-    id_changeHandler: function (model, id) {
-      location.hash = '#/ad/' + id;
-      this.urlRoot = tp.API + 'ad/';
+    syncHandler: function () {
+      if ('id' in this.changed) {
+        location.hash = '#/ad/' + id;
+        this.urlRoot = tp.API + 'ad/';
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.model')));

@@ -1,0 +1,26 @@
+@charset "UTF-8"
+
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+
+$th-width: 35%
+
+@media (max-width: $screen-xs-max)
+  .responsive-table
+    > tbody,
+    > tfoot
+      > tr
+        > td
+          padding-left: $th-width
+          position: relative
+
+          &:before
+            position: absolute
+            top: $table-cell-padding
+            left: 0
+            right: 100% - $th-width - 5%
+            bottom: $table-cell-padding
+            white-space: nowrap
+            font-weight: bold
+            content: attr(data-title)
+            text-align: right
+            line-height: $line-height-base
