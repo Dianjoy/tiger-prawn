@@ -3,7 +3,8 @@
  */
 'use strict';
 (function (ns) {
-  var OWNER = 'ad_owner';
+  var OWNER = 'ad_owner'
+    , CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
   ns.AD = Backbone.Model.extend({
     defaults: {
@@ -55,9 +56,15 @@
       }
       return _.extend(json, this.options);
     },
+    validate: function (attrs) {
+      var pack_name = this.get('pack_name');
+      if (pack_name && attrs.pack_name !== pack_name && !confirm(CONFIRM_MSG)) {
+        return '新包名与之前不一致，请检查后重新上传。';
+      }
+    },
     syncHandler: function () {
       if ('id' in this.changed) {
-        location.hash = '#/ad/' + id;
+        location.hash = '#/ad/' + this.id;
         this.urlRoot = tp.API + 'ad/';
       }
     }

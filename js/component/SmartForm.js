@@ -34,7 +34,12 @@
     },
     initialize: function () {
       this.submit = this.getSubmit();
+      this.model.on('invalid', this.model_invalidHandler, this);
       this.initUploader();
+    },
+    remove: function () {
+      this.model.off(null, null, this);
+      Backbone.View.prototype.remove.call(this);
     },
     validate: function () {
       // 验证表单项是否合乎要求
@@ -117,6 +122,10 @@
     },
     legend_clickHandler: function (event) {
       $(event.currentTarget).toggleClass('collapsed');
+    },
+    model_invalidHandler: function (model, error) {
+      this.displayResult(false, error, 'times');
+      this.trigger('error', null, 1, {message: error});
     },
     submit_successHandler: function(response) {
       if ('go_to_url' in response) {
@@ -201,6 +210,7 @@
         });
         this.model.save(attr, {
           patch: true,
+          wait: true,
           success: function (model, response) {
             self.submit_successHandler(response);
           },
@@ -229,7 +239,6 @@
           items.trigger('change');
         }
       }
-      this.model.set(data);
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
