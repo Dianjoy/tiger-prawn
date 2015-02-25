@@ -34,7 +34,9 @@
     },
     initialize: function () {
       this.submit = this.getSubmit();
-      this.model.on('invalid', this.model_invalidHandler, this);
+      if (this.model instanceof Backbone.Model) {
+        this.model.on('invalid', this.model_invalidHandler, this);
+      }
       this.initUploader();
     },
     remove: function () {
