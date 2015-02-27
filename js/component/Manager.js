@@ -10,7 +10,7 @@
       '.smart-info': 'dianjoy.component.SmartInfo',
       '.smart-list': 'dianjoy.component.SmartList',
       '.smart-slide': 'dianjoy.component.SmartSlide',
-      '.morris-chart': 'dianjoy.component.MorrisChart',
+      '.morris-chart': 'tp.component.MorrisChart',
       '.article-editor': 'dianjoy.component.ArticleEditor',
       '#login-form': 'tp.component.LoginForm',
       'form': 'tp.component.SmartForm'

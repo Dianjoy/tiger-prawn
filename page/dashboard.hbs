@@ -16,18 +16,18 @@
     <a href="./stat/" class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
   <div class="col-md-3 col-sm-6 dashboard-stat stat-tertiary">
-    <i class="fa fa-download fa-3x circle-title"></i>
+    <i class="fa fa-money fa-3x circle-title"></i>
     <div class="dashboard-stat-content">
-      <h3 class="title">一周下载数</h3>
-      <p>{{total_download}}</p>
+      <h3 class="title">一周推广费用</h3>
+      <p>&yen; {{money}}</p>
     </div>
     <a href="./stat/" class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
   <div class="col-md-3 col-sm-6 dashboard-stat stat-quartus">
-    <i class="fa fa-money fa-3x circle-title"></i>
+    <i class="fa fa-download fa-3x circle-title"></i>
     <div class="dashboard-stat-content">
-      <h3 class="title">已消费</h3>
-      <p>&yen; {{money}}</p>
+      <h3 class="title">一周下载数</h3>
+      <p>{{total_download}}</p>
     </div>
     <a href="./stat/" class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
@@ -53,6 +53,9 @@
     <div class="portlet portlet-green">
       <div class="portlet-leading">
         <h4 class="portlet-title"><i class="fa fa-history"></i> 上下线记录</h4>
+        <div class="btn-group btn-group-sm more">
+          <a class="btn" href="#/ad/" title="全部广告"><i class="fa fa-ellipsis-h"></i></a>
+        </div>
       </div>
       <div class="portlet-body">
         <ul class="list-group icon-list-group">
@@ -74,21 +77,24 @@
         <h4 class="portlet-title"><i class="fa fa-line-chart"></i> 流量统计</h4>
       </div>
       <div class="portlet-body">
-        <div id="morris-chart" style="width: 100%; height: 300px">
-
+        <div class="morris-chart" style="height: 300px">
+          <script type="application/json">
+            {
+              "data": [
+                {{#each transfer}}
+                  {
+                    "date": "{{transfer_date}}",
+                    "transfer": {{transfer}},
+                    "rmb": {{d100 rmb}}
+                  }{{#unless @last}},{{/unless}}
+                {{/each}}
+              ],
+              "xkey": "date",
+              "ykeys": ["transfer", "rmb"],
+              "labels": ["推广量", "消耗"]
+            }
+          </script>
         </div>
-        <script type="application/json" class="morris-data" data-target="morris-chart">
-          {
-            "data": [
-              {{#each transfer}}
-                { "date": "{{date}}", "value": {{transfer}} },
-              {{/each}}
-            ],
-            "xkey": "date",
-            "ykeys": ["value"],
-            "labels": ["CPA"]
-          }
-        </script>
       </div>
     </div>
   </div>
