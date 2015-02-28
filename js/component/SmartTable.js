@@ -154,6 +154,9 @@
       }, options, init);
       this.filter = tp.utils.decodeURLParam(init.filter);
       this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
+      if (init.model) {
+        options.model = Nervenet.parseNamespace(init.model);
+      }
 
       this.collection = tp.model.ListCollection.createInstance(null, options);
       this.collection.on('add', this.collection_addHandler, this);

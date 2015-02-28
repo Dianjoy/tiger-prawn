@@ -50,9 +50,9 @@
       }
     });
   Collection.createInstance = function (models, options) {
-    options.Model = 'idAttribute' in options ? Model.extend({
+    options.Model = options.model || ('idAttribute' in options ? Model.extend({
       idAttribute: options.idAttribute
-    }) : Model;
+    }) : Model);
     var collection;
     if (!('collectionId' in options)) {
       return new Collection(models, options);

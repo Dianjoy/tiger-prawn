@@ -26,8 +26,8 @@
       if (this.isNew()) {
         this.isEmpty = true;
         this.urlRoot += 'init';
+        this.on('sync', this.syncHandler, this);
       }
-      this.on('sync', this.syncHandler, this);
     },
     parse: function (response, options) {
       if (response.options) {
@@ -38,7 +38,7 @@
       if (response.ad && !response.ad.owner) {
         response.ad.owner = Number(localStorage.getItem(OWNER));
       }
-      return response.ad;
+      return this.collection ? response : response.ad; // 如果是collection.fetch得来，就没有ad属性
     },
     save: function (key, value, options) {
       if (key === 'owner' && value) {
