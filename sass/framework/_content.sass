@@ -2,12 +2,12 @@
 
 @import "../define"
 @import "../../bower_components/colors/sass/variables"
-
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 
 #content
   margin-top: $topbar-height
   margin-left: $sidebar-width
-  margin-bottom: $footer-height * 2.5
+  margin-bottom: $footer-height
   padding: $gap-l
 
 
@@ -20,7 +20,7 @@
   > .breadcrumb
     background-color: $silver
 
-@media screen and (max-width: 768px)
+@media (max-width: $screen-xs-max)
   #content
     margin: 0
     padding-bottom: $topbar-height * 2
@@ -47,7 +47,7 @@
     left: 50%
     margin-left: -125px
 
-@media screen and (max-width: 768px)
+@media (max-width: $screen-xs-max)
   #page-loading
     left: 0
     .loading

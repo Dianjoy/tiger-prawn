@@ -2,6 +2,7 @@
 
 @import "../define"
 @import "../../bower_components/colors/sass/variables"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 
 .breadcrumb
   .date-range
@@ -42,7 +43,7 @@
       button
         margin-top: $gap
 
-@media screen and (max-width: 768px)
+@media (max-width: $screen-xs-max)
   .breadcrumb
     .date-range
       .dropdown

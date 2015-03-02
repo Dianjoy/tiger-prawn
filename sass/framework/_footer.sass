@@ -1,5 +1,6 @@
 @charset "UTF-8"
 @import "../define"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 @import "compass/css3/opacity"
 
 #footer
@@ -22,7 +23,7 @@
   a
     color: #FC7D6F
 
-@media screen and (max-width: 768px)
+@media (max-width: $screen-xs-max)
   #footer
     height: auto
     position: relative
@@ -30,7 +31,7 @@
     bottom: 0
     padding: 0
     margin-top: -$footer-height
-    line-height: $footer-min-line-height
+    line-height: $line-height-base
     p
       width: 100%
       padding: 10px

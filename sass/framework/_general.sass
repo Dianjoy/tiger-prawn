@@ -1,6 +1,7 @@
 @charset "UTF-8"
 
 @import "../define"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 
 body
   background-color: $background-color
@@ -12,7 +13,7 @@ body
 .pit
   display: none !important
 
-@media screen and (max-width: 768px)
+@media (max-width: $screen-xs-max)
   html
     height: 100%
     margin: 0

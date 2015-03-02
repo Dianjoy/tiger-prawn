@@ -1,62 +1,14 @@
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 
-.keyword-form
-  margin-top: 0
-
-@media screen and (max-width: 768px)
+@media (max-width: $screen-xs-max)
   .table-header
     .form-group
-      float: left
-
-  #pagesize
-    width: auto
+      width: 100%
 
   .pagination
     margin: 0
 
-  .keyword-form
-    float: left
-
-    .form-group
-      display: inline-block
-
-
   .col-md-3, .col-sm-6
     margin-top: $gap-p
-
-  .responsive-table>tbody>tr>td
-    padding-left: $table-font-size * 7
-
-  .responsive-table>tbody>tr>td
-    border-top: 0
-    border-left: 0
-    border-right: 0
-    border-bottom: 1px solid #ddd
-
-  .responsive-table thead
-    display: none
-
-  .responsive-table tbody
-    display: block
-
-    tr:nth-child(odd)
-      background-color: $table-odd-color
-
-    tr
-      display: block
-
-      td
-        display: block
-        text-align: left
-        position: relative
-        min-height: 36px
-
-      td[data-title]:before
-        content: attr(data-title)
-        white-space: nowrap
-        text-align: right
-        font-size: inherit
-        width: $table-font-size * 5
-        position: absolute
-        left: 0
 
 

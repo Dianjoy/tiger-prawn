@@ -1,7 +1,7 @@
 @charset "UTF-8"
 @import "../../bower_components/colors/sass/variables"
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 @import "../define"
-
 
 .navbar-side
   background-color: $sidebar-background-color
@@ -16,7 +16,7 @@
 .navbar-fixed-top .navbar-collapse
   max-height: 100%
 
-@media screen and (max-width: 768px)
+@media (max-width: $screen-xs-max)
   .navbar-side
     height: auto
     margin-top: 0
@@ -34,7 +34,6 @@
     >.navbar-collapse
       margin-right: -15px
       margin-left: 0
-
 
 .side-nav
   float: none
