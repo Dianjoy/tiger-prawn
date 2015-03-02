@@ -80,7 +80,7 @@
         }
       }
       // 验证密码
-      if (input.attr('type') === 'password' && !/^[0-9a-zA-Z$!^#_@%&*.]{6,16}$/.test(input.val())) {
+      if (input.attr('type') === 'password' && !/^[0-9a-zA-Z$!^#_@%&*.]{6,32}$/.test(input.val())) {
         return '密码应为6~16个字符，包含字母、数字、特殊符号等';
       }
 

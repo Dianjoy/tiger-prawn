@@ -35,5 +35,13 @@
   // 除100，用于币值转换
   h.registerHelper('d100', function (value) {
     return (value / 100).toFixed(2);
-  })
+  });
+
+  h.registerHelper('is_set', function (conditional, options) {
+    if (conditional !== null && !(conditional === void 0)) {
+      options.fn(this);
+    } else {
+      options.inverse(this);
+    }
+  });
 }(Handlebars));
