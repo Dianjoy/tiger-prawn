@@ -10,13 +10,14 @@
       "ad(/)": "list",
       "ad/create": "create",
       "ad/:id": "edit",
-      "apply/(:id)": "listApplies"
+      "apply/(:id)": "listApplies",
+      "info/(:query)": "showHistoryInfo"
     },
     create: function () {
       var model = new tp.model.AD();
       this.$body
         .load('page/ad/edit.hbs', model, {
-          className: 'ad ad-new',
+          className: 'ad ad-new Android',
           loader: tp.page.AdEditor
         })
         .setFramework('ad ad-new', '创建广告');
@@ -38,6 +39,11 @@
       this.$body
         .load('page/ad/apply.html')
         .setFramework('apply', '我的申请');
+    },
+    showHistoryInfo: function (query) {
+      this.$body
+        .load('page/info.html')
+        .setFramework('info', '广告投放情报');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));

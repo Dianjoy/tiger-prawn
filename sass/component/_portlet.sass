@@ -1,6 +1,7 @@
 @charset "UTF-8"
 
 @import "../../bower_components/colors/sass/variables"
+@import "../define"
 
 .portlet
 
@@ -14,6 +15,18 @@
     background-color: $silver
     color: $white
     padding: 0 15px
+    position: relative
+
+    .more
+      position: absolute
+      top: $gap-s
+      right: $gap-s
+
+    .btn
+      color: $white
+
+      &:hover
+        background-color: rgba(0, 0, 0, .4)
 
   .portlet-title
     font-size: 1.15em

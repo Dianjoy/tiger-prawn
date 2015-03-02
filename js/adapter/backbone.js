@@ -19,5 +19,10 @@
       };
     }
     return sync(method, model, options);
-  }
+  };
+
+  // 修复Backbone在url()时的问题
+  b.Model.prototype.isNew = function () {
+    return !this.id;
+  };
 }(Backbone));

@@ -1,5 +1,6 @@
-<form class="form-horizontal Android model-editor {{pick province_type '' 'show-provinces'}}" method="post" enctype="multipart/form-data" id="ad-editor">
+<form class="form-horizontal model-editor {{pick province_type '' 'show-provinces'}}" method="post" enctype="multipart/form-data" id="ad-editor">
   <input type="hidden" name="ad_sdk_type" value="1">
+  <input type="hidden" name="id" value="">
   <fieldset>
     <a name="pack"></a>
     <legend>请先上传安装包，或填入抓取链接</legend>
@@ -58,6 +59,9 @@
   <fieldset class="collapsible">
     <a name="basic-info"></a>
     <legend>基础信息</legend>
+    <div class="alert alert-info col-sm-offset-2">
+      此区块通常不用手工填写，上传安装包之后会自动填充。
+    </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">所属平台</label>
       <div class="col-sm-10 platform select-button">
@@ -159,13 +163,17 @@
     <legend>投放信息</legend>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="quote_rmb">广告主报价</label>
-      <div class="col-sm-10">
-        <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required="required" />
+      <div class="col-sm-4">
+        <div class="input-group">
+          <span class="input-group-addon">&yen;</span>
+          <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required="required" min="1" />
+          <span class="input-group-addon">分</span>
+        </div>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="job_num">日投放量</label>
-      <div class="col-sm-10">
+      <div class="col-sm-4">
         <input type="number" id="job_num" value="{{job_num}}" class="form-control" {{#if id}}readonly title="欲修改每日投放请到广告列表"{{else}}name="job_num"{{/if}}/>
       </div>
     </div>

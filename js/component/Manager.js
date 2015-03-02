@@ -10,7 +10,7 @@
       '.smart-info': 'dianjoy.component.SmartInfo',
       '.smart-list': 'dianjoy.component.SmartList',
       '.smart-slide': 'dianjoy.component.SmartSlide',
-      '.morris-chart': 'dianjoy.component.MorrisChart',
+      '.morris-chart': 'tp.component.MorrisChart',
       '.article-editor': 'dianjoy.component.ArticleEditor',
       '#login-form': 'tp.component.LoginForm',
       'form': 'tp.component.SmartForm'
@@ -26,6 +26,9 @@
       // 自动初始化组件
       var self = this;
       for (var selector in this.map) {
+        if (!this.map.hasOwnProperty(selector)) {
+          continue;
+        }
         var dom = el.find(selector);
         if (dom.length) {
           var init = {
@@ -74,8 +77,8 @@
       if (!components) {
         return;
       }
-      var className = Nervenet.parseNamespace(className)
-        , result = [];
+      var result = [];
+      className = Nervenet.parseNamespace(className);
       for (var i = 0, len = components.length; i < len; i++) {
         if (components[i] instanceof className) {
           result.push(components[i]);
@@ -86,7 +89,7 @@
     getPath: function (str, isCustom) {
       var arr = str.split('.');
       if (isCustom) {
-        return custom + arr.join('/') + '.js';
+        return arr.join('/') + '.js';
       }
       if (arr[0] === 'tp') {
         arr = arr.slice(1);

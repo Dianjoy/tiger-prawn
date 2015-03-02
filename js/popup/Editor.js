@@ -16,7 +16,7 @@
       this.submit = this.$('.btn-primary');
       this.options = options;
       var type = options.type || 'short-text'
-        , template = tp.path + (options.form ? 'page/' + options.form : ('template/popup-' + type));
+        , template = tp.path + (options.template ? 'page/' + options.template : ('template/popup-' + type));
       $.get(template + '.hbs', _.bind(this.loadCompleteHandler, this), 'html');
 
       // 补充信息
@@ -46,6 +46,13 @@
         this.$('.item-grid').empty();
       }
 
+      var dateFields = this.$('[type=datetime]');
+      if (dateFields.length) {
+        dateFields.each(function () {
+          $(this).datetimepicker($(this).data());
+        });
+      }
+
       this.submit.prop('disabled', false);
     },
     hide: function (delay) {
@@ -56,7 +63,7 @@
       }, delay);
     },
     form_errorHandler: function (xhr, status, error) {
-      this.displayResult(false, error.msg, 'frown-o');
+      this.displayResult(false, error.message, 'frown-o');
       this.trigger('error', xhr, status, error);
     },
     form_successHandler: function (response) {

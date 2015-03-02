@@ -1,0 +1,40 @@
+<div class="form-inline table-header">
+  <div class="form-group">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query">
+  </div>
+</div>
+
+<table class="table table-bordered table-striped responsive-table smart-table" data-url="{{API}}info/" data-search="#search-query" data-auto-fetch="false">
+  <thead>
+  <tr>
+    <th>广告名</th>
+    <th>创建时间</th>
+    <th>广告主报价</th>
+    <th>上线要求</th>
+    <th>运行状态</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    <tr id="{{id}}">
+      <td>{{ad_name}}</td>
+      <td><time datetime="{{create_time}}">{{create_time}}</time></td>
+      <td>&yen;{{d100 quote_rmb}}</td>
+      <td>{{others}}</td>
+      <td>
+        {{#if status}}
+        <strong class="text-success"><i class="fa fa-check"></i> 已推广</strong>
+        {{#if payment}}<small class="text-success">（回款率：{{payment_percent}}%）</small>{{/if}}
+        {{else}}
+        <strong class="text-danger"><i class="fa fa-times"></i> 未上线</strong>
+        {{/if}}
+      </td>
+    </tr>
+  </script>
+  </tbody>
+</table>
+
+<div class="alert alert-info">
+  请输入您关心的广告名进行搜索。系统会取出最近的十条相关内容供您参考。
+</div>

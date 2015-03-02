@@ -54,7 +54,6 @@ table
 
 .table-header
   margin-bottom: 1em
-  position: relative
 
   [type=search] + .fa-spinner
     position: absolute
@@ -62,39 +61,5 @@ table
     right: 10px
     line-height: 34px
 
-@media (max-width: $screen-xs-max)
-  .responsive-table>tbody>tr>td
-    padding-left: 7em
-
-  .responsive-table>tbody>tr>td
-    border-top: 0
-    border-left: 0
-    border-right: 0
-    border-bottom: 1px solid #ddd
-
-  .responsive-table thead
-    display: none
-
-  .responsive-table tbody
-    display: block
-
-    tr:nth-child(odd)
-      background-color: $table-bg-accent
-
-    tr
-      display: block
-
-      td
-        display: block
-        text-align: left
-        position: relative
-        min-height: 36px
-
-      td[data-title]:before
-        content: attr(data-title)
-        white-space: nowrap
-        text-align: right
-        font-size: inherit
-        width: 5em
-        position: absolute
-        left: 0
+  .form-group
+    position: relative

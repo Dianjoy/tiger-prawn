@@ -1,6 +1,7 @@
 'use strict';
 (function (ns) {
-  var DATE_FORMAT = 'YYYY-MM-DD';
+  var DATE_FORMAT = 'YYYY-MM-DD'
+    , spinner = '<i class="fa fa-spin fa-spinner"></i>';
 
   var Pager = Backbone.View.extend({
     events: {
@@ -60,7 +61,7 @@
       var href = target.attr('href')
         , index = Number(href.substr(href.lastIndexOf('/') + 1));
       this.model.set('page', index);
-      target.html('<i class="fa fa-spin fa-spinner"></i>');
+      target.html(spinner);
       this.$el.children().addClass('disabled');
       event.preventDefault();
     }
@@ -119,13 +120,13 @@
       this.spinner && this.spinner.remove();
     },
     keydownHandler: function (event) {
-      if (event.keyCode === 13 && event.target.value != '') {
+      if (event.keyCode === 13) {
         this.model.set({
           keyword: event.target.value,
           page: 0
         });
         this.$el.prop('readonly', true);
-        this.spinner = $('<span class="fa fa-spin fa-spinner"></span>');
+        this.spinner = this.spinner || $(spinner);
         this.spinner.insertAfter(this.$el);
       }
     }
@@ -138,18 +139,24 @@
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
-      'click .popup': 'popup_clickHandler',
       'change select.edit': 'select_changeHandler',
       'change .stars input': 'star_changeHandler',
       'change .status-button': 'statusButton_clickHandler',
       'sortupdate': 'sortUpdateHandler'
     },
     initialize: function (options) {
-      this.template = Handlebars.compile(this.$('script').html().replace(/\s{2,}|\n/g, ''));
+      this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
       var init = this.$el.data();
-      options = _.extend({pagesize: 10}, options, init, {url: init.url.replace('{{API}}', tp.API)});
+      init.url = init.url.replace('{{API}}', tp.API);
+      options = _.extend({
+        pagesize: 10,
+        autoFetch: true
+      }, options, init);
       this.filter = tp.utils.decodeURLParam(init.filter);
       this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
+      if (init.model) {
+        options.model = Nervenet.parseNamespace(init.model);
+      }
 
       this.collection = tp.model.ListCollection.createInstance(null, options);
       this.collection.on('add', this.collection_addHandler, this);
@@ -193,7 +200,9 @@
         });
       }
 
-      this.collection.fetch(_.extend(this.filter, this.model.pick('page', 'keyword')));
+      if (options.autoFetch) {
+        this.collection.fetch(_.extend(this.filter, this.model.pick('page', 'keyword')));
+      }
     },
     remove: function () {
       if (this.pagination) {
@@ -328,24 +337,11 @@
     },
     model_changeHandler: function (model) {
       this.filter = _.extend(this.filter, model.changed);
-      this.collection.fetch(this.filter);
+      this.collection.fetch({data: this.filter});
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
       this.collection.fetch(this.filter);
-    },
-    popup_clickHandler: function (event) {
-      var id = $(event.currentTarget).closest('tr').attr('id')
-        , model = this.collection.get(id);
-      tp.popup.Manager.popup({
-        title: '编辑',
-        content: event.currentTarget.href,
-        confirm: '修改',
-        cancel: '取消',
-        isRemote: true,
-        model: model
-      });
-      event.preventDefault();
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)

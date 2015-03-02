@@ -34,7 +34,14 @@
     },
     initialize: function () {
       this.submit = this.getSubmit();
+      if (this.model instanceof Backbone.Model) {
+        this.model.on('invalid', this.model_invalidHandler, this);
+      }
       this.initUploader();
+    },
+    remove: function () {
+      this.model.off(null, null, this);
+      Backbone.View.prototype.remove.call(this);
     },
     validate: function () {
       // 验证表单项是否合乎要求
@@ -73,7 +80,7 @@
         }
       }
       // 验证密码
-      if (input.attr('type') === 'password' && !/^[0-9a-zA-Z$!^#_@%&*.]{6,16}$/.test(input.val())) {
+      if (input.attr('type') === 'password' && !/^[0-9a-zA-Z$!^#_@%&*.]{6,32}$/.test(input.val())) {
         return '密码应为6~16个字符，包含字母、数字、特殊符号等';
       }
 
@@ -89,13 +96,13 @@
       return submit;
     },
     initUploader: function () {
-      var id = this.model.id
+      var id = this.model ? this.model.id : ''
         , self = this;
       this.$('.uploader').each(function () {
         var options = $(this).data();
-        options.data = {
-          id: id
-        };
+        if (id) {
+          options.data = {id: id};
+        }
         var uploader = new meathill.SimpleUploader(this, options);
         uploader.on('data', self.uploader_dataHandler, self);
       });
@@ -117,6 +124,10 @@
     },
     legend_clickHandler: function (event) {
       $(event.currentTarget).toggleClass('collapsed');
+    },
+    model_invalidHandler: function (model, error) {
+      this.displayResult(false, error, 'times');
+      this.trigger('error', null, 1, {message: error});
     },
     submit_successHandler: function(response) {
       if ('go_to_url' in response) {
@@ -193,8 +204,15 @@
             attr[key] = element.value;
           }
         }, this);
+        this.$('.switch').each(function () {
+          var isNumber = !isNaN(parseInt(this.value))
+            , value = isNumber ? Number(this.value) : this.value;
+          value = this.checked ? value : !value;
+          attr[this.name] = isNumber ? Number(value) : value;
+        });
         this.model.save(attr, {
           patch: true,
+          wait: true,
           success: function (model, response) {
             self.submit_successHandler(response);
           },
@@ -223,7 +241,6 @@
           items.trigger('change');
         }
       }
-      this.model.set(data);
     }
   });
 }(Nervenet.createNameSpace('tp.component')));

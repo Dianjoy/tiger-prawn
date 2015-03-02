@@ -3,7 +3,8 @@
  */
 'use strict';
 (function (ns) {
-  var OWNER = 'ad_owner';
+  var OWNER = 'ad_owner'
+    , CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
   ns.AD = Backbone.Model.extend({
     defaults: {
@@ -25,8 +26,8 @@
       if (this.isNew()) {
         this.isEmpty = true;
         this.urlRoot += 'init';
+        this.on('sync', this.syncHandler, this);
       }
-      this.on('change:id', this.id_changeHandler, this);
     },
     parse: function (response, options) {
       if (response.options) {
@@ -37,7 +38,7 @@
       if (response.ad && !response.ad.owner) {
         response.ad.owner = Number(localStorage.getItem(OWNER));
       }
-      return response.ad;
+      return this.collection ? response : response.ad; // 如果是collection.fetch得来，就没有ad属性
     },
     save: function (key, value, options) {
       if (key === 'owner' && value) {
@@ -55,9 +56,17 @@
       }
       return _.extend(json, this.options);
     },
-    id_changeHandler: function (model, id) {
-      location.hash = '#/ad/' + id;
-      this.urlRoot = tp.API + 'ad/';
+    validate: function (attrs) {
+      var pack_name = this.get('pack_name');
+      if (pack_name && attrs.pack_name !== pack_name && !confirm(CONFIRM_MSG)) {
+        return '新包名与之前不一致，请检查后重新上传。';
+      }
+    },
+    syncHandler: function () {
+      if ('id' in this.changed) {
+        location.hash = '#/ad/' + this.id;
+        this.urlRoot = tp.API + 'ad/';
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.model')));

@@ -1,0 +1,62 @@
+@charset "UTF-8"
+
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+
+$th-width: 35%
+
+@media (max-width: $screen-xs-max)
+  .responsive-table
+    > tbody,
+    > tfoot
+      > tr
+        > td
+          padding-left: $th-width
+          position: relative
+
+          &:before
+            position: absolute
+            top: $table-cell-padding
+            left: 0
+            right: 100% - $th-width - 5%
+            bottom: $table-cell-padding
+            white-space: nowrap
+            font-weight: bold
+            content: attr(data-title)
+            text-align: right
+            line-height: $line-height-base
+
+  .responsive-table>tbody>tr>td
+    padding-left: 7em
+
+  .responsive-table>tbody>tr>td
+    border-top: 0
+    border-left: 0
+    border-right: 0
+    border-bottom: 1px solid #ddd
+
+  .responsive-table thead
+    display: none
+
+  .responsive-table tbody
+    display: block
+
+    tr:nth-child(odd)
+      background-color: $table-bg-accent
+
+    tr
+      display: block
+
+      td
+        display: block
+        text-align: left
+        position: relative
+        min-height: 36px
+
+      td[data-title]:before
+        content: attr(data-title)
+        white-space: nowrap
+        text-align: right
+        font-size: inherit
+        width: 5em
+        position: absolute
+        left: 0
