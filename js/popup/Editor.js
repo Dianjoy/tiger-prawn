@@ -46,6 +46,13 @@
         this.$('.item-grid').empty();
       }
 
+      var dateFields = this.$('[type=datetime]');
+      if (dateFields.length) {
+        dateFields.each(function () {
+          $(this).datetimepicker($(this).data());
+        });
+      }
+
       this.submit.prop('disabled', false);
     },
     hide: function (delay) {

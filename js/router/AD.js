@@ -17,7 +17,7 @@
       var model = new tp.model.AD();
       this.$body
         .load('page/ad/edit.hbs', model, {
-          className: 'ad ad-new',
+          className: 'ad ad-new Android',
           loader: tp.page.AdEditor
         })
         .setFramework('ad ad-new', '创建广告');
