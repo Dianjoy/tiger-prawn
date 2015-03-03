@@ -38,7 +38,9 @@
       <td data-title="针对">{{attr}}</td>
       <td data-title="调整前后">
         {{#if is_url}}
-        <a href="{{before}}">调整前</a> / <a href="{{after}}">调整后</a>
+        <a href="{{before}}">原链接</a> / <a href="{{after}}">现链接</a>
+        {{else if is_status}}
+        {{pick before '上线' '下线'}} / {{pick after '上线' '下线'}}
         {{else}}
         {{#if before}}{{before}} / {{/if}}{{after}}
         {{/if}}
