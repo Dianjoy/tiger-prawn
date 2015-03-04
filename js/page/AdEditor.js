@@ -35,20 +35,11 @@
       this.model.off(null, null, this);
     },
     checkADURL: function (value) {
-      if (!value) {
-        this.$('.fetch-button')
-          .removeClass('btn-warning')
-          .prop('disabled', true);
-        return;
-      }
       if (/\.ipa$/.test(value) || /itunes.apple.com/.test(value)) {
         this.$('input[name=ad_app_type][value=2]').prop('checked', true);
         return;
       }
       if (/\.apk$/.test(value)) {
-        this.$('.fetch-button')
-          .addClass('btn-warning')
-          .prop('disabled', false);
         this.$('input[name=ad_app_type][value=1]').prop('checked', true);
       }
     },

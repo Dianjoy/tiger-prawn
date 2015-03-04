@@ -5,7 +5,8 @@
 (function (ns) {
   ns.FileFetcher = Backbone.View.extend({
     events: {
-      'click .fetch-button': 'fetchButton_clickHandler'
+      'click .fetch-button': 'fetchButton_clickHandler',
+      'change [name]': 'input_changeHandler'
     },
     fetchButton_clickHandler: function () {
       var field = this.$('[name=ad_url]')
@@ -40,6 +41,12 @@
     fetchFile_errorHandler: function (response) {
       console.log(response);
       alert(response.msg);
+    },
+    input_changeHandler: function (event) {
+      var has_url = !!event.target.value;
+      this.$('.fetch-button')
+        .toggleClass('btn-warning', has_url)
+        .prop('disabled', !has_url);
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
