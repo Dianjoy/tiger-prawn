@@ -258,30 +258,8 @@
       }
     },
     collection_changeHandler: function (model) {
-      var changed = model.changed
-        , tr = this.$('#' + ('id' in changed ? model.cid : model.id))
-        , target;
-      if ('id' in changed) {
-        tr.replaceWith(this.template(model.toJSON()));
-        return;
-      }
-      for (var prop in changed) {
-        if (!changed.hasOwnProperty(prop)) {
-          continue;
-        }
-        target = tr.find('[href=#' + prop + ']');
-        if (target.data('refresh')) {
-          var index = target.closest('td').index();
-          tr = $(this.template(model.toJSON()));
-          target.parent().replaceWith(tr.children().eq(index));
-        } else if (target.children().is('img')) {
-          target.children('img').attr('src', changed[prop]);
-        } else if (target.is('.status-button')) {
-          target.toggleClass('active', changed[prop]);
-        } else {
-          target.text(changed[target.data('display') ? target.data('display') : prop]);
-        }
-      }
+      var html = this.template(model.toJSON());
+      this.$('#' + (model.id || model.cid)).replaceWith(html);
     },
     collection_removeHandler: function (model, collection, options) {
       var item = this.$('#' + (model.id || model.cid));

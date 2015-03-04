@@ -40,14 +40,14 @@
       <td data-title="报价"><a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-message="true" data-refresh="true">{{quote_rmb}}</a></td>
       <td data-title="每日投放">
         {{#if set_job_num}}
-          <span title="申请已提交，等待核准">{{job_num}} / {{set_job_num}}</span>
+          <span title="申请已提交，等待核准">{{#if previous}}{{previous.job_num}}{{else}}{{../job_num}}{{/if}} / {{set_job_num}}</span>
         {{else}}
         <a href="#job_num" class="edit" title="调整日投放量" data-refresh="true" data-title="调整每日投放量" data-template="ad/job-edit">{{job_num}}</a>
         {{/if}}
       </td>
       <td data-title="今日尚余">
         {{#if set_today_left}}
-          <span title="申请已提交，等待核准">{{today_left}} / {{set_today_left}}</span>
+          <span title="申请已提交，等待核准">{{#if previous}}{{previous.today_left}}{{else}}{{../today_left}}{{/if}} / {{set_today_left}}</span>
         {{else}}
         <a href="#today_left" class="edit" title="调整今日余量" data-type="number" data-min="0" data-comment="message" data-refresh="true">{{today_left}}</a>
         {{/if}}

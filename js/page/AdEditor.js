@@ -10,7 +10,6 @@
   ns.AdEditor = tp.view.Loader.extend({
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
-      'click .fetch-button': 'fetchButton_clickHandler',
       'change [name=ad_app_type]': 'platform_changeHandler',
       'change #replace-ad': 'replaceAD_changeHandler',
       'change .domestic input': 'area_changeHandler',
@@ -36,20 +35,11 @@
       this.model.off(null, null, this);
     },
     checkADURL: function (value) {
-      if (!value) {
-        this.$('.fetch-button')
-          .removeClass('btn-warning')
-          .prop('disabled', true);
-        return;
-      }
       if (/\.ipa$/.test(value) || /itunes.apple.com/.test(value)) {
         this.$('input[name=ad_app_type][value=2]').prop('checked', true);
         return;
       }
       if (/\.apk$/.test(value)) {
-        this.$('.fetch-button')
-          .addClass('btn-warning')
-          .prop('disabled', false);
         this.$('input[name=ad_app_type][value=1]').prop('checked', true);
       }
     },
@@ -81,43 +71,6 @@
       this.$('[name=replace-with]').html(options);
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', false);
       this.$('#replace-ad').next().removeClass('spin');
-    },
-    fetchButton_clickHandler: function () {
-      var field = this.$('[name=ad_url]')
-        , value = field.val();
-      if (!value || field.attr('type') === 'hidden') { // 用户上传的文件不抓包
-        return;
-      }
-      if (/itunes.apple.com/.test(value)) {
-        alert('App Store应用不需要抓取');
-        return;
-      }
-      tp.service.Manager.call(tp.API + 'fetch/', {
-        type: 'ad_url',
-        file: value
-      }, {
-        context: this,
-        success: this.fetchFile_successHandler,
-        error: this.fetchFile_errorHandler
-      });
-      this.$('.fetch-button').prop('disabled', true)
-        .find('i').addClass('fa-spin fa-spinner');
-      this.$('[name=ad_url]').prop('disabled', true);
-    },
-    fetchFile_successHandler: function (response) {
-      alert('服务器抓取文件成功');
-      for (var key in response.form) {
-        if (response.form.hasOwnProperty(key)) {
-          this.$('[name=' + key + ']').val(response.form[key]);
-        }
-      }
-      this.$('.fetch-button').prop('disabled', false)
-        .find('i').removeClass('fa-spin fa-spinner');
-      this.$('[name=ad_url]').prop('disabled', false);
-    },
-    fetchFile_errorHandler: function (response) {
-      console.log(response);
-      alert(response.msg);
     },
     isp_changeHandler: function (event) {
       var target = $(event.target)

@@ -35,10 +35,11 @@
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
       }
-      if (response.ad && !response.ad.owner) {
+      var has_ad = response.ad && _.isObject(response.ad);
+      if (has_ad && !response.ad.owner) {
         response.ad.owner = Number(localStorage.getItem(OWNER));
       }
-      return this.collection ? response : response.ad; // 如果是collection.fetch得来，就没有ad属性
+      return has_ad ? response.ad : response;
     },
     save: function (key, value, options) {
       if (key === 'owner' && value) {
@@ -53,6 +54,10 @@
       var json = Backbone.Model.prototype.toJSON.call(this, options);
       if (options) { // from sync，因为{patch: true}
         return json;
+      }
+      var previous = this.previousAttributes();
+      if (!_.isEmpty(previous)) {
+        json.previous = previous;
       }
       return _.extend(json, this.options);
     },

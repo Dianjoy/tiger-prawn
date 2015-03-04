@@ -26,6 +26,7 @@
 
   ns.SmartForm = tp.view.DataSyncView.extend({
     $router: null,
+    uploaders: [],
     events: {
       "blur input,textarea,select": "input_blurHandler",
       'focus input': 'input_focusHandler',
@@ -41,6 +42,13 @@
     },
     remove: function () {
       this.model.off(null, null, this);
+      _.each(this.uploaders, function (uploader) {
+        uploader.off('data');
+        if (uploader.remove) {
+          uploader.remove();
+        }
+      });
+      this.uploaders = null;
       Backbone.View.prototype.remove.call(this);
     },
     validate: function () {
@@ -96,8 +104,9 @@
       return submit;
     },
     initUploader: function () {
-      var id = this.model ? this.model.id : ''
-        , self = this;
+      var id = this.model ? this.model.id : null
+        , self = this
+        , collection = this.uploaders;
       this.$('.uploader').each(function () {
         var options = $(this).data();
         if (id) {
@@ -105,6 +114,15 @@
         }
         var uploader = new meathill.SimpleUploader(this, options);
         uploader.on('data', self.uploader_dataHandler, self);
+        collection.push(uploader);
+      });
+      this.$('.fetcher').each(function () {
+        var fetcher = new tp.component.FileFetcher({
+          el: this,
+          model: self.model
+        });
+        fetcher.on('data', self.uploader_dataHandler, self);
+        collection.push(fetcher);
       });
     },
     input_blurHandler: function (event) {
@@ -130,13 +148,6 @@
       this.trigger('error', null, 1, {message: error});
     },
     submit_successHandler: function(response) {
-      if ('go_to_url' in response) {
-        var router = this.$router;
-        response.msg += '<br>将于3秒后跳转';
-        setTimeout(function () {
-          router.navigate(response.go_to_url);
-        }, 3000);
-      }
       this.displayResult(true, response.msg, 'smile-o');
       this.$el.trigger('success');
       this.trigger('success', response);
