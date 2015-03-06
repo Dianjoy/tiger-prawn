@@ -45,9 +45,9 @@
         {{#if before}}{{before}} / {{/if}}{{after}}
         {{/if}}
       </td>
-      <td data-title="提交时间"><time datetime="{{create_time}}">{{create_time}}</time></td>
+      <td data-title="提交时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td data-title="附言">{{send_msg}}</td>
-      <td data-title="处理时间"><time datetime="{{handle_time}}">{{handle_time}}</time></td>
+      <td data-title="处理时间"><time datetime="{{handle_time}}">{{moment handle_time}}</time></td>
       <td data-title="回复">{{reply_msg}}</td>
       <td data-title="操作人">{{handler}}</td>
       <td data-title="操作">

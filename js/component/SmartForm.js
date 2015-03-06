@@ -113,6 +113,7 @@
           options.data = {id: id};
         }
         var uploader = new meathill.SimpleUploader(this, options);
+        uploader.on('start', self.uploader_startHandler, self);
         uploader.on('data', self.uploader_dataHandler, self);
         collection.push(uploader);
       });
@@ -121,6 +122,7 @@
           el: this,
           model: self.model
         });
+        fetcher.on('start', self.uploader_startHandler, self);
         fetcher.on('data', self.uploader_dataHandler, self);
         collection.push(fetcher);
       });
@@ -202,9 +204,6 @@
         var attr = {}
           , self = this;
         _.each(this.$el.serializeArray(), function (element) {
-          if (element.value === '') {
-            return;
-          }
           var key = element.name.replace('[]', '');
           if (attr[key] !== undefined) {
             if (!_.isArray(attr[key])) {
@@ -237,6 +236,7 @@
       return isPass;
     },
     uploader_dataHandler: function (data) {
+      this.$el.removeClass('uploading');
       for (var key in data) {
         if (!data.hasOwnProperty(key)) {
           return;
@@ -252,6 +252,9 @@
           items.trigger('change');
         }
       }
+    },
+    uploader_startHandler: function () {
+      this.$el.addClass('uploading');
     }
   });
 }(Nervenet.createNameSpace('tp.component')));

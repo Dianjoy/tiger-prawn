@@ -20,7 +20,7 @@
           {{/if}}
         </div>
         <label class="btn btn-info btn-block su-upload-button">
-          <i class="fa fa-upload"></i> 选择安装包
+          <i class="fa fa-upload"></i> 选择安装包并上传
         </label>
         <input type="hidden" name="ad_url" value="{{ad_url}}" class="su-url form-control">
       </div>
@@ -125,15 +125,15 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pic_path">广告LOGO</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="pic_path">
-        <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中..">
-          {{#if pic_path}}
-            <div class="su-item">
-              <img src="{{UPLOAD}}{{pic_path}}" class="img-thumbnail">
-            </div>
-          {{/if}}
-        </div>
+        {{#if pic_path}}
+          <div class="su-item">
+            <img src="{{UPLOAD}}{{pic_path}}" class="img-thumbnail">
+          </div>
+        {{else}}
+        <div class="su-placeholder" data-initial="请上传PNG文件，尺寸128x128。" data-progress="上传图片中.."></div>
+        {{/if}}
         <label class="btn btn-info btn-block su-upload-button">
-          <i class="fa fa-upload"></i> 选择图标
+          <i class="fa fa-image"></i> 选择图标并上传
         </label>
         <input type="hidden" name="pic_path" value="{{pic_path}}" class="su-url">
       </div>
@@ -141,17 +141,17 @@
     <div class="form-group app">
       <label class="col-sm-2 control-label" for="ad_shoot">广告截图</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="ad_shoot" data-multiple="true" data-append="true">
-        <div class="su-placeholder su-grid col-2 su-removable" data-initial="可上传多个文件。" data-progress="上传文件中..">
-          {{#if shoots}}
-            {{#each shoots}}
-              <div class="su-item">
-                <img src="{{../UPLOAD}}{{.}}" class="img-thumbnail">
-              </div>
-            {{/each}}
-          {{/if}}
-        </div>
+        {{#if shoots}}
+          {{#each shoots}}
+            <div class="su-item">
+              <img src="{{../UPLOAD}}{{.}}" class="img-thumbnail">
+            </div>
+          {{/each}}
+        {{else}}
+        <div class="su-placeholder su-grid col-2 su-removable" data-initial="请上传两张JPG文件，尺寸480x800。" data-progress="上传文件中.."></div>
+        {{/if}}
         <label class="btn btn-info btn-block su-upload-button">
-          <i class="fa fa-upload"></i> 选择广告截图
+          <i class="fa fa-image"></i> 选择广告截图并上传
         </label>
         <input type="hidden" name="ad_shoot" value="{{ad_shoot}}" class="su-url">
       </div>

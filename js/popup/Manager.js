@@ -67,7 +67,7 @@
       }
       return popup;
     }
-  }
+  };
 
   var manager = ns.Manager = new Klass({
     el: 'body'

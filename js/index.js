@@ -1,10 +1,4 @@
 $(function () {
-  $('.morris-data').each(function () {
-    var data = JSON.parse(this.innerHTML);
-    data.element = $(this).data('target');
-    new Morris.Line(data);
-  });
-
   // start here
   var context = Nervenet.createContext()
     , me = new tp.model.Me()
@@ -33,6 +27,9 @@ $(function () {
 
   // 验证用户身份
   me.fetch();
+
+  // moment使用中式语法
+  moment.locale('zh-cn');
 
   // GA
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

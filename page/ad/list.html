@@ -63,8 +63,8 @@
         <span class="label status-{{status}}">{{pick status '拒绝' '等待'}}</span>
         {{/if}}
       </td>
-      <td data-title="创建时间"><time datetime="{{create_time}}">{{substring create_time 5 11}}</time></td>
-      <td data-title="变更时间"><time datetime="{{status_time}}">{{substring status_time 5 11}}</time></td>
+      <td data-title="创建时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
+      <td data-title="变更时间"><time datetime="{{status_time}}">{{moment status_time}}</time></td>
       <td data-title="备注"><a href="#others" data-type="long-text" class="edit">{{others}}</a></td>
       <td data-title="操作">
         <div class="btn-group">

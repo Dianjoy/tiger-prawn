@@ -23,11 +23,11 @@
   "dependencies": {
     "bootstrap": "~3.3.2",
     "font-awesome": "~4.3.0",
-    "colors": "~2.0.0",
+    "colors": "~2.2.0",
     "backbone": "~1.1.2",
     "nervenet": "~0.1.9",
     "handlebars": "~3.0.0",
-    "animate.css": "~3.2.1",
+    "animate.css": "~3.2.3",
     "moment": "~2.9.0",
     "eonasdan-bootstrap-datetimepicker": "~4.0.0",
     "morrisjs": "~0.5.1",

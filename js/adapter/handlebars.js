@@ -37,11 +37,7 @@
     return (value / 100).toFixed(2);
   });
 
-  h.registerHelper('is_set', function (conditional, options) {
-    if (conditional !== null && !(conditional === void 0)) {
-      options.fn(this);
-    } else {
-      options.inverse(this);
-    }
+  h.registerHelper('moment', function (value) {
+    return moment(value).calendar();
   });
 }(Handlebars));

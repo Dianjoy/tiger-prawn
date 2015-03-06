@@ -25,7 +25,7 @@
         info = Handlebars.compile(info.html());
         this.$('.info').html(info(this.model.toJSON()));
       }
-      this.$el.modal('show');
+      this.$el.modal(options);
     },
     render: function (template) {
       template = Handlebars.compile(template);
@@ -76,7 +76,7 @@
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13 && event.ctrlKey) {
-        this.form.submit();
+        this.form.$el.submit();
         event.preventDefault();
       }
     },
@@ -89,6 +89,7 @@
         this.collection.off(null, null, this);
       }
       clearTimeout(timeout);
+      this.$el.remove();
       this.trigger('hidden');
     }
   });
@@ -201,17 +202,29 @@
   });
 
   ns.FileEditor = Editor.extend({
+    events: _.extend({
+      'click [data-dismiss]': 'clickHandler'
+    }, Editor.prototype),
     initialize: function (options) {
       this.isImage = /image\/\*/.test(options.accept);
       options.API = tp.API;
       if (options.multiple) {
         options.items = options.value.split(',');
       }
+      // 防止误触导致退出窗体
+      options.backdrop = 'static';
+      options.keyboard = false;
       Editor.prototype.initialize.call(this, options);
     },
     render: function (response) {
       Editor.prototype.render.call(this, response);
       this.form.initUploader();
+    },
+    clickHandler: function (e) {
+      var label = '您有文件正在上传，关闭窗口将导致上传失败。您确认要继续关闭窗口么？';
+      if (this.form.$el.hasClass('loading') && !confirm(label)) {
+        e.stopPropagation();
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));

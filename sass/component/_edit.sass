@@ -1,5 +1,11 @@
-.edit:not(.btn,.label)
-  border-bottom: 1px dashed
+.edit
+
+  &:empty:before
+    content: '[edit]'
+    border-bottom: 1px dashed
+
+  &:not(.btn,.label)
+    border-bottom: 1px dashed
 
   &:hover
     text-decoration: none
