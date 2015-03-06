@@ -38,6 +38,6 @@
   });
 
   h.registerHelper('moment', function (value) {
-    return moment(value).calendar();
+    return value ? moment(value).calendar() : '';
   });
 }(Handlebars));
