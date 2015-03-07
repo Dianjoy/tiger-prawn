@@ -316,6 +316,7 @@
     model_changeHandler: function (model) {
       this.filter = _.extend(this.filter, model.changed);
       this.collection.fetch({data: this.filter});
+      model.unset('keyword', {silent: true});
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
