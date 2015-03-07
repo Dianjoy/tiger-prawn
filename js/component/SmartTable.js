@@ -1,137 +1,5 @@
 'use strict';
 (function (ns) {
-  var DATE_FORMAT = 'YYYY-MM-DD'
-    , spinner = '<i class="fa fa-spin fa-spinner"></i>';
-
-  var Pager = Backbone.View.extend({
-    events: {
-      'click a': 'clickHandler'
-    },
-    initialize: function (options) {
-      var total = Math.ceil(options.length / options.pagesize);
-      this.template = this.$('script').remove().html() || '';
-      this.template = this.template ? Handlebars.compile(this.template) : false;
-      this.total = total;
-      this.pagesize = options.pagesize;
-      this.render();
-      this.displayPageNum();
-    },
-    render: function () {
-      if (!this.template) {
-        return;
-      }
-      var page = this.model.get('page')
-        , arr = []
-        , start = page - 5 > 0 ? page - 5 : 0
-        , end = start + 10 < this.total ? start + 10 : this.total
-        , length = end - start;
-      for (var i = 0; i < length; i++) {
-        arr[i] = {
-          index: i + start,
-          label: i + start + 1
-        };
-      }
-      this.$el.html(this.template({
-        pages: arr,
-        prev: page - 1,
-        next: page + 1
-      }));
-    },
-    displayPageNum: function () {
-      var page = this.model.get('page') || 0
-        , total = this.total;
-      this.$('[href="#/to/' + page + '"]').parent('.hidden-xs').addClass('active')
-        .siblings().removeClass('active');
-      this.$el.each(function () {
-        $(this).children().first().toggleClass('disabled', page === 0)
-          .end().last().toggleClass('disabled', page >= total - 1);
-      });
-    },
-    setTotal: function (total) {
-      this.total = Math.ceil(total / this.pagesize);
-      this.render();
-      this.displayPageNum();
-    },
-    clickHandler: function (event) {
-      var target = $(event.currentTarget)
-        , parent = target.parent();
-      if (parent.hasClass('disabled') || parent.hasClass('active')) {
-        return false;
-      }
-      var href = target.attr('href')
-        , index = Number(href.substr(href.lastIndexOf('/') + 1));
-      this.model.set('page', index);
-      target.html(spinner);
-      this.$el.children().addClass('disabled');
-      event.preventDefault();
-    }
-  });
-
-  var Ranger = Backbone.View.extend({
-    events: {
-      'click .shortcut': 'shortcut_clickHandler',
-      'click .range input': 'input_clickHandler',
-      'click .range button': 'range_clickHandler'
-    },
-    initialize: function () {
-      this.$('.date').datetimepicker();
-    },
-    remove: function () {
-      this.stopListening();
-      this.el = this.$el = this.model = null;
-      return this;
-    },
-    input_clickHandler: function (event) {
-      event.stopPropagation();
-    },
-    range_clickHandler: function () {
-      var start = this.$('[name=start]').val()
-        , end = this.$('[name=end]').val();
-      this.$('.shortcut').removeClass('active');
-      this.$('.label').text(start + ' - ' + end);
-      this.model.set({
-        start: start,
-        end: end
-      });
-    },
-    shortcut_clickHandler: function (event) {
-      var item = $(event.currentTarget)
-        , start = item.data('start')
-        , end = item.data('end');
-      item.addClass('active')
-        .siblings().removeClass('active');
-      start = moment().add(start, 'days').format(DATE_FORMAT);
-      end = moment().add(end, 'days').format(DATE_FORMAT);
-      this.model.set({
-        start: start,
-        end: end
-      });
-      this.$('.label').text(item.text());
-      event.preventDefault();
-    }
-  });
-
-  var Search = Backbone.View.extend({
-    events: {
-      'keydown': 'keydownHandler'
-    },
-    start: function () {
-      this.$el.prop('readonly', false);
-      this.spinner && this.spinner.remove();
-    },
-    keydownHandler: function (event) {
-      if (event.keyCode === 13) {
-        this.model.set({
-          keyword: event.target.value,
-          page: 0
-        });
-        this.$el.prop('readonly', true);
-        this.spinner = this.spinner || $(spinner);
-        this.spinner.insertAfter(this.$el);
-      }
-    }
-  });
-
   ns.SmartTable = Backbone.View.extend({
     $context: null,
     fragment: '',
@@ -170,7 +38,7 @@
 
       // 启用搜索
       if ('search' in init) {
-        this.search = new Search({
+        this.search = new ns.table.Search({
           el: init.search,
           model: this.model
         });
@@ -178,11 +46,10 @@
 
       // 翻页
       if ('pagesize' in init && init.pagesize > 0) {
-        this.pagination = new Pager({
-          el: 'pagination' in init ? init.pagination : this.$('.pager'),
-          model: this.model,
-          pagesize: options.pagesize
-        });
+        this.pagination = new ns.table.Pager(_.extend({}, options, {
+          el: 'pagination' in init ? init.pagination : '.pager',
+          model: this.model
+        }));
       }
 
       // 调整每页数量
@@ -194,14 +61,17 @@
 
       // 起止日期
       if ('ranger' in init) {
-        this.ranger = new Ranger({
+        this.ranger = new ns.table.Ranger(_.extend({}, options, {
           el: init.ranger,
           model: this.model
-        });
+        }));
       }
 
       if (options.autoFetch) {
-        this.collection.fetch(_.extend(this.filter, this.model.pick('page', 'keyword')));
+        this.filter = _.extend(this.filter, this.model.pick('page', 'keyword', 'start', 'end'));
+        this.collection.fetch({
+          data: this.filter
+        });
       }
     },
     remove: function () {

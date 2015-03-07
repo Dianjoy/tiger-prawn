@@ -31,11 +31,11 @@
         if (this.isLoading) {
           return;
         }
-        options = _.extend({
-          data: {
-            pagesize: this.pagesize
-          }
-        }, options);
+        if (options.data) {
+          options.data.pagesize = this.pagesize;
+        } else {
+          options.data = {pagesize: this.pagesize};
+        }
         Backbone.Collection.prototype.fetch.call(this, options);
         this.isLoading = true;
       },

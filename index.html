@@ -125,7 +125,7 @@
       <div class="dropdown">
         <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="data-range-btn">
           <i class="fa fa-calendar"></i>
-          日期选择：<span class="label">（默认）</span>
+          日期选择：<span class="label">一月内</span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="data-range-btn">
@@ -138,12 +138,12 @@
             <label for="stat-range-start-date">开始日期</label>
             <div class="input-group date">
               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-              <input type="date" class="form-control" name="start" value="2014-11-11" id="stat-range-start-date" data-date-format="YYYY-MM-DD">
+              <input type="date" class="form-control" name="start" id="stat-range-start-date">
             </div>
             <label for="stat-range-end-date">结束日期</label>
             <div class="input-group date">
               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-              <input type="date" class="form-control" name="end" value="2014-11-11" id="stat-range-end-date" data-date-format="YYYY-MM-DD">
+              <input type="date" class="form-control" name="end" id="stat-range-end-date">
             </div>
             <button type="button" class="btn btn-primary btn-block"><i class="fa fa-play"></i> 检索</button>
           </li>
@@ -172,7 +172,7 @@
       <div class="growl-item-inner">
         <h4 class="growl-item-header">{{title}}</h4>
         {{#if handler}}
-        <a href="{{handler}}">[{{description}}] <strong>{{name}}</strong> <small class="text-muted">{{substring create_time 5 11}}</small></a>
+        <a href="{{handler}}">[{{description}}] <strong>{{name}}</strong> <small class="text-muted">{{from-now create_time}}</small></a>
         {{else}}
         <i class="fa-envelope-o"></i> 以及其他 <strong>{{left}}</strong> 条新消息，请及时处理。
         {{/if}}
@@ -262,6 +262,7 @@
 <script src="js/view/DataSyncView.js"></script>
 <script src="js/component/SmartForm.js"></script>
 <script src="js/component/FileFetcher.js"></script>
+<script src="js/component/TableParts.js"></script>
 <script src="js/component/Manager.js"></script>
 <script src="js/popup/Base.js"></script>
 <script src="js/popup/Editor.js"></script>

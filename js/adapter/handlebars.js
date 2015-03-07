@@ -40,4 +40,8 @@
   h.registerHelper('moment', function (value) {
     return value ? moment(value).calendar() : '';
   });
+
+  h.registerHelper('from-now', function (value) {
+    return value ? moment(value).fromNow() : '';
+  })
 }(Handlebars));
