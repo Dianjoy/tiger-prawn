@@ -204,7 +204,7 @@
   ns.FileEditor = Editor.extend({
     events: _.extend({
       'click [data-dismiss]': 'clickHandler'
-    }, Editor.prototype),
+    }, Editor.prototype.events),
     initialize: function (options) {
       this.isImage = /image\/\*/.test(options.accept);
       options.API = tp.API;
