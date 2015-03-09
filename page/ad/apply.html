@@ -40,7 +40,7 @@
         {{#if is_url}}
         <a href="{{before}}">原链接</a> / <a href="{{after}}">现链接</a>
         {{else if is_status}}
-        {{pick before '上线' '下线'}} / {{pick after '上线' '下线'}}
+        {{#if before}}{{pick before '上线' '下线'}} / {{/if}}{{pick after '上线' '下线'}}
         {{else}}
         {{#if before}}{{before}} / {{/if}}{{after}}
         {{/if}}

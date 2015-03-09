@@ -31,7 +31,7 @@
         {{cid}}
       </td>
       <td data-title="创建时间">{{moment create_time}}</td>
-      <td data-title="备注">{{others}}</td>
+      <td data-title="备注">{{{text-collapse others 30}}}</td>
       <td data-title="状态">
         <i class="fa fa-{{pick ad_app_type '' 'android' 'ios'}} text-{{pick status 'success' 'muted'}}"></i>
       </td>
@@ -41,7 +41,7 @@
   </tbody>
   <tfoot class="waiting">
   <tr>
-    <td colspan="4">
+    <td colspan="5">
       <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
     </td>
   </tr>

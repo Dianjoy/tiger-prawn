@@ -24,12 +24,23 @@
 
   // substring
   h.registerHelper('substring', function (value, start, length) {
-    return value.substr(start, length);
+    return value ? value.substr(start, length) : '';
+  });
+
+  // text-collapse
+  h.registerHelper('text-collapse', function (value, length) {
+    if (!value) {
+      return '';
+    }
+    if (value.length < length) {
+      return value;
+    }
+    return '<abbr title="' + value + '">' + value.substr(0, length) + '...</abbr>';
   });
 
   // 取扩展名
   h.registerHelper('ext', function (value) {
-    return value.substr(value.lastIndexOf('.') + 1);
+    return value ? value.substr(value.lastIndexOf('.') + 1) : '';
   });
 
   // 除100，用于币值转换
@@ -37,10 +48,10 @@
     return (value / 100).toFixed(2);
   });
 
+  // 用来生成可读时间
   h.registerHelper('moment', function (value) {
     return value ? moment(value).calendar() : '';
   });
-
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
   })
