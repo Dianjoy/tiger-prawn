@@ -4,8 +4,7 @@
 'use strict';
 (function (ns) {
   var hidden
-    , notification = Notification
-      || new MockNotification();
+    , notification = 'Notification' in window ? Notification : new MockNotification();
   if ('hidden' in document) {
     hidden = 'hidden';
   } else if ('webkitHidden' in document) {
@@ -19,8 +18,10 @@
   function MockNotification() {
     console.log('no desktop notification');
   }
-  MockNotification.permission = '';
-  MockNotification.requestPermission = function () {};
+  MockNotification.prototype = {
+    permission: '',
+    requestPermission: function () {}
+  };
 
   var Manager = Backbone.View.extend({
     count: 0,
