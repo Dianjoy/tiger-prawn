@@ -206,7 +206,7 @@
       'click [data-dismiss]': 'clickHandler'
     }, Editor.prototype.events),
     initialize: function (options) {
-      this.isImage = /image\/\*/.test(options.accept);
+      options.isImage = /image\/\*/.test(options.accept);
       options.API = tp.API;
       if (options.multiple) {
         options.items = options.value.split(',');
