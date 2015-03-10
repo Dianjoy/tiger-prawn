@@ -7,6 +7,8 @@
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
+      'click tbody .filter': 'tbodyFilter_clickHandler',
+      'click thead .filter': 'theadFilter_clickHandler',
       'change select.edit': 'select_changeHandler',
       'change .stars input': 'star_changeHandler',
       'change .status-button': 'statusButton_clickHandler',
@@ -208,6 +210,25 @@
         , value = target.prop('checked') ? data.deactive : data.active
         , id = target.closest('tr').attr('id');
       this.saveModel(target, id, target.attr('name'), value);
+    },
+    tbodyFilter_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , path = target.attr('href').split('/').slice(-2)
+        , hasFilter = this.model.has(path[0]);
+      this.model.set(path[0], path[1]);
+      if (hasFilter) {
+        this.$('.filters').find('[href="#/' + path[0] + '"]').replaceWith(target.clone());
+      } else {
+        this.$('.filters').append(target.clone());
+      }
+      event.preventDefault();
+    },
+    theadFilter_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , path = target.attr('href').split('/').slice(-2);
+      this.model.unset(path[0]);
+      target.remove();
+      event.preventDefault();
     },
     sortUpdateHandler: function (event, ui) {
       var item = ui.item

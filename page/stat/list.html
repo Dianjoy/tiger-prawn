@@ -15,7 +15,7 @@
 <table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-start="-31" data-end="0">
   <thead>
   <tr>
-    <th>广告名</th>
+    <th class="filters">广告名</th>
     <th>创建时间</th>
     <th>备注</th>
     <th>状态</th>
@@ -26,8 +26,8 @@
   <script type="text/x-handlebars-template">
     <tr>
       <td data-title="管理名">
-        <a href="#ch-{{cid}}" class="label label-ch">{{channel}}</a>
-        <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
+        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-ch">{{channel}}</a>{{/if}}
+        <a href="#/ad_name/{{ad_name}}" class="filter label label-ad">{{ad_name}}</a>
         {{cid}}
       </td>
       <td data-title="创建时间">{{moment create_time}}</td>

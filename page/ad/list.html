@@ -16,7 +16,7 @@
 <table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".date-range" data-search="#search-query" data-model="tp.model.AD">
   <thead>
   <tr>
-    <th class="filter">管理名</th>
+    <th class="filters">管理名</th>
     <th>负责人</th>
     <th><a class="order" href="#quote_rmb">报价</a></th>
     <th><a class="order" href="#job_num">每日投放</a></th>
@@ -32,8 +32,8 @@
   <script type="text/x-handlebars-template">
     <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}} {{packname}}" id="{{id}}">
       <td data-title="管理名">
-        {{#if channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/if}}
-        <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
+        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-ch">{{channel}}</a>{{/if}}
+        <a href="#/ad_name/{{ad_name}}" class="label label-ad filter">{{ad_name}}</a>
         {{cid}}
       </td>
       <td data-title="负责人">{{execute_owner}}</td>
