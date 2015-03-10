@@ -18,12 +18,8 @@
   function MockNotification() {
     console.log('no desktop notification');
 
-    if (!('permission' in this.prototype)) {
-      this.prototype = {
-        permission: '',
-        requestPermission: function () {}
-      };
-    }
+    this.permission = '';
+    this.requestPermission = function () {};
   }
 
   var Manager = Backbone.View.extend({
