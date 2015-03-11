@@ -9,6 +9,7 @@
       'click .edit': 'edit_clickHandler',
       'click tbody .filter': 'tbodyFilter_clickHandler',
       'click thead .filter': 'theadFilter_clickHandler',
+      'click .order': 'order_clickHandler',
       'change select.edit': 'select_changeHandler',
       'change .stars input': 'star_changeHandler',
       'change .status-button': 'statusButton_clickHandler',
@@ -35,8 +36,9 @@
       this.collection.on('sync', this.collection_syncHandler, this);
 
       // 通过页面中介来实现翻页等功能
-      this.model = this.model || new Backbone.Model();
+      this.model = this.model || new tp.model.TableMemento();
       this.model.on('change', this.model_changeHandler, this);
+      this.model.on('invalid', this.model_invalidHandler, this);
 
       // 启用搜索
       if ('search' in init) {
@@ -70,7 +72,7 @@
       }
 
       if (options.autoFetch) {
-        this.filter = _.extend(this.filter, this.model.pick('page', 'keyword', 'start', 'end'));
+        this.filter = _.extend(this.filter, this.model.toJSON());
         this.collection.fetch({
           data: this.filter
         });
@@ -101,6 +103,7 @@
       if (this.pagination) {
         this.pagination.setTotal(this.collection.total);
       }
+      this.$el.removeClass('render');
       this.$context.trigger('table-rendered');
     },
     saveModel: function (target, id, prop, value) {
@@ -145,6 +148,7 @@
     },
     collection_syncHandler: function () {
       this.render();
+      this.model.waiting = false;
     },
     deleteButton_clickHandler: function (event) {
       var target = $(event.currentTarget)
@@ -186,9 +190,25 @@
       event.preventDefault();
     },
     model_changeHandler: function (model) {
-      this.filter = _.extend(this.filter, model.changed);
+      this.filter = _.extend(this.filter, model.toJSON());
       this.collection.fetch({data: this.filter});
+      this.$el.addClass('loading');
+      model.warting = true;
       model.unset('keyword', {silent: true});
+    },
+    model_invalidHandler: function (model, error) {
+      alert(error);
+    },
+    order_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , order = target.attr('href').substr(2);
+      this.$('.order.active').not(target).removeClass('active inverse');
+      target.toggleClass('inverse', target.hasClass('active') && !target.hasClass('inverse')).addClass('active');
+      this.model.set({
+        order: order,
+        seq: target.hasClass('inverse') ? 'desc' : 'asc'
+      });
+      event.preventDefault();
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
