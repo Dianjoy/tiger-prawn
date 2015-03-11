@@ -30,7 +30,7 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
-    <tr class="{{class}} {{sdk_type}} ch-{{channel_id}} ad-{{aid}} {{packname}}" id="{{id}}">
+    <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}} ch-{{channel_id}} ad-{{aid}} {{pack_name}}" id="{{id}}">
       <td data-title="管理名">
         {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-ch">{{channel}}</a>{{/if}}
         <a href="#/ad_name/{{ad_name}}" class="label label-ad filter">{{ad_name}}</a>
@@ -65,11 +65,11 @@
       </td>
       <td data-title="创建时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td data-title="变更时间"><time datetime="{{status_time}}">{{moment status_time}}</time></td>
-      <td data-title="备注"><a href="#others" data-type="long-text" class="edit">{{others}}</a></td>
+      <td data-title="备注"><a href="#others" data-type="long-text" class="edit">{{{text-collapse others 30}}}</a></td>
       <td data-title="操作">
         <div class="btn-group">
           <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
-          <button class="btn btn-danger delete-button" {{#if has_transfer}}disabled title="此广告已跑量，不能删除，只能申请下线" {{/if}}><i class="fa fa-trash-o fa-fw"></i></button>
+          {{#unless is_ready}}<button class="btn btn-danger delete-button" disabled title="此广告已跑量，不能删除，只能申请下线" ><i class="fa fa-trash-o fa-fw"></i></button>{{/unless}}
         </div>
       </td>
     </tr>

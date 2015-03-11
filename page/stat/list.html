@@ -24,7 +24,7 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
-    <tr>
+    <tr id="{{id}}">
       <td data-title="管理名">
         {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-ch">{{channel}}</a>{{/if}}
         <a href="#/ad_name/{{ad_name}}" class="filter label label-ad">{{ad_name}}</a>
@@ -33,7 +33,7 @@
       <td data-title="创建时间">{{moment create_time}}</td>
       <td data-title="备注">{{{text-collapse others 30}}}</td>
       <td data-title="状态">
-        <i class="fa fa-{{pick ad_app_type '' 'android' 'ios'}} text-{{pick status 'success' 'muted'}}"></i>
+        <i class="status fa fa-{{pick ad_app_type '' 'android' 'apple'}} text-{{pick status 'success' 'muted'}}"></i>
       </td>
       <td data-title="推广数量">{{device1}}</td>
     </tr>
