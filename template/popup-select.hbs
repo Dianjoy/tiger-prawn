@@ -9,7 +9,7 @@
   {{/if}}
   <select class="form-control" name="{{prop}}">
     {{#each options}}
-      <option value="{{id}}">{{label}}</option>
+      <option value="{{id}}{{key}}">{{value}}{{label}}</option>
     {{/each}}
   </select>
   {{#if addNew}}
