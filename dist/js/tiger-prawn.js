@@ -1,18 +1,5 @@
 "use strict";
 (function () {
-;(function (ns) {
-  ns.API = 'http://ad-diy.com/';
-  ns.UPLOAD = 'http://ad-diy.com/'; // 上传文件的起始路径
-  ns.path = ''; // 项目路径
-  ns.config = {
-    login: {
-      welcome: '欢迎使用点乐广告自助平台',
-      admin: 'service@dianjoy.com',
-      verify: ns.API + 'showimg.php',
-      className: 'login'
-    }
-  };
-}(Nervenet.createNameSpace('tp')));;
 (function (b) {
   var sync = b.sync;
 
@@ -56,12 +43,23 @@
 
   // substring
   h.registerHelper('substring', function (value, start, length) {
-    return value.substr(start, length);
+    return value ? value.substr(start, length) : '';
+  });
+
+  // text-collapse
+  h.registerHelper('text-collapse', function (value, length) {
+    if (!value) {
+      return '';
+    }
+    if (value.length < length) {
+      return value;
+    }
+    return '<abbr title="' + value + '">' + value.substr(0, length) + '...</abbr>';
   });
 
   // 取扩展名
   h.registerHelper('ext', function (value) {
-    return value.substr(value.lastIndexOf('.') + 1);
+    return value ? value.substr(value.lastIndexOf('.') + 1) : '';
   });
 
   // 除100，用于币值转换
@@ -69,10 +67,10 @@
     return (value / 100).toFixed(2);
   });
 
+  // 用来生成可读时间
   h.registerHelper('moment', function (value) {
     return value ? moment(value).calendar() : '';
   });
-
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
   })
@@ -596,6 +594,22 @@
   });
 }(Nervenet.createNameSpace('tp.model')));;
 (function (ns) {
+  ns.TableMemento = Backbone.Model.extend({
+    waiting: false,
+    _validate: function (attr, options) {
+      if (!('validate' in options)) {
+        options.validate = true;
+      }
+      Backbone.Model.prototype._validate.call(this, attr, options);
+    },
+    validate: function (attr, options) {
+      if (this.waiting || ('ignore' in options && !options.ignore)) {
+        return '表格正在更新数据，请稍候。';
+      }
+    }
+  });
+}(Nervenet.createNameSpace('tp.model')));;
+(function (ns) {
   ns.Panel = Backbone.View.extend({
     fragment: '',
     events: {
@@ -686,8 +700,7 @@
 }(Nervenet.createNameSpace('tp.notification')));;
 (function (ns) {
   var hidden
-    , notification = Notification
-      || new MockNotification();
+    , notification = 'Notification' in window ? Notification : new MockNotification();
   if ('hidden' in document) {
     hidden = 'hidden';
   } else if ('webkitHidden' in document) {
@@ -700,9 +713,10 @@
 
   function MockNotification() {
     console.log('no desktop notification');
+
+    this.permission = '';
+    this.requestPermission = function () {};
   }
-  MockNotification.permission = '';
-  MockNotification.requestPermission = function () {};
 
   var Manager = Backbone.View.extend({
     count: 0,
@@ -1638,7 +1652,7 @@
       'click [data-dismiss]': 'clickHandler'
     }, Editor.prototype.events),
     initialize: function (options) {
-      this.isImage = /image\/\*/.test(options.accept);
+      options.isImage = /image\/\*/.test(options.accept);
       options.API = tp.API;
       if (options.multiple) {
         options.items = options.value.split(',');

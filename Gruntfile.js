@@ -90,7 +90,7 @@ module.exports = function (grunt) {
       , html = grunt.file.read(this.data);
     html.replace(JS_REG, function (match, src) {
       var filename = src.substr(src.lastIndexOf('/') + 1);
-      if (filename === 'define.js' || filename === 'index.js') {
+      if (['define.js', 'index.js', 'config.js'].indexOf(filename) != -1) {
         return '';
       }
       jsFiles.push(src);

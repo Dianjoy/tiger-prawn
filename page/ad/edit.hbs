@@ -24,14 +24,6 @@
         </label>
         <input type="hidden" name="ad_url" value="{{ad_url}}" class="su-url form-control">
       </div>
-      <div class="col-sm-6">
-        <div class="well well-small app file">
-          <h4>安装包上传记录</h4>
-          {{#each apk_history}}
-            <i class="fa fa-time"></i> <a href="{{API}}{{url}}">{{upload_user}} 于 {{upload_time}} 上传</a><br />
-          {{/each}}
-        </div>
-      </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="replace-ad">替换广告</label>
