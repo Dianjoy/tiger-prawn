@@ -103,7 +103,7 @@
       if (this.pagination) {
         this.pagination.setTotal(this.collection.total);
       }
-      this.$el.removeClass('render');
+      this.$el.removeClass('loading');
       this.$context.trigger('table-rendered');
     },
     saveModel: function (target, id, prop, value) {

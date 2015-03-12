@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}apply/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".date-range" data-search="#search-query">
+<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}apply/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query">
   <thead>
   <tr>
     <th class="filter">管理名</th>
@@ -51,9 +51,11 @@
       <td data-title="回复">{{reply_msg}}</td>
       <td data-title="操作人">{{handler}}</td>
       <td data-title="操作">
-        {{#unless handler}}
+        {{#if handler}}
+        <span class="text-{{pick status 'info' 'success' 'danger' 'default'}}"><i class="fa fa-{{pick status 'play' 'check' 'times' 'trash-o'}}"></i> {{pick status '申请中' '已批准' '已拒绝' '撤回'}}</span>
+        {{else}}
         <button class="btn btn-danger delete-button" data-msg="您确定要撤销申请么？"><i class="fa fa-times"></i> 撤消申请</button>
-        {{/unless}}
+        {{/if}}
       </td>
     </tr>
   </script>

@@ -9,7 +9,7 @@
       if (!('validate' in options)) {
         options.validate = true;
       }
-      Backbone.Model.prototype._validate.call(this, attr, options);
+      return Backbone.Model.prototype._validate.call(this, attr, options);
     },
     validate: function (attr, options) {
       if (this.waiting || ('ignore' in options && !options.ignore)) {
