@@ -61,6 +61,10 @@
           popup = context.createInstance(ns.TagsEditor, options);
           break;
 
+        case 'status':
+          popup = context.createInstance(ns.SwitchEditor,options);
+          break;
+
         default:
           popup = context.createInstance(ns.Editor, options);
           break;

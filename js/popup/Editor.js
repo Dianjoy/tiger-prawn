@@ -227,4 +227,15 @@
       }
     }
   });
+
+  ns.SwitchEditor = Editor.extend({
+    initialize: function(options){
+      this.model.get(options.prop);
+      if(options.open == this.model.get(options.prop)){
+        return !options.open;
+      }else{
+        return options.open;
+      }
+    }
+  });
 }(Nervenet.createNameSpace('tp.popup')));

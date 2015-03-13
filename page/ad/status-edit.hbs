@@ -16,7 +16,7 @@
   <div class="form-group">
     <label for="editor-popup-input" class="control-label">申请上线/下线</label>
     {{#if deactive}}<label>{{deactive}}</label>{{/if}}
-    <input type="checkbox" name="{{prop}}" class="switch" id="editor-popup-input" value="{{open}}" {{#if value}}checked {{/if}} />
+    <input type="checkbox" name="{{prop}}" class="switch" id="editor-popup-input" value="{{open}}" {{#if value}}checked {{/if}} readonly/>
     <label for="editor-popup-input"></label>
     {{#if active}}<label>{{active}}</label>{{/if}}
   </div>
