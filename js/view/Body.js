@@ -60,6 +60,7 @@
     },
     addButton_clickHandler: function (event) {
       var options = $(event.currentTarget).data();
+      options.collectionId = $(event.currentTarget).attr('href').substr(1);
       this.$context.trigger('add-model', options);
       event.preventDefault();
     },

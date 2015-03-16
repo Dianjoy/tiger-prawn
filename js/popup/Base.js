@@ -16,24 +16,20 @@
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
       'click [data-dismiss=modal]': 'closeButton_clickHandler',
-      'keydown textarea': 'textarea_keydownHandler',
+      'keydown': 'keydownHandler',
       'success': 'form_successHandler'
     },
     initialize: function (options) {
       if (options.isRemote) {
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
-        if (/\.hbs$/i.test(options.content)) {
-          $.get(options.content, _.bind(this.template_successHandler, this));
-          options.remote = false;
+        if (/\.hbs/.test(options.content)) {
+          $.get(options.content, _.bind(this.template_loadedHandler, this));
         } else {
-          options.remote = options.content;
+          $.get(options.content, _.bind(this.onLoadComplete, this));
         }
       }
-      this.$el.modal({
-        show: true,
-        remote: options.remote
-      });
+      this.$el.modal(options);
     },
     remove: function () {
       clearTimeout(timeout);
@@ -46,7 +42,10 @@
         modal.modal('hide');
       }, 3000);
     },
-    onLoadComplete: function () {
+    onLoadComplete: function (response) {
+      if (response) {
+        this.$('.modal-body').html(response);
+      }
       this.$el.removeClass('loading')
         .find('.modal-footer .btn-primary').prop('disabled', false);
       tp.component.Manager.check(this.$el, this.model);
@@ -64,21 +63,20 @@
       }
       this.trigger('confirm');
     },
-    template_successHandler: function (response) {
+    template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
-      this.$('.modal-body').html(this.template(_.extend({
+      this.onLoadComplete(this.template(_.extend({
         urlRoot: this.model.collection.url
       }, this.model.toJSON())));
-      this.onLoadComplete();
-    },
-    textarea_keydownHandler: function (event) {
-      if (event.keyCode === 13 && event.ctrlKey) {
-        $(event.target).closest('form').submit();
-        event.preventDefault();
-      }
     },
     hiddenHandler: function () {
       this.remove();
+    },
+    keydownHandler: function (event) {
+      if (event.keyCode === 13 && event.ctrlKey) {
+        this.$('.modal-footer .btn-primary').submit();
+        event.preventDefault();
+      }
     },
     loadCompleteHandler: function() {
       this.onLoadComplete();
