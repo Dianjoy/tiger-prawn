@@ -1,8 +1,8 @@
 var model = new Backbone.Model({
     'id': 1,
-    'name': 'meathill',
-    'age': 30,
-    'sex': 1,
+    'name': 'qiujuan',
+    'age': 100,
+    'sex': 2,
     'status': 0
   })
   , Buttons = Backbone.View.extend({
@@ -28,9 +28,16 @@ model.options = {
   sex: [{id: 1, label: '男'}, {id: 2, label: '女'}]
 };
 
-QUnit.test('popup', function (assert) {
-  context.trigger('edit-model', model, 'name', {
-    label: '名字'
+$('#modal').on('shown.bs.modal', function () {
+  $(this).modal({
+    backdrop: 'static',
+    keyboard: false
+  });
+});
+
+QUnit.test('switch', function (assert) {
+  context.trigger('edit-model', model, 'status', {
+    label: '状态'
   });
   var done1 = assert.async();
   var done2 = assert.async();

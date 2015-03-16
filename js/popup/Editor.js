@@ -232,10 +232,11 @@
     initialize: function(options){
       this.model.get(options.prop);
       if(options.open == this.model.get(options.prop)){
-        return !options.open;
+        options.open = !options.open;
       }else{
-        return options.open;
-      }
+        options.open = options.open;
+      };
+      Editor.prototype.initialize.call(this, options);
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));
