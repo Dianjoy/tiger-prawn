@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Meathill (lujia.zhai@dianjoy.com)">
+  <title>测试创建新元素窗体</title>
+  <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css">
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+</head>
+<body>
+
+<table class="table table-bordered smart-table" data-collection-id="list" data-url="{{API}}test/" data-auto-fetch="false">
+  <thead>
+  <tr>
+    <td>ID</td>
+    <td>标题</td>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    <tr>
+      <td>{{id}}</td>
+      <td>{{title}}</td>
+    </tr>
+  </script>
+  </tbody>
+</table>
+
+<div class="table-footer">
+  <a href="#list" class="btn btn-primary add-button" data-template="create" data-title="创建新元素" data-confirm="创建" data-cancel="取消"><i class="fa fa-plus"></i> 创建一个元素</a>
+</div>
+
+<script type="text/x-handlebars-template" id="popup">
+  <div class="modal modal-styled fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+          <h4 class="modal-title">{{title}}</h4>
+        </div>
+        <div class="modal-body">{{{content}}}</div>
+        <div class="modal-footer">
+          {{#if confirm}}<button class="btn btn-primary" form="popup-form"><i class="fa fa-check"></i> {{confirm}}</button>{{/if}}
+          {{#if cancel}}<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{cancel}}</button>{{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+<script type="text/x-handlebars-template" id="editor-popup">
+  <div class="modal modal-styled fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">编辑</h4>
+        </div>
+        <div class="modal-body">
+          <div class="info"></div>
+          <div class="alert alert-msg" style="display: none"></div>
+          <p class="loading"><i class="fa fa-spin fa-spinner fa-4x"></i></p>
+          {{#if comment}}
+          <div class="form-group">
+            <label for="editor-comment">附言</label>
+            <textarea class="form-control" id="editor-comment" form="prop-editor" name="{{comment}}" rows="2"></textarea>
+          </div>
+          {{/if}}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" form="prop-editor" disabled><i class="fa fa-check"></i> 保存</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> 取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script src="../bower_components/qunit/qunit/qunit.js"></script>
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../bower_components/handlebars/handlebars.min.js"></script>
+<script src="../bower_components/underscore/underscore-min.js"></script>
+<script src="../bower_components/backbone/backbone.js"></script>
+<script src="../bower_components/nervenet/nervenet.min.js"></script>
+<script src="../js/define.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/utils/utils.js"></script>
+<script src="../js/adapter/backbone.js"></script>
+<script src="../js/model/ListCollection.js"></script>
+<script src="../js/model/TableMemento.js"></script>
+<script src="../js/controller/addModelCommand.js"></script>
+<script src="../js/popup/Manager.js"></script>
+<script src="../js/view/DataSyncView.js"></script>
+<script src="../js/component/SmartForm.js"></script>
+<script src="../js/component/SmartTable.js"></script>
+<script src="../js/component/TableParts.js"></script>
+<script src="../js/popup/Base.js"></script>
+<script src="../js/view/Body.js"></script>
+<script src="new-item-list.js"></script>
+</body>
+</html>

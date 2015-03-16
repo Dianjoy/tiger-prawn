@@ -18,7 +18,8 @@ $(function () {
     .inject(tp.component.Manager)
     .inject(tp.popup.Manager)
     .inject(tp.service.Manager)
-    .mapEvent('edit-model', tp.controller.editModelCommand);
+    .mapEvent('edit-model', tp.controller.editModelCommand)
+    .mapEvent('add-model', tp.controller.addModelCommand);
 
   // routers
   context.createInstance(tp.router.Base);

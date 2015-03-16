@@ -11,10 +11,11 @@
   ns.Base = tp.view.DataSyncView.extend({
     $context: null,
     events: {
-      'show.bs.modal': 'showHandler',
+      'shown.bs.modal': 'shownHandler',
       'hidden.bs.modal': 'hiddenHandler',
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
+      'click [data-dismiss=modal]': 'closeButton_clickHandler',
       'keydown textarea': 'textarea_keydownHandler',
       'success': 'form_successHandler'
     },
@@ -34,6 +35,11 @@
         remote: options.remote
       });
     },
+    remove: function () {
+      clearTimeout(timeout);
+      this.off();
+      Backbone.View.prototype.remove.call(this);
+    },
     hide: function () {
       var modal = this.$el;
       timeout = setTimeout(function () {
@@ -45,6 +51,10 @@
         .find('.modal-footer .btn-primary').prop('disabled', false);
       tp.component.Manager.check(this.$el, this.model);
     },
+    closeButton_clickHandler: function () {
+      this.$el.modal('hide');
+      this.trigger('cancel');
+    },
     form_successHandler: function () {
       this.hide();
     },
@@ -52,6 +62,7 @@
       if (!event.currentTarget.form) {
         this.$el.modal('hide');
       }
+      this.trigger('confirm');
     },
     template_successHandler: function (response) {
       this.template = Handlebars.compile(response);
@@ -67,16 +78,13 @@
       }
     },
     hiddenHandler: function () {
-      tp.component.Manager.clear(this.$el);
-      this.$('.modal-body').empty();
-      clearTimeout(timeout);
+      this.remove();
     },
     loadCompleteHandler: function() {
       this.onLoadComplete();
     },
-    showHandler: function () {
+    shownHandler: function () {
       this.$('.modal-footer .btn-primary').prop('disabled', false);
-      this.$('.alert').hide();
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));

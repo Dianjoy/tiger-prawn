@@ -5,7 +5,8 @@
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
-      'change [type=range]': 'range_changeHandler'
+      'change [type=range]': 'range_changeHandler',
+      'click .add-button': 'addButton_clickHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -56,6 +57,11 @@
         this.$el.removeClass('full-page')
           .find('.login').remove();
       }
+    },
+    addButton_clickHandler: function (event) {
+      var options = $(event.currentTarget).data();
+      this.$context.trigger('add-model', options);
+      event.preventDefault();
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
