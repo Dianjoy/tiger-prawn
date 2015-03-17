@@ -23,26 +23,24 @@ var model = new Backbone.Model({
 context.inject(tp.popup.Manager);
 context.mapEvent('edit-model', tp.controller.editModelCommand);
 tp.path = '../';
-model.urlRoot = 'http://localhost:3000/popup/';
+model.urlRoot = 'http://localhost:3000/switch/';
 model.options = {
   sex: [{id: 1, label: '男'}, {id: 2, label: '女'}]
 };
 
 $('#modal').on('shown.bs.modal', function () {
-  $(this).modal({
-    backdrop: 'static',
-    keyboard: false
-  });
+  $('.switch').focus()
 });
 
 QUnit.test('switch', function (assert) {
   context.trigger('edit-model', model, 'status', {
-    label: '状态'
+    label: '状态',
+    type: 'status'
   });
   var done1 = assert.async();
   var done2 = assert.async();
-  setTimeout(function () {
-    assert.ok($('.model-editor-popup').length === 1, 'popup!');
-    assert.ok($('.model-editor-popup table').length === 1, 'info in it');
-  }, 0);
+  setTimeout(function (options) {
+    assert.ok($('.model-editor-popup').length === 1, '弹出来了!');
+    assert.ok(('input[name="status"]').value !== model.get('status'),'正确')
+  },500);
 });
