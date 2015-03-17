@@ -33,14 +33,11 @@ $('#modal').on('shown.bs.modal', function () {
 });
 
 QUnit.test('switch', function (assert) {
-  context.trigger('edit-model', model, 'status', {
-    label: '状态',
-    type: 'status'
-  });
+  var options = {label: '状态', type: 'status', prop: 'status'};
+  context.trigger('edit-model', model, 'status', options);
   var done1 = assert.async();
-  var done2 = assert.async();
-  setTimeout(function (options) {
-    assert.ok($('.model-editor-popup').length === 1, '弹出来了!');
-    assert.ok(('input[name="status"]').value !== model.get('status'),'正确')
-  },500);
+
+  setTimeout(function () {
+    assert.ok($(".switch").prop("checked") !== model.get(options.prop), true);
+  },0);
 });
