@@ -11,6 +11,7 @@
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
       'change [name=ad_app_type]': 'platform_changeHandler',
+      'change [name=search_flag]': 'searchFlag_changeHandler',
       'change #replace-ad': 'replaceAD_changeHandler',
       'change .domestic input': 'area_changeHandler',
       'change .isp input': 'isp_changeHandler',
@@ -124,6 +125,9 @@
         return;
       }
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
+    },
+    searchFlag_changeHandler: function (event) {
+      this.$('.aso').toggle(event.target.value === '1');
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

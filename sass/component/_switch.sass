@@ -19,6 +19,7 @@ input[type=checkbox].switch
     border-radius: 24px
     width: 50px
     height: 24px
+    margin-bottom: 0
     position: relative
     transition: all 0.2s
     vertical-align: middle
@@ -36,7 +37,10 @@ input[type=checkbox].switch
       transition: all 0.2s
 
     .form-group &
-      margin: $gap-s 0 0
+      margin-top: 5px
+
+    .form-group .control-label ~ &
+      margin-top: 0
 
   &:checked
     &:disabled + label

@@ -4,7 +4,9 @@
     <li role="presentation" class="active"><a href="#ad-dashboard" aria-controls="status" role="tab" data-toggle="tab"><i class="fa fa-dashboard"></i> 运行状态</a></li>
     <li role="presentation"><a href="#base-info" aria-controls="base-info" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i> 基础信息</a></li>
     <li role="presentation"><a href="#put" aria-controls="put" role="tab" data-toggle="tab"><i class="fa fa-truck"></i> 投放信息</a></li>
+    {{#unless cp}}
     <li role="presentation"><a href="#channel" aria-controls="channel" role="tab" data-toggle="tab"><i class="fa fa-yen"></i> 渠道信息</a></li>
+    {{/unless}}
   </ul>
 
   <div class="tab-content">
@@ -119,6 +121,7 @@
         {{/if}}
       </table>
     </div>
+    {{#unless}}
     <div id="channel" class="tab-pane" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
@@ -147,6 +150,7 @@
         </tr>
       </table>
     </div>
+    {{/unless}}
 
     <div class="alert alert-info">
       <h4>广告备注</h4>

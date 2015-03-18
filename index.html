@@ -93,25 +93,26 @@
       <progress value="65" max="100" class="pit">65%</progress>
     </li>
     <li><a href="./"><i class="fa fa-dashboard"></i> 首页</a></li>
-    <li>
-      <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#sidebar-ad">
-        <i class="fa fa-flag"></i> 广告 <span class="caret"></span>
-      </a>
-      <ul class="nav collapse" id="sidebar-ad">
-        <li><a href="#/ad/create"><i class="fa fa-plus"></i> 创建广告</a></li>
-        <li><a href="#/ad/"><i class="fa fa-list"></i> 我的广告</a></li>
-        <li><a href="#/apply/"><i class="fa fa-file"></i> 我的申请</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#sidebar-stat">
-        <i class="fa fa-line-chart"></i> 统计 <span class="caret"></span>
-      </a>
-      <ul class="nav collapse" id="sidebar-stat">
-        <li><a href="#/stat/">当日统计</a></li>
-      </ul>
-    </li>
-    <li><a href="#/info/"><i class="fa fa-search"></i> 广告投放情报</a></li>
+    <script type="text/x-handlebars-template">
+      {{#each list}}
+      <li>
+        {{#if sub}}
+        <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#{{sub-id}}">
+        {{else}}
+        <a href="{{link}}">
+        {{/if}}
+          {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}} {{title}} {{#if sub}}<span class="caret"></span>{{/if}}
+        </a>
+        {{#if sub}}
+        <ul class="nav collapse" id="{{sub-id}}">
+          {{#each sub}}
+          <li><a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}} {{title}}</a></li>
+          {{/each}}
+        </ul>
+        {{/if}}
+      </li>
+      {{/each}}
+    </script>
   </ul>
 </nav>
 

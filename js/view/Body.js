@@ -18,6 +18,14 @@
     clear: function () {
       tp.component.Manager.clear(this.$el);
     },
+    createSidebar: function () {
+      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default'
+        , template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+      $.getJSON('page/sidebar/' + role + '.json', function (response) {
+        var html = template({list: response});
+        $('#navbar-side-inner').append(html);
+      });
+    },
     load: function (url, data, options) {
       options = options || {};
       this.clear();
@@ -53,6 +61,7 @@
     start: function (showFramework) {
       this.isStart = true;
       this.$('#page-preloader').remove();
+      this.createSidebar();
       if (showFramework) {
         this.$el.removeClass('full-page')
           .find('.login').remove();
