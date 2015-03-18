@@ -2,8 +2,7 @@ var model = new Backbone.Model({
     'id': 1,
     'name': 'meathill',
     'age': 30,
-    'sex': 1,
-    'status': 0
+    'sex': 1
   })
   , Buttons = Backbone.View.extend({
     events: {

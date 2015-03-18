@@ -229,13 +229,9 @@
   });
 
   ns.SwitchEditor = Editor.extend({
-    initialize: function(options){
+    initialize: function (options) {
+      options.value = !(this.model.get(options.prop) === options.open);
       Editor.prototype.initialize.call(this, options);
-      if( this.model.get(options.prop) === options.open){
-        $(".switch").prop("checked",false);
-      }else{
-        $(".switch").prop("checked",true);
-      }
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));

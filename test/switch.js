@@ -3,7 +3,7 @@ var model = new Backbone.Model({
     'name': 'qiujuan',
     'age': 100,
     'sex': 2,
-    'status': 0
+    'status': 1
   })
   , Buttons = Backbone.View.extend({
     events: {
@@ -33,7 +33,7 @@ $('#modal').on('shown.bs.modal', function () {
 });
 
 QUnit.test('switch', function (assert) {
-  var options = {label: '状态', type: 'status', prop: 'status'};
+  var options = {label: '状态', type: 'status', prop: 'status', open: 0};
   context.trigger('edit-model', model, 'status', options);
   var done1 = assert.async();
 
