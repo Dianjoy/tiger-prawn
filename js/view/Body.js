@@ -61,8 +61,8 @@
     start: function (showFramework) {
       this.isStart = true;
       this.$('#page-preloader').remove();
-      this.createSidebar();
       if (showFramework) {
+        this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
       }
