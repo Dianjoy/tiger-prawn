@@ -121,7 +121,7 @@
         {{/if}}
       </table>
     </div>
-    {{#unless}}
+    {{#unless cp}}
     <div id="channel" class="tab-pane" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
@@ -144,6 +144,20 @@
           <th>数据反馈形式</th>
           <td><a href="#feedback" class="edit" data-type="select" data-list="#feedback">{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据'}}</a></td>
         </tr>
+        {{#equal feedback 2}}
+        <tr>
+          <th>后台地址</th>
+          <td><a href="#url" class="edit">{{url}}</a></td>
+        </tr>
+        <tr>
+          <th>账号</th>
+          <td><a href="#user" class="edit">{{user}}</a></td>
+        </tr>
+        <tr>
+          <th>密码</th>
+          <td><a href="#pwd" class="edit">{{pwd}}</a></td>
+        </tr>
+        {{/equal}}
         <tr>
           <th>反馈周期</th>
           <td><a href="#cycle" class="edit" data-type="select" data-list="#cycle">{{pick cycle '' '隔日数据' '一周两次数据' '隔周数据' '隔月数据'}}</a></td>
