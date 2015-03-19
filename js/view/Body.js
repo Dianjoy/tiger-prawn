@@ -19,8 +19,10 @@
       tp.component.Manager.clear(this.$el);
     },
     createSidebar: function () {
+      this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+      this.$('.sidebar-nav-item').remove();
       var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default'
-        , template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+        , template = this.template;
       $.getJSON('page/sidebar/' + role + '.json', function (response) {
         var html = template({list: response});
         $('#navbar-side-inner').append(html);

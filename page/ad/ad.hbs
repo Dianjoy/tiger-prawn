@@ -14,7 +14,14 @@
       <table class="table table-bordered table-striped">
         <tr>
           <th>当前状态</th>
-          <td>{{pick status '上线' '下线' '待审批'}}</td>
+          <td>
+            {{pick status '上线' '下线' '待审批' '待审批' '被拒绝'}}
+            {{#equal status 4}}
+              <h4>原因</h4>
+              <blockquote>{{decline.NAME}}：<br>{{decline.comment}}</blockquote>
+              <a class="edit btn btn-primary" href="#status" data-type="status" data-open="0" data-deactive="" data-active="申请再审">我已查验，修改完毕，再次申请。</a>
+            {{/equal}}
+          </td>
         </tr>
         <tr>
           <th>每日限量</th>

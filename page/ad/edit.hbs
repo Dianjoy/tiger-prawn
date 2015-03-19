@@ -95,19 +95,31 @@
     <div class="form-group app">
       <label class="col-sm-2 control-label" for="ad_lib">广告版本</label>
       <div class="col-sm-10">
-        <input type="text" name="ad_lib" id="ad_lib" value="{{ad_lib}}" class="form-control" />
+        <input name="ad_lib" id="ad_lib" value="{{ad_lib}}" class="form-control" />
       </div>
     </div>
     <div class="form-group app">
       <label class="col-sm-2 control-label" for="ad_size">广告大小</label>
       <div class="col-sm-10">
-        <input type="text" name="ad_size" id="ad_size" value="{{ad_size}}" class="form-control" />
+        <input name="ad_size" id="ad_size" value="{{ad_size}}" class="form-control" />
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pack_name">广告包名</label>
       <div class="col-sm-10">
-        <input type="text" name="pack_name" id="pack_name" value="{{pack_name}}" class="form-control" />
+        <input name="pack_name" id="pack_name" value="{{pack_name}}" class="form-control" />
+      </div>
+    </div>
+    <div class="form-group iPhone tech">
+      <label class="col-sm-2 control-label" for="process_name">进程名</label>
+      <div class="col-sm-10">
+        <input name="process_name" id="process_name" value="{{process_name}}" class="form-control"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="url_scheme">url_scheme</label>
+      <div class="col-sm-10">
+        <input name="url_scheme" id="url_scheme" value="{{url_scheme}}" class="form-control">
       </div>
     </div>
     <div class="form-group">
@@ -186,7 +198,7 @@
         </div>
       </div>
       <p class="help-block iPhone">
-        单价最低1元，在红包锁屏中显示的价格是单价的一半。
+        单价最低1元。
       </p>
     </div>
     <div class="form-group">
@@ -254,12 +266,6 @@
         <label for="put-ipad-ipad">只投iPad</label>
         <input type="radio" name="put_ipad" value="2" id="put-ipad-iphone" />
         <label for="put-ipad-iphone">只投iPhone</label>
-      </div>
-    </div>
-    <div class="form-group iPhone tech">
-      <label class="col-sm-2 control-label" for="process_name">进程名</label>
-      <div class="col-sm-10">
-        <input type="text" name="process_name" id="process_name" value="{{process_name}}" class="form-control"/>
       </div>
     </div>
     <div class="form-group iPhone tech">
