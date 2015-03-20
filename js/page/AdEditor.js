@@ -92,7 +92,7 @@
       }
     },
     platform_changeHandler: function (event) {
-      this.$el
+      this.$('form')
         .removeClass('Android iPhone')
         .addClass(event.target.labels[0].innerText);
       var is_ios = event.target.value === '2';
