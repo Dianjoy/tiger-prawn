@@ -11,7 +11,9 @@
           <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
           <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络地址</button>
         </div>
+        {{#unless cp}}
         <button type="button" class="btn fetch-button" disabled><i class="fa fa-cloud-download"></i> 抓取</button>
+        {{/unless}}
         <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中..">
           {{#if ad_url}}
             <div class="su-item">
