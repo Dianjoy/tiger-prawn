@@ -59,7 +59,7 @@
         {{/if}}
       </td>
       <td data-title="状态">
-        <i class="fa fa-{{pick ad_app_type '' 'android' 'apple'}}"></i>
+        <i class="platform fa fa-{{pick ad_app_type '' 'android' 'apple'}}"> </i>
         {{#if is_ready}}
         {{#if set_status}}
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
