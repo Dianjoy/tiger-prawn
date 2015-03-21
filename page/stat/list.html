@@ -19,7 +19,10 @@
     <th>创建时间</th>
     <th>备注</th>
     <th>状态</th>
-    <th>推广数量</th>
+    <th>点击数</th>
+    <th>激活数</th>
+    <th>费用</th>
+    <th>详细</th>
   </tr>
   </thead>
   <tbody>
@@ -33,15 +36,19 @@
       <td data-title="创建时间">{{moment create_time}}</td>
       <td data-title="备注">{{{text-collapse others 30}}}</td>
       <td data-title="状态">
-        <i class="status fa fa-{{pick ad_app_type '' 'android' 'apple'}} text-{{pick status 'success' 'muted'}}"></i>
+        <i class="platform fa fa-{{pick ad_app_type '' 'android' 'apple'}}"></i>
+        <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
       </td>
-      <td data-title="推广数量">{{device1}}</td>
+      <td data-title="点击数">{{click}}</td>
+      <td data-title="激活数">{{device1}}</td>
+      <td data-title="费用">{{cost}}</td>
+      <td><a href="#/stat/{{id}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a></td>
     </tr>
   </script>
   </tbody>
   <tfoot class="waiting">
   <tr>
-    <td colspan="5">
+    <td colspan="8">
       <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
     </td>
   </tr>

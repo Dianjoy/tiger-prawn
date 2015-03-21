@@ -1,0 +1,33 @@
+<div class="page-header">
+  <h1>{{channel}} {{ad_name}} {{cid}} <small>广告管理名</small></h1>
+</div>
+
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}/{{date}}" data-pagesize="24" >
+  <thead>
+  <tr>
+    <th>时间</th>
+    <th>点击数</th>
+    <th>激活数</th>
+    <th>费用</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <tr>
+      <td data-title="时间">{{hour}}</td>
+      <td data-title="点击数">{{click}}</td>
+      <td data-title="激活数">{{device1}}</td>
+      <td data-title="费用">{{cost}}</td>
+    </tr>
+    {{{{/raw-helper}}}}
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="6">
+      <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
+    </td>
+  </tr>
+  </tfoot>
+</table>

@@ -36,7 +36,7 @@
       this.collection.on('sync', this.collection_syncHandler, this);
 
       // 通过页面中介来实现翻页等功能
-      this.model = this.model || new tp.model.TableMemento();
+      this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento();
       this.model.on('change', this.model_changeHandler, this);
       this.model.on('invalid', this.model_invalidHandler, this);
 
