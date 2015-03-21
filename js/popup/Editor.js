@@ -230,7 +230,7 @@
 
   ns.SwitchEditor = Editor.extend({
     initialize: function (options) {
-      options.value = (this.model.get(options.prop) !== options.open);
+      options.value = this.model.get(options.prop) != options.open;
       Editor.prototype.initialize.call(this, options);
     }
   });
