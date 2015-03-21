@@ -54,5 +54,14 @@
   });
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
-  })
+  });
+
+  // 等于
+  h.registerHelper('equal', function (value, target, options) {
+    if (value == target) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
 }(Handlebars));

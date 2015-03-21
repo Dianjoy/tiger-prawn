@@ -11,28 +11,30 @@
   ns.Base = tp.view.DataSyncView.extend({
     $context: null,
     events: {
-      'show.bs.modal': 'showHandler',
+      'shown.bs.modal': 'shownHandler',
       'hidden.bs.modal': 'hiddenHandler',
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
-      'keydown textarea': 'textarea_keydownHandler',
+      'click [data-dismiss=modal]': 'closeButton_clickHandler',
+      'keydown': 'keydownHandler',
       'success': 'form_successHandler'
     },
     initialize: function (options) {
       if (options.isRemote) {
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
-        if (/\.hbs$/i.test(options.content)) {
-          $.get(options.content, _.bind(this.template_successHandler, this));
-          options.remote = false;
+        if (/\.hbs/.test(options.content)) {
+          $.get(options.content, _.bind(this.template_loadedHandler, this));
         } else {
-          options.remote = options.content;
+          $.get(options.content, _.bind(this.onLoadComplete, this));
         }
       }
-      this.$el.modal({
-        show: true,
-        remote: options.remote
-      });
+      this.$el.modal(options);
+    },
+    remove: function () {
+      clearTimeout(timeout);
+      this.off();
+      Backbone.View.prototype.remove.call(this);
     },
     hide: function () {
       var modal = this.$el;
@@ -40,10 +42,17 @@
         modal.modal('hide');
       }, 3000);
     },
-    onLoadComplete: function () {
+    onLoadComplete: function (response) {
+      if (response) {
+        this.$('.modal-body').html(response);
+      }
       this.$el.removeClass('loading')
         .find('.modal-footer .btn-primary').prop('disabled', false);
       tp.component.Manager.check(this.$el, this.model);
+    },
+    closeButton_clickHandler: function () {
+      this.$el.modal('hide');
+      this.trigger('cancel');
     },
     form_successHandler: function () {
       this.hide();
@@ -52,31 +61,28 @@
       if (!event.currentTarget.form) {
         this.$el.modal('hide');
       }
+      this.trigger('confirm');
     },
-    template_successHandler: function (response) {
+    template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
-      this.$('.modal-body').html(this.template(_.extend({
+      this.onLoadComplete(this.model ? this.template(_.extend({
         urlRoot: this.model.collection.url
-      }, this.model.toJSON())));
-      this.onLoadComplete();
-    },
-    textarea_keydownHandler: function (event) {
-      if (event.keyCode === 13 && event.ctrlKey) {
-        $(event.target).closest('form').submit();
-        event.preventDefault();
-      }
+      }, this.model.toJSON())) : null);
     },
     hiddenHandler: function () {
-      tp.component.Manager.clear(this.$el);
-      this.$('.modal-body').empty();
-      clearTimeout(timeout);
+      this.remove();
+    },
+    keydownHandler: function (event) {
+      if (event.keyCode === 13 && event.ctrlKey) {
+        this.$('.modal-footer .btn-primary').submit();
+        event.preventDefault();
+      }
     },
     loadCompleteHandler: function() {
       this.onLoadComplete();
     },
-    showHandler: function () {
+    shownHandler: function () {
       this.$('.modal-footer .btn-primary').prop('disabled', false);
-      this.$('.alert').hide();
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));

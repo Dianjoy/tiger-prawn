@@ -1,0 +1,35 @@
+[
+  {
+    "title": "广告",
+    "icon": "flag",
+    "sub-id": "sidebar-ad",
+    "sub": [
+      {
+        "title": "创建广告",
+        "icon": "plus",
+        "link": "#/ad/create"
+      },
+      {
+        "title": "我的广告",
+        "icon": "list",
+        "link": "#/ad/"
+      },
+      {
+        "title": "我的申请",
+        "icon": "file",
+        "link": "#/apply/"
+      }
+    ]
+  },
+  {
+    "title": "统计",
+    "icon": "line-chart",
+    "sub-id": "sidebar-stat",
+    "sub": [
+      {
+        "title": "当日统计",
+        "link": "#/stat/"
+      }
+    ]
+  }
+]

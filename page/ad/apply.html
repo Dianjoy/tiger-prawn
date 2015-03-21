@@ -18,7 +18,7 @@
   <tr>
     <th class="filter">管理名</th>
     <th>针对</th>
-    <th>调整前后</th>
+    <th>调整（前）后</th>
     <th>提交时间</th>
     <th>附言</th>
     <th>处理时间</th>
@@ -35,12 +35,14 @@
         <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
         {{cid}}
       </td>
-      <td data-title="针对">{{attr}}</td>
-      <td data-title="调整前后">
+      <td data-title="针对">{{label}}</td>
+      <td data-title="调整（前）后">
         {{#if is_url}}
         <a href="{{before}}">原链接</a> / <a href="{{after}}">现链接</a>
         {{else if is_status}}
         {{#if before}}{{pick before '上线' '下线'}} / {{/if}}{{pick after '上线' '下线'}}
+        {{else if is_replace}}
+        <a href="#/ad/{{adid}}">新广告</a>
         {{else}}
         {{#if before}}{{before}} / {{/if}}{{after}}
         {{/if}}
@@ -53,6 +55,8 @@
       <td data-title="操作">
         {{#if handler}}
         <span class="text-{{pick status 'info' 'success' 'danger' 'default'}}"><i class="fa fa-{{pick status 'play' 'check' 'times' 'trash-o'}}"></i> {{pick status '申请中' '已批准' '已拒绝' '撤回'}}</span>
+        {{else if is_replace}}
+        等待审批。替换广告暂时不能撤销。
         {{else}}
         <button class="btn btn-danger delete-button" data-msg="您确定要撤销申请么？"><i class="fa fa-times"></i> 撤消申请</button>
         {{/if}}

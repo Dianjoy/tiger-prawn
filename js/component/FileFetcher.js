@@ -8,6 +8,10 @@
       'click .fetch-button': 'fetchButton_clickHandler',
       'change [name]': 'input_changeHandler'
     },
+    validate: function (value) {
+      var reg = /^https?:\/\//;
+      return reg.test(value);
+    },
     fetchButton_clickHandler: function () {
       var field = this.$('[name=ad_url]')
         , value = field.val();
@@ -43,7 +47,7 @@
       alert(response.msg);
     },
     input_changeHandler: function (event) {
-      var has_url = !!event.target.value;
+      var has_url = this.validate(event.target.value);
       this.$('.fetch-button')
         .toggleClass('btn-warning', has_url)
         .prop('disabled', !has_url);

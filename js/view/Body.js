@@ -5,7 +5,8 @@
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
-      'change [type=range]': 'range_changeHandler'
+      'change [type=range]': 'range_changeHandler',
+      'click .add-button': 'addButton_clickHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -16,6 +17,16 @@
     },
     clear: function () {
       tp.component.Manager.clear(this.$el);
+    },
+    createSidebar: function () {
+      this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+      this.$('.sidebar-nav-item').remove();
+      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default'
+        , template = this.template;
+      $.getJSON('page/sidebar/' + role + '.json', function (response) {
+        var html = template({list: response});
+        $('#navbar-side-inner').append(html);
+      });
     },
     load: function (url, data, options) {
       options = options || {};
@@ -53,9 +64,16 @@
       this.isStart = true;
       this.$('#page-preloader').remove();
       if (showFramework) {
+        this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
       }
+    },
+    addButton_clickHandler: function (event) {
+      var options = $(event.currentTarget).data();
+      options.collectionId = $(event.currentTarget).attr('href').substr(1);
+      this.$context.trigger('add-model', options);
+      event.preventDefault();
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);

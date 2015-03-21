@@ -18,7 +18,8 @@ $(function () {
     .inject(tp.component.Manager)
     .inject(tp.popup.Manager)
     .inject(tp.service.Manager)
-    .mapEvent('edit-model', tp.controller.editModelCommand);
+    .mapEvent('edit-model', tp.controller.editModelCommand)
+    .mapEvent('add-model', tp.controller.addModelCommand);
 
   // routers
   context.createInstance(tp.router.Base);
@@ -34,7 +35,8 @@ $(function () {
   // GA
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    m=s.getElementsByTagName(o);m=Array.prototype.pop.call(m);
+    a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
   ga('create', 'UA-35957679-15', 'auto');

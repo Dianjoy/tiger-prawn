@@ -4,7 +4,9 @@
     <li role="presentation" class="active"><a href="#ad-dashboard" aria-controls="status" role="tab" data-toggle="tab"><i class="fa fa-dashboard"></i> 运行状态</a></li>
     <li role="presentation"><a href="#base-info" aria-controls="base-info" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i> 基础信息</a></li>
     <li role="presentation"><a href="#put" aria-controls="put" role="tab" data-toggle="tab"><i class="fa fa-truck"></i> 投放信息</a></li>
+    {{#unless cp}}
     <li role="presentation"><a href="#channel" aria-controls="channel" role="tab" data-toggle="tab"><i class="fa fa-yen"></i> 渠道信息</a></li>
+    {{/unless}}
   </ul>
 
   <div class="tab-content">
@@ -12,7 +14,14 @@
       <table class="table table-bordered table-striped">
         <tr>
           <th>当前状态</th>
-          <td>{{pick status '上线' '下线' '待审批'}}</td>
+          <td>
+            {{pick status '上线' '下线' '待审批' '待审批' '被拒绝'}}
+            {{#equal status 4}}
+              <h4>原因</h4>
+              <blockquote>{{decline.NAME}}：<br>{{decline.comment}}</blockquote>
+              <a class="edit btn btn-primary" href="#status" data-type="status" data-open="0" data-deactive="" data-active="申请再审">我已查验，修改完毕，再次申请。</a>
+            {{/equal}}
+          </td>
         </tr>
         <tr>
           <th>每日限量</th>
@@ -119,6 +128,7 @@
         {{/if}}
       </table>
     </div>
+    {{#unless cp}}
     <div id="channel" class="tab-pane" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
@@ -141,12 +151,27 @@
           <th>数据反馈形式</th>
           <td><a href="#feedback" class="edit" data-type="select" data-list="#feedback">{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据'}}</a></td>
         </tr>
+        {{#equal feedback 2}}
+        <tr>
+          <th>后台地址</th>
+          <td><a href="#url" class="edit">{{url}}</a></td>
+        </tr>
+        <tr>
+          <th>账号</th>
+          <td><a href="#user" class="edit">{{user}}</a></td>
+        </tr>
+        <tr>
+          <th>密码</th>
+          <td><a href="#pwd" class="edit">{{pwd}}</a></td>
+        </tr>
+        {{/equal}}
         <tr>
           <th>反馈周期</th>
           <td><a href="#cycle" class="edit" data-type="select" data-list="#cycle">{{pick cycle '' '隔日数据' '一周两次数据' '隔周数据' '隔月数据'}}</a></td>
         </tr>
       </table>
     </div>
+    {{/unless}}
 
     <div class="alert alert-info">
       <h4>广告备注</h4>
