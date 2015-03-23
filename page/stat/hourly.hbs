@@ -1,6 +1,11 @@
 <div class="page-header">
   <h1>{{channel}} {{ad_name}} {{cid}} <small>广告管理名</small></h1>
 </div>
+{{#if others}}
+  <div class="alert alert-info">
+    {{others}}
+  </div>
+{{/if}}
 
 <table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}/{{date}}" data-pagesize="24" >
   <thead>

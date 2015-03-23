@@ -19,7 +19,7 @@
         return;
       }
       if (/itunes\.apple\.com/.test(value)) {
-        alert('App Store应用不需要抓取');
+        alert('App Store应用暂时不支持抓取');
         return;
       }
       tp.service.Manager.call(tp.API + 'fetch/', {

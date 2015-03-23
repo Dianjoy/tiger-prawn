@@ -17,7 +17,6 @@
   <tr>
     <th class="filters">广告名</th>
     <th>创建时间</th>
-    <th>备注</th>
     <th>状态</th>
     <th>点击数</th>
     <th>激活数</th>
@@ -34,7 +33,6 @@
         {{cid}}
       </td>
       <td data-title="创建时间">{{moment create_time}}</td>
-      <td data-title="备注">{{{text-collapse others 30}}}</td>
       <td data-title="状态">
         <i class="platform fa fa-{{pick ad_app_type '' 'android' 'apple'}}"></i>
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
