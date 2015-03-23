@@ -64,4 +64,9 @@
       return options.inverse(this);
     }
   });
+
+  // raw
+  h.registerHelper('raw-helper', function (options) {
+    return options.fn();
+  });
 }(Handlebars));

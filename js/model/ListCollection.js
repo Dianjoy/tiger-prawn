@@ -50,12 +50,15 @@
       }
     });
   Collection.createInstance = function (models, options) {
-    options.model = options.model || ('idAttribute' in options ? Model.extend({
-      idAttribute: options.idAttribute
-    }) : Model);
+    var params = _.extend({}, options);
+    if (!options.model || !(options.model instanceof Function)) {
+      params.model = ('idAttribute' in options ? Model.extend({
+        idAttribute: options.idAttribute
+      }) : Model);
+    }
     var collection;
     if (!('collectionId' in options)) {
-      return new Collection(models, options);
+      return new Collection(models, params);
     }
     if (options.collectionId in collections) {
       collection = collections[options.collectionId];
@@ -63,7 +66,7 @@
         collection.reset(models);
       }
     } else {
-      collection = new Collection(models, options);
+      collection = new Collection(models, params);
       collections[options.collectionId] = collection;
     }
     return collection;

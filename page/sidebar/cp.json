@@ -27,7 +27,7 @@
     "sub-id": "sidebar-stat",
     "sub": [
       {
-        "title": "当日统计",
+        "title": "广告统计",
         "link": "#/stat/"
       }
     ]
