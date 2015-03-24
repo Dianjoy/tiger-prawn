@@ -12,6 +12,7 @@
     <th>创建时间</th>
     <th>广告主报价</th>
     <th>上线要求</th>
+    <th>下线要求</th>
     <th>运行状态</th>
   </tr>
   </thead>
@@ -22,6 +23,7 @@
       <td><time datetime="{{create_time}}">{{create_time}}</time></td>
       <td>&yen;{{d100 quote_rmb}}</td>
       <td>{{others}}</td>
+      <td>{{offline_msg}}</td>
       <td>
         {{#if transfer}}
         <strong class="text-success"><i class="fa fa-check"></i> 已推广</strong>
