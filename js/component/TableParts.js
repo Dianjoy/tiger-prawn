@@ -43,14 +43,15 @@
     displayPageNum: function () {
       var page = this.model.get('page') || 0
         , total = this.total;
-      this.$('[href="#/to/' + page + '"]').parent('.hidden-xs').addClass('active')
+      this.$('[href="#/to/' + page + '"]').closest('.hidden-xs').addClass('active')
         .siblings().removeClass('active');
       this.$el.each(function () {
         $(this).children().first().toggleClass('disabled', page === 0)
           .end().last().toggleClass('disabled', page >= total - 1);
       });
     },
-    setTotal: function (total) {
+    setTotal: function (total, pagesize) {
+      this.pagesize = pagesize || this.pagesize;
       this.total = Math.ceil(total / this.pagesize);
       this.render();
       this.displayPageNum();

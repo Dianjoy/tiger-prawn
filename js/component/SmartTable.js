@@ -34,6 +34,7 @@
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
+      options.pagesize = this.collection.pagesize;
 
       // 通过页面中介来实现翻页等功能
       this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento();
@@ -211,6 +212,9 @@
       event.preventDefault();
     },
     pagesize_changeHandler: function (event) {
+      if (this.pagination) {
+        this.pagination.setTotal(this.collection.total, event.target.value);
+      }
       this.collection.setPagesize(event.target.value);
       this.collection.fetch(this.filter);
     },
