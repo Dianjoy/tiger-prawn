@@ -25,11 +25,12 @@
         pagesize: 10,
         autoFetch: true
       }, options, init);
-      this.filter = tp.utils.decodeURLParam(init.filter);
       this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
       if (init.model) {
         options.model = Nervenet.parseNamespace(init.model);
       }
+      // 特定的过滤器
+      this.options = tp.utils.decodeURLParam(init.filter);
 
       this.collection = tp.model.ListCollection.createInstance(null, options);
       this.collection.on('add', this.collection_addHandler, this);
@@ -77,7 +78,7 @@
       }
 
       if (options.autoFetch) {
-        this.filter = _.extend(this.filter, this.model.toJSON());
+        this.filter = _.extend(this.model.toJSON(), this.options);
         this.collection.fetch({
           data: this.filter
         });
@@ -203,7 +204,7 @@
       event.preventDefault();
     },
     model_changeHandler: function (model) {
-      this.filter = _.extend(this.filter, model.toJSON());
+      this.filter = _.extend(model.toJSON(), this.options);
       this.collection.fetch({data: this.filter});
       this.$el.addClass('loading');
       model.warting = true;
