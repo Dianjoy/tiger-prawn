@@ -60,8 +60,8 @@
         }
       });
     },
-    clear: function (el) {
-      var components = el.data('components');
+    clear: function ($el) {
+      var components = $el.data('components');
       if (!components || components.length === 0) {
         return;
       }

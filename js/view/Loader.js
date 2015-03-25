@@ -5,6 +5,7 @@
 (function (ns) {
   ns.Loader = Backbone.View.extend({
     $context: null,
+    fresh: false,
     tagName: 'div',
     events: {
       'click .edit': 'edit_clickHandler'
@@ -18,9 +19,17 @@
       }
 
       $.get(options.template, _.bind(this.template_getHandler, this), 'html');
+
+      if ('fresh' in options) {
+        this.fresh = options.fresh;
+      }
     },
     render: function () {
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
+      if (this.fresh) {
+        this.fresh = false;
+        this.model.on('change', this.model_changeHandler, this);
+      }
       var self = this
         , $el = this.$el
         , model = this.model;
@@ -36,6 +45,15 @@
       options.label = options.label || target.closest('td').prev('th').text();
       this.$context.trigger('edit-model', this.model, prop, options);
       event.preventDefault();
+    },
+    model_changeHandler: function () {
+      // 记录当前活动元素的位置
+      var id = this.$('.active').filter('.tab-pane').attr('id');
+      tp.component.Manager.clear(this.$el);
+      this.render();
+      if (id) {
+        this.$('[href=#' + id + '][data-toggle]').click();
+      }
     },
     model_syncHandler: function () {
       if (this.template) {

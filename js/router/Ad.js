@@ -27,7 +27,10 @@
         id: id
       });
       this.$body
-        .load('page/ad/ad.hbs', model, {className: 'ad ad-detail'})
+        .load('page/ad/ad.hbs', model, {
+          className: 'ad ad-detail',
+          fresh: true
+        })
         .setFramework('ad', '编辑广告');
     },
     list: function () {
