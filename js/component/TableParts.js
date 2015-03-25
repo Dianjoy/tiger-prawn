@@ -11,13 +11,17 @@
       'click a': 'clickHandler'
     },
     initialize: function (options) {
-      var total = Math.ceil(options.length / options.pagesize);
       this.template = this.$('script').remove().html() || '';
       this.template = this.template ? Handlebars.compile(this.template) : false;
-      this.total = total;
-      this.pagesize = options.pagesize;
+      this.pagesize = this.collection.pagesize;
+      this.total = Math.ceil(options.length / this.pagesize);
       this.render();
       this.displayPageNum();
+      this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off(null, null, this);
+      Backbone.View.prototype.remove.call(this);
     },
     render: function () {
       if (!this.template) {
@@ -55,6 +59,9 @@
       this.total = Math.ceil(total / this.pagesize);
       this.render();
       this.displayPageNum();
+    },
+    collection_syncHandler: function () {
+      this.setTotal(this.collection.total, this.collection.pagesize);
     },
     clickHandler: function (event) {
       var target = $(event.currentTarget)
@@ -132,7 +139,15 @@
     events: {
       'keydown': 'keydownHandler'
     },
-    start: function () {
+    initialize: function () {
+      this.$el.val(this.model.get('keyword'));
+      this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off(null, null, this);
+      Backbone.View.prototype.remove.call(this);
+    },
+    collection_syncHandler: function () {
       this.$el.prop('readonly', false);
       this.spinner && this.spinner.remove();
     },

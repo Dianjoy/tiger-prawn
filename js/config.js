@@ -13,4 +13,8 @@
       className: 'login'
     }
   };
+
+  ns.PROJECT = 'ad-diy';
+
+  ns.NOTICE_KEY = 'tiger-prawn';
 }(Nervenet.createNameSpace('tp')));

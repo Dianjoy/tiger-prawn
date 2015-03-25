@@ -1,5 +1,7 @@
 'use strict';
 (function (ns) {
+  var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{value}}</a>');
+
   ns.SmartTable = Backbone.View.extend({
     $context: null,
     fragment: '',
@@ -34,18 +36,19 @@
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
-      options.pagesize = this.collection.pagesize;
 
       // 通过页面中介来实现翻页等功能
       this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento();
       this.model.on('change', this.model_changeHandler, this);
       this.model.on('invalid', this.model_invalidHandler, this);
+      this.renderHeader();
 
       // 启用搜索
       if ('search' in init) {
         this.search = new ns.table.Search({
           el: init.search,
-          model: this.model
+          model: this.model,
+          collection: this.collection
         });
       }
 
@@ -53,7 +56,8 @@
       if ('pagesize' in init && init.pagesize > 0) {
         this.pagination = new ns.table.Pager(_.extend({}, options, {
           el: 'pagination' in init ? init.pagination : '.pager',
-          model: this.model
+          model: this.model,
+          collection: this.collection
         }));
       }
 
@@ -98,14 +102,22 @@
       this.$('.waiting').hide();
       this.$('tbody').append(this.fragment);
       this.fragment = '';
-      if (this.search) {
-        this.search.start();
-      }
-      if (this.pagination) {
-        this.pagination.setTotal(this.collection.total);
-      }
       this.$el.removeClass('loading');
       this.$context.trigger('table-rendered');
+    },
+    renderHeader: function () {
+      // 排序
+      var order = this.model.get('order')
+        , seq = this.model.get('seq')
+        , status = this.model.omit('keyword', 'order', 'seq')
+        , labels = '';
+      if (order) {
+        this.$('.order[href=#' + order + ']').addClass('active').toggleClass('inverse', seq == 'desc');
+      }
+      _.each(status, function (value, key) {
+        labels += filterLabel({key: key, value: value});
+      });
+      this.$('.filters').append(labels);
     },
     saveModel: function (target, id, prop, value) {
       target.prop('disabled', true);
@@ -202,7 +214,7 @@
     },
     order_clickHandler: function (event) {
       var target = $(event.currentTarget)
-        , order = target.attr('href').substr(2);
+        , order = target.attr('href').substr(1);
       this.$('.order.active').not(target).removeClass('active inverse');
       target.toggleClass('inverse', target.hasClass('active') && !target.hasClass('inverse')).addClass('active');
       this.model.set({
@@ -212,9 +224,6 @@
       event.preventDefault();
     },
     pagesize_changeHandler: function (event) {
-      if (this.pagination) {
-        this.pagination.setTotal(this.collection.total, event.target.value);
-      }
       this.collection.setPagesize(event.target.value);
       this.collection.fetch(this.filter);
     },

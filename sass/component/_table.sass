@@ -3,6 +3,7 @@
 @import "../../bower_components/colors/sass/variables"
 @import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 @import "../../bower_components/font-awesome/scss/variables"
+@import "compass/css3/opacity"
 @import "../define"
 
 table
@@ -80,12 +81,12 @@ table
     margin: 0
 
   &.loading
-    background-color: $gray
+    @include opacity(0.5)
 
-.label-ch
+.label-channel
   background: $label-info-bg
 
-.label-ad
+.label-ad_name
   background: $label-success-bg
 
 .table-header

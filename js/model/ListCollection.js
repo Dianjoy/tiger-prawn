@@ -17,6 +17,7 @@
       pagesize: 10,
       isLoading: false,
       initialize: function(models, options) {
+        this.key = tp.PROJECT + location.hash + '-pagesize';
         Backbone.Collection.prototype.initialize.call(this, models, options);
         if (!options) {
           return;
@@ -24,7 +25,7 @@
         if (options.url) {
           this.url = options.url;
         }
-        var size = localStorage.getItem(location.hash + '-pagesize');
+        var size = localStorage.getItem(this.key);
         this.pagesize = size || options.pagesize || this.pagesize;
       },
       fetch: function (options) {
@@ -46,7 +47,7 @@
       },
       setPagesize: function (size) {
         this.pagesize = size;
-        localStorage.setItem(location.hash + '-pagesize', size);
+        localStorage.setItem(this.key, size);
       }
     });
   Collection.createInstance = function (models, options) {
