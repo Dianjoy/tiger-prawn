@@ -31,8 +31,8 @@
   <script type="text/x-handlebars-template">
     <tr id="{{id}}" class="ad-{{adid}}">
       <td data-title="管理名">
-        {{#if channel}}<a href="#ch-{{channel_id}}" class="label label-ch">{{channel}}</a>{{/if}}
-        <a href="#ad-{{aid}}" class="label label-ad">{{ad_name}}</a>
+        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>{{/if}}
+        <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
         {{cid}}
       </td>
       <td data-title="针对">{{label}}</td>
