@@ -10,6 +10,17 @@
           return response.data;
         }
         return response;
+      },
+      toJSON: function (options) {
+        var json = Backbone.Model.prototype.toJSON.call(this, options);
+        if (options) { // from sync，因为{patch: true}
+          return json;
+        }
+        var previous = this.previousAttributes();
+        if (!_.isEmpty(previous)) {
+          json.previous = previous;
+        }
+        return _.extend(json, this.options);
       }
     });
   var Collection = ns.ListCollection = Backbone.Collection.extend({
@@ -43,6 +54,9 @@
       parse: function (response) {
         this.isLoading = false;
         this.total = _.isArray(response) ? response.length : response.total;
+        if (response.options){
+          this.options = response.options;
+        }
         return _.isArray(response) ? response : response.list;
       },
       setPagesize: function (size) {
