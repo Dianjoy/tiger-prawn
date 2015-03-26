@@ -6,7 +6,7 @@
     {{#if cp}}
     <legend>请先上传安装包，我们会从中抓取广告信息。</legend>
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="ad_url">广告链接</label>
+      <label class="col-sm-2 control-label">广告链接</label>
       <div class="col-sm-4 uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="*.ipa" id="app-uploader" data-name="ad_url">
         <div class="btn-group su-tabs">
           <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
@@ -23,7 +23,7 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="ad_url">App Store 下载地址</label>
       <div class="col-sm-10">
-        <input name="ad_url" value="{{ad_url}}" class="form-control">
+        <input type="url" name="ad_url" value="{{ad_url}}" class="form-control" id="ad_url">
       </div>
     </div>
     {{else}}
