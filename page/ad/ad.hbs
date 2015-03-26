@@ -1,8 +1,8 @@
 
 <div role="tabpanel" id="ad-detail">
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="hide"><a href="#ad-dashboard" aria-controls="status" role="tab" data-toggle="tab"><i class="fa fa-dashboard"></i> 运行状态</a></li>
-    <li role="presentation" class="active"><a href="#base-info" aria-controls="base-info" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i> 基础信息</a></li>
+    <li role="presentation" class="active"><a href="#ad-dashboard" aria-controls="status" role="tab" data-toggle="tab"><i class="fa fa-dashboard"></i> 运行状态</a></li>
+    <li role="presentation"><a href="#base-info" aria-controls="base-info" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i> 基础信息</a></li>
     <li role="presentation"><a href="#put" aria-controls="put" role="tab" data-toggle="tab"><i class="fa fa-truck"></i> 投放信息</a></li>
     {{#unless cp}}
     <li role="presentation"><a href="#channel" aria-controls="channel" role="tab" data-toggle="tab"><i class="fa fa-yen"></i> 渠道信息</a></li>
@@ -10,7 +10,7 @@
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane hide" id="ad-dashboard" role="tabpanel">
+    <div class="tab-pane active" id="ad-dashboard" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
           <th>当前状态</th>
@@ -37,7 +37,7 @@
         </tr>
       </table>
     </div>
-    <div class="tab-pane active" id="base-info" role="tabpanel">
+    <div class="tab-pane" id="base-info" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
           <th>所属平台</th>
@@ -52,7 +52,7 @@
           <td><a class="edit" href="#ad_type" data-type="select" data-options="ad_types">{{pick ad_type ad_types}}</a></td>
         </tr>
         <tr>
-          <th>广告语</th>
+          <th>广告描述</th>
           <td><a class="edit" href="#ad_desc" data-type="long-text">{{ad_desc}}</a></td>
         </tr>
         <tr>
