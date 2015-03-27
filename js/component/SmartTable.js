@@ -208,7 +208,6 @@
       this.collection.fetch({data: this.filter});
       this.$el.addClass('loading');
       model.warting = true;
-      model.unset('keyword', {silent: true});
     },
     model_invalidHandler: function (model, error) {
       alert(error);
