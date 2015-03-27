@@ -14,10 +14,10 @@
     displayResult: function (isSuccess, msg, icon) {
       msg = (icon ? '<i class="fa fa-' + icon + '"></i> ' : '') + msg;
       this.submit
+        .prop('disabled', false)
         .find('i:hidden').show()
         .end().find('.fa-spin').remove();
       this.$el.removeClass('processing');
-      this.$('button:not([type])').prop('disabled', false);
       this.$('.alert-msg')
         .hide()
         .toggleClass('alert-danger', !isSuccess)
