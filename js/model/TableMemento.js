@@ -26,7 +26,7 @@
       }
     },
     changeHandler: function () {
-      localStorage.setItem(this.key, JSON.stringify(this.omit('page')));
+      localStorage.setItem(this.key, JSON.stringify(this.omit('page', 'keyword')));
     }
   });
 }(Nervenet.createNameSpace('tp.model')));
