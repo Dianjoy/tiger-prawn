@@ -54,7 +54,7 @@
       parse: function (response) {
         this.isLoading = false;
         this.total = _.isArray(response) ? response.length : response.total;
-        if (response.options){
+        if (response.options) {
           this.options = response.options;
         }
         return _.isArray(response) ? response : response.list;

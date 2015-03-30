@@ -64,7 +64,7 @@
         return false;
       }
       //验证password是否有6位数
-      if ('password' in elements && !/^[0-9a-zA-Z$!^#_@%&*.]{6,32}$/.test(elements.password.value)){
+      if ('password' in elements && !/^[0-9a-zA-Z$!^#_@%&*.]{6,32}$/.test(elements.password.value)) {
         showErrorPopup(elements.password, '密码应为6~16个字符，请重新填写');
         return false;
       }

@@ -182,7 +182,7 @@
   ns.SelectEditor = Editor.extend({
     render: function (response) {
       if (this.options.options) {
-        if (this.model.options){
+        if (this.model.options) {
           this.options.options = this.model.options[this.options.options];
         } else {
           this.options.options = this.model.collection.options[this.options.options];
