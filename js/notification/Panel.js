@@ -3,18 +3,20 @@
  */
 'use strict';
 (function (ns) {
-  ns.Panel = Backbone.View.extend({
+  ns.Panel = tp.view.DataSyncView.extend({
     fragment: '',
     events: {
       'click input': 'input_clickHandler',
+      'click .mark-all-button': 'markAllButton_clickHandler',
       'change [name=check]': 'check_changeHandler',
       'animationend': 'animationEndHandler',
       'webkitAnimationEnd': 'animationEndHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
-      this.list = this.$('.message-list');
+      this.header = this.$('.dropdown-header');
       this.button = this.$('.dropdown-toggle');
+      this.submit = this.$('.mark-all-button');
 
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
@@ -51,12 +53,35 @@
     },
     collection_syncHandler: function () {
       if (this.fragment) {
-        this.list.append(this.fragment);
+        this.header.after(this.fragment);
         this.refreshNumber();
         this.fragment = '';
       }
     },
     input_clickHandler: function (event) {
+      event.stopPropagation();
+    },
+    markAll_errorHandler: function (xhr, status, error) {
+      this.displayResult(false, status, 'times');
+    },
+    markAll_successHandler: function (response) {
+      this.$('.alarm').remove();
+      this.label.remove();
+      this.displayResult(true, response.msg, 'check');
+      this.$('.alert').delay(3000).slideUp();
+    },
+    markAllButton_clickHandler: function (event) {
+      var ids = [];
+      this.collection.each(function (model) {
+        ids.push(model.id);
+      });
+      this.collection.sync('delete', this, {
+        url: this.collection.url + ids.join(','),
+        success: this.markAll_successHandler,
+        error: this.markAll_errorHandler,
+        context: this
+      });
+      this.displayProcessing();
       event.stopPropagation();
     }
   });

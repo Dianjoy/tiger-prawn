@@ -153,6 +153,7 @@
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {
+        this.model.unset('keyword', {silent: true}); // 这次搜索之前要先把关键字删掉，保证触发change
         this.model.set({
           keyword: event.target.value,
           page: 0

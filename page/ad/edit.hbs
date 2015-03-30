@@ -113,7 +113,7 @@
       </div>
     </div>
     <div class="form-group app">
-      <label class="col-sm-2 control-label">广告描述</label>
+      <label class="col-sm-2 control-label" for="ad_desc">广告描述</label>
       <div class="col-sm-10">
         <textarea class="form-control" rows="6" name="ad_desc" id="ad_desc" maxlength="1024" required>{{ad_desc}}</textarea>
       </div>
@@ -143,9 +143,9 @@
       </div>
     </div>
     <div class="form-group iPhone">
-      <label class="col-sm-2 control-label" for="url_scheme">URL schemes</label>
+      <label class="col-sm-2 control-label" for="url_type">URL scheme</label>
       <div class="col-sm-10">
-        <input name="url_scheme" id="url_scheme" value="{{url_scheme}}" class="form-control">
+        <input name="url_type" id="url_type" value="{{url_type}}" class="form-control">
       </div>
     </div>
     <div class="form-group">
@@ -294,10 +294,37 @@
         <label for="put-ipad-iphone">只投iPhone</label>
       </div>
     </div>
-    <div class="form-group iPhone tech">
-      <label class="col-sm-2 control-label" for="url_type">打开链接格式</label>
+    {{#unless cp}}
+    <div class="form-group iPhone">
+      <label class="col-sm-2 control-label">投放目标：越狱</label>
+      <div class="col-sm-10 select-button">
+        <input type="radio" name="put_jb" value="0" id="put-jb-all" checked />
+        <label for="put-jb-all">全部设备</label>
+        <input type="radio" name="put_jb" value="1" id="put-jb-only" />
+        <label for="put-jb-only">越狱设备</label>
+        <input type="radio" name="put_jb" value="2" id="put-jb-no" />
+        <label for="put-jb-no">非越狱设备</label>
+      </div>
+    </div>
+    <div class="form-group iPhone">
+      <label class="col-sm-2 control-label" for="ip">绑定广告主IP</label>
       <div class="col-sm-10">
-        <input type="text" name="url_type" id="url_type" value="{{url_type}}" class="form-control" />
+        <input type="text" name="ip" id="ip" value="{{ip}}" class="form-control" />
+        <p class="help-block">
+          绑定IP后将不在校验验证码。多个IP可以用“;”分割，最多可以绑定12个的IP。
+        </p>
+      </div>
+    </div>
+    <div class="form-group iPhone">
+      <label class="col-sm-2 control-label" for="salt">加分校验码</label>
+      <div class="col-sm-10">
+        <input type="text" name="salt" id="salt" value="{{salt}}" class="form-control" />
+      </div>
+    </div>
+    <div class="form-group iPhone tech">
+      <label class="col-sm-2 control-label" for="click_url">点击通知地址</label>
+      <div class="col-sm-10">
+        <input type="text" name="click_url" id="click_url" value="{{click_url}}" class="form-control" />
       </div>
     </div>
     <div class="form-group iPhone tech">
@@ -307,14 +334,33 @@
       </div>
     </div>
     <div class="form-group iPhone tech">
+      <label class="col-sm-2 control-label" for="sign_formula">签名格式</label>
+      <div class="col-sm-10">
+        <input type="text" name="sign_formula" id="sign_formula" value="{{sign_formula}}" class="form-control" />
+      </div>
+    </div>
+    <div class="form-group iPhone tech">
+      <label class="col-sm-2 control-label" for="sign_salt">签名密钥</label>
+      <div class="col-sm-10">
+        <input type="text" name="sign_salt" id="sign_salt" value="{{sign_salt}}" class="form-control" />
+      </div>
+    </div>
+    <div class="form-group iPhone tech">
+      <label class="col-sm-2 control-label" for="success_flag">返回标志</label>
+      <div class="col-sm-10">
+        <input type="text" name="success_flag" id="success_flag" value="{{success_flag}}" class="form-control" />
+      </div>
+    </div>
+    <div class="form-group iPhone tech">
       <label class="col-sm-2 control-label" for="down_type">下载类型</label>
       <div class="col-sm-10">
         <select name="down_type" id="down_type" class="form-control">
-          <option value="0"> 点乐跳转到appstore </option>
-          <option value="1"> 广告主跳转到appstore </option>
+          <option value="0"> 点乐跳转到 App Store </option>
+          <option value="1"> 广告主跳转到 App Store </option>
         </select>
       </div>
     </div>
+    {{/unless}}
   </fieldset>
 
   {{#unless cp}}
