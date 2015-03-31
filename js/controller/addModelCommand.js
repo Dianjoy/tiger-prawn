@@ -9,9 +9,10 @@
     options.isRemote = true;
     options.content = tp.path + 'page/' + options.template;
     model.options = collection.options;
+    model.urlRoot = collection.url;
     options.model = model;
     var popup = tp.popup.Manager.popup(options);
-    popup.on('confirm', function () {
+    popup.on('success', function () {
       collection.add(model, {
         immediately: true,
         prepend: true

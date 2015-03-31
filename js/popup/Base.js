@@ -56,6 +56,7 @@
     },
     form_successHandler: function () {
       this.hide();
+      this.trigger('success')
     },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {
