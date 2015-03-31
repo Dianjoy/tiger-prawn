@@ -88,13 +88,25 @@ module.exports = function (grunt) {
   grunt.registerMultiTask('index', 'find out js', function () {
     var JS_REG = /<script src="(js\/\S+)"><\/script>/g
       , html = grunt.file.read(this.data);
+    // 取HTML中引用的文件
     html.replace(JS_REG, function (match, src) {
       var filename = src.substr(src.lastIndexOf('/') + 1);
+      // 不打包特殊文件
       if (['define.js', 'index.js', 'config.js'].indexOf(filename) != -1) {
+        return '';
+      }
+      // 不打包除Base外的路由文件
+      if (/^js\/router\//.test(src) && filename != 'Base.js') {
         return '';
       }
       jsFiles.push(src);
       return match;
+    });
+    // 取所有组件
+    grunt.file.recurse('js/component', function (path, root, sub, filename) {
+      if (jsFiles.indexOf(path) === -1) {
+        jsFiles.push(path);
+      }
     });
     console.log(jsFiles);
   });
