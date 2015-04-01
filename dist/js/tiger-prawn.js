@@ -73,7 +73,21 @@
   });
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
-  })
+  });
+
+  // 等于
+  h.registerHelper('equal', function (value, target, options) {
+    if (value == target) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
+
+  // raw
+  h.registerHelper('raw-helper', function (options) {
+    return options.fn();
+  });
 }(Handlebars));
 ;
 ;(function (ns) {
@@ -118,7 +132,7 @@
       var model = new tp.model.AD();
       this.$body
         .load('page/ad/edit.hbs', model, {
-          className: 'ad ad-new Android',
+          className: 'ad ad-new',
           loader: tp.page.AdEditor
         })
         .setFramework('ad ad-new', '创建广告');
@@ -128,7 +142,10 @@
         id: id
       });
       this.$body
-        .load('page/ad/ad.hbs', model, {className: 'ad ad-detail'})
+        .load('page/ad/ad.hbs', model, {
+          className: 'ad ad-detail',
+          fresh: true
+        })
         .setFramework('ad', '编辑广告');
     },
     list: function () {
@@ -152,7 +169,27 @@
   ns.Stat = Backbone.Router.extend({
     $body: null,
     routes: {
-      'stat(/)': 'showStat'
+      'stat(/)': 'showStat',
+      'stat/:id': 'showADStat',
+      'stat/:id/:date': 'showADStatDate'
+    },
+    showADStat: function (id) {
+      var model = new tp.model.AD({
+        id: id
+      });
+      this.$body.load('page/stat/daily.hbs', model, {
+        className: 'stat stat-ad'
+      });
+      this.$body.setFramework('has-date-range');
+    },
+    showADStatDate: function (id, date) {
+      var model = new tp.model.AD({
+        id: id,
+        date: date
+      });
+      this.$body.load('page/stat/hourly.hbs', model, {
+        className: 'stat stat-date'
+      });
     },
     showStat: function () {
       this.$body.load('page/stat/list.html');
@@ -218,7 +255,7 @@
 }(Nervenet.createNameSpace('tp.service')));
 
 ;
-(function (ns) {var popup
+(function (ns) {var popup
     , editor;
 
   var Klass = Backbone.View.extend({
@@ -271,6 +308,10 @@
 
         case 'tags':
           popup = context.createInstance(ns.TagsEditor, options);
+          break;
+
+        case 'status':
+          popup = context.createInstance(ns.SwitchEditor,options);
           break;
 
         default:
@@ -483,13 +524,24 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-;(function (ns) {var collections = {}
+;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
         if ('code' in response && 'msg' in response && 'data' in response) {
           return response.data;
         }
         return response;
+      },
+      toJSON: function (options) {
+        var json = Backbone.Model.prototype.toJSON.call(this, options);
+        if (options) { // from sync，因为{patch: true}
+          return json;
+        }
+        var previous = this.previousAttributes();
+        if (!_.isEmpty(previous)) {
+          json.previous = previous;
+        }
+        return _.extend(json, this.options);
       }
     });
   var Collection = ns.ListCollection = Backbone.Collection.extend({
@@ -497,6 +549,7 @@
       pagesize: 10,
       isLoading: false,
       initialize: function(models, options) {
+        this.key = tp.PROJECT + location.hash + '-pagesize';
         Backbone.Collection.prototype.initialize.call(this, models, options);
         if (!options) {
           return;
@@ -504,7 +557,7 @@
         if (options.url) {
           this.url = options.url;
         }
-        var size = localStorage.getItem(location.hash + '-pagesize');
+        var size = localStorage.getItem(this.key);
         this.pagesize = size || options.pagesize || this.pagesize;
       },
       fetch: function (options) {
@@ -522,20 +575,26 @@
       parse: function (response) {
         this.isLoading = false;
         this.total = _.isArray(response) ? response.length : response.total;
+        if (response.options) {
+          this.options = response.options;
+        }
         return _.isArray(response) ? response : response.list;
       },
       setPagesize: function (size) {
         this.pagesize = size;
-        localStorage.setItem(location.hash + '-pagesize', size);
+        localStorage.setItem(this.key, size);
       }
     });
   Collection.createInstance = function (models, options) {
-    options.Model = options.model || ('idAttribute' in options ? Model.extend({
-      idAttribute: options.idAttribute
-    }) : Model);
+    var params = _.extend({}, options);
+    if (!options.model || !(options.model instanceof Function)) {
+      params.model = ('idAttribute' in options ? Model.extend({
+        idAttribute: options.idAttribute
+      }) : Model);
+    }
     var collection;
     if (!('collectionId' in options)) {
-      return new Collection(models, options);
+      return new Collection(models, params);
     }
     if (options.collectionId in collections) {
       collection = collections[options.collectionId];
@@ -543,7 +602,7 @@
         collection.reset(models);
       }
     } else {
-      collection = new Collection(models, options);
+      collection = new Collection(models, params);
       collections[options.collectionId] = collection;
     }
     return collection;
@@ -588,7 +647,7 @@
     },
     syncHandler: function () {
       if (autoNext) {
-        //setTimeout(this.fetch, TIMEOUT);
+        setTimeout(this.fetch, TIMEOUT);
       }
     }
   });
@@ -596,32 +655,71 @@
 (function (ns) {
   ns.TableMemento = Backbone.Model.extend({
     waiting: false,
+    initialize: function () {
+      this.key = tp.PROJECT + location.hash;
+      var storage = localStorage.getItem(this.key);
+      if (storage) {
+        storage = JSON.parse(storage);
+        this.set(storage, {silent: true});
+      }
+      this.on('change', this.changeHandler, this);
+    },
     _validate: function (attr, options) {
       if (!('validate' in options)) {
         options.validate = true;
       }
-      Backbone.Model.prototype._validate.call(this, attr, options);
+      return Backbone.Model.prototype._validate.call(this, attr, options);
     },
     validate: function (attr, options) {
       if (this.waiting || ('ignore' in options && !options.ignore)) {
         return '表格正在更新数据，请稍候。';
       }
+    },
+    changeHandler: function () {
+      localStorage.setItem(this.key, JSON.stringify(this.omit('page', 'keyword')));
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
+;(function (ns) {
+  ns.DataSyncView = Backbone.View.extend({
+    displayProcessing: function () {
+      this.$el.addClass('processing');
+      this.submit
+        .prop('disabled', true)
+        .find('i').hide()
+        .end().prepend('<i class="fa fa-spin fa-spinner"></i>');
+    },
+    displayResult: function (isSuccess, msg, icon) {
+      msg = (icon ? '<i class="fa fa-' + icon + '"></i> ' : '') + msg;
+      this.submit
+        .prop('disabled', false)
+        .find('i:hidden').show()
+        .end().find('.fa-spin').remove();
+      this.$el.removeClass('processing');
+      this.$('.alert-msg')
+        .hide()
+        .toggleClass('alert-danger', !isSuccess)
+        .toggleClass('alert-success', isSuccess)
+        .html(msg + ' (' + moment().format('HH:mm:ss') + ')')
+        .slideDown();
+    }
+  });
+}(Nervenet.createNameSpace('tp.view')));;
 (function (ns) {
-  ns.Panel = Backbone.View.extend({
+  ns.Panel = tp.view.DataSyncView.extend({
     fragment: '',
     events: {
       'click input': 'input_clickHandler',
+      'click .mark-all-button': 'markAllButton_clickHandler',
       'change [name=check]': 'check_changeHandler',
       'animationend': 'animationEndHandler',
       'webkitAnimationEnd': 'animationEndHandler'
     },
     initialize: function () {
       this.template = Handlebars.compile(this.$('script').remove().html());
-      this.list = this.$('.message-list');
+      this.header = this.$('.dropdown-header');
       this.button = this.$('.dropdown-toggle');
+      this.submit = this.$('.mark-all-button');
 
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
@@ -658,12 +756,35 @@
     },
     collection_syncHandler: function () {
       if (this.fragment) {
-        this.list.append(this.fragment);
+        this.header.after(this.fragment);
         this.refreshNumber();
         this.fragment = '';
       }
     },
     input_clickHandler: function (event) {
+      event.stopPropagation();
+    },
+    markAll_errorHandler: function (xhr, status, error) {
+      this.displayResult(false, status, 'times');
+    },
+    markAll_successHandler: function (response) {
+      this.$('.alarm').remove();
+      this.label.remove();
+      this.displayResult(true, response.msg, 'check');
+      this.$('.alert').delay(3000).slideUp();
+    },
+    markAllButton_clickHandler: function (event) {
+      var ids = [];
+      this.collection.each(function (model) {
+        ids.push(model.id);
+      });
+      this.collection.sync('delete', this, {
+        url: this.collection.url + ids.join(','),
+        success: this.markAll_successHandler,
+        error: this.markAll_errorHandler,
+        context: this
+      });
+      this.displayProcessing();
       event.stopPropagation();
     }
   });
@@ -766,31 +887,6 @@
     collection: collection
   });
 }(Nervenet.createNameSpace('tp.notification')));;
-;(function (ns) {
-  ns.DataSyncView = Backbone.View.extend({
-    displayProcessing: function () {
-      this.$el.addClass('processing');
-      this.submit
-        .prop('disabled', true)
-        .find('i').hide()
-        .end().prepend('<i class="fa fa-spin fa-spinner"></i>');
-    },
-    displayResult: function (isSuccess, msg, icon) {
-      msg = (icon ? '<i class="fa fa-' + icon + '"></i> ' : '') + msg;
-      this.submit
-        .find('i:hidden').show()
-        .end().find('.fa-spin').remove();
-      this.$el.removeClass('processing');
-      this.$('button:not([type])').prop('disabled', false);
-      this.$('.alert-msg')
-        .hide()
-        .toggleClass('alert-danger', !isSuccess)
-        .toggleClass('alert-success', isSuccess)
-        .html(msg + ' (' + moment().format('HH:mm:ss') + ')')
-        .slideDown();
-    }
-  });
-}(Nervenet.createNameSpace('tp.view')));;
 (function (ns) {
   function showErrorPopup(target, msgs) {
     if (msgs.length === 0) {
@@ -853,6 +949,11 @@
       // 验证两次输入的密码是否一致
       if ('newpassword' in elements && elements.newpassword.value !== elements.repassword.value) {
         showErrorPopup(elements.repassword, '两次密码不一致哟，麻烦检查下吧');
+        return false;
+      }
+      //验证password是否有6位数
+      if ('password' in elements && !/^[0-9a-zA-Z$!^#_@%&*.]{6,32}$/.test(elements.password.value)) {
+        showErrorPopup(elements.password, '密码应为6~16个字符，请重新填写');
         return false;
       }
 
@@ -1056,6 +1157,10 @@
       'click .fetch-button': 'fetchButton_clickHandler',
       'change [name]': 'input_changeHandler'
     },
+    validate: function (value) {
+      var reg = /^https?:\/\//;
+      return reg.test(value);
+    },
     fetchButton_clickHandler: function () {
       var field = this.$('[name=ad_url]')
         , value = field.val();
@@ -1063,7 +1168,7 @@
         return;
       }
       if (/itunes\.apple\.com/.test(value)) {
-        alert('App Store应用不需要抓取');
+        alert('App Store应用暂时不支持抓取');
         return;
       }
       tp.service.Manager.call(tp.API + 'fetch/', {
@@ -1091,7 +1196,7 @@
       alert(response.msg);
     },
     input_changeHandler: function (event) {
-      var has_url = !!event.target.value;
+      var has_url = this.validate(event.target.value);
       this.$('.fetch-button')
         .toggleClass('btn-warning', has_url)
         .prop('disabled', !has_url);
@@ -1107,13 +1212,17 @@
       'click a': 'clickHandler'
     },
     initialize: function (options) {
-      var total = Math.ceil(options.length / options.pagesize);
       this.template = this.$('script').remove().html() || '';
       this.template = this.template ? Handlebars.compile(this.template) : false;
-      this.total = total;
-      this.pagesize = options.pagesize;
+      this.pagesize = this.collection.pagesize;
+      this.total = Math.ceil(options.length / this.pagesize);
       this.render();
       this.displayPageNum();
+      this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off(null, null, this);
+      Backbone.View.prototype.remove.call(this);
     },
     render: function () {
       if (!this.template) {
@@ -1139,17 +1248,21 @@
     displayPageNum: function () {
       var page = this.model.get('page') || 0
         , total = this.total;
-      this.$('[href="#/to/' + page + '"]').parent('.hidden-xs').addClass('active')
+      this.$('[href="#/to/' + page + '"]').closest('.hidden-xs').addClass('active')
         .siblings().removeClass('active');
       this.$el.each(function () {
         $(this).children().first().toggleClass('disabled', page === 0)
           .end().last().toggleClass('disabled', page >= total - 1);
       });
     },
-    setTotal: function (total) {
+    setTotal: function (total, pagesize) {
+      this.pagesize = pagesize || this.pagesize;
       this.total = Math.ceil(total / this.pagesize);
       this.render();
       this.displayPageNum();
+    },
+    collection_syncHandler: function () {
+      this.setTotal(this.collection.total, this.collection.pagesize);
     },
     clickHandler: function (event) {
       var target = $(event.currentTarget)
@@ -1227,12 +1340,21 @@
     events: {
       'keydown': 'keydownHandler'
     },
-    start: function () {
+    initialize: function () {
+      this.$el.val(this.model.get('keyword'));
+      this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off(null, null, this);
+      Backbone.View.prototype.remove.call(this);
+    },
+    collection_syncHandler: function () {
       this.$el.prop('readonly', false);
       this.spinner && this.spinner.remove();
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {
+        this.model.unset('keyword', {silent: true}); // 这次搜索之前要先把关键字删掉，保证触发change
         this.model.set({
           keyword: event.target.value,
           page: 0
@@ -1303,8 +1425,8 @@
         }
       });
     },
-    clear: function (el) {
-      var components = el.data('components');
+    clear: function ($el) {
+      var components = $el.data('components');
       if (!components || components.length === 0) {
         return;
       }
@@ -1379,28 +1501,30 @@
   ns.Base = tp.view.DataSyncView.extend({
     $context: null,
     events: {
-      'show.bs.modal': 'showHandler',
+      'shown.bs.modal': 'shownHandler',
       'hidden.bs.modal': 'hiddenHandler',
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
-      'keydown textarea': 'textarea_keydownHandler',
+      'click [data-dismiss=modal]': 'closeButton_clickHandler',
+      'keydown': 'keydownHandler',
       'success': 'form_successHandler'
     },
     initialize: function (options) {
       if (options.isRemote) {
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
-        if (/\.hbs$/i.test(options.content)) {
-          $.get(options.content, _.bind(this.template_successHandler, this));
-          options.remote = false;
+        if (/\.hbs/.test(options.content)) {
+          $.get(options.content, _.bind(this.template_loadedHandler, this));
         } else {
-          options.remote = options.content;
+          $.get(options.content, _.bind(this.onLoadComplete, this));
         }
       }
-      this.$el.modal({
-        show: true,
-        remote: options.remote
-      });
+      this.$el.modal(options);
+    },
+    remove: function () {
+      clearTimeout(timeout);
+      this.off();
+      Backbone.View.prototype.remove.call(this);
     },
     hide: function () {
       var modal = this.$el;
@@ -1408,10 +1532,17 @@
         modal.modal('hide');
       }, 3000);
     },
-    onLoadComplete: function () {
+    onLoadComplete: function (response) {
+      if (response) {
+        this.$('.modal-body').html(response);
+      }
       this.$el.removeClass('loading')
         .find('.modal-footer .btn-primary').prop('disabled', false);
       tp.component.Manager.check(this.$el, this.model);
+    },
+    closeButton_clickHandler: function () {
+      this.$el.modal('hide');
+      this.trigger('cancel');
     },
     form_successHandler: function () {
       this.hide();
@@ -1420,31 +1551,26 @@
       if (!event.currentTarget.form) {
         this.$el.modal('hide');
       }
+      this.trigger('confirm');
     },
-    template_successHandler: function (response) {
+    template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
-      this.$('.modal-body').html(this.template(_.extend({
-        urlRoot: this.model.collection.url
-      }, this.model.toJSON())));
-      this.onLoadComplete();
-    },
-    textarea_keydownHandler: function (event) {
-      if (event.keyCode === 13 && event.ctrlKey) {
-        $(event.target).closest('form').submit();
-        event.preventDefault();
-      }
+      this.onLoadComplete(this.model ? this.template(_.extend(this.model.toJSON())) : null);
     },
     hiddenHandler: function () {
-      tp.component.Manager.clear(this.$el);
-      this.$('.modal-body').empty();
-      clearTimeout(timeout);
+      this.remove();
+    },
+    keydownHandler: function (event) {
+      if (event.keyCode === 13 && event.ctrlKey) {
+        this.$('.modal-footer .btn-primary').submit();
+        event.preventDefault();
+      }
     },
     loadCompleteHandler: function() {
       this.onLoadComplete();
     },
-    showHandler: function () {
+    shownHandler: function () {
       this.$('.modal-footer .btn-primary').prop('disabled', false);
-      this.$('.alert').hide();
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));;
@@ -1628,7 +1754,11 @@
   ns.SelectEditor = Editor.extend({
     render: function (response) {
       if (this.options.options) {
-        this.options.options = this.model.options[this.options.options];
+        if (this.model.options) {
+          this.options.options = this.model.options[this.options.options];
+        } else {
+          this.options.options = this.model.collection.options[this.options.options];
+        }
       }
       Editor.prototype.render.call(this, response);
       if (this.options.list) {
@@ -1673,10 +1803,18 @@
       }
     }
   });
+
+  ns.SwitchEditor = Editor.extend({
+    initialize: function (options) {
+      options.value = this.model.get(options.prop) != options.open;
+      Editor.prototype.initialize.call(this, options);
+    }
+  });
 }(Nervenet.createNameSpace('tp.popup')));;
 (function (ns) {
   ns.Loader = Backbone.View.extend({
     $context: null,
+    fresh: false,
     tagName: 'div',
     events: {
       'click .edit': 'edit_clickHandler'
@@ -1690,9 +1828,17 @@
       }
 
       $.get(options.template, _.bind(this.template_getHandler, this), 'html');
+
+      if ('fresh' in options) {
+        this.fresh = options.fresh;
+      }
     },
     render: function () {
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
+      if (this.fresh) {
+        this.fresh = false;
+        this.model.on('change', this.model_changeHandler, this);
+      }
       var self = this
         , $el = this.$el
         , model = this.model;
@@ -1708,6 +1854,15 @@
       options.label = options.label || target.closest('td').prev('th').text();
       this.$context.trigger('edit-model', this.model, prop, options);
       event.preventDefault();
+    },
+    model_changeHandler: function () {
+      // 记录当前活动元素的位置
+      var id = this.$('.active').filter('.tab-pane').attr('id');
+      tp.component.Manager.clear(this.$el);
+      this.render();
+      if (id) {
+        this.$('[href=#' + id + '][data-toggle]').click();
+      }
     },
     model_syncHandler: function () {
       if (this.template) {
@@ -1727,7 +1882,8 @@
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
-      'change [type=range]': 'range_changeHandler'
+      'change [type=range]': 'range_changeHandler',
+      'click .add-button': 'addButton_clickHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -1738,6 +1894,16 @@
     },
     clear: function () {
       tp.component.Manager.clear(this.$el);
+    },
+    createSidebar: function () {
+      this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+      this.$('.sidebar-nav-item').remove();
+      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default'
+        , template = this.template;
+      $.getJSON('page/sidebar/' + role + '.json', function (response) {
+        var html = template({list: response});
+        $('#navbar-side-inner').append(html);
+      });
     },
     load: function (url, data, options) {
       options = options || {};
@@ -1775,9 +1941,16 @@
       this.isStart = true;
       this.$('#page-preloader').remove();
       if (showFramework) {
+        this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
       }
+    },
+    addButton_clickHandler: function (event) {
+      var options = $(event.currentTarget).data();
+      options.collectionId = event.currentTarget.hash.substr(1);
+      this.$context.trigger('add-model', options);
+      event.preventDefault();
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
@@ -1806,6 +1979,7 @@
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
       'change [name=ad_app_type]': 'platform_changeHandler',
+      'change [name=search_flag]': 'searchFlag_changeHandler',
       'change #replace-ad': 'replaceAD_changeHandler',
       'change .domestic input': 'area_changeHandler',
       'change .isp input': 'isp_changeHandler',
@@ -1886,7 +2060,7 @@
       }
     },
     platform_changeHandler: function (event) {
-      this.$el
+      this.$('form')
         .removeClass('Android iPhone')
         .addClass(event.target.labels[0].innerText);
       var is_ios = event.target.value === '2';
@@ -1919,6 +2093,9 @@
         return;
       }
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
+    },
+    searchFlag_changeHandler: function (event) {
+      this.$('.aso').toggle(event.target.value === '1');
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

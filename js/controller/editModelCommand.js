@@ -11,7 +11,7 @@
 
   ns.editModelCommand = function (model, prop, options) {
     options = _.extend({}, options);
-    options.value = model.get(prop) || model.get(options.display);
+    options.value = model.get(prop);
     callPopup(model, prop, options);
   }
 }(Nervenet.createNameSpace('tp.controller')));
