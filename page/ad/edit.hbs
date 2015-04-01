@@ -259,8 +259,8 @@
       <label class="col-sm-2 control-label">投放运营商</label>
       <div class="col-sm-10 select-button isp">
         {{#each net_types}}
-        <input type="checkbox" name="net_type[]" value="{{code}}" id="net-type-{{name}}" />
-        <label for="net-type-{{name}}">{{name}}</label>
+        <input type="checkbox" name="net_type[]" value="{{key}}" id="net-type-{{key}}" />
+        <label for="net-type-{{key}}">{{value}}</label>
         {{/each}}
       </div>
     </div>
