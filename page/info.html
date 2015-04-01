@@ -13,17 +13,19 @@
     <th>广告主报价</th>
     <th>上线要求</th>
     <th>下线要求</th>
+    <th>数据反馈</th>
     <th>运行状态</th>
   </tr>
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
     <tr id="{{id}}">
-      <td>{{ad_name}}</td>
+      <td>{{ad_name}} {{#if is_full}}<span class="label label-warning">饱</span>{{/if}}</td>
       <td><time datetime="{{create_time}}">{{create_time}}</time></td>
       <td>&yen;{{d100 quote_rmb}}</td>
       <td>{{others}}</td>
       <td>{{offline_msg}}</td>
+      <td>{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据'}}</td>
       <td>
         {{#if transfer}}
         <strong class="text-success"><i class="fa fa-check"></i> 已推广</strong>

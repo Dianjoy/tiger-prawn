@@ -118,85 +118,6 @@
     }
   });
 }(Nervenet.createNameSpace('tp.router')));;
-(function (ns) {
-  ns.AD = Backbone.Router.extend({
-    $body: null,
-    routes: {
-      "ad(/)": "list",
-      "ad/create": "create",
-      "ad/:id": "edit",
-      "apply/(:id)": "listApplies",
-      "info/(:query)": "showHistoryInfo"
-    },
-    create: function () {
-      var model = new tp.model.AD();
-      this.$body
-        .load('page/ad/edit.hbs', model, {
-          className: 'ad ad-new',
-          loader: tp.page.AdEditor
-        })
-        .setFramework('ad ad-new', '创建广告');
-    },
-    edit: function (id) {
-      var model = new tp.model.AD({
-        id: id
-      });
-      this.$body
-        .load('page/ad/ad.hbs', model, {
-          className: 'ad ad-detail',
-          fresh: true
-        })
-        .setFramework('ad', '编辑广告');
-    },
-    list: function () {
-      this.$body
-        .load('page/ad/list.html')
-        .setFramework('ad ad-list', '我的广告');
-    },
-    listApplies: function (id) {
-      this.$body
-        .load('page/ad/apply.html')
-        .setFramework('apply', '我的申请');
-    },
-    showHistoryInfo: function (query) {
-      this.$body
-        .load('page/info.html')
-        .setFramework('info', '广告投放情报');
-    }
-  });
-}(Nervenet.createNameSpace('tp.router')));;
-(function (ns) {
-  ns.Stat = Backbone.Router.extend({
-    $body: null,
-    routes: {
-      'stat(/)': 'showStat',
-      'stat/:id': 'showADStat',
-      'stat/:id/:date': 'showADStatDate'
-    },
-    showADStat: function (id) {
-      var model = new tp.model.AD({
-        id: id
-      });
-      this.$body.load('page/stat/daily.hbs', model, {
-        className: 'stat stat-ad'
-      });
-      this.$body.setFramework('has-date-range');
-    },
-    showADStatDate: function (id, date) {
-      var model = new tp.model.AD({
-        id: id,
-        date: date
-      });
-      this.$body.load('page/stat/hourly.hbs', model, {
-        className: 'stat stat-date'
-      });
-    },
-    showStat: function () {
-      this.$body.load('page/stat/list.html');
-      this.$body.setFramework('has-date-range');
-    }
-  });
-}(Nervenet.createNameSpace('tp.router')));;
 ;(function (ns) {
   var manager = {
     $body: null,
@@ -255,7 +176,7 @@
 }(Nervenet.createNameSpace('tp.service')));
 
 ;
-(function (ns) {var popup
+(function (ns) {var popup
     , editor;
 
   var Klass = Backbone.View.extend({
@@ -379,7 +300,7 @@
 
   ns.editModelCommand = function (model, prop, options) {
     options = _.extend({}, options);
-    options.value = model.get(prop) || model.get(options.display);
+    options.value = model.get(prop);
     callPopup(model, prop, options);
   }
 }(Nervenet.createNameSpace('tp.controller')));;
@@ -524,7 +445,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-;(function (ns) {var collections = {}
+;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
         if ('code' in response && 'msg' in response && 'data' in response) {
@@ -619,8 +540,13 @@
 
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
+    index: 0,
     url: tp.API + 'notice/',
     initialize: function () {
+      var storage = localStorage.getItem(tp.NOTICE_KEY);
+      if (storage) {
+        storage = json.parse(storage);
+      }
       this.on('sync', this.syncHandler, this);
       this.fetch = _.bind(this.fetch, this);
     },
@@ -647,7 +573,7 @@
     },
     syncHandler: function () {
       if (autoNext) {
-        setTimeout(this.fetch, TIMEOUT);
+        //setTimeout(this.fetch, TIMEOUT);
       }
     }
   });
@@ -1546,6 +1472,7 @@
     },
     form_successHandler: function () {
       this.hide();
+      this.trigger('success')
     },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {
@@ -2078,7 +2005,8 @@
       }
       if (replace && !this.hasAD) {
         tp.service.Manager.call(tp.API + 'ad/', {
-          pack_name: pack_name
+          pack_name: pack_name,
+          status: 0
         }, {
           success: this.fetchAD_successHandler,
           error: this.fetchAD_errorHandler,
@@ -2110,4 +2038,365 @@
       this.collection.fetch();
     }
   });
-}(Nervenet.createNameSpace('tp.page')));}());
+}(Nervenet.createNameSpace('tp.page')));;
+(function (ns) {
+  ns.LoginForm = Backbone.View.extend({
+    events: {
+      'click #verify-code': 'verifyCode_clickHandler'
+    },
+    verifyCode_clickHandler: function (event) {
+      var src = event.target.src
+        , offset = src.indexOf('?ts=')
+        , time = Date.now();
+      src = offset === -1 ? src + '?ts=' + time : src.replace(/\?ts=\d+$/, '?ts=' + time);
+      event.target.src = src;
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));;
+(function (ns) {
+  ns.MorrisChart = Backbone.View.extend({
+    $colors: null,
+    initialize: function (options) {
+      var chartData = JSON.parse(this.$('script').remove().html().replace(/,\s?]/, ']'));
+      if (chartData.data.length <= 1) {
+        this.$el.addClass('empty').text('（无数据）');
+        return;
+      }
+      this.createOptions(options, chartData);
+      this.drawChart();
+    },
+    createOptions: function (options, chartData) {
+      var data = this.$el.data();
+      options = _.extend({
+        element: this.el,
+        lineWidth: 2
+      }, options, chartData, data);
+      this.className = 'type' in options ? options.type.charAt(0).toUpperCase() + options.type.substr(1) : 'Line';
+      if ('colors' in options) {
+        options.colors = options.lineColors = options.barColors = options.colors.split(',');
+      } else {
+        options.colors = options.lineColors = options.barColors = this.$colors;
+      }
+      if (this.className === 'Donut') {
+        options.formatter = function (y, data) {
+          return 'percent' in data ? y + '(' + data.percent + '%)' : y;
+        }
+      }
+      this.options = options;
+    },
+    drawChart: function () {
+      this.chart = new Morris[this.className](this.options);
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));;
+;(function (ns) {var init = {
+    events: {
+      'change .auto-submit': 'autoSubmit_Handler',
+      'click .add-row-button': 'addRowButton_clickHandler'
+    },
+    initialize: function () {
+      var cid = this.$el.data('collection-id');
+      if (cid) {
+        this.collection = tp.model.ListCollection.createInstance(null, {
+          id: cid
+        });
+      }
+
+      this.render();
+    },
+    render: function () {
+      this.$('.keyword-form').find('[name=query]').val(this.model.get('keyword'));
+    },
+    addRowButton_clickHandler: function (event) {
+      this.collection.add({});
+      event.preventDefault();
+    },
+    autoSubmit_Handler: function (event) {
+      $(event.currentTarget).closest('form').submit();
+    }
+  };
+  ns.SmartNavbar = Backbone.View.extend(init);
+}(Nervenet.createNameSpace('tp.component')));
+;
+(function (ns) {
+  var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{value}}</a>');
+
+  ns.SmartTable = Backbone.View.extend({
+    $context: null,
+    fragment: '',
+    events: {
+      'click .add-row-button': 'addRowButton_clickHandler',
+      'click .delete-button': 'deleteButton_clickHandler',
+      'click .edit': 'edit_clickHandler',
+      'click tbody .filter': 'tbodyFilter_clickHandler',
+      'click thead .filter': 'theadFilter_clickHandler',
+      'click .order': 'order_clickHandler',
+      'change select.edit': 'select_changeHandler',
+      'change .stars input': 'star_changeHandler',
+      'change .status-button': 'statusButton_clickHandler',
+      'sortupdate': 'sortUpdateHandler'
+    },
+    initialize: function (options) {
+      this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
+      var init = this.$el.data();
+      init.url = init.url.replace('{{API}}', tp.API);
+      options = _.extend({
+        pagesize: 10,
+        autoFetch: true
+      }, options, init);
+      this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
+      if (init.model) {
+        options.model = Nervenet.parseNamespace(init.model);
+      }
+      // 特定的过滤器
+      this.options = tp.utils.decodeURLParam(init.filter);
+
+      this.collection = tp.model.ListCollection.createInstance(null, options);
+      this.collection.on('add', this.collection_addHandler, this);
+      this.collection.on('change', this.collection_changeHandler, this);
+      this.collection.on('remove', this.collection_removeHandler, this);
+      this.collection.on('sync', this.collection_syncHandler, this);
+
+      // 通过页面中介来实现翻页等功能
+      this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento();
+      this.model.on('change', this.model_changeHandler, this);
+      this.model.on('invalid', this.model_invalidHandler, this);
+      this.renderHeader();
+
+      // 启用搜索
+      if ('search' in init) {
+        this.search = new ns.table.Search({
+          el: init.search,
+          model: this.model,
+          collection: this.collection
+        });
+      }
+
+      // 翻页
+      if ('pagesize' in init && init.pagesize > 0) {
+        this.pagination = new ns.table.Pager(_.extend({}, options, {
+          el: 'pagination' in init ? init.pagination : '.pager',
+          model: this.model,
+          collection: this.collection
+        }));
+      }
+
+      // 调整每页数量
+      if ('pagesizeController' in init) {
+        this.pagesizeController = $(init.pagesizeController);
+        this.pagesizeController.val(this.collection.pagesize);
+        this.pagesizeController.on('change', _.bind(this.pagesize_changeHandler, this));
+      }
+
+      // 起止日期
+      if ('ranger' in init) {
+        this.ranger = new ns.table.Ranger(_.extend({}, options, {
+          el: init.ranger,
+          model: this.model
+        }));
+      }
+
+      if (options.autoFetch) {
+        this.filter = _.extend(this.model.toJSON(), this.options);
+        this.collection.fetch({
+          data: this.filter
+        });
+      }
+    },
+    remove: function () {
+      if (this.pagination) {
+        this.pagination.remove();
+      }
+      if (this.pagesizeController) {
+        this.pagesizeController.off('change');
+      }
+      if (this.ranger) {
+        this.ranger.remove();
+      }
+      this.collection.off(null, null, this);
+      this.model.off(null, null, this);
+      tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
+      Backbone.View.prototype.remove.call(this);
+    },
+    render: function () {
+      this.$('.waiting').hide();
+      this.$('tbody').append(this.fragment);
+      this.fragment = '';
+      this.$el.removeClass('loading');
+      this.$context.trigger('table-rendered');
+    },
+    renderHeader: function () {
+      // 排序
+      var order = this.model.get('order')
+        , seq = this.model.get('seq')
+        , status = this.model.omit('keyword', 'order', 'seq')
+        , labels = '';
+      if (order) {
+        this.$('.order[href=#' + order + ']').addClass('active').toggleClass('inverse', seq == 'desc');
+      }
+      _.each(status, function (value, key) {
+        labels += filterLabel({key: key, value: value});
+      });
+      this.$('.filters').append(labels);
+    },
+    saveModel: function (target, id, prop, value) {
+      target.prop('disabled', true);
+      this.collection.get(id).save(prop, value, {
+        patch: true,
+        wait: true,
+        success: function () {
+          target.prop('disabled', false);
+        }
+      });
+    },
+    addRowButton_clickHandler: function (event) {
+      var prepend = $(event.currentTarget).data('prepend');
+      this.collection.add(this.model.pick(this.include), {
+        immediately: true,
+        prepend: !!prepend
+      });
+    },
+    collection_addHandler: function (model, collection, options) {
+      this.fragment += this.template(model.toJSON());
+      if (options.immediately) {
+        var item = $(this.fragment);
+        item.attr('id', model.id || model.cid);
+        this.$('tbody')[options.prepend ? 'prepend' : 'append'](item);
+        this.fragment = '';
+      }
+    },
+    collection_changeHandler: function (model) {
+      var html = this.template(model.toJSON());
+      this.$('#' + (model.id || model.cid)).replaceWith(html);
+    },
+    collection_removeHandler: function (model, collection, options) {
+      var item = this.$('#' + (model.id || model.cid));
+      if (options.fadeOut) {
+        item.fadeOut(function () {
+          $(this).remove();
+        })
+      } else {
+        item.remove();
+      }
+    },
+    collection_syncHandler: function () {
+      this.render();
+      this.model.waiting = false;
+    },
+    deleteButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , msg = target.data('msg');
+      msg = msg || '确定删除么？';
+      if (!confirm(msg)) {
+        return;
+      }
+      var id = target.closest('tr').attr('id');
+      target.prop('disabled', true)
+        .find('i').addClass('fa-spin fa-spinner');
+      this.collection.get(id).destroy({
+        fadeOut: true,
+        wait: true,
+        error: function (model, response) {
+          target.prop('disabled', false)
+            .find('i').removeClass('fa-spin fa-spinner');
+          console.log(response.msg);
+          alert('删除失败');
+        }
+      });
+      event.preventDefault();
+    },
+    edit_clickHandler: function (event) {
+      if (event.currentTarget.tagName.toLowerCase() === 'select') {
+        return;
+      }
+      var target = $(event.currentTarget)
+        , data = target.data()
+        , index = target.closest('td').index()
+        , prop = event.currentTarget.hash.substr(1)
+        , id = target.closest('tr').attr('id')
+        , model = this.collection.get(id)
+        , options = _.extend({
+          label: this.$('thead th').eq(index).text()
+        }, data);
+      options.type = data.type || 'short-text';
+      this.$context.trigger('edit-model', model, prop, options);
+      event.preventDefault();
+    },
+    model_changeHandler: function (model) {
+      this.filter = _.extend(model.toJSON(), this.options);
+      this.collection.fetch({data: this.filter});
+      this.$el.addClass('loading');
+      model.warting = true;
+    },
+    model_invalidHandler: function (model, error) {
+      alert(error);
+    },
+    order_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , order = target.attr('href').substr(1);
+      this.$('.order.active').not(target).removeClass('active inverse');
+      target.toggleClass('inverse', target.hasClass('active') && !target.hasClass('inverse')).addClass('active');
+      this.model.set({
+        order: order,
+        seq: target.hasClass('inverse') ? 'desc' : 'asc'
+      });
+      event.preventDefault();
+    },
+    pagesize_changeHandler: function (event) {
+      this.collection.setPagesize(event.target.value);
+      this.collection.fetch(this.filter);
+    },
+    select_changeHandler: function (event) {
+      var target = $(event.currentTarget)
+        , id = target.closest('tr').attr('id');
+      this.saveModel(target, id, target.attr('name'), target.val());
+    },
+    star_changeHandler: function (event) {
+      var target = $(event.currentTarget)
+        , id = target.closest('tr').attr('id');
+      this.saveModel(target.add(target.siblings('.star')), id, target.attr('name'), target.val());
+    },
+    statusButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , data = _.extend({active: 1, deactive: 0}, target.data())
+        , value = target.prop('checked') ? data.deactive : data.active
+        , id = target.closest('tr').attr('id');
+      this.saveModel(target, id, target.attr('name'), value);
+    },
+    tbodyFilter_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , path = target.attr('href').split('/').slice(-2)
+        , hasFilter = this.model.has(path[0]);
+      this.model.set(path[0], path[1]);
+      if (hasFilter) {
+        this.$('.filters').find('[href="#/' + path[0] + '"]').replaceWith(target.clone());
+      } else {
+        this.$('.filters').append(target.clone());
+      }
+      event.preventDefault();
+    },
+    theadFilter_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , path = target.attr('href').split('/').slice(-2);
+      this.model.unset(path[0]);
+      target.remove();
+      event.preventDefault();
+    },
+    sortUpdateHandler: function (event, ui) {
+      var item = ui.item
+        , index = item.index()
+        , id = item.attr('id')
+        , model = this.collection.get(id)
+        , curr = this.collection.indexOf(model)
+        , start = this.collection.pagesize * this.model.get('page') || 0;
+      this.collection.models.splice(curr, 1);
+      this.collection.models.splice(index, 0, model);
+      this.collection.trigger('sort', model, index);
+      this.collection.each(function (model, i) {
+        if (model.changedAttributes({seq: start + i})) {
+          model.save({seq: start + i}, {wait: true, patch: true});
+        }
+      });
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));}());
