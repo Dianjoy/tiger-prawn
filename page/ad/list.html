@@ -54,10 +54,10 @@
         {{/if}}
       </td>
       <td data-title="今日尚余">
-        {{#if set_today_left}}
-          <span title="申请已提交，等待核准">{{#if previous}}{{previous.today_left}}{{else}}{{../today_left}}{{/if}} / {{set_today_left}}</span>
+        {{#if set_rmb}}
+          <span title="申请已提交，等待核准">{{#if previous}}{{previous.num}}{{else}}{{../num}}{{/if}} / {{set_rmb}}</span>
         {{else}}
-        <a href="#today_left" class="edit" title="调整今日余量" data-type="number" data-min="0" data-comment="message" data-refresh="true">{{today_left}}</a>
+        <a href="#num" class="edit" title="调整今日余量" data-type="number" data-min="0" data-comment="message" data-refresh="true">{{num}}</a>
         {{/if}}
       </td>
       <td data-title="状态">
