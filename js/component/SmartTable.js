@@ -105,6 +105,13 @@
       this.fragment = '';
       this.$el.removeClass('loading');
       this.$context.trigger('table-rendered');
+      // 排序
+      if ('order' in this.model.changed || 'seq' in  this.model.changed) {
+        var tbody = this.$('tbody');
+        this.collection.each(function (model) {
+          tbody.append(tbody.find('#' + model.id));
+        });
+      }
     },
     renderHeader: function () {
       // 排序
@@ -113,6 +120,7 @@
         , status = this.model.omit('keyword', 'order', 'seq')
         , labels = '';
       if (order) {
+        this.$('.order').removeClass('active inverse');
         this.$('.order[href=#' + order + ']').addClass('active').toggleClass('inverse', seq == 'desc');
       }
       _.each(status, function (value, key) {
