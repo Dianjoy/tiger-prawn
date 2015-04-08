@@ -66,7 +66,7 @@
     },
     template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
-      this.onLoadComplete(this.model ? this.template(_.extend(this.model.toJSON())) : null);
+      this.onLoadComplete(this.model ? this.template(this.model.toJSON()) : null);
     },
     hiddenHandler: function () {
       this.remove();

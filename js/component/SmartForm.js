@@ -246,8 +246,14 @@
         if (!data.hasOwnProperty(key)) {
           return;
         }
-        var value = data[key]
-          , items = this.$('[name= ' + key + ']').val(value);
+        var value = data[key];
+        if (_.isArray(value)) {
+          this.$('[name="' + key +'[]"]').each(function () {
+            this.checked = value.indexOf(this.value) !== -1;
+          });
+          continue;
+        }
+        var items = this.$('[name= ' + key + ']').val(value);
         try {
           items.length > 0 || this.$('[name=' + key + '][value=' + value + '], [name="' + key + '[]"][value=' + value + ']').prop('checked', true);
         } catch (e) {

@@ -32,7 +32,7 @@
       // 特定的过滤器
       this.options = tp.utils.decodeURLParam(init.filter);
 
-      this.collection = tp.model.ListCollection.createInstance(null, options);
+      this.collection = tp.model.ListCollection.getInstance(options);
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
