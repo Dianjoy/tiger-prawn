@@ -75,7 +75,7 @@
         idAttribute: options.idAttribute
       }) : Model);
     }
-    var collection = new Collection(models, params);
+    var collection = new Collection(null, params);
     if (options.collectionId) {
       collections[options.collectionId] = collection;
     }
