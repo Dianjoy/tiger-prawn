@@ -20,11 +20,20 @@
   <tbody>
   <script type="text/x-handlebars-template">
     <tr id="{{id}}">
-      <td>{{ad_name}} {{#if is_full}}<span class="label label-warning">饱</span>{{/if}}</td>
-      <td><time datetime="{{create_time}}">{{create_time}}</time></td>
+      <td>
+        {{ad_name}}
+        {{#if is_full}}
+          <span class="label label-warning" title="该广告已经饱和">饱</span>
+        {{else if fullness}}
+          <span class="label label-info" title="接近饱和">近</span>
+        {{else}}
+          <span class="label label-success" title="不饱和，可以接入广告">空</span>
+        {{/if}}
+      </td>
+      <td><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td>&yen;{{d100 quote_rmb}}</td>
-      <td>{{others}}</td>
-      <td>{{offline_msg}}</td>
+      <td>{{{text-collapse others 30}}}</td>
+      <td>{{{text-collapse offline_msg 30}}}</td>
       <td>{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据'}}</td>
       <td>
         {{#if transfer}}
