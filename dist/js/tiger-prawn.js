@@ -176,11 +176,14 @@
 }(Nervenet.createNameSpace('tp.service')));
 
 ;
-(function (ns) {var popup
+(function (ns) {var popup
     , editor;
 
   var Klass = Backbone.View.extend({
     $context: null,
+    events: {
+      'click .popup': 'popupButton_clickHandler'
+    },
     initialize: function () {
       this.template = Handlebars.compile(this.$('#popup').remove().html());
       this.editor = Handlebars.compile(this.$('#editor-popup').remove().html());
@@ -203,6 +206,14 @@
       this.$el.append(editor);
       editor = EditorFactory.createEditor(this.$context, options);
       return editor;
+    },
+    popupButton_clickHandler: function (event) {
+      var options = $(event.currentTarget).data();
+      if (options.collectionId) {
+        var collection = tp.model.ListCollection.getInstance(options)
+        options.model = collection.get(options.id);
+      }
+      this.popup(options);
     }
   });
 
@@ -445,7 +456,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-;(function (ns) {var collections = {}
+;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
         if ('code' in response && 'msg' in response && 'data' in response) {
@@ -506,24 +517,19 @@
         localStorage.setItem(this.key, size);
       }
     });
-  Collection.createInstance = function (models, options) {
+  Collection.getInstance = function (options) {
+    if (options.collectionId && options.collectionId in collections) {
+      return collections[options.collectionId];
+    }
+
     var params = _.extend({}, options);
     if (!options.model || !(options.model instanceof Function)) {
       params.model = ('idAttribute' in options ? Model.extend({
         idAttribute: options.idAttribute
       }) : Model);
     }
-    var collection;
-    if (!('collectionId' in options)) {
-      return new Collection(models, params);
-    }
-    if (options.collectionId in collections) {
-      collection = collections[options.collectionId];
-      if (collection.length === 0 && models) {
-        collection.reset(models);
-      }
-    } else {
-      collection = new Collection(models, params);
+    var collection = new Collection(null, params);
+    if (options.collectionId) {
       collections[options.collectionId] = collection;
     }
     return collection;
@@ -540,13 +546,8 @@
 
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
-    index: 0,
     url: tp.API + 'notice/',
     initialize: function () {
-      var storage = localStorage.getItem(tp.NOTICE_KEY);
-      if (storage) {
-        storage = json.parse(storage);
-      }
       this.on('sync', this.syncHandler, this);
       this.fetch = _.bind(this.fetch, this);
     },
@@ -573,7 +574,7 @@
     },
     syncHandler: function () {
       if (autoNext) {
-        //setTimeout(this.fetch, TIMEOUT);
+        setTimeout(this.fetch, TIMEOUT);
       }
     }
   });
@@ -1060,8 +1061,14 @@
         if (!data.hasOwnProperty(key)) {
           return;
         }
-        var value = data[key]
-          , items = this.$('[name= ' + key + ']').val(value);
+        var value = data[key];
+        if (_.isArray(value)) {
+          this.$('[name="' + key +'[]"]').each(function () {
+            this.checked = value.indexOf(this.value) !== -1;
+          });
+          continue;
+        }
+        var items = this.$('[name= ' + key + ']').val(value);
         try {
           items.length > 0 || this.$('[name=' + key + '][value=' + value + '], [name="' + key + '[]"][value=' + value + ']').prop('checked', true);
         } catch (e) {
@@ -1482,7 +1489,7 @@
     },
     template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
-      this.onLoadComplete(this.model ? this.template(_.extend(this.model.toJSON())) : null);
+      this.onLoadComplete(this.model ? this.template(this.model.toJSON()) : null);
     },
     hiddenHandler: function () {
       this.remove();
@@ -2089,7 +2096,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-;(function (ns) {var init = {
+;(function (ns) {var init = {
     events: {
       'change .auto-submit': 'autoSubmit_Handler',
       'click .add-row-button': 'addRowButton_clickHandler'
@@ -2151,7 +2158,7 @@
       // 特定的过滤器
       this.options = tp.utils.decodeURLParam(init.filter);
 
-      this.collection = tp.model.ListCollection.createInstance(null, options);
+      this.collection = tp.model.ListCollection.getInstance(options);
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
