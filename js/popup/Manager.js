@@ -11,6 +11,9 @@
 
   var Klass = Backbone.View.extend({
     $context: null,
+    events: {
+      'click .popup': 'popupButton_clickHandler'
+    },
     initialize: function () {
       this.template = Handlebars.compile(this.$('#popup').remove().html());
       this.editor = Handlebars.compile(this.$('#editor-popup').remove().html());
@@ -33,6 +36,14 @@
       this.$el.append(editor);
       editor = EditorFactory.createEditor(this.$context, options);
       return editor;
+    },
+    popupButton_clickHandler: function (event) {
+      var options = $(event.currentTarget).data();
+      if (options.collectionId) {
+        var collection = tp.model.ListCollection.getInstance(options)
+        options.model = collection.get(options.id);
+      }
+      this.popup(options);
     }
   });
 

@@ -64,24 +64,19 @@
         localStorage.setItem(this.key, size);
       }
     });
-  Collection.createInstance = function (models, options) {
+  Collection.getInstance = function (options) {
+    if (options.collectionId && options.collectionId in collections) {
+      return collections[options.collectionId];
+    }
+
     var params = _.extend({}, options);
     if (!options.model || !(options.model instanceof Function)) {
       params.model = ('idAttribute' in options ? Model.extend({
         idAttribute: options.idAttribute
       }) : Model);
     }
-    var collection;
-    if (!('collectionId' in options)) {
-      return new Collection(models, params);
-    }
-    if (options.collectionId in collections) {
-      collection = collections[options.collectionId];
-      if (collection.length === 0 && models) {
-        collection.reset(models);
-      }
-    } else {
-      collection = new Collection(models, params);
+    var collection = new Collection(models, params);
+    if (options.collectionId) {
       collections[options.collectionId] = collection;
     }
     return collection;
