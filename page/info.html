@@ -1,7 +1,7 @@
 <div class="form-inline table-header">
   <div class="form-group">
     <label for="search-query">搜索：</label>
-    <input type="search" class="form-control" id="search-query">
+    <input type="search" class="form-control" id="search-query" autofocus>
   </div>
 </div>
 
@@ -27,7 +27,7 @@
         {{else if fullness}}
           <span class="label label-info" title="接近饱和">近</span>
         {{else}}
-          <span class="label label-success" title="不饱和，可以接入广告">空</span>
+          <span class="label label-success" title="不饱和，可以接入广告">饿</span>
         {{/if}}
       </td>
       <td><time datetime="{{create_time}}">{{moment create_time}}</time></td>
