@@ -5,30 +5,18 @@
  */
 'use strict';
 (function () {
-  var _storage = null
-    , data = {}
-    , Storage = function () {};
-  Storage.prototype = {
-    getItem: function (key) {
-      return data[key];
-    },
-    hasItem: function (key) {
-      return !!data[key];
-    },
-    removeItem: function (key) {
-      delete data[key];
-    },
-    setItem: function (key, value) {
-      data[key] = value;
-    }
-  };
+  var data = {}
 
   // 兼容safari
   try {
     localStorage.setItem('tp', 1);
     localStorage.removeItem('tp');
   } catch (e) {
-    _storage = localStorage;
-    window.localStorage = new Storage();
+    localStorage.setItem = function (key, value) {
+      data[key] = value;
+    };
+    localStorage.getItem = function (key) {
+      return data[key];
+    };
   }
 }());
