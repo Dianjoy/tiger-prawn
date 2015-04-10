@@ -31,6 +31,7 @@
       "blur input,textarea,select": "input_blurHandler",
       'focus input': 'input_focusHandler',
       'submit': 'submitHandler',
+      'data': 'dataHandler',
       'click .collapsible legend': 'legend_clickHandler'
     },
     initialize: function () {
@@ -132,6 +133,29 @@
         collection.push(fetcher);
       });
     },
+    useData: function (data) {
+      for (var key in data) {
+        if (!data.hasOwnProperty(key)) {
+          return;
+        }
+        var value = data[key];
+        if (_.isArray(value)) {
+          this.$('[name="' + key +'[]"]').each(function () {
+            this.checked = value.indexOf(this.value) !== -1;
+          });
+          continue;
+        }
+        var items = this.$('[name= ' + key + ']').val(value);
+        try {
+          items.length > 0 || this.$('[name=' + key + '][value=' + value + '], [name="' + key + '[]"][value=' + value + ']').prop('checked', true);
+        } catch (e) {
+          console.log('no such item');
+        }
+        if (items.attr('type') === 'hidden') {
+          items.trigger('change');
+        }
+      }
+    },
     input_blurHandler: function (event) {
       var target = $(event.currentTarget)
         , msg = this.checkInput(target);
@@ -163,6 +187,16 @@
       error = tp.Error.getAjaxMessage(xhr, status, error);
       this.displayResult(false, error.message, error.icon);
       this.trigger('error', xhr, status, error);
+    },
+    uploader_dataHandler: function (data) {
+      this.$el.removeClass('uploading');
+      this.useData(data);
+    },
+    uploader_startHandler: function () {
+      this.$el.addClass('uploading');
+    },
+    dataHandler: function (event, data) {
+      this.useData(data);
     },
     submitHandler: function(event) {
       // 隐藏的表单不提交
@@ -239,33 +273,6 @@
       }
 
       return isPass;
-    },
-    uploader_dataHandler: function (data) {
-      this.$el.removeClass('uploading');
-      for (var key in data) {
-        if (!data.hasOwnProperty(key)) {
-          return;
-        }
-        var value = data[key];
-        if (_.isArray(value)) {
-          this.$('[name="' + key +'[]"]').each(function () {
-            this.checked = value.indexOf(this.value) !== -1;
-          });
-          continue;
-        }
-        var items = this.$('[name= ' + key + ']').val(value);
-        try {
-          items.length > 0 || this.$('[name=' + key + '][value=' + value + '], [name="' + key + '[]"][value=' + value + ']').prop('checked', true);
-        } catch (e) {
-          console.log('no such item');
-        }
-        if (items.attr('type') === 'hidden') {
-          items.trigger('change');
-        }
-      }
-    },
-    uploader_startHandler: function () {
-      this.$el.addClass('uploading');
     }
   });
 }(Nervenet.createNameSpace('tp.component')));

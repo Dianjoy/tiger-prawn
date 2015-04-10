@@ -12,6 +12,7 @@
       'blur [name=ad_url]': 'adURL_blurHandler',
       'change [name=ad_app_type]': 'platform_changeHandler',
       'change [name=search_flag]': 'searchFlag_changeHandler',
+      'change [name=replace-with]': 'replaceWith_changeHandler',
       'change #replace-ad': 'replaceAD_changeHandler',
       'change .domestic input': 'area_changeHandler',
       'change .isp input': 'isp_changeHandler',
@@ -69,9 +70,11 @@
       var template = Handlebars.compile('{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}')
         , options = template(response);
       this.hasAD = true;
+      this.replace = response;
       this.$('[name=replace-with]').html(options);
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', false);
       this.$('#replace-ad').next().removeClass('spin');
+      this.$('form').trigger('data', response[0]);
     },
     isp_changeHandler: function (event) {
       var target = $(event.target)
@@ -126,6 +129,10 @@
         return;
       }
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
+    },
+    replaceWith_changeHandler: function (event) {
+      var data = this.replace.list[event.target.selectedIndex];
+      this.$('form').trigger('data', data);
     },
     searchFlag_changeHandler: function (event) {
       this.$('.aso').toggle(event.target.value === '1');
