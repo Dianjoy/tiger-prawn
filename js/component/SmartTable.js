@@ -185,11 +185,12 @@
       this.collection.get(id).destroy({
         fadeOut: true,
         wait: true,
-        error: function (model, response) {
+        error: function (model, xhr) {
+          var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
           target.prop('disabled', false)
             .find('i').removeClass('fa-spin fa-spinner');
           console.log(response.msg);
-          alert('删除失败');
+          alert(response.msg || '删除失败');
         }
       });
       event.preventDefault();
