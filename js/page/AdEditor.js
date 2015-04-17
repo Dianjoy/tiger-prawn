@@ -74,7 +74,7 @@
       this.$('[name=replace-with]').html(options);
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', false);
       this.$('#replace-ad').next().removeClass('spin');
-      this.$('form').trigger('data', response[0]);
+      this.$('form').trigger('data', _.omit(response.list[0], 'ad_url', 'ad_lib', 'ad_size', 'id', 'pack_name'));
     },
     isp_changeHandler: function (event) {
       var target = $(event.target)
@@ -131,7 +131,7 @@
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
     },
     replaceWith_changeHandler: function (event) {
-      var data = this.replace.list[event.target.selectedIndex];
+      var data = _.omit(this.replace.list[event.target.selectedIndex], 'id', 'ad_lib', 'ad_size', 'ad_url', 'pack_name');
       this.$('form').trigger('data', data);
     },
     searchFlag_changeHandler: function (event) {
