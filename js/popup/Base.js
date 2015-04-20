@@ -28,6 +28,8 @@
         } else {
           $.get(options.content, _.bind(this.onLoadComplete, this));
         }
+
+        ga('send', 'pageview', options.content);
       }
       this.$el.modal(options);
     },
