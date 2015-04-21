@@ -22,8 +22,8 @@
         }
         return _.extend(json, this.options);
       }
-    });
-  var Collection = ns.ListCollection = Backbone.Collection.extend({
+    })
+    , Collection = ns.ListCollection = Backbone.Collection.extend({
       total: 0,
       pagesize: 10,
       isLoading: false,
@@ -64,6 +64,7 @@
         localStorage.setItem(this.key, size);
       }
     });
+
   Collection.getInstance = function (options) {
     if (options.collectionId && options.collectionId in collections) {
       return collections[options.collectionId];

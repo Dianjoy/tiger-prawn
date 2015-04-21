@@ -7,7 +7,10 @@
 (function (ns) {
   'use strict';
   var popup
-    , editor;
+    , editor
+    , popupDefault = {
+      isRemote: true
+    };
 
   var Klass = Backbone.View.extend({
     $context: null,
@@ -38,12 +41,18 @@
       return editor;
     },
     popupButton_clickHandler: function (event) {
-      var options = $(event.currentTarget).data();
+      var target = event.currentTarget
+        , options = _.extend({}, popupDefault, $(target).data());
       if (options.collectionId) {
         var collection = tp.model.ListCollection.getInstance(options)
         options.model = collection.get(options.id);
       }
+      if (target.tagName.toLowerCase() === 'a') {
+        options.content = target.href;
+        options.title = options.title || target.title;
+      }
       this.popup(options);
+      event.preventDefault();
     }
   });
 

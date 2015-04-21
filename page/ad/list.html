@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query" data-model="tp.model.AD">
+<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query" data-model="tp.model.AD" data-collection-id="ad">
   <thead>
   <tr>
     <th class="filters">管理名</th>
@@ -83,6 +83,9 @@
       <td data-title="操作">
         <div class="btn-group">
           <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
+          {{#if is_resend}}
+          <a href="page/ad/baobei.hbs" class="btn btn-info popup" title="重新发送报备邮件" data-id="{{id}}" data-confirm="提交" data-collection-id="ad"><i class="fa fa-envelope-o"></i></a>
+          {{/if}}
           {{#unless is_ready}}<button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>{{/unless}}
         </div>
       </td>

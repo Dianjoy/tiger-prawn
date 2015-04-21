@@ -31,10 +31,12 @@
 
         ga('send', 'pageview', options.content);
       }
+      this.options = options;
       this.$el.modal(options);
     },
     remove: function () {
       clearTimeout(timeout);
+      this.options = null;
       this.off();
       Backbone.View.prototype.remove.call(this);
     },
@@ -68,7 +70,8 @@
     },
     template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
-      this.onLoadComplete(this.model ? this.template(this.model.toJSON()) : null);
+      var data = _.extend({API: tp.API}, this.options, this.model ? this.model.toJSON() : null);
+      this.onLoadComplete(this.template(data));
     },
     hiddenHandler: function () {
       this.remove();

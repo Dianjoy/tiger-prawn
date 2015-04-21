@@ -1,0 +1,21 @@
+<table class="table table-bordered table-striped">
+  <tr>
+    <th>渠道名</th>
+    <td>{{channel}}</td>
+  </tr>
+  <tr>
+    <th>广告名</th>
+    <td>{{ad_name}}</td>
+  </tr>
+  <tr>
+    <th>包号</th>
+    <td>{{cid}}</td>
+  </tr>
+</table>
+<form class="ajax" action="{{API}}baobei/{{id}}" method="post" id="popup-form">
+  <div class="alert alert-msg" style="display: none"></div>
+  <div class="form-group">
+    <label for="editor-popup-input">发送给</label>
+    <input type="email" name="email" class="form-control" id="editor-popup-input" value="{{baobei}}" autofocus />
+  </div>
+</form>
