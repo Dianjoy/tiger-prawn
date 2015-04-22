@@ -7,7 +7,7 @@
 </div>
 {{/if}}
 
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-ranger=".date-range" data-start="-31" data-end="0">
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-ranger=".date-range" data-start="-31" data-end="0" data-id-attribute="date">
   <thead>
   <tr>
     <th>日期</th>
@@ -20,7 +20,7 @@
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
-    <tr>
+    <tr id="{{date}}">
       <td data-title="日期">{{date}}</td>
       <td data-title="点击数">{{click}}</td>
       <td data-title="激活数">{{transfer}}</td>
