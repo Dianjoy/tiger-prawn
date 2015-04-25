@@ -6,6 +6,7 @@
     <li role="presentation"><a href="#put" aria-controls="put" role="tab" data-toggle="tab"><i class="fa fa-truck"></i> 投放信息</a></li>
     {{#unless cp}}
     <li role="presentation"><a href="#channel" aria-controls="channel" role="tab" data-toggle="tab"><i class="fa fa-yen"></i> 渠道信息</a></li>
+    <li role="presentation"><a href="#comment" aria-controls="comment" role="tab" data-toggle="tab"><i class="fa fa-comment"></i> 运营点评</a></li>
     {{/unless}}
   </ul>
 
@@ -53,13 +54,17 @@
         </tr>
         <tr>
           <th>广告描述</th>
-          <td><a class="edit" href="#ad_desc" data-type="long-text">{{ad_desc}}</a></td>
+          <td><a class="edit" href="#ad_desc" data-type="long-text">{{{ad_desc}}}</a></td>
         </tr>
         <tr>
           <th>广告链接</th>
           <td>
-            <a class="btn btn-default" href="{{ad_url}}" download="{{ad_name}}.{{ext ad_url}}"><i class="fa fa-download"></i> 下载测试</a>
-            <a class="edit btn btn-warning" href="#ad_url" data-type="file" data-accept="*.{{ext ad_url}}" data-comment="message"><i class="fa fa-upload"></i> 更换安装包</a>
+            {{#if ios}}
+              <a class="edit" href="#ad_url">{{ad_url}}</a>
+            {{else}}
+              <a class="btn btn-default" href="{{ad_url}}" download="{{ad_name}}.{{ext ad_url}}"><i class="fa fa-download"></i> 下载测试</a>
+              <a class="edit btn btn-warning" href="#ad_url" data-type="file" data-accept="*.{{ext ad_url}}" data-comment="message"><i class="fa fa-upload"></i> 更换安装包</a>
+            {{/if}}
           </td>
         </tr>
         <tr>
@@ -94,7 +99,7 @@
         </tr>
       </table>
     </div>
-    <div id="put" class="tab-pane" role="tabpanel">
+    <div  class="tab-pane"id="put" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
           <th>广告主报价</th>
@@ -129,7 +134,7 @@
       </table>
     </div>
     {{#unless cp}}
-    <div id="channel" class="tab-pane" role="tabpanel">
+    <div class="tab-pane" id="channel" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
           <th>负责人</th>
@@ -169,6 +174,26 @@
           <th>反馈周期</th>
           <td><a href="#cycle" class="edit" data-type="select" data-list="#cycle">{{pick cycle '' '隔日数据' '一周两次数据' '隔周数据' '隔月数据'}}</a></td>
         </tr>
+      </table>
+    </div>
+    <div class="tab-pane" id="comment" role="tabpanel">
+      <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>运营</th>
+          <th>点评</th>
+          <th>发表时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each comments}}
+        <tr>
+          <td>{{author}}</td>
+          <td>{{comment}}</td>
+          <td>{{moment create_time}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
       </table>
     </div>
     {{/unless}}

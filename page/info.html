@@ -15,6 +15,7 @@
     <th>下线要求</th>
     <th>数据反馈</th>
     <th>运行状态</th>
+    <th>运营点评</th>
   </tr>
   </thead>
   <tbody>
@@ -42,6 +43,11 @@
         {{else}}
         <strong class="text-danger"><i class="fa fa-times"></i> 未上线</strong>
         {{/if}}
+      </td>
+      <td>
+        {{#each comments}}
+        {{comment}} <small>（<time datetime="{{create_time}}" class="text-muted">{{moment create_time}}</time>）</small>
+        {{/each}}
       </td>
     </tr>
   </script>
