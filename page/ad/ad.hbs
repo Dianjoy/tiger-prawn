@@ -123,11 +123,11 @@
             <a class="edit" href="#province_type" data-type="select" data-list="#province_type">{{pick province_type '全国' '分省'}}</a>
           </td>
         </tr>
-        {{#if put_province}}
+        {{#if province_type}}
           <tr>
             <th>&nbsp;</th>
             <td>
-              {{#each put_provinces}}<span class="label label-info" id="province-{{id}}">{{value}}</span> {{/each}}
+              <a class="edit" href="#put_provinces" data-type="checkbox" data-options="provinces">{{#each put_provinces}}<span class="label label-info" id="province-{{id}}">{{value}}</span> {{/each}}</a>
             </td>
           </tr>
         {{/if}}

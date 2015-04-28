@@ -82,7 +82,11 @@
           break;
 
         case 'status':
-          popup = context.createInstance(ns.SwitchEditor,options);
+          popup = context.createInstance(ns.SwitchEditor, options);
+          break;
+
+        case 'checkbox':
+          popup = context.createInstance(ns.CheckboxEditor, options);
           break;
 
         default:

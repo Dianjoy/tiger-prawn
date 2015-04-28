@@ -14,7 +14,7 @@
       $(document).off('ajaxSuccess', this.onSuccess);
       tp.component.BaseList.prototype.remove.call(this);
     },
-    onSuccess: function (event, xhr, settings) {
+    onSuccess: function (event, xhr) {
       if (xhr.responseJSON && xhr.responseJSON.ad_comments) {
         this.collection.set(xhr.responseJSON.ad_comments);
         this.collection.trigger('sync');
