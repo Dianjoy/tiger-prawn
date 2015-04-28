@@ -2,7 +2,7 @@
 (function (ns) {
   var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{value}}</a>');
 
-  ns.SmartTable = Backbone.View.extend({
+  ns.SmartTable = ns.BaseList.extend({
     $context: null,
     fragment: '',
     events: {
@@ -18,7 +18,6 @@
       'sortupdate': 'sortUpdateHandler'
     },
     initialize: function (options) {
-      this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
       var init = this.$el.data();
       init.url = init.url.replace('{{API}}', tp.API);
       options = _.extend({
@@ -33,10 +32,7 @@
       this.options = tp.utils.decodeURLParam(init.filter);
 
       this.collection = tp.model.ListCollection.getInstance(options);
-      this.collection.on('add', this.collection_addHandler, this);
-      this.collection.on('change', this.collection_changeHandler, this);
-      this.collection.on('remove', this.collection_removeHandler, this);
-      this.collection.on('sync', this.collection_syncHandler, this);
+      ns.BaseList.prototype.initialize.call(this, {container: 'tbody'});
 
       // 通过页面中介来实现翻页等功能
       this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento();
@@ -94,22 +90,18 @@
       if (this.ranger) {
         this.ranger.remove();
       }
-      this.collection.off(null, null, this);
       this.model.off(null, null, this);
       tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
-      Backbone.View.prototype.remove.call(this);
+      ns.BaseList.prototype.remove.call(this);
     },
     render: function () {
-      this.$('.waiting').hide();
-      this.$('tbody').append(this.fragment);
-      this.fragment = '';
-      this.$el.removeClass('loading');
+      ns.BaseList.prototype.render.call(this);
       this.$context.trigger('table-rendered');
       // 排序
       if ('order' in this.model.changed || 'seq' in  this.model.changed) {
-        var tbody = this.$('tbody');
+        var container = this.container;
         this.collection.each(function (model) {
-          tbody.append(tbody.find('#' + model.id));
+          container.append(container.find('#' + model.id));
         });
       }
     },
@@ -145,31 +137,8 @@
         prepend: !!prepend
       });
     },
-    collection_addHandler: function (model, collection, options) {
-      this.fragment += this.template(model.toJSON());
-      if (options.immediately) {
-        var item = $(this.fragment);
-        item.attr('id', model.id || model.cid);
-        this.$('tbody')[options.prepend ? 'prepend' : 'append'](item);
-        this.fragment = '';
-      }
-    },
-    collection_changeHandler: function (model) {
-      var html = this.template(model.toJSON());
-      this.$('#' + (model.id || model.cid)).replaceWith(html);
-    },
-    collection_removeHandler: function (model, collection, options) {
-      var item = this.$('#' + (model.id || model.cid));
-      if (options.fadeOut) {
-        item.fadeOut(function () {
-          $(this).remove();
-        })
-      } else {
-        item.remove();
-      }
-    },
     collection_syncHandler: function () {
-      this.render();
+      ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
     },
     deleteButton_clickHandler: function (event) {

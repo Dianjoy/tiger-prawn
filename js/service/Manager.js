@@ -2,7 +2,7 @@
  * @overview 负责服务器数据交互
  */
 'use strict';
-;(function (ns) {
+(function (ns) {
   var manager = {
     $body: null,
     $me: null,
