@@ -27,7 +27,7 @@
     return value ? value.substr(start, length) : '';
   });
 
-  // text-collapse
+  // text-collapse，使用时需要{{{}}}
   h.registerHelper('text-collapse', function (value, length) {
     if (!value) {
       return '';
@@ -63,6 +63,14 @@
     } else {
       return options.inverse(this);
     }
+  });
+
+  // 包含
+  h.registerHelper('in', function (value, array, options) {
+    if (_.isArray(array) && array.indexOf(value) !== -1) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
   });
 
   // raw

@@ -1,6 +1,7 @@
-<div class="form-group select-button">
+<div class="form-group select-button select-button-group col-5">
   {{#each options}}
-  <input type="checkbox" name="{{prop}}" value="{{value}}" id="{{name}}-{{key}}">
-  <label for="editor-popup-input">{{value}}</label>
+  <input type="checkbox" name="{{../prop}}" value="{{key}}" id="{{../prop}}-{{key}}" {{#in key ../value}}checked{{/in}}>
+  <label for="{{../prop}}-{{key}}">{{value}}</label>
   {{/each}}
+  <hr>
 </div>

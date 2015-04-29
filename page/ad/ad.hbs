@@ -121,16 +121,12 @@
           <th>投放区域</th>
           <td>
             <a class="edit" href="#province_type" data-type="select" data-list="#province_type">{{pick province_type '全国' '分省'}}</a>
+            {{#if province_type}}
+            <hr>
+            <a class="edit" href="#put_provinces" data-type="checkbox" data-options="provinces">{{#each put_provinces}}<span class="label label-info">{{pick . ../provinces key='key' label='value'}}</span> {{/each}}</a>
+            {{/if}}
           </td>
         </tr>
-        {{#if province_type}}
-          <tr>
-            <th>&nbsp;</th>
-            <td>
-              <a class="edit" href="#put_provinces" data-type="checkbox" data-options="provinces">{{#each put_provinces}}<span class="label label-info" id="province-{{id}}">{{value}}</span> {{/each}}</a>
-            </td>
-          </tr>
-        {{/if}}
       </table>
     </div>
     {{#unless cp}}
