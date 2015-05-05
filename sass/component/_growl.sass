@@ -1,0 +1,110 @@
+
+@import "../define"
+@import "compass/css3/images"
+@import "compass/css3/box-shadow"
+@import "compass/css3/opacity"
+
+#growl
+  position: fixed
+  bottom: 50px
+  right: $gap
+  z-index: 1001
+  width: 300px
+  padding: 0
+  margin: 0
+  list-style: none
+  @include background-image(linear-gradient(to bottom, #5c5b5b, #353535))
+  border-radius: 4px
+
+  &:empty
+    display: none
+
+.growl-item
+  position: relative
+  padding: 10px 30px 13px 65px
+  color: #f0f0f0
+  font-size: 13px
+  font-weight: 500
+  background: transparent
+  text-shadow: 0 1px #111111
+  @include box-shadow(inset 0px 1px rgba(255, 255, 255, 0.13), inset 0px -1px rgba(0, 0, 0, 0.23), inset 48px 0px 0px rgba(0, 0, 0, 0.3), inset 46px 0px 0px rgba(255, 255, 255, 0.07))
+
+  .close
+    position: absolute
+    top: 5px
+    right: 10px
+    color: #000
+    outline: none !important
+    @include opacity(0.25)
+    text-shadow: none
+
+  &:hover .close
+    color: #fff
+    @include opacity(1)
+
+  a
+    color: #f0ad4e
+    text-decoration: none
+
+    &:hover
+      text-decoration: underline
+
+.growl-item-title
+  margin: 0 0 4px
+  font-weight: 600
+
+  &:empty
+    display: none
+
+.growl-item-inner:before
+  position: absolute
+  top: 15px
+  left: 18px
+  z-index: 20
+  display: block
+  content: " "
+  height: 13px
+  width: 13px
+  background-color: #999
+  @include box-shadow(inset 0px 1px 3px rgba(0, 0, 0, 0.3))
+  border-radius: 50%
+
+  .growl-danger &
+    background-color: #d9534f
+
+  .growl-info &
+    background-color: #3498db
+
+  .growl-success &
+    background-color: #5cb85c
+
+  .growl-warning &
+    background-color: #ff751a
+
+.growl-icon
+  position: absolute
+  top: 12px
+  left: 15px
+  z-index: 1000
+  width: 1em
+  font-size: 20px
+  text-align: center
+
+.growl-has-icon .growl-message-inner:before
+  display: none !important
+
+.growl-has-icon
+  .growl-icon
+    color: #bbb
+
+  .growl-success .growl-icon
+    color: #5cb85c
+
+  .growl-warning .growl-icon
+    color: #ff751a
+
+  .growl-danger .growl-icon
+    color: #d9534f
+
+  .growl-info .growl-icon
+    color: #3498db
