@@ -4,10 +4,12 @@
  */
 'use strict';
 (function (h) {
+  var slice = Array.prototype.slice
+    , pop = Array.prototype.pop;
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, options, params) {
     value = parseInt(value);
-    options = _.isArray(options) ? options : Array.prototype.slice.call(arguments, 1, -1);
+    options = _.isArray(options) ? options : slice.call(arguments, 1, -1);
     if (_.isArray(options) && _.isObject(options[0])) {
       var key = params.hash.key || 'id'
         , label = params.hash.label || 'label';
@@ -67,7 +69,11 @@
 
   // 包含
   h.registerHelper('in', function (value, array, options) {
-    if (_.isArray(array) && array.indexOf(value) !== -1) {
+    if (!_.isArray(array)) {
+      options = pop.call(arguments);
+      array = slice.call(arguments, 1);
+    }
+    if (array.indexOf(value) !== -1) {
       return options.fn(this);
     }
     return options.inverse(this);

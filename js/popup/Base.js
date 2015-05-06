@@ -30,6 +30,8 @@
         }
 
         ga('send', 'pageview', options.content);
+      } else {
+        this.onLoadComplete(options.content);
       }
       this.options = options;
       this.$el.modal(options);

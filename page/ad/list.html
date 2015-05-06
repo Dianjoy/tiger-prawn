@@ -62,17 +62,20 @@
       </td>
       <td data-title="状态">
         <i class="platform fa fa-{{pick ad_app_type '' 'android' 'apple'}}"></i>
-        {{#if is_ready}}
+        {{#in status 0 1 4}}
         {{#if set_status}}
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
         {{else if is_reject}}
         <a class="label status-{{status}} edit" href="#status" title="申请重审" data-type="status" data-active="申请重审" data-open="0" data-comment="message">被拒绝</a>
+        {{#with reject}}
+        <span class="popup label label-info" data-title="被拒绝原因" data-content="{{comment}} (by: {{author}} {{create_time}})" data-confirm="false" data-cancel="false">原因</span>
+        {{/with}}
         {{else}}
         <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线' '' '' '申请重审'}}" data-type="status" data-deactive="下线" data-active="上线" data-open="0" data-comment="message" data-refresh="true" data-template="ad/status-edit">{{pick status 'ON' 'OFF' '' '' '被拒绝'}}</a>
         {{/if}}
         {{else}}
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
-        {{/if}}
+        {{/in}}
         {{#if search_flag}}
         <span class="label label-default">ASO</span>
         {{/if}}
@@ -92,7 +95,7 @@
           {{#if is_resend}}
           <a href="page/ad/baobei.hbs" class="btn btn-info popup" title="重新发送报备邮件" data-id="{{id}}" data-confirm="提交" data-collection-id="ad"><i class="fa fa-envelope-o"></i></a>
           {{/if}}
-          {{#unless is_ready}}<button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>{{/unless}}
+          {{#in status 2 3 4}}<button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>{{/in}}
         </div>
       </td>
     </tr>

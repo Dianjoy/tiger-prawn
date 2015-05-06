@@ -7,10 +7,7 @@
 (function (ns) {
   'use strict';
   var popup
-    , editor
-    , popupDefault = {
-      isRemote: true
-    };
+    , editor;
 
   var Klass = Backbone.View.extend({
     $context: null,
@@ -42,13 +39,14 @@
     },
     popupButton_clickHandler: function (event) {
       var target = event.currentTarget
-        , options = _.extend({}, popupDefault, $(target).data());
+        , options = $(target).data();
       if (options.collectionId) {
         var collection = tp.model.ListCollection.getInstance(options)
         options.model = collection.get(options.id);
       }
       if (target.tagName.toLowerCase() === 'a') {
         options.content = target.href;
+        options.isRemote = true;
         options.title = options.title || target.title;
       }
       this.popup(options);
