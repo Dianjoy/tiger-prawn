@@ -12,7 +12,7 @@
       'dashboard': 'showDashboard'
     },
     showDashboard: function () {
-      this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
+      this.$body.load(tp.path + 'page/dashboard.hbs', new tp.model.Dashboard());
     },
     showUserPage: function (page) {
       if (page === 'logout') {

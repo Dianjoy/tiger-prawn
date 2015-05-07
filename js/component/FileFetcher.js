@@ -47,6 +47,7 @@
       alert(response.msg);
     },
     input_changeHandler: function (event) {
+      event.target.value = event.target.value.replace(/\s/g, '');
       var has_url = this.validate(event.target.value);
       this.$('.fetch-button')
         .toggleClass('btn-warning', has_url)
