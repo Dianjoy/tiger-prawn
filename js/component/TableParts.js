@@ -130,6 +130,8 @@
         start: start,
         end: end
       });
+      this.$('[name=start]').val(start);
+      this.$('[name=end]').val(end);
       this.$('.label').text(item.text());
       event.preventDefault();
     }
