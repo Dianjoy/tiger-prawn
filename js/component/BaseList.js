@@ -25,7 +25,7 @@
     },
     collection_addHandler: function (model, collection, options) {
       this.fragment += this.template(model.toJSON());
-      if (options.immediately) {
+      if (options && options.immediately) {
         var item = $(this.fragment);
         item.attr('id', model.id || model.cid);
         this.container[options.prepend ? 'prepend' : 'append'](item);

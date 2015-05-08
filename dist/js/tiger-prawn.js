@@ -23,10 +23,12 @@
   };
 }(Backbone));;
 (function (h) {
+  var slice = Array.prototype.slice
+    , pop = Array.prototype.pop;
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, options, params) {
     value = parseInt(value);
-    options = _.isArray(options) ? options : Array.prototype.slice.call(arguments, 1, -1);
+    options = _.isArray(options) ? options : slice.call(arguments, 1, -1);
     if (_.isArray(options) && _.isObject(options[0])) {
       var key = params.hash.key || 'id'
         , label = params.hash.label || 'label';
@@ -86,7 +88,11 @@
 
   // 包含
   h.registerHelper('in', function (value, array, options) {
-    if (_.isArray(array) && array.indexOf(value) !== -1) {
+    if (!_.isArray(array)) {
+      options = pop.call(arguments);
+      array = slice.call(arguments, 1);
+    }
+    if (array.indexOf(value) !== -1) {
       return options.fn(this);
     }
     return options.inverse(this);
@@ -123,7 +129,7 @@
       'dashboard': 'showDashboard'
     },
     showDashboard: function () {
-      this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
+      this.$body.load(tp.path + 'page/dashboard.hbs', new tp.model.Dashboard());
     },
     showUserPage: function (page) {
       if (page === 'logout') {
@@ -201,10 +207,7 @@
 
 ;
 (function (ns) {var popup
-    , editor
-    , popupDefault = {
-      isRemote: true
-    };
+    , editor;
 
   var Klass = Backbone.View.extend({
     $context: null,
@@ -236,13 +239,14 @@
     },
     popupButton_clickHandler: function (event) {
       var target = event.currentTarget
-        , options = _.extend({}, popupDefault, $(target).data());
+        , options = $(target).data();
       if (options.collectionId) {
         var collection = tp.model.ListCollection.getInstance(options)
         options.model = collection.get(options.id);
       }
       if (target.tagName.toLowerCase() === 'a') {
         options.content = target.href;
+        options.isRemote = true;
         options.title = options.title || target.title;
       }
       this.popup(options);
@@ -584,13 +588,8 @@
 
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
-    index: 0,
     url: tp.API + 'notice/',
     initialize: function () {
-      var storage = localStorage.getItem(tp.NOTICE_KEY);
-      if (storage) {
-        storage = json.parse(storage);
-      }
       this.on('sync', this.syncHandler, this);
       this.fetch = _.bind(this.fetch, this);
     },
@@ -617,7 +616,7 @@
     },
     syncHandler: function () {
       if (autoNext) {
-        //setTimeout(this.fetch, TIMEOUT);
+        setTimeout(this.fetch, TIMEOUT);
       }
     }
   });
@@ -1003,7 +1002,7 @@
           });
           continue;
         }
-        var items = this.$('[name= ' + key + ']').val(value);
+        var items = this.$('[name= ' + key + ']:not([type=radio])').val(value);
         try {
           items.length > 0 || this.$('[name=' + key + '][value=' + value + '], [name="' + key + '[]"][value=' + value + ']').prop('checked', true);
         } catch (e) {
@@ -1142,7 +1141,8 @@
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
-      this.collection.on('sync reset', this.collection_syncHandler, this);
+      this.collection.on('sync', this.collection_syncHandler, this);
+      this.collection.on('reset', this.collection_resetHandler, this);
     },
     remove: function () {
       this.collection.off(null, null, this);
@@ -1156,7 +1156,7 @@
     },
     collection_addHandler: function (model, collection, options) {
       this.fragment += this.template(model.toJSON());
-      if (options.immediately) {
+      if (options && options.immediately) {
         var item = $(this.fragment);
         item.attr('id', model.id || model.cid);
         this.container[options.prepend ? 'prepend' : 'append'](item);
@@ -1176,6 +1176,13 @@
       } else {
         item.remove();
       }
+    },
+    collection_resetHandler: function () {
+      this.container.empty();
+      this.collection.each(function (model) {
+        this.collection_addHandler(model);
+      }, this);
+      this.render();
     },
     collection_syncHandler: function () {
       this.render();
@@ -1227,6 +1234,7 @@
       alert(response.msg);
     },
     input_changeHandler: function (event) {
+      event.target.value = event.target.value.replace(/\s/g, '');
       var has_url = this.validate(event.target.value);
       this.$('.fetch-button')
         .toggleClass('btn-warning', has_url)
@@ -1362,6 +1370,8 @@
         start: start,
         end: end
       });
+      this.$('[name=start]').val(start);
+      this.$('[name=end]').val(end);
       this.$('.label').text(item.text());
       event.preventDefault();
     }
@@ -1551,6 +1561,8 @@
         }
 
         ga('send', 'pageview', options.content);
+      } else {
+        this.onLoadComplete(options.content);
       }
       this.options = options;
       this.$el.modal(options);
