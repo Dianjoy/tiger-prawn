@@ -10,7 +10,8 @@
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
-      this.collection.on('sync reset', this.collection_syncHandler, this);
+      this.collection.on('sync', this.collection_syncHandler, this);
+      this.collection.on('reset', this.collection_resetHandler, this);
     },
     remove: function () {
       this.collection.off(null, null, this);
@@ -44,6 +45,13 @@
       } else {
         item.remove();
       }
+    },
+    collection_resetHandler: function () {
+      this.container.empty();
+      this.collection.each(function (model) {
+        this.collection_addHandler(model);
+      }, this);
+      this.render();
     },
     collection_syncHandler: function () {
       this.render();
