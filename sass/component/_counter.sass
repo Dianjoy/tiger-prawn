@@ -1,0 +1,6 @@
+.counter
+  counter-reset: tp-counter
+
+  .counter-item::before
+    counter-increment: tp-counter
+    content: counter(tp-counter)
