@@ -206,7 +206,7 @@
 }(Nervenet.createNameSpace('tp.service')));
 
 ;
-(function (ns) {var popup
+(function (ns) {var popup
     , editor;
 
   var Klass = Backbone.View.extend({
@@ -497,7 +497,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-;(function (ns) {var collections = {}
+;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
         if ('code' in response && 'msg' in response && 'data' in response) {
@@ -1261,6 +1261,7 @@
     },
     remove: function () {
       this.collection.off(null, null, this);
+      this.model = this.collection = null;
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
@@ -1326,7 +1327,8 @@
     },
     initialize: function (options) {
       this.$('[type=date]').datetimepicker({format: DATE_FORMAT});
-      this.render(options);
+      var range = this.render(options);
+      this.trigger(range, {silent: true});
     },
     render: function (options) {
       // 默认显示一个月
@@ -1336,14 +1338,19 @@
       }, _.pick(options, 'start', 'end'));
       range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
       range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
-      this.model.set(range, {silent: true});
       this.$('[name=start]').val(range.start);
       this.$('[name=end]').val(range.end);
+      return range;
     },
     remove: function () {
       this.stopListening();
       this.el = this.$el = this.model = null;
       return this;
+    },
+    trigger: function (range, options) {
+      options = options || {};
+      options.reset = true;
+      this.model.set(range, options);
     },
     input_clickHandler: function (event) {
       event.stopPropagation();
@@ -1353,7 +1360,7 @@
         , end = this.$('[name=end]').val();
       this.$('.shortcut').removeClass('active');
       this.$('.label').text(start + ' - ' + end);
-      this.model.set({
+      this.trigger({
         start: start,
         end: end
       });
@@ -1364,15 +1371,9 @@
         , end = item.data('end');
       item.addClass('active')
         .siblings().removeClass('active');
-      start = moment().add(start, 'days').format(DATE_FORMAT);
-      end = moment().add(end, 'days').format(DATE_FORMAT);
-      this.model.set({
-        start: start,
-        end: end
-      });
-      this.$('[name=start]').val(start);
-      this.$('[name=end]').val(end);
       this.$('.label').text(item.text());
+      var range = this.render({start: start, end: end});
+      this.trigger(range);
       event.preventDefault();
     }
   });
@@ -1387,6 +1388,7 @@
     },
     remove: function () {
       this.collection.off(null, null, this);
+      this.collection = this.model = null;
       Backbone.View.prototype.remove.call(this);
     },
     collection_syncHandler: function () {
@@ -1404,6 +1406,37 @@
         this.spinner = this.spinner || $(spinner);
         this.spinner.insertAfter(this.$el);
       }
+    }
+  });
+
+  ns.Filter = Backbone.View.extend({
+    events: {
+      'change': 'changeHandler'
+    },
+    initialize: function () {
+      this.model.on('change', this.model_changeHandler, this);
+      this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off(null, null, this);
+      this.collection = this.model = null;
+      Backbone.View.prototype.remove.call(this);
+    },
+    collection_syncHandler: function () {
+      this.$('.fa-spin').remove();
+      this.$('select').prop('disabled', false);
+    },
+    model_changeHandler: function () {
+      this.$('select').prop('disabled', true);
+    },
+    changeHandler: function (event) {
+      var target = event.target
+        , name = target.name
+        , value = target.value;
+      this.model.set(name, value, {
+        reset: true
+      });
+      $(target).after(spinner);
     }
   });
 }(Nervenet.createNameSpace('tp.component.table')));;
@@ -2220,7 +2253,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-;(function (ns) {var init = {
+;(function (ns) {var init = {
     events: {
       'change .auto-submit': 'autoSubmit_Handler',
       'click .add-row-button': 'addRowButton_clickHandler'
@@ -2254,7 +2287,6 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
-    fragment: '',
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
@@ -2264,8 +2296,7 @@
       'click .order': 'order_clickHandler',
       'change select.edit': 'select_changeHandler',
       'change .stars input': 'star_changeHandler',
-      'change .status-button': 'statusButton_clickHandler',
-      'sortupdate': 'sortUpdateHandler'
+      'change .status-button': 'statusButton_clickHandler'
     },
     initialize: function (options) {
       var init = this.$el.data();
@@ -2274,7 +2305,6 @@
         pagesize: 10,
         autoFetch: true
       }, options, init);
-      this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
       if (init.model) {
         options.model = Nervenet.parseNamespace(init.model);
       }
@@ -2323,10 +2353,19 @@
         }));
       }
 
+      // 删选器
+      if ('filter' in init) {
+        this.filter = new ns.Filter({
+          el: init.filter,
+          model: this.model,
+          collection: this.collection
+        });
+      }
+
       if (options.autoFetch) {
-        this.filter = _.extend(this.model.toJSON(), this.options);
+        var filter = _.extend(this.model.toJSON(), this.options);
         this.collection.fetch({
-          data: this.filter
+          data: filter
         });
       }
     },
@@ -2339,6 +2378,9 @@
       }
       if (this.ranger) {
         this.ranger.remove();
+      }
+      if (this.filter) {
+        this.filter.remove();
       }
       this.model.off(null, null, this);
       tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
@@ -2382,7 +2424,7 @@
     },
     addRowButton_clickHandler: function (event) {
       var prepend = $(event.currentTarget).data('prepend');
-      this.collection.add(this.model.pick(this.include), {
+      this.collection.add(null, {
         immediately: true,
         prepend: !!prepend
       });
@@ -2429,11 +2471,12 @@
         }, data);
       options.type = data.type || 'short-text';
       this.$context.trigger('edit-model', model, prop, options);
+      event.stopPropagation();
       event.preventDefault();
     },
-    model_changeHandler: function (model) {
-      this.filter = _.extend(model.toJSON(), this.options);
-      this.collection.fetch({data: this.filter});
+    model_changeHandler: function (model, options) {
+      var filter = _.extend(model.toJSON(), this.options, options);
+      this.collection.fetch({data: filter});
       this.$el.addClass('loading');
       model.warting = true;
     },
@@ -2453,7 +2496,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.collection.fetch(this.filter);
+      this.collection.fetch(_.extend(model.toJSON(), this.options));
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)
@@ -2490,22 +2533,6 @@
       this.model.unset(path[0]);
       target.remove();
       event.preventDefault();
-    },
-    sortUpdateHandler: function (event, ui) {
-      var item = ui.item
-        , index = item.index()
-        , id = item.attr('id')
-        , model = this.collection.get(id)
-        , curr = this.collection.indexOf(model)
-        , start = this.collection.pagesize * this.model.get('page') || 0;
-      this.collection.models.splice(curr, 1);
-      this.collection.models.splice(index, 0, model);
-      this.collection.trigger('sort', model, index);
-      this.collection.each(function (model, i) {
-        if (model.changedAttributes({seq: start + i})) {
-          model.save({seq: start + i}, {wait: true, patch: true});
-        }
-      });
     }
   });
 }(Nervenet.createNameSpace('tp.component')));}());

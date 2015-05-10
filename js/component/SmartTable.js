@@ -4,7 +4,6 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
-    fragment: '',
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
@@ -14,8 +13,7 @@
       'click .order': 'order_clickHandler',
       'change select.edit': 'select_changeHandler',
       'change .stars input': 'star_changeHandler',
-      'change .status-button': 'statusButton_clickHandler',
-      'sortupdate': 'sortUpdateHandler'
+      'change .status-button': 'statusButton_clickHandler'
     },
     initialize: function (options) {
       var init = this.$el.data();
@@ -24,7 +22,6 @@
         pagesize: 10,
         autoFetch: true
       }, options, init);
-      this.include = init.include ? init.include.split(',') : null; // 每个model应该继承的属性
       if (init.model) {
         options.model = Nervenet.parseNamespace(init.model);
       }
@@ -73,10 +70,19 @@
         }));
       }
 
+      // 删选器
+      if ('filter' in init) {
+        this.filter = new ns.Filter({
+          el: init.filter,
+          model: this.model,
+          collection: this.collection
+        });
+      }
+
       if (options.autoFetch) {
-        this.filter = _.extend(this.model.toJSON(), this.options);
+        var filter = _.extend(this.model.toJSON(), this.options);
         this.collection.fetch({
-          data: this.filter
+          data: filter
         });
       }
     },
@@ -89,6 +95,9 @@
       }
       if (this.ranger) {
         this.ranger.remove();
+      }
+      if (this.filter) {
+        this.filter.remove();
       }
       this.model.off(null, null, this);
       tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
@@ -132,7 +141,7 @@
     },
     addRowButton_clickHandler: function (event) {
       var prepend = $(event.currentTarget).data('prepend');
-      this.collection.add(this.model.pick(this.include), {
+      this.collection.add(null, {
         immediately: true,
         prepend: !!prepend
       });
@@ -179,11 +188,12 @@
         }, data);
       options.type = data.type || 'short-text';
       this.$context.trigger('edit-model', model, prop, options);
+      event.stopPropagation();
       event.preventDefault();
     },
-    model_changeHandler: function (model) {
-      this.filter = _.extend(model.toJSON(), this.options);
-      this.collection.fetch({data: this.filter});
+    model_changeHandler: function (model, options) {
+      var filter = _.extend(model.toJSON(), this.options, options);
+      this.collection.fetch({data: filter});
       this.$el.addClass('loading');
       model.warting = true;
     },
@@ -203,7 +213,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.collection.fetch(this.filter);
+      this.collection.fetch(_.extend(model.toJSON(), this.options));
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)
@@ -240,22 +250,6 @@
       this.model.unset(path[0]);
       target.remove();
       event.preventDefault();
-    },
-    sortUpdateHandler: function (event, ui) {
-      var item = ui.item
-        , index = item.index()
-        , id = item.attr('id')
-        , model = this.collection.get(id)
-        , curr = this.collection.indexOf(model)
-        , start = this.collection.pagesize * this.model.get('page') || 0;
-      this.collection.models.splice(curr, 1);
-      this.collection.models.splice(index, 0, model);
-      this.collection.trigger('sort', model, index);
-      this.collection.each(function (model, i) {
-        if (model.changedAttributes({seq: start + i})) {
-          model.save({seq: start + i}, {wait: true, patch: true});
-        }
-      });
     }
   });
 }(Nervenet.createNameSpace('tp.component')));

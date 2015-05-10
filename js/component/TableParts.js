@@ -21,6 +21,7 @@
     },
     remove: function () {
       this.collection.off(null, null, this);
+      this.model = this.collection = null;
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
@@ -86,7 +87,8 @@
     },
     initialize: function (options) {
       this.$('[type=date]').datetimepicker({format: DATE_FORMAT});
-      this.render(options);
+      var range = this.render(options);
+      this.trigger(range, {silent: true});
     },
     render: function (options) {
       // 默认显示一个月
@@ -96,14 +98,19 @@
       }, _.pick(options, 'start', 'end'));
       range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
       range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
-      this.model.set(range, {silent: true});
       this.$('[name=start]').val(range.start);
       this.$('[name=end]').val(range.end);
+      return range;
     },
     remove: function () {
       this.stopListening();
       this.el = this.$el = this.model = null;
       return this;
+    },
+    trigger: function (range, options) {
+      options = options || {};
+      options.reset = true;
+      this.model.set(range, options);
     },
     input_clickHandler: function (event) {
       event.stopPropagation();
@@ -113,7 +120,7 @@
         , end = this.$('[name=end]').val();
       this.$('.shortcut').removeClass('active');
       this.$('.label').text(start + ' - ' + end);
-      this.model.set({
+      this.trigger({
         start: start,
         end: end
       });
@@ -124,15 +131,9 @@
         , end = item.data('end');
       item.addClass('active')
         .siblings().removeClass('active');
-      start = moment().add(start, 'days').format(DATE_FORMAT);
-      end = moment().add(end, 'days').format(DATE_FORMAT);
-      this.model.set({
-        start: start,
-        end: end
-      });
-      this.$('[name=start]').val(start);
-      this.$('[name=end]').val(end);
       this.$('.label').text(item.text());
+      var range = this.render({start: start, end: end});
+      this.trigger(range);
       event.preventDefault();
     }
   });
@@ -147,6 +148,7 @@
     },
     remove: function () {
       this.collection.off(null, null, this);
+      this.collection = this.model = null;
       Backbone.View.prototype.remove.call(this);
     },
     collection_syncHandler: function () {
@@ -164,6 +166,37 @@
         this.spinner = this.spinner || $(spinner);
         this.spinner.insertAfter(this.$el);
       }
+    }
+  });
+
+  ns.Filter = Backbone.View.extend({
+    events: {
+      'change': 'changeHandler'
+    },
+    initialize: function () {
+      this.model.on('change', this.model_changeHandler, this);
+      this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off(null, null, this);
+      this.collection = this.model = null;
+      Backbone.View.prototype.remove.call(this);
+    },
+    collection_syncHandler: function () {
+      this.$('.fa-spin').remove();
+      this.$('select').prop('disabled', false);
+    },
+    model_changeHandler: function () {
+      this.$('select').prop('disabled', true);
+    },
+    changeHandler: function (event) {
+      var target = event.target
+        , name = target.name
+        , value = target.value;
+      this.model.set(name, value, {
+        reset: true
+      });
+      $(target).after(spinner);
     }
   });
 }(Nervenet.createNameSpace('tp.component.table')));
