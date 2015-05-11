@@ -206,7 +206,7 @@
 }(Nervenet.createNameSpace('tp.service')));
 
 ;
-(function (ns) {var popup
+(function (ns) {var popup
     , editor;
 
   var Klass = Backbone.View.extend({
@@ -497,7 +497,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-;(function (ns) {var collections = {}
+;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
         if ('code' in response && 'msg' in response && 'data' in response) {
@@ -2253,7 +2253,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-;(function (ns) {var init = {
+;(function (ns) {var init = {
     events: {
       'change .auto-submit': 'autoSubmit_Handler',
       'click .add-row-button': 'addRowButton_clickHandler'
@@ -2355,7 +2355,7 @@
 
       // 删选器
       if ('filter' in init) {
-        this.filter = new ns.Filter({
+        this.filter = new ns.table.Filter({
           el: init.filter,
           model: this.model,
           collection: this.collection

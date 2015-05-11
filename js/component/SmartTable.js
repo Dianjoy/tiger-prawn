@@ -72,7 +72,7 @@
 
       // 删选器
       if ('filter' in init) {
-        this.filter = new ns.Filter({
+        this.filter = new ns.table.Filter({
           el: init.filter,
           model: this.model,
           collection: this.collection
