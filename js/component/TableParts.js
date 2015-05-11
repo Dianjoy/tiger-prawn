@@ -176,6 +176,13 @@
     initialize: function () {
       this.model.on('change', this.model_changeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
+      this.render();
+    },
+    render: function () {
+      var data = this.model.toJSON();
+      for (var prop in data) {
+        this.$('[name=' + prop + ']').val(data[prop]);
+      }
     },
     remove: function () {
       this.collection.off(null, null, this);

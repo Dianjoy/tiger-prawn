@@ -26,7 +26,7 @@
         options.model = Nervenet.parseNamespace(init.model);
       }
       // 特定的过滤器
-      this.options = tp.utils.decodeURLParam(init.filter);
+      this.params = tp.utils.decodeURLParam(init.params);
 
       this.collection = tp.model.ListCollection.getInstance(options);
       ns.BaseList.prototype.initialize.call(this, {container: 'tbody'});
@@ -80,9 +80,8 @@
       }
 
       if (options.autoFetch) {
-        var filter = _.extend(this.model.toJSON(), this.options);
         this.collection.fetch({
-          data: filter
+          data: _.extend(this.model.toJSON(), this.params)
         });
       }
     },
@@ -192,8 +191,9 @@
       event.preventDefault();
     },
     model_changeHandler: function (model, options) {
-      var filter = _.extend(model.toJSON(), this.options, options);
-      this.collection.fetch({data: filter});
+      options = options || {};
+      options.data = _.extend(model.toJSON(), this.params);
+      this.collection.fetch(options);
       this.$el.addClass('loading');
       model.warting = true;
     },
@@ -213,7 +213,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.collection.fetch(_.extend(model.toJSON(), this.options));
+      this.collection.fetch({data: _.extend(model.toJSON(), this.params)});
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)
