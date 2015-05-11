@@ -357,6 +357,24 @@
   }
 }(Nervenet.createNameSpace('tp.controller')));;
 (function (ns) {
+  ns.addModelCommand = function (options) {
+    var collection = tp.model.ListCollection.getInstance(options)
+      , model = new collection.model(null, options);
+    options.isRemote = true;
+    options.content = 'page/' + options.template;
+    model.options = collection.options;
+    model.urlRoot = collection.url;
+    options.model = model;
+    var popup = tp.popup.Manager.popup(options);
+    popup.on('success', function () {
+      collection.add(model, {
+        immediately: true,
+        prepend: true
+      });
+    });
+  };
+}(Nervenet.createNameSpace('tp.controller')));;
+(function (ns) {
   var OWNER = 'ad_owner'
     , CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
@@ -2050,6 +2068,9 @@
     },
     addButton_clickHandler: function (event) {
       var options = $(event.currentTarget).data();
+      if (!options.title && event.currentTarget.title) {
+        options.title = event.currentTarget.title;
+      }
       options.collectionId = event.currentTarget.hash.substr(1);
       this.$context.trigger('add-model', options);
       event.preventDefault();

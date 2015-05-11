@@ -71,6 +71,9 @@
     },
     addButton_clickHandler: function (event) {
       var options = $(event.currentTarget).data();
+      if (!options.title && event.currentTarget.title) {
+        options.title = event.currentTarget.title;
+      }
       options.collectionId = event.currentTarget.hash.substr(1);
       this.$context.trigger('add-model', options);
       event.preventDefault();

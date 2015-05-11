@@ -4,10 +4,10 @@
 'use strict';
 (function (ns) {
   ns.addModelCommand = function (options) {
-    var collection = tp.model.ListCollection.createInstance(null, options)
+    var collection = tp.model.ListCollection.getInstance(options)
       , model = new collection.model(null, options);
     options.isRemote = true;
-    options.content = tp.path + 'page/' + options.template;
+    options.content = 'page/' + options.template;
     model.options = collection.options;
     model.urlRoot = collection.url;
     options.model = model;
