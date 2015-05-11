@@ -85,7 +85,14 @@
       </td>
       <td data-title="创建时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td data-title="变更时间"><time datetime="{{status_time}}">{{moment status_time}}</time></td>
-      <td data-title="备注"><a href="#others" data-type="long-text" class="edit">{{{text-collapse others 30}}}</a></td>
+      <td data-title="备注">
+        <a href="#others" data-type="long-text" class="edit">
+          {{#each cm_others}}
+            备注：{{comment}}；创建时间：{{create_time}}；状态：{{status}}；创建人：{{author}}；
+            处理人：{{handle}}；处理时间：{{solve_time}}<br/>
+          {{/each}}
+        </a>
+      </td>
       <td data-title="操作">
         <div class="btn-group">
           <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>

@@ -197,7 +197,13 @@
     <div class="alert alert-info">
       <h4>广告备注</h4>
       <p>
-        <a href="#others" class="edit" data-type="long-text">{{others}}</a></p>
+        <a href="#others" class="edit" data-type="long-text">
+          {{#each cm_others}}
+            备注：{{comment}}；创建时间：{{create_time}}；状态：{{status}}；创建人：{{author}}；
+            处理人：{{handle}}；处理时间：{{solve_time}}<br/>
+          {{/each}}
+        </a>
+      </p>
     </div>
   </div>
 </div>
