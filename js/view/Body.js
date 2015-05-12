@@ -16,7 +16,7 @@
       this.model.on('change:fullname', this.model_nameChangeHandler, this);
     },
     clear: function () {
-      tp.component.Manager.clear(this.$el);
+      tp.component.Manager.clear(this.container);
     },
     createSidebar: function () {
       this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());

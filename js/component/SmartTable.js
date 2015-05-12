@@ -99,6 +99,7 @@
         this.filter.remove();
       }
       this.model.off(null, null, this);
+      this.collection.off(null, null, this);
       tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
       ns.BaseList.prototype.remove.call(this);
     },
