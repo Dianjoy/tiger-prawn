@@ -43,6 +43,7 @@
         if (this.isLoading) {
           return;
         }
+        options = options || {};
         if (options.data) {
           options.data.pagesize = this.pagesize;
         } else {

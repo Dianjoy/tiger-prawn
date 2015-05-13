@@ -196,14 +196,16 @@
 
     <div class="alert alert-info">
       <h4>广告备注</h4>
-      <p>
-        <a href="#others" class="edit" data-type="long-text">
-          {{#each cm_others}}
-            备注：{{comment}}；创建时间：{{create_time}}；状态：{{status}}；创建人：{{author}}；
-            处理人：{{handle}}；处理时间：{{solve_time}}<br/>
-          {{/each}}
-        </a>
-      </p>
+      <p>{{others}}</p>
+      <ul>
+        {{#each cm_others}}
+          <li>{{comment}}；<small class="text-muted"><time datetime="{{create_time}}">{{moment create_time}}</time></small>
+          {{#if status}}<br><span class="text-success fa fa-check">{{handle}} <small class="text-muted"><time datetime="{{solve_time}}">{{moment solve_time}}</time></small></span>{{/if}}<br/>
+        {{/each}}</li>
+      </ul>
+      <a href="#comment" class="edit btn btn-primary btn-sm" data-type="long-text">
+        <i class="fa fa-comment"></i> 添加备注
+      </a>
     </div>
   </div>
 </div>
