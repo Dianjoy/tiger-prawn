@@ -23,4 +23,7 @@
 
   // 起始页面，登录后自动跳转的页面
   ns.startPage = '';
+
+  // 启动路径，这个bug终于修了么……
+  ns.BASE = '/tiger-prawn';
 }(Nervenet.createNameSpace('tp')));

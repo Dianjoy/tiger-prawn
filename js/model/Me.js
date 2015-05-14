@@ -23,7 +23,7 @@
         var route;
         if (!Backbone.History.started) {
           route = Backbone.history.start({
-            root: '/tiger-prawn/'
+            root: tp.BASE
           });
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
@@ -50,7 +50,7 @@
       this.$body.start();
       location.hash = '#/user/login';
       Backbone.history.start({
-        root: '/tiger-prawn'
+        root: tp.BASE
       });
     }
   });
