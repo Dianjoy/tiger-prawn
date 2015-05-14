@@ -27,7 +27,7 @@
           });
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
-          location.hash = '#/dashboard';
+          location.hash = tp.startPage || '#/dashboard';
         }
       } else {
         if (this.$body.isStart && location.hash !== '#/user/logout') {

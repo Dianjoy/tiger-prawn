@@ -15,7 +15,12 @@
     }
   };
 
+  // 项目名称，主要用于生成key
   ns.PROJECT = 'ad-diy';
 
+  // 通知的key
   ns.NOTICE_KEY = 'tiger-prawn';
+
+  // 起始页面，登录后自动跳转的页面
+  ns.startPage = '';
 }(Nervenet.createNameSpace('tp')));
