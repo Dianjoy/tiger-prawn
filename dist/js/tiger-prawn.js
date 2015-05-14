@@ -129,7 +129,7 @@
       'dashboard': 'showDashboard'
     },
     showDashboard: function () {
-      this.$body.load(tp.path + 'page/dashboard.hbs', new tp.model.Dashboard());
+      this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
     },
     showUserPage: function (page) {
       if (page === 'logout') {
@@ -149,37 +149,38 @@
   });
 }(Nervenet.createNameSpace('tp.router')));;
 (function (ns) {
+  var defaults = {
+    dataType: 'json',
+    type: 'post',
+    cache: false,
+    xhrFields: {
+      withCredentials: true
+    }
+  };
   var manager = {
     $body: null,
     $me: null,
     call: function (url, data, options) {
-      options = options || {};
-      var self = this
-        , onSuccess = options.success || this.onSuccess
-        , onError = options.error || this.onError
-        , context = options.context;
-      $.ajax({
+      options = _.extend({
         url: url,
-        data: data,
-        dataType: 'json',
-        type: options.method || 'post',
-        cache: false,
-        xhrFields: {
-          withCredentials: true
-        },
-        success: function (response) {
-          if (response.code === 0) {
-            onSuccess.call(context, response);
-            self.postHandle(response);
-            self.trigger('complete:call', response);
-          } else {
-            onError.call(context, response);
-          }
-        },
-        error: function (xhr, status, err) {
-          onError.call(context, xhr, status, err);
+        data: data
+      }, defaults, options);
+      var self = this
+        , error = options.error || this.onError
+        , success = options.success || this.onSuccess;
+      options.success = function (response) {
+        if (response.code === 0) {
+          self.postHandle(response);
+          success.call(options.context, response);
+          self.trigger('complete:call', response);
+        } else {
+          error(response);
         }
-      });
+      };
+      options.error = function (xhr, status, err) {
+        error.call(options.context, xhr, status, err);
+      };
+      $.ajax(options);
     },
     postHandle: function (response) {
       // 以后可以扩展成循环，现在先逐个添加好了
@@ -197,7 +198,6 @@
       console.log(loaded / total);
     },
     onSuccess: function (response) {
-      this.trigger('complete:upload', response);
       console.log('success', response);
     }
   };
@@ -487,7 +487,7 @@
           });
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
-          location.hash = '#/dashboard';
+          location.hash = tp.startPage || '#/dashboard';
         }
       } else {
         if (this.$body.isStart && location.hash !== '#/user/logout') {
@@ -670,6 +670,9 @@
 }(Nervenet.createNameSpace('tp.model')));;
 ;(function (ns) {
   ns.DataSyncView = Backbone.View.extend({
+    initialize: function () {
+      this.submit = this.$('button.btn-primary');
+    },
     displayProcessing: function () {
       this.$el.addClass('processing');
       this.submit
@@ -1648,17 +1651,17 @@
     },
     closeButton_clickHandler: function () {
       this.$el.modal('hide');
-      this.trigger('cancel');
+      this.trigger('cancel', this);
     },
     form_successHandler: function () {
       this.hide();
-      this.trigger('success')
+      this.trigger('success');
     },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {
         this.$el.modal('hide');
       }
-      this.trigger('confirm');
+      this.trigger('confirm', this);
     },
     template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
@@ -1667,6 +1670,7 @@
     },
     hiddenHandler: function () {
       this.remove();
+      this.trigger('hidden', this);
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13 && event.ctrlKey) {

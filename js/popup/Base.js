@@ -58,17 +58,17 @@
     },
     closeButton_clickHandler: function () {
       this.$el.modal('hide');
-      this.trigger('cancel');
+      this.trigger('cancel', this);
     },
     form_successHandler: function () {
       this.hide();
-      this.trigger('success')
+      this.trigger('success');
     },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {
         this.$el.modal('hide');
       }
-      this.trigger('confirm');
+      this.trigger('confirm', this);
     },
     template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
@@ -77,6 +77,7 @@
     },
     hiddenHandler: function () {
       this.remove();
+      this.trigger('hidden', this);
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13 && event.ctrlKey) {

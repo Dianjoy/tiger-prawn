@@ -4,6 +4,9 @@
  */
 ;(function (ns) {
   ns.DataSyncView = Backbone.View.extend({
+    initialize: function () {
+      this.submit = this.$('button.btn-primary');
+    },
     displayProcessing: function () {
       this.$el.addClass('processing');
       this.submit

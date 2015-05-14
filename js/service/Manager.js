@@ -3,37 +3,38 @@
  */
 'use strict';
 (function (ns) {
+  var defaults = {
+    dataType: 'json',
+    type: 'post',
+    cache: false,
+    xhrFields: {
+      withCredentials: true
+    }
+  };
   var manager = {
     $body: null,
     $me: null,
     call: function (url, data, options) {
-      options = options || {};
-      var self = this
-        , onSuccess = options.success || this.onSuccess
-        , onError = options.error || this.onError
-        , context = options.context;
-      $.ajax({
+      options = _.extend({
         url: url,
-        data: data,
-        dataType: 'json',
-        type: options.method || 'post',
-        cache: false,
-        xhrFields: {
-          withCredentials: true
-        },
-        success: function (response) {
-          if (response.code === 0) {
-            onSuccess.call(context, response);
-            self.postHandle(response);
-            self.trigger('complete:call', response);
-          } else {
-            onError.call(context, response);
-          }
-        },
-        error: function (xhr, status, err) {
-          onError.call(context, xhr, status, err);
+        data: data
+      }, defaults, options);
+      var self = this
+        , error = options.error || this.onError
+        , success = options.success || this.onSuccess;
+      options.success = function (response) {
+        if (response.code === 0) {
+          self.postHandle(response);
+          success.call(options.context, response);
+          self.trigger('complete:call', response);
+        } else {
+          error(response);
         }
-      });
+      };
+      options.error = function (xhr, status, err) {
+        error.call(options.context, xhr, status, err);
+      };
+      $.ajax(options);
     },
     postHandle: function (response) {
       // 以后可以扩展成循环，现在先逐个添加好了
@@ -51,7 +52,6 @@
       console.log(loaded / total);
     },
     onSuccess: function (response) {
-      this.trigger('complete:upload', response);
       console.log('success', response);
     }
   };
