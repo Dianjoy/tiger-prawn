@@ -17,11 +17,11 @@
   <tbody>
   <script type="text/x-handlebars-template">
     <tr id="{{pack_name}}">
-      <td>{{channel}} {{ad_name}} {{cid}}</td>
+      <td>{{ad_name}}</td>
       <td>{{pack_name}}</td>
       <td>
         {{#each comments}}
-        {{comment}} <small>（{{author}}：<time datetime="{{create_time}}" class="text-muted">{{moment create_time}}</time>）</small>
+        {{comment}} <small>（{{author}}：<time datetime="{{create_time}}" class="text-muted">{{moment create_time}}</time>）</small><br>
         {{/each}}
       </td>
     </tr>
