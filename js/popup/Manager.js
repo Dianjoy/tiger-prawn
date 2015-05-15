@@ -24,9 +24,10 @@
       }
     },
     popup: function (options) {
-      var popup = $(this.template(options));
+      var popup = $(this.template(options))
+        , klass = Nervenet.parseNamespace(options.popup) || ns.Base;
       this.$el.append(popup);
-      popup = this.$context.createInstance(ns.Base, _.extend({
+      popup = this.$context.createInstance(klass, _.extend({
         el: popup
       }, options));
       return popup;

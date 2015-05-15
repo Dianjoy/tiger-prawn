@@ -16,8 +16,7 @@
     },
     onSuccess: function (event, xhr) {
       if (xhr.responseJSON && xhr.responseJSON.ad_comments) {
-        this.collection.set(xhr.responseJSON.ad_comments);
-        this.collection.trigger('sync');
+        this.collection.reset(xhr.responseJSON.ad_comments);
         this.$el.toggleClass('hide', this.collection.length === 0);
       }
     }

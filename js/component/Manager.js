@@ -20,7 +20,7 @@
       el.data('components', components);
       el.popover({
         html: true,
-        selector: '.has-popover'
+        selector: '[data-type=popover]'
       });
 
       // 自动初始化组件
