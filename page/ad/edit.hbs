@@ -6,7 +6,7 @@
     <legend>请先上传安装包，我们会从中抓取广告信息。</legend>
     <div class="form-group">
       <label class="col-sm-2 control-label">分析用安装包</label>
-      <div class="col-sm-4 uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="*.ipa" id="app-uploader" data-name="ad_url">
+      <div class="col-sm-6 col-md-4 uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="*.ipa" id="app-uploader" data-name="ad_url">
         <div class="btn-group su-tabs">
           <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
           <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络地址</button>
@@ -29,7 +29,7 @@
     <legend>请先上传安装包，或填入抓取链接</legend>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="ad_url">广告链接</label>
-      <div class="col-sm-4 uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="*.apk" id="app-uploader" data-name="ad_url">
+      <div class="col-sm-6 col-md-5 uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="*.apk" id="app-uploader" data-name="ad_url">
         <div class="btn-group su-tabs">
           <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
           <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络地址</button>
@@ -333,16 +333,18 @@
   <fieldset>
     <a name="channel-area"></a>
     <legend>渠道信息</legend>
+    {{#if sales}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="owner">负责人</label>
       <div class="col-sm-4 col-xs-6">
-        <select class="form-control" name="owner">
+        <select class="form-control" name="owner" id="owner">
           {{#each sales}}
           <option value="{{key}}">{{value}}</option>
           {{/each}}
         </select>
       </div>
     </div>
+    {{/if}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="channel">渠道名称</label>
       <div class="col-sm-10">
