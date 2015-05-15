@@ -36,6 +36,14 @@
       this.options = options;
       this.$el.modal(options);
     },
+    render: function () {
+      var dateFields = this.$('[type=datetime]');
+      if (dateFields.length) {
+        dateFields.each(function () {
+          $(this).datetimepicker($(this).data());
+        });
+      }
+    },
     remove: function () {
       clearTimeout(timeout);
       this.options = null;
@@ -74,6 +82,7 @@
       this.template = Handlebars.compile(response);
       var data = _.extend({API: tp.API}, this.options, this.model ? this.model.toJSON() : null);
       this.onLoadComplete(this.template(data));
+      this.render();
     },
     hiddenHandler: function () {
       this.remove();

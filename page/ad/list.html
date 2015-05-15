@@ -101,6 +101,7 @@
       <td data-title="操作">
         <div class="btn-group">
           <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
+          <a href="page/ad/data-load.hbs" class="btn btn-primary popup" title="导出数据" data-id="{{id}}" data-confirm="导出CSV" data-collection-id="ad"><i class="fa fa-download"></i></a>
           {{#if is_resend}}
           <a href="page/ad/baobei.hbs" class="btn btn-info popup" title="重新发送报备邮件" data-id="{{id}}" data-confirm="提交" data-collection-id="ad"><i class="fa fa-envelope-o"></i></a>
           {{/if}}
