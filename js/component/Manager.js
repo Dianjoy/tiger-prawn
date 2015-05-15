@@ -23,6 +23,13 @@
         selector: '[data-type=popover]'
       });
 
+      var dateFields = $('.datetimepicker');
+      if (dateFields.length) {
+        dateFields.datetimepicker({
+          format:'YYYY-MM-DD'
+        });
+      }
+
       // 自动初始化组件
       var self = this;
       for (var selector in this.map) {

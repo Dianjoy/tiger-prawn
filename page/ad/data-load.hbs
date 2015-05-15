@@ -1,0 +1,25 @@
+<table class="table table-bordered table-striped">
+  <tr>
+    <th>渠道名</th>
+    <td>{{channel}}</td>
+  </tr>
+  <tr>
+    <th>广告名</th>
+    <td>{{ad_name}}</td>
+  </tr>
+  <tr>
+    <th>包号</th>
+    <td>{{cid}}</td>
+  </tr>
+</table>
+<form action="{{API}}data-load/{{id}}" method="get" id="popup-form" target="_blank">
+  <div class="alert alert-msg" style="display: none"></div>
+  <label for="replace-time">查询日期</label>
+
+  <div class="input-group">
+    <input type="hidden" name="ad-app-type" value="{{ad_app_type}}">
+    <input type="hidden" name="feedback" value="{{feedback}}">
+    <input name="transfer-time" class="form-control date datetimepicker" required>
+    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+  </div>
+</form>
