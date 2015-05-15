@@ -23,7 +23,7 @@
         selector: '[data-type=popover]'
       });
 
-      var dateFields = $('.datetimepicker');
+      var dateFields = el.find('.datetimepicker');
       if (dateFields.length) {
         dateFields.datetimepicker({
           format:'YYYY-MM-DD'
