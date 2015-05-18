@@ -15,18 +15,18 @@
       '#login-form': 'tp.component.LoginForm',
       'form': 'tp.component.SmartForm'
     },
-    check: function (el, mediator) {
+    check: function ($el, mediator) {
       var components = [];
-      el.data('components', components);
-      el.popover({
+      $el.data('components', components);
+      $el.popover({
         html: true,
         selector: '[data-type=popover]'
       });
 
-      var dateFields = el.find('.datetimepicker');
+      var dateFields = $el.find('.datetimepicker');
       if (dateFields.length) {
-        dateFields.datetimepicker({
-          format:'YYYY-MM-DD'
+        dateFields.each(function () {
+          $(this).datetimepicker($(this).data());
         });
       }
 
@@ -36,7 +36,7 @@
         if (!this.map.hasOwnProperty(selector)) {
           continue;
         }
-        var dom = el.find(selector);
+        var dom = $el.find(selector);
         if (dom.length) {
           var init = {
             model: mediator
@@ -53,7 +53,7 @@
         }
       }
       // 初始化非本库的自定义组件
-      el.find('[data-mediator-class]').each(function () {
+      $el.find('[data-mediator-class]').each(function () {
         var className = $(this).data('mediator-class')
           , component = Nervenet.parseNamespace(className)
           , init = {
@@ -68,6 +68,11 @@
       });
     },
     clear: function ($el) {
+      $el.popover('destroy');
+      var dateFields = $el.find('.datetimepicker');
+      if (dateFields.destroy) {
+        dateFields.destroy();
+      }
       var components = $el.data('components');
       if (!components || components.length === 0) {
         return;
@@ -79,8 +84,8 @@
       }
       components.length = 0;
     },
-    find: function (el, className) {
-      var components = el.data('components');
+    find: function ($el, className) {
+      var components = $el.data('components');
       if (!components) {
         return;
       }
@@ -121,8 +126,8 @@
       };
       document.head.appendChild(script);
     },
-    preCheck: function (el) {
-      var components = el.data('components');
+    preCheck: function ($el) {
+      var components = $el.data('components');
       if (!components) {
         return true;
       }
