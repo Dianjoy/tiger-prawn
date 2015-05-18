@@ -6,6 +6,7 @@
 (function (ns) {
   ns.AD = Backbone.Router.extend({
     $body: null,
+    $context: null,
     routes: {
       "ad(/)": "list",
       "ad/create": "create",
@@ -32,6 +33,7 @@
           fresh: true
         })
         .setFramework('ad', '编辑广告');
+      this.$context.mapValue('model', model);
     },
     list: function () {
       this.$body

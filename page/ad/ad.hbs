@@ -1,4 +1,3 @@
-
 <div role="tabpanel" id="ad-detail" class="tabpanel">
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#ad-dashboard" aria-controls="status" role="tab" data-toggle="tab"><i class="fa fa-dashboard"></i> 运行状态</a></li>
@@ -209,6 +208,16 @@
     </div>
   </div>
 </div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">操作广告</div>
+  <div class="panel-body">
+    {{#in status '0' '1'}}
+    <a href="page/ad/data-load.hbs" class="btn btn-primary popup" title="导出数据" data-confirm="导出CSV"><i class="fa fa-download"></i> 导出数据</a>
+    {{/in}}
+  </div>
+</div>
+
 <datalist id="province_type">
   <option value="0">全国</option>
   <option value="1">分省</option>

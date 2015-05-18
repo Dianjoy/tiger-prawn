@@ -20,6 +20,7 @@
       'success': 'form_successHandler'
     },
     initialize: function (options) {
+      this.model = this.model || this.$context.getValue('model');
       if (options.isRemote) {
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);

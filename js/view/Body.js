@@ -16,7 +16,12 @@
       this.model.on('change:fullname', this.model_nameChangeHandler, this);
     },
     clear: function () {
+      this.$context.removeValue('model');
       tp.component.Manager.clear(this.container);
+      if (this.page) {
+        this.page.remove();
+        this.page = null;
+      }
     },
     createSidebar: function () {
       this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
@@ -37,7 +42,7 @@
       // html or hbs
       if (/.hbs$/.test(url)) {
         var klass = options.loader || tp.view.Loader
-          , page = this.$context.createInstance(klass, _.extend({
+          , page = this.page = this.$context.createInstance(klass, _.extend({
             template: url,
             model: data
           }, options));

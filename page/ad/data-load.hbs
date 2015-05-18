@@ -14,12 +14,14 @@
 </table>
 <form action="{{API}}data-load/{{id}}" method="get" id="popup-form" target="_blank">
   <div class="alert alert-msg" style="display: none"></div>
-  <label for="replace-time">查询日期</label>
 
-  <div class="input-group">
+  <div class="form-group">
+    <label for="transfer-time">查询日期</label>
     <input type="hidden" name="ad-app-type" value="{{ad_app_type}}">
     <input type="hidden" name="feedback" value="{{feedback}}">
-    <input type="date" name="transfer-time" class="form-control datetimepicker" required>
-    <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+    <div class="input-group">
+      <input name="transfer-time" class="form-control datetimepicker" id="transfer-time" required data-format="YYYY-MM-DD">
+      <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+    </div>
   </div>
 </form>
