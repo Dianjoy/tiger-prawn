@@ -224,9 +224,10 @@
       }
     },
     popup: function (options) {
-      var popup = $(this.template(options));
+      var popup = $(this.template(options))
+        , klass = Nervenet.parseNamespace(options.popup) || ns.Base;
       this.$el.append(popup);
-      popup = this.$context.createInstance(ns.Base, _.extend({
+      popup = this.$context.createInstance(klass, _.extend({
         el: popup
       }, options));
       return popup;
@@ -483,7 +484,7 @@
         var route;
         if (!Backbone.History.started) {
           route = Backbone.history.start({
-            root: '/tiger-prawn/'
+            root: tp.BASE
           });
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
@@ -510,7 +511,7 @@
       this.$body.start();
       location.hash = '#/user/login';
       Backbone.history.start({
-        root: '/tiger-prawn'
+        root: tp.BASE
       });
     }
   });
@@ -1483,13 +1484,20 @@
       '#login-form': 'tp.component.LoginForm',
       'form': 'tp.component.SmartForm'
     },
-    check: function (el, mediator) {
+    check: function ($el, mediator) {
       var components = [];
-      el.data('components', components);
-      el.popover({
+      $el.data('components', components);
+      $el.popover({
         html: true,
-        selector: '.has-popover'
+        selector: '[data-type=popover]'
       });
+
+      var dateFields = $el.find('.datetimepicker');
+      if (dateFields.length) {
+        dateFields.each(function () {
+          $(this).datetimepicker($(this).data());
+        });
+      }
 
       // 自动初始化组件
       var self = this;
@@ -1497,7 +1505,7 @@
         if (!this.map.hasOwnProperty(selector)) {
           continue;
         }
-        var dom = el.find(selector);
+        var dom = $el.find(selector);
         if (dom.length) {
           var init = {
             model: mediator
@@ -1514,7 +1522,7 @@
         }
       }
       // 初始化非本库的自定义组件
-      el.find('[data-mediator-class]').each(function () {
+      $el.find('[data-mediator-class]').each(function () {
         var className = $(this).data('mediator-class')
           , component = Nervenet.parseNamespace(className)
           , init = {
@@ -1529,6 +1537,11 @@
       });
     },
     clear: function ($el) {
+      $el.popover('destroy');
+      var dateFields = $el.find('.datetimepicker');
+      if (dateFields.destroy) {
+        dateFields.destroy();
+      }
       var components = $el.data('components');
       if (!components || components.length === 0) {
         return;
@@ -1540,8 +1553,8 @@
       }
       components.length = 0;
     },
-    find: function (el, className) {
-      var components = el.data('components');
+    find: function ($el, className) {
+      var components = $el.data('components');
       if (!components) {
         return;
       }
@@ -1582,8 +1595,8 @@
       };
       document.head.appendChild(script);
     },
-    preCheck: function (el) {
-      var components = el.data('components');
+    preCheck: function ($el) {
+      var components = $el.data('components');
       if (!components) {
         return true;
       }
@@ -1613,6 +1626,7 @@
       'success': 'form_successHandler'
     },
     initialize: function (options) {
+      this.model = this.model || this.$context.getValue('model');
       if (options.isRemote) {
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
@@ -2018,7 +2032,12 @@
       this.model.on('change:fullname', this.model_nameChangeHandler, this);
     },
     clear: function () {
+      this.$context.removeValue('model');
       tp.component.Manager.clear(this.container);
+      if (this.page) {
+        this.page.remove();
+        this.page = null;
+      }
     },
     createSidebar: function () {
       this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
@@ -2039,7 +2058,7 @@
       // html or hbs
       if (/.hbs$/.test(url)) {
         var klass = options.loader || tp.view.Loader
-          , page = this.$context.createInstance(klass, _.extend({
+          , page = this.page = this.$context.createInstance(klass, _.extend({
             template: url,
             model: data
           }, options));
@@ -2254,20 +2273,35 @@
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
     initialize: function (options) {
-      var chartData = JSON.parse(this.$('script').remove().html().replace(/,\s?]/, ']'));
-      if (chartData.data.length <= 1) {
-        this.$el.addClass('empty').text('（无数据）');
-        return;
+      var init = this.$el.data();
+      options = _.extend({
+        autoFetch: true
+      }, options, init);
+      if (options.url) {
+        this.collection = tp.model.ListCollection.getInstance(options);
+        this.collection.on('sync reset', this.collection_fetchHandler, this);
+        this.createOptions(options);
+        if (options.autoFetch) {
+          this.collection.fetch();
+        }
+      } else {
+        var data = this.$('script');
+        if (data.length) {
+          var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
+          if (chartData.data.length) {
+            this.createOptions(options, chartData);
+            this.drawChart();
+            return;
+          }
+        }
+        this.showEmpty();
       }
-      this.createOptions(options, chartData);
-      this.drawChart();
     },
     createOptions: function (options, chartData) {
-      var data = this.$el.data();
       options = _.extend({
         element: this.el,
         lineWidth: 2
-      }, options, chartData, data);
+      }, options, chartData);
       this.className = 'type' in options ? options.type.charAt(0).toUpperCase() + options.type.substr(1) : 'Line';
       if ('colors' in options) {
         options.colors = options.lineColors = options.barColors = options.colors.split(',');
@@ -2279,10 +2313,27 @@
           return 'percent' in data ? y + '(' + data.percent + '%)' : y;
         }
       }
+      if (!_.isArray(options.ykeys)) {
+        options.ykeys = [options.ykeys];
+      }
+      if (!_.isArray(options.labels)) {
+        options.labels = [options.labels];
+      }
       this.options = options;
     },
     drawChart: function () {
+      this.$('.fa-spin').remove();
       this.chart = new Morris[this.className](this.options);
+    },
+    showEmpty: function () {
+      this.$el.addClass('empty').text('（无数据）');
+    },
+    collection_fetchHandler: function (collection) {
+      if (collection.length === 0) {
+        this.showEmpty();
+      }
+      this.options.data = collection.toJSON();
+      this.drawChart();
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
