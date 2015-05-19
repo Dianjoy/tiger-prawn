@@ -110,11 +110,11 @@
         </tr>
         <tr>
           <th>完成条件</th>
-          <td><a class="edit" href="#cate" data-type="select" data-options="cates">{{pick cate cates key='key' label='value'}}</a></td>
+          <td><a class="edit" href="#cate" data-type="select" data-options="cates">{{pick cate cates}}</a></td>
         </tr>
         <tr>
           <th>投放运营商</th>
-          <td><a class="edit" href="#net_type" data-type="select" data-options="net_types">{{pick net_type net_types key='key' label='value'}}</a></td>
+          <td><a class="edit" href="#net_type" data-type="select" data-options="net_types">{{pick net_type net_types}}</a></td>
         </tr>
         <tr>
           <th>投放区域</th>
@@ -122,7 +122,7 @@
             <a class="edit" href="#province_type" data-type="select" data-list="#province_type">{{pick province_type '全国' '分省'}}</a>
             {{#if province_type}}
             <hr>
-            <a class="edit" href="#put_provinces" data-type="checkbox" data-options="provinces">{{#each put_provinces}}<span class="label label-info">{{pick . ../provinces key='key' label='value'}}</span> {{/each}}</a>
+            <a class="edit" href="#put_provinces" data-type="checkbox" data-options="provinces">{{#each put_provinces}}<span class="label label-info">{{pick . ../provinces }}</span> {{/each}}</a>
             {{/if}}
           </td>
         </tr>
@@ -131,13 +131,15 @@
     {{#unless cp}}
     <div class="tab-pane" id="channel" role="tabpanel">
       <table class="table table-bordered table-striped">
+        {{#if sales}}
         <tr>
           <th>负责人</th>
-          <td><a href="#owner" class="edit" data-type="select" data-options="sales">{{pick owner sales key='key' label='value'}}</a></td>
+          <td><a href="#owner" class="edit" data-type="select" data-options="sales">{{pick owner sales}}</a></td>
         </tr>
+        {{/if}}
         <tr>
           <th>渠道名称</th>
-          <td><a href="#channel" class="edit">{{channel}}</a></td>
+          <td><a href="#channel" class="edit" data-type="select" data-add-new="true" data-options="channels" data-template="ad/channel-edit" data-url="channel/">{{#pick_with channel channels offset=-1}}{{full_name}}{{/pick_with}}</a></td>
         </tr>
         <tr>
           <th>渠道号</th>

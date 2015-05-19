@@ -249,8 +249,8 @@
       <label class="col-sm-2 control-label">完成条件</label>
       <div class="col-sm-10 select-button">
         {{#each cates}}
-          <input type="radio" name="cate" value="{{key}}" id="cate-{{value}}" />
-          <label for="cate-{{value}}">{{value}}</label>
+          <input type="radio" name="cate" value="{{@key}}" id="cate-{{@key}}" />
+          <label for="cate-{{@key}}">{{.}}</label>
         {{/each}}
       </div>
     </div>
@@ -264,8 +264,8 @@
       <label class="col-sm-2 control-label">投放运营商</label>
       <div class="col-sm-10 select-button isp">
         {{#each net_types}}
-        <input type="checkbox" name="net_type[]" value="{{key}}" id="net-type-{{key}}" />
-        <label for="net-type-{{key}}">{{value}}</label>
+        <input type="checkbox" name="net_type[]" value="{{@key}}" id="net-type-{{@key}}" />
+        <label for="net-type-{{@key}}">{{.}}</label>
         {{/each}}
       </div>
     </div>
@@ -282,8 +282,8 @@
       <label class="col-sm-2 control-label">省份选择</label>
       <div class="col-sm-10 select-button select-button-group">
         {{#each provinces}}
-        <input type="checkbox" name="provinces[]" value="{{key}}" id="province-{{value}}" {{checked}} />
-        <label for="province-{{value}}">{{value}}</label>
+        <input type="checkbox" name="provinces[]" value="{{@key}}" id="province-{{@key}}" {{checked}} />
+        <label for="province-{{@key}}">{{.}}</label>
         {{/each}}
         <hr />
       </div>
@@ -339,7 +339,7 @@
       <div class="col-sm-4 col-xs-6">
         <select class="form-control" name="owner" id="owner">
           {{#each sales}}
-          <option value="{{key}}">{{value}}</option>
+          <option value="{{@key}}">{{.}}</option>
           {{/each}}
         </select>
       </div>
@@ -347,8 +347,17 @@
     {{/if}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="channel">渠道名称</label>
-      <div class="col-sm-10">
-        <input type="text" name="channel" id="channel" value="{{channel}}" class="form-control" required />
+      <div class="col-sm-5">
+        <select name="channel" id="channel" class="form-control collection-select" data-collection-id="channel" data-url="{{API}}channel/" required>
+        {{{{raw-helper}}}}
+          <script type="text/x-handlebars-template">
+          <option value="{{id}}">{{full_name}}（{{pick type '广告主' '网盟' '个人' '换量'}}）</option>
+          </script>
+        {{{{/raw-helper}}}}
+        </select>
+      </div>
+      <div class="col-sm-5">
+        <a href="#channel" type="button" class="btn btn-info add-button" data-template="ad/new-channel-popup.hbs" title="添加新渠道" data-confirm="创建"><i class="fa fa-plus"></i> 添加新渠道</a>
       </div>
     </div>
     <div class="form-group">

@@ -7,21 +7,27 @@
   var slice = Array.prototype.slice
     , pop = Array.prototype.pop;
   // 从后面给的值中挑出一个
-  h.registerHelper('pick', function (value, options, params) {
+  h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
-    options = _.isArray(options) ? options : slice.call(arguments, 1, -1);
-    if (_.isArray(options) && _.isObject(options[0])) {
-      var key = params.hash.key || 'id'
-        , label = params.hash.label || 'label';
-      for (var i = 0, len = options.length, result; i < len; i++) {
-        if (options[i][key] == value) {
-          result = options[i];
+    array = _.isArray(array) ? array : slice.call(arguments, 1, -1);
+    return array[value];
+  });
+
+  h.registerHelper('pick_with', function (value, array, options) {
+    value = parseInt(value);
+    array = _.isArray(array) ? array : slice.call(arguments, 1, -1);
+    options = pop.call(arguments);
+    if (_.isObject(array[0])) { // 对象
+      var key = options.hash.key || 'id';
+      for (var i = 0, len = array.length, result; i < len; i++) {
+        if (array[i][key] == value) {
+          result = array[i];
           break;
         }
       }
-      return result ? result[label] : '';
+      return result ? options.fn(result) : '';
     }
-    return options[value];
+    return options.fn(array[value + options.hash.offset]);
   });
 
   // substring

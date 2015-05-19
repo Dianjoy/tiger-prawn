@@ -30,6 +30,7 @@
         item.attr('id', model.id || model.cid);
         this.container[options.prepend ? 'prepend' : 'append'](item);
         this.fragment = '';
+        return item;
       }
     },
     collection_changeHandler: function (model) {
