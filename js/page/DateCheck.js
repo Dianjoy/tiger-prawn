@@ -13,7 +13,8 @@
       $('input[name="end-date"]').data('DateTimePicker').maxDate(moment(event.date).add(7, 'days'));
     },
     endDate_changeHandler: function (event) {
-      $('input[name="start-date"]').data('DateTimePicker').maxDate(event.date);
+      $('input[name="start-date"]').data('DateTimePicker').minDate(moment(event.date).subtract(7, 'days'));
+      $('input[name="start-date"]').data('DateTimePicker').maxDate(event.date)
     }
   });
 }(Nervenet.createNameSpace('tp.page')));
