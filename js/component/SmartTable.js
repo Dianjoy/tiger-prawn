@@ -192,7 +192,7 @@
       event.preventDefault();
     },
     model_changeHandler: function (model, options) {
-      options = options || {};
+      options = _.omit(options, 'unset') || {};
       options.data = _.extend(model.toJSON(), this.params);
       this.collection.fetch(options);
       this.$el.addClass('loading');
