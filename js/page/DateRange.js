@@ -1,5 +1,5 @@
 /**
- * Created by chensheng on 15/5/20.
+ * Created by meathill on 15/5/20.
  */
 'use strict';
 (function (ns) {
@@ -11,7 +11,7 @@
     }),
     startDate_changeHandler: function (event) {
       var startDate = event.date,
-          end = $('input[name="end-date"]');
+        end = $('input[name="end-date"]');
       var result = this.getDateFromStart(end.val(), startDate.format(FORMAT));
       //end.val(result);
       end.data('DateTimePicker').defaultDate(result);
@@ -19,8 +19,8 @@
     },
     endDate_changeHandler: function(event) {
       var start = $('input[name="start-date"]'),
-          end = $('input[name="end-date"]'),
-          endDate = event.date;
+        end = $('input[name="end-date"]'),
+        endDate = event.date;
       var result = this.getDateFromEnd(start.val(), endDate.format(FORMAT));
       //start.val(result);
       this.setDateRange(end, moment(result), moment(result).add(7, 'days'));
@@ -58,7 +58,7 @@
     },
     getDateFromStart: function (current, start) {
       var min = moment(current).subtract(7, 'days').format(FORMAT),
-          max = current;
+        max = current;
       if (start < min) {
         return moment(start).add(7,'days').format(FORMAT);
       } else if (start >= min && start <= max) {
