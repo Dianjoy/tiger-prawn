@@ -43,7 +43,7 @@
       if (options.fadeOut) {
         item.fadeOut(function () {
           $(this).remove();
-        })
+        });
       } else {
         item.remove();
       }
