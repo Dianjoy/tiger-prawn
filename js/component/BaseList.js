@@ -4,6 +4,7 @@
 'use strict';
 (function (ns) {
   ns.BaseList = Backbone.View.extend({
+    fragment: '',
     initialize: function (options) {
       this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
       this.container = options.container ? this.$(options.container) : this.$el;
