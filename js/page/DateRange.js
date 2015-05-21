@@ -9,14 +9,18 @@
       'dp.change input[name="start-date"]': 'startDate_changeHandler',
       'dp.change input[name="end-date"]': 'endDate_changeHandler'
     }),
+    onLoadComplete: function (response) {
+      tp.popup.Base.prototype.onLoadComplete.call(this, response);
+      var start = $('input[name="start-date"]');
+      this.setMaxDate(start, moment());
+    },
     startDate_changeHandler: function (event) {
       var startDate = event.date,
           start = $('input[name="start-date"]'),
           end = $('input[name="end-date"]');
       var result = this.getDateFromStart(end.val(), startDate.format(FORMAT));
       end.val(result);
-      this.setDateRange(end, startDate, startDate.clone().add(7, 'days'));
-      this.setMaxDate(start, moment());
+      this.setEndDateRange(startDate, startDate.clone().add(7, 'days'));
     },
     endDate_changeHandler: function(event) {
       var start = $('input[name="start-date"]'),
@@ -24,7 +28,7 @@
           endDate = event.date;
       var result = this.getDateFromEnd(start.val(), endDate.format(FORMAT));
       start.val(result);
-      this.setDateRange(end, moment(result), moment(result).add(7, 'days'));
+      this.setEndDateRange(moment(result), moment(result).add(7, 'days'));
     },
     setMinDate: function (elem, date) {
       elem.data("DateTimePicker").minDate(date);
@@ -32,13 +36,14 @@
     setMaxDate: function (elem, date) {
       elem.data("DateTimePicker").maxDate(date);
     },
-    setDateRange: function (element, start, end) {
+    setEndDateRange: function (start, end) {
+      var endElem = $('input[name="end-date"]');
       try {
-        this.setMinDate(element, start);
-        this.setMaxDate(element, end);
+        this.setMinDate(endElem, start);
+        this.setMaxDate(endElem, end);
       } catch (e) {
-        this.setMaxDate(element, end);
-        this.setMinDate(element, start);
+        this.setMaxDate(endElem, end);
+        this.setMinDate(endElem, start);
       }
     },
     getDateFromEnd: function (current, end) {
