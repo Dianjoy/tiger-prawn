@@ -31,6 +31,12 @@
         items.length > 0 || (items = this.$('[name="' + key + '[]"][value=' + init[key] + ']').prop('checked', true)); // checkbox
         items.length > 0 || this.$('[name=' + key + ']').val(init[key]); // select
       }
+
+      var collection = tp.model.ListCollection.getInstance({
+        collectionId: 'channel',
+        url: tp.API + 'channel/'
+      });
+      collection.reset(this.model.options.channels);
     },
     remove: function () {
       Backbone.View.prototype.remove.call(this);

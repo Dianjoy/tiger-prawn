@@ -15,7 +15,8 @@
     popup.on('success', function () {
       collection.add(model, {
         immediately: true,
-        prepend: true
+        prepend: true,
+        merge: true
       });
     });
   };

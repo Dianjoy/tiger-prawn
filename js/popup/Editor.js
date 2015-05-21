@@ -184,12 +184,23 @@
       if (this.options.options) {
         if (this.model.options) {
           this.options.options = this.model.options[this.options.options];
-        } else {
+        } else if (this.model.collection.options) {
           this.options.options = this.model.collection.options[this.options.options];
         }
       }
       Editor.prototype.render.call(this, response);
-      if (this.options.list) {
+
+      if (this.options.addNew) {
+        var collection = new tp.model.ListCollection.getInstance({
+            collectionId: this.options.prop,
+            url: tp.API + this.options.url
+          })
+          , select = new tp.component.CollectionSelect({
+            el: this.$('select'),
+            collection: collection
+          });
+        collection.reset(this.options.options);
+      } else if (this.options.list) {
         this.$('select').html($(this.options.list).html());
       }
 

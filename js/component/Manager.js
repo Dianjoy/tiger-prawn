@@ -6,12 +6,8 @@
     $context: null,
     map: {
       '.smart-table': 'tp.component.SmartTable',
-      '.smart-navbar': 'tp.component.SmartNavbar',
-      '.smart-info': 'dianjoy.component.SmartInfo',
-      '.smart-list': 'dianjoy.component.SmartList',
-      '.smart-slide': 'dianjoy.component.SmartSlide',
+      '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
-      '.article-editor': 'dianjoy.component.ArticleEditor',
       '#login-form': 'tp.component.LoginForm',
       'form': 'tp.component.SmartForm'
     },
