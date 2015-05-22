@@ -18,6 +18,11 @@
         "title": "我的修改申请",
         "icon": "file",
         "link": "#/apply/"
+      },
+      {
+        "title": "我的渠道",
+        "icon": "list",
+        "link": "#/ad/channel"
       }
     ]
   },
