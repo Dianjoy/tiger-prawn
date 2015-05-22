@@ -20,7 +20,7 @@
           end = $('input[name="end-date"]');
       var result = this.getDateFromStart(end.val(), startDate.format(FORMAT));
       end.val(result);
-      this.setEndDateRange(startDate, startDate.clone().add(7, 'days'));
+      this.setEndDateRange(startDate, startDate.clone().add(6, 'days'));
     },
     endDate_changeHandler: function(event) {
       var start = $('input[name="start-date"]'),
@@ -28,7 +28,7 @@
           endDate = event.date;
       var result = this.getDateFromEnd(start.val(), endDate.format(FORMAT));
       start.val(result);
-      this.setEndDateRange(moment(result), moment(result).add(7, 'days'));
+      this.setEndDateRange(moment(result), moment(result).add(6, 'days'));
     },
     setMinDate: function (elem, date) {
       elem.data("DateTimePicker").minDate(date);
@@ -48,7 +48,7 @@
     },
     getDateFromEnd: function (current, end) {
       var min = current
-        , max = moment(current).add(7, 'days').format(FORMAT);
+        , max = moment(current).add(6, 'days').format(FORMAT);
       if (end >= min && end <= max) {
         return current;
       } else if (end < min) {
@@ -58,14 +58,14 @@
       }
     },
     getDateFromStart: function (current, start) {
-      var min = moment(current).subtract(7, 'days').format(FORMAT),
+      var min = moment(current).subtract(6, 'days').format(FORMAT),
           max = current;
       if (start < min) {
-        return moment(start).add(7,'days').format(FORMAT);
+        return moment(start).add(6,'days').format(FORMAT);
       } else if (start >= min && start <= max) {
         return current;
       } else if (start > max) {
-        return moment(start).add(7,'days').format(FORMAT);
+        return moment(start).add(6,'days').format(FORMAT);
       }
     }
   });
