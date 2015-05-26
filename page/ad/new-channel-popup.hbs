@@ -17,4 +17,14 @@
       <option value="3">换量</option>
     </select>
   </div>
+  {{#if relativeSales}}
+  <div class="form-group">
+    <label for="sales">选择商务</label>
+    <select class="form-control" name="sales" id="sales">
+      {{#each relativeSales}}
+        <option value="{{key}}">{{value}}</option>
+      {{/each}}
+    </select>
+  </div>
+  {{/if}}
 </form>

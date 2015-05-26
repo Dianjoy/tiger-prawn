@@ -36,6 +36,9 @@
         collectionId: 'channel',
         url: tp.API + 'channel/'
       });
+      collection.options = {
+        relativeSales: this.model.options.relativeSales
+      };
       collection.reset(this.model.options.channels);
     },
     remove: function () {
