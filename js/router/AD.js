@@ -10,9 +10,10 @@
     routes: {
       "ad(/)": "list",
       "ad/create": "create",
+      "ad/channel": "listChannels",
       "ad/:id": "edit",
       "apply/(:id)": "listApplies",
-      "info/(:query)": "showHistoryInfo"
+      "info/(:query)": "showHistoryInfo",
     },
     create: function () {
       var model = new tp.model.AD();
@@ -49,6 +50,11 @@
       this.$body
         .load('page/info.html')
         .setFramework('info', '广告投放情报');
+    },
+    listChannels: function () {
+      this.$body
+        .load('page/ad/channel.html')
+        .setFramework('ad ad-channel', '我的渠道');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));
