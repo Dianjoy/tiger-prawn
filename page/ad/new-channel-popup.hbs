@@ -22,7 +22,7 @@
     <label for="sales">选择商务</label>
     <select class="form-control" name="sales" id="sales">
       {{#each relativeSales}}
-        <option value="{{@key}}">{{.}}</option>
+        <option value="{{key}}">{{value}}</option>
       {{/each}}
     </select>
   </div>

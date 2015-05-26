@@ -39,6 +39,9 @@
       </td>
       <td data-title="操作">
         <div class="btn-group">
+          {{#if relativeSales}}
+          <a href="#sales" class="btn btn-primary edit" title="修改负责人" data-type="select" data-options="relativeSales"><i class="fa fa-edit"></i></a>
+          {{/if}}
           <button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>
         </div>
       </td>
