@@ -201,7 +201,7 @@
       <ul>
         {{#each cm_others}}
           <li>{{comment}}；<small class="text-muted"><time datetime="{{create_time}}">{{moment create_time}}</time></small>
-          {{#if status}}<br><span class="text-success fa fa-check">{{handle}} <small class="text-muted"><time datetime="{{solve_time}}">{{moment solve_time}}</time></small></span>{{/if}}<br/>
+          {{#if status}}<br><span class="text-success fa fa-check">{{reply}} <small class="text-muted">{{handler}} <time datetime="{{solve_time}}">{{moment solve_time}}</time></small></span>{{/if}}<br/>
         {{/each}}</li>
       </ul>
       <a href="#comment" class="edit btn btn-primary btn-sm" data-type="long-text">

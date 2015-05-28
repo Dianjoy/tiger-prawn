@@ -17,7 +17,7 @@
   <thead>
   <tr>
     <th class="filters">管理名</th>
-    <th>负责人</th>
+    <th>执行人</th>
     <th><a class="order" href="#quote_rmb">报价</a></th>
     <th><a class="order" href="#job_num">每日投放</a></th>
     <th>今日尚余</th>
@@ -93,7 +93,7 @@
         <ul>
         {{#each cm_others}}
           <li>{{comment}}；<small class="text-muted"><time datetime="{{create_time}}">{{moment create_time}}</time></small>
-          {{#if status}}<br><span class="text-success fa fa-check">{{handle}} <small class="text-muted"><time datetime="{{solve_time}}">{{moment solve_time}}</time></small></span>{{/if}}</li>
+          {{#if status}}<br><span class="text-success fa fa-check">{{reply}} <small class="text-muted">{{handler}} <time datetime="{{solve_time}}">{{moment solve_time}}</time></small></span>{{/if}}</li>
         {{/each}}
         </ul>
         <a href="#comment" data-type="long-text" class="edit btn btn-info btn-sm"><i class="fa fa-comment"></i> 添加备注</a>
