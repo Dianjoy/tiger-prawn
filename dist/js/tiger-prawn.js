@@ -26,21 +26,27 @@
   var slice = Array.prototype.slice
     , pop = Array.prototype.pop;
   // 从后面给的值中挑出一个
-  h.registerHelper('pick', function (value, options, params) {
+  h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
-    options = _.isArray(options) ? options : slice.call(arguments, 1, -1);
-    if (_.isArray(options) && _.isObject(options[0])) {
-      var key = params.hash.key || 'id'
-        , label = params.hash.label || 'label';
-      for (var i = 0, len = options.length, result; i < len; i++) {
-        if (options[i][key] == value) {
-          result = options[i];
+    array = _.isArray(array) ? array : slice.call(arguments, 1, -1);
+    return array[value];
+  });
+
+  h.registerHelper('pick_with', function (value, array, options) {
+    value = parseInt(value);
+    array = _.isArray(array) ? array : slice.call(arguments, 1, -1);
+    options = pop.call(arguments);
+    if (_.isObject(array[0])) { // 对象
+      var key = options.hash.key || 'id';
+      for (var i = 0, len = array.length, result; i < len; i++) {
+        if (array[i][key] == value) {
+          result = array[i];
           break;
         }
       }
-      return result ? result[label] : '';
+      return result ? options.fn(result) : '';
     }
-    return options[value];
+    return options.fn(array[value + options.hash.offset]);
   });
 
   // substring
@@ -370,7 +376,8 @@
     popup.on('success', function () {
       collection.add(model, {
         immediately: true,
-        prepend: true
+        prepend: true,
+        merge: true
       });
     });
   };
@@ -636,7 +643,7 @@
     },
     syncHandler: function () {
       if (autoNext) {
-        setTimeout(this.fetch, TIMEOUT);
+        //setTimeout(this.fetch, TIMEOUT);
       }
     }
   });
@@ -1158,6 +1165,7 @@
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
   ns.BaseList = Backbone.View.extend({
+    fragment: '',
     initialize: function (options) {
       this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
       this.container = options.container ? this.$(options.container) : this.$el;
@@ -1184,6 +1192,7 @@
         item.attr('id', model.id || model.cid);
         this.container[options.prepend ? 'prepend' : 'append'](item);
         this.fragment = '';
+        return item;
       }
     },
     collection_changeHandler: function (model) {
@@ -1195,7 +1204,7 @@
       if (options.fadeOut) {
         item.fadeOut(function () {
           $(this).remove();
-        })
+        });
       } else {
         item.remove();
       }
@@ -1470,17 +1479,37 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component.table')));;
+(function (ns) {
+  ns.CollectionSelect = ns.BaseList.extend({
+    initialize: function (options) {
+      var init = this.$el.data();
+      this.collection = tp.model.ListCollection.getInstance(init);
+      ns.BaseList.prototype.initialize.call(this, options);
+
+      if (this.collection.length) {
+        this.collection_resetHandler();
+      }
+    },
+    collection_addHandler: function (model, collection, options) {
+      var item = ns.BaseList.prototype.collection_addHandler.call(this, model, collection, options);
+      if (item) {
+        item.prop('selected', true)
+          .siblings().prop('selected', false);
+      }
+    },
+    collection_changeHandler: function (model) {
+      this.$('[value=' + model.id + ']').prop('selected', true)
+        .siblings().prop('selected', false);
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));;
 ;(function (ns) {
   ns.Manager = {
     $context: null,
     map: {
       '.smart-table': 'tp.component.SmartTable',
-      '.smart-navbar': 'tp.component.SmartNavbar',
-      '.smart-info': 'dianjoy.component.SmartInfo',
-      '.smart-list': 'dianjoy.component.SmartList',
-      '.smart-slide': 'dianjoy.component.SmartSlide',
+      '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
-      '.article-editor': 'dianjoy.component.ArticleEditor',
       '#login-form': 'tp.component.LoginForm',
       'form': 'tp.component.SmartForm'
     },
@@ -1532,7 +1561,7 @@
           init.el = this;
           components.push(self.$context.createInstance(component, init));
         } else {
-          self.loadMediatorClass(components, className, init, $(this), true);
+          self.loadMediatorClass(components, className, init, $(this));
         }
       });
     },
@@ -1567,21 +1596,18 @@
       }
       return result;
     },
-    getPath: function (str, isCustom) {
+    getPath: function (str) {
       var arr = str.split('.');
-      if (isCustom) {
-        return arr.join('/') + '.js';
-      }
-      if (arr[0] === 'tp') {
+      if (arr[0] === tp.NAME_SPACE) {
         arr = arr.slice(1);
       }
       return 'js/' + arr.join('/') + '.js';
     },
-    loadMediatorClass: function (components, className, init, dom, isCustom) {
+    loadMediatorClass: function (components, className, init, dom) {
       var self = this
         , script = document.createElement("script");
       script.async = true;
-      script.src = this.getPath(className, isCustom);
+      script.src = this.getPath(className);
       script.onload = function() {
         this.onload = null;
         var component = Nervenet.parseNamespace(className);
@@ -1882,12 +1908,23 @@
       if (this.options.options) {
         if (this.model.options) {
           this.options.options = this.model.options[this.options.options];
-        } else {
+        } else if (this.model.collection.options) {
           this.options.options = this.model.collection.options[this.options.options];
         }
       }
       Editor.prototype.render.call(this, response);
-      if (this.options.list) {
+
+      if (this.options.addNew) {
+        var collection = new tp.model.ListCollection.getInstance({
+            collectionId: this.options.prop,
+            url: tp.API + this.options.url
+          })
+          , select = new tp.component.CollectionSelect({
+            el: this.$('select'),
+            collection: collection
+          });
+        collection.reset(this.options.options);
+      } else if (this.options.list) {
         this.$('select').html($(this.options.list).html());
       }
 
@@ -2146,6 +2183,15 @@
         items.length > 0 || (items = this.$('[name="' + key + '[]"][value=' + init[key] + ']').prop('checked', true)); // checkbox
         items.length > 0 || this.$('[name=' + key + ']').val(init[key]); // select
       }
+
+      var collection = tp.model.ListCollection.getInstance({
+        collectionId: 'channel',
+        url: tp.API + 'channel/'
+      });
+      collection.options = {
+        relativeSales: this.model.options.relativeSales
+      };
+      collection.reset(this.model.options.channels);
     },
     remove: function () {
       Backbone.View.prototype.remove.call(this);
@@ -2251,6 +2297,75 @@
     },
     searchFlag_changeHandler: function (event) {
       this.$('.aso').toggle(event.target.value === '1');
+    }
+  });
+}(Nervenet.createNameSpace('tp.page')));
+;
+(function (ns) {
+  var FORMAT = 'YYYY-MM-DD';
+  ns.DateRange = tp.popup.Base.extend({
+    events: _.extend(tp.popup.Base.prototype.events, {
+      'dp.change input[name="start-date"]': 'startDate_changeHandler',
+      'dp.change input[name="end-date"]': 'endDate_changeHandler'
+    }),
+    onLoadComplete: function (response) {
+      tp.popup.Base.prototype.onLoadComplete.call(this, response);
+      var start = $('input[name="start-date"]');
+      this.setMaxDate(start, moment());
+    },
+    startDate_changeHandler: function (event) {
+      var startDate = event.date,
+          start = $('input[name="start-date"]'),
+          end = $('input[name="end-date"]');
+      var result = this.getDateFromStart(end.val(), startDate.format(FORMAT));
+      end.val(result);
+      this.setEndDateRange(startDate, startDate.clone().add(6, 'days'));
+    },
+    endDate_changeHandler: function(event) {
+      var start = $('input[name="start-date"]'),
+          end = $('input[name="end-date"]'),
+          endDate = event.date;
+      var result = this.getDateFromEnd(start.val(), endDate.format(FORMAT));
+      start.val(result);
+      this.setEndDateRange(moment(result), moment(result).add(6, 'days'));
+    },
+    setMinDate: function (elem, date) {
+      elem.data("DateTimePicker").minDate(date);
+    },
+    setMaxDate: function (elem, date) {
+      elem.data("DateTimePicker").maxDate(date);
+    },
+    setEndDateRange: function (start, end) {
+      var endElem = $('input[name="end-date"]');
+      try {
+        this.setMinDate(endElem, start);
+        this.setMaxDate(endElem, end);
+      } catch (e) {
+        this.setMaxDate(endElem, end);
+        this.setMinDate(endElem, start);
+      }
+    },
+    getDateFromEnd: function (current, end) {
+      var min = current
+        , max = moment(current).add(6, 'days').format(FORMAT);
+      if (end >= min && end <= max) {
+        return current;
+      } else if (end < min) {
+        return end;
+      } else if (end > max) {
+        return end;
+      }
+    },
+    getDateFromStart: function (current, start) {
+      var min = moment(current).subtract(6, 'days').format(FORMAT),
+          max = current;
+      if (start < min) {
+        return moment(start).add(6,'days').format(FORMAT);
+      } else if (start >= min && start <= max) {
+        return current;
+      } else if (start > max) {
+        return moment(start).add(6,'days').format(FORMAT);
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.page')));
@@ -2559,7 +2674,7 @@
       event.preventDefault();
     },
     model_changeHandler: function (model, options) {
-      options = options || {};
+      options = _.omit(options, 'unset') || {};
       options.data = _.extend(model.toJSON(), this.params);
       this.collection.fetch(options);
       this.$el.addClass('loading');

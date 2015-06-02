@@ -26,4 +26,7 @@
 
   // 启动路径，这个bug终于修了么……
   ns.BASE = '/tiger-prawn';
+
+  // 命名空间
+  ns.NAME_SPACE = 'tp';
 }(Nervenet.createNameSpace('tp')));

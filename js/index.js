@@ -26,9 +26,6 @@ $(function () {
   context.createInstance(tp.router.AD);
   context.createInstance(tp.router.Stat);
 
-  // 注册专用组件
-  tp.component.Manager.map['.ad-comment'] = 'tp.page.Info';
-
   // 验证用户身份
   me.fetch();
 

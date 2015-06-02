@@ -59,7 +59,7 @@
           init.el = this;
           components.push(self.$context.createInstance(component, init));
         } else {
-          self.loadMediatorClass(components, className, init, $(this), true);
+          self.loadMediatorClass(components, className, init, $(this));
         }
       });
     },
@@ -94,21 +94,18 @@
       }
       return result;
     },
-    getPath: function (str, isCustom) {
+    getPath: function (str) {
       var arr = str.split('.');
-      if (isCustom) {
-        return arr.join('/') + '.js';
-      }
-      if (arr[0] === 'tp') {
+      if (arr[0] === tp.NAME_SPACE) {
         arr = arr.slice(1);
       }
       return 'js/' + arr.join('/') + '.js';
     },
-    loadMediatorClass: function (components, className, init, dom, isCustom) {
+    loadMediatorClass: function (components, className, init, dom) {
       var self = this
         , script = document.createElement("script");
       script.async = true;
-      script.src = this.getPath(className, isCustom);
+      script.src = this.getPath(className);
       script.onload = function() {
         this.onload = null;
         var component = Nervenet.parseNamespace(className);
