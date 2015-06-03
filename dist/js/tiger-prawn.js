@@ -28,7 +28,7 @@
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
-    array = _.isArray(array) ? array : slice.call(arguments, 1, -1);
+    array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
     return array[value];
   });
 
@@ -556,7 +556,7 @@
         if (!_.isEmpty(previous)) {
           json.previous = previous;
         }
-        return _.extend(json, this.options);
+        return _.extend(json, this.collection.options);
       }
     })
     , Collection = ns.ListCollection = Backbone.Collection.extend({
@@ -2665,7 +2665,7 @@
         return;
       }
       var id = target.closest('tr').attr('id');
-      this.saveModel(target, id, 'status', 1, {remove: true});
+      this.saveModel(target, id, target.attr('name'), target.val(), {remove: true});
     },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);

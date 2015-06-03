@@ -9,7 +9,7 @@
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
-    array = _.isArray(array) ? array : slice.call(arguments, 1, -1);
+    array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
     return array[value];
   });
 
