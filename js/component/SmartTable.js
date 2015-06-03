@@ -162,7 +162,7 @@
         return;
       }
       var id = target.closest('tr').attr('id');
-      this.saveModel(target, id, 'status', 1, {remove: true});
+      this.saveModel(target, id, target.attr('name'), target.val(), {remove: true});
     },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
