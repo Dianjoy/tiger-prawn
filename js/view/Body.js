@@ -6,7 +6,8 @@
     $context: null,
     events: {
       'change [type=range]': 'range_changeHandler',
-      'click .add-button': 'addButton_clickHandler'
+      'click .add-button': 'addButton_clickHandler',
+      'click .refresh-button': 'refreshButton_clickHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -88,6 +89,10 @@
     },
     range_changeHandler: function (event) {
       $(event.target).next().html(event.target.value);
+    },
+    refreshButton_clickHandler: function (event) {
+      Backbone.history.loadUrl(Backbone.history.fragment);
+      event.preventDefault();
     },
     page_loadCompleteHandler: function () {
       this.loading.remove();

@@ -56,6 +56,22 @@
     return (value / 100).toFixed(2);
   });
 
+  // 换算简单的数字
+  h.registerHelper('short_n', function (value) {
+    if (_.isNaN(value)) {
+      return value;
+    }
+    var units = ['万', '亿']
+      , str = value
+      , count = 0;
+    while (value / 10000 >= 1) {
+      value /= 10000;
+      str = (value % 1 === 0 ? value : (value * 100 >> 0 / 100)) + units[count];
+      count++;
+    }
+    return str;
+  });
+
   // 用来生成可读时间
   h.registerHelper('moment', function (value) {
     return value ? moment(value).calendar() : '';

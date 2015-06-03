@@ -6,6 +6,7 @@
     $context: null,
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
+      'click .archive-button': 'archiveButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'click tbody .filter': 'tbodyFilter_clickHandler',
@@ -13,7 +14,7 @@
       'click .order': 'order_clickHandler',
       'change select.edit': 'select_changeHandler',
       'change .stars input': 'star_changeHandler',
-      'change .status-button': 'statusButton_clickHandler'
+      'change .status-button': 'statusButton_changeHandler'
     },
     initialize: function (options) {
       var init = this.$el.data();
@@ -28,6 +29,9 @@
       // 特定的过滤器
       this.params = tp.utils.decodeURLParam(init.params);
 
+      if (options.start || options.end) {
+        options.defaults = _.pick(options, 'start', 'end');
+      }
       this.collection = tp.model.ListCollection.getInstance(options);
       ns.BaseList.prototype.initialize.call(this, {container: 'tbody'});
 
@@ -129,13 +133,18 @@
       });
       this.$('.filters').append(labels);
     },
-    saveModel: function (target, id, prop, value) {
-      target.prop('disabled', true);
+    saveModel: function (target, id, prop, value, options) {
+      target.prop('disabled', true)
+        .find('i').addClass('fa-spin fa-spinner');
       this.collection.get(id).save(prop, value, {
         patch: true,
         wait: true,
+        context: this,
         success: function () {
           target.prop('disabled', false);
+          if (options && options.remove) {
+            this.collection.remove(id);
+          }
         }
       });
     },
@@ -146,14 +155,22 @@
         prepend: !!prepend
       });
     },
+    archiveButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , msg = target.data('msg') || '确定归档么？'
+      if (!confirm(msg)) {
+        return;
+      }
+      var id = target.closest('tr').attr('id');
+      this.saveModel(target, id, 'status', 1, {remove: true});
+    },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
     },
     deleteButton_clickHandler: function (event) {
       var target = $(event.currentTarget)
-        , msg = target.data('msg');
-      msg = msg || '确定删除么？';
+        , msg = target.data('msg') || '确定删除么？';
       if (!confirm(msg)) {
         return;
       }
@@ -194,6 +211,7 @@
     model_changeHandler: function (model, options) {
       options = _.omit(options, 'unset') || {};
       options.data = _.extend(model.toJSON(), this.params);
+      _.extend(this.collection.model.prototype.defaults, _.pick(model.changed, 'start', 'end'));
       this.collection.fetch(options);
       this.$el.addClass('loading');
       model.warting = true;
@@ -226,10 +244,10 @@
         , id = target.closest('tr').attr('id');
       this.saveModel(target.add(target.siblings('.star')), id, target.attr('name'), target.val());
     },
-    statusButton_clickHandler: function (event) {
+    statusButton_changeHandler: function (event) {
       var target = $(event.currentTarget)
         , data = _.extend({active: 1, deactive: 0}, target.data())
-        , value = target.prop('checked') ? data.deactive : data.active
+        , value = target.prop('checked') ? data.active : data.deactive
         , id = target.closest('tr').attr('id');
       this.saveModel(target, id, target.attr('name'), value);
     },

@@ -75,6 +75,22 @@
     return (value / 100).toFixed(2);
   });
 
+  // 换算简单的数字
+  h.registerHelper('short_n', function (value) {
+    if (_.isNaN(value)) {
+      return value;
+    }
+    var units = ['万', '亿']
+      , str = value
+      , count = 0;
+    while (value / 10000 >= 1) {
+      value /= 10000;
+      str = (value % 1 === 0 ? value : (value * 100 >> 0 / 100)) + units[count];
+      count++;
+    }
+    return str;
+  });
+
   // 用来生成可读时间
   h.registerHelper('moment', function (value) {
     return value ? moment(value).calendar() : '';
@@ -526,8 +542,8 @@
 ;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
-        if ('code' in response && 'msg' in response && 'data' in response) {
-          return response.data;
+        if ('code' in response && 'msg' in response && this.collection.key in response) {
+          return response[this.collection.key];
         }
         return response;
       },
@@ -548,7 +564,8 @@
       pagesize: 10,
       isLoading: false,
       initialize: function(models, options) {
-        this.key = tp.PROJECT + location.hash + '-pagesize';
+        this.key = options.key || 'data';
+        this.save = tp.PROJECT + location.hash + '-pagesize';
         Backbone.Collection.prototype.initialize.call(this, models, options);
         if (!options) {
           return;
@@ -556,7 +573,7 @@
         if (options.url) {
           this.url = options.url;
         }
-        var size = localStorage.getItem(this.key);
+        var size = localStorage.getItem(this.save);
         this.pagesize = size || options.pagesize || this.pagesize;
       },
       fetch: function (options) {
@@ -582,7 +599,7 @@
       },
       setPagesize: function (size) {
         this.pagesize = size;
-        localStorage.setItem(this.key, size);
+        localStorage.setItem(this.save, size);
       }
     });
 
@@ -592,10 +609,9 @@
     }
 
     var params = _.extend({}, options);
-    if (!options.model || !(options.model instanceof Function)) {
-      params.model = ('idAttribute' in options ? Model.extend({
-        idAttribute: options.idAttribute
-      }) : Model);
+    if (!params.model || !(params.model instanceof Backbone.Model)) {
+      var init = _.pick(params, 'idAttribute', 'defaults');
+      params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
     var collection = new Collection(null, params);
     if (options.collectionId) {
@@ -2059,7 +2075,8 @@
     $context: null,
     events: {
       'change [type=range]': 'range_changeHandler',
-      'click .add-button': 'addButton_clickHandler'
+      'click .add-button': 'addButton_clickHandler',
+      'click .refresh-button': 'refreshButton_clickHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -2141,6 +2158,10 @@
     },
     range_changeHandler: function (event) {
       $(event.target).next().html(event.target.value);
+    },
+    refreshButton_clickHandler: function (event) {
+      Backbone.history.loadUrl(Backbone.history.fragment);
+      event.preventDefault();
     },
     page_loadCompleteHandler: function () {
       this.loading.remove();
@@ -2488,6 +2509,7 @@
     $context: null,
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
+      'click .archive-button': 'archiveButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'click tbody .filter': 'tbodyFilter_clickHandler',
@@ -2495,7 +2517,7 @@
       'click .order': 'order_clickHandler',
       'change select.edit': 'select_changeHandler',
       'change .stars input': 'star_changeHandler',
-      'change .status-button': 'statusButton_clickHandler'
+      'change .status-button': 'statusButton_changeHandler'
     },
     initialize: function (options) {
       var init = this.$el.data();
@@ -2510,6 +2532,9 @@
       // 特定的过滤器
       this.params = tp.utils.decodeURLParam(init.params);
 
+      if (options.start || options.end) {
+        options.defaults = _.pick(options, 'start', 'end');
+      }
       this.collection = tp.model.ListCollection.getInstance(options);
       ns.BaseList.prototype.initialize.call(this, {container: 'tbody'});
 
@@ -2611,13 +2636,18 @@
       });
       this.$('.filters').append(labels);
     },
-    saveModel: function (target, id, prop, value) {
-      target.prop('disabled', true);
+    saveModel: function (target, id, prop, value, options) {
+      target.prop('disabled', true)
+        .find('i').addClass('fa-spin fa-spinner');
       this.collection.get(id).save(prop, value, {
         patch: true,
         wait: true,
+        context: this,
         success: function () {
           target.prop('disabled', false);
+          if (options && options.remove) {
+            this.collection.remove(id);
+          }
         }
       });
     },
@@ -2628,14 +2658,22 @@
         prepend: !!prepend
       });
     },
+    archiveButton_clickHandler: function (event) {
+      var target = $(event.currentTarget)
+        , msg = target.data('msg') || '确定归档么？'
+      if (!confirm(msg)) {
+        return;
+      }
+      var id = target.closest('tr').attr('id');
+      this.saveModel(target, id, 'status', 1, {remove: true});
+    },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
     },
     deleteButton_clickHandler: function (event) {
       var target = $(event.currentTarget)
-        , msg = target.data('msg');
-      msg = msg || '确定删除么？';
+        , msg = target.data('msg') || '确定删除么？';
       if (!confirm(msg)) {
         return;
       }
@@ -2676,6 +2714,7 @@
     model_changeHandler: function (model, options) {
       options = _.omit(options, 'unset') || {};
       options.data = _.extend(model.toJSON(), this.params);
+      _.extend(this.collection.model.prototype.defaults, _.pick(model.changed, 'start', 'end'));
       this.collection.fetch(options);
       this.$el.addClass('loading');
       model.warting = true;
@@ -2708,10 +2747,10 @@
         , id = target.closest('tr').attr('id');
       this.saveModel(target.add(target.siblings('.star')), id, target.attr('name'), target.val());
     },
-    statusButton_clickHandler: function (event) {
+    statusButton_changeHandler: function (event) {
       var target = $(event.currentTarget)
         , data = _.extend({active: 1, deactive: 0}, target.data())
-        , value = target.prop('checked') ? data.deactive : data.active
+        , value = target.prop('checked') ? data.active : data.deactive
         , id = target.closest('tr').attr('id');
       this.saveModel(target, id, target.attr('name'), value);
     },

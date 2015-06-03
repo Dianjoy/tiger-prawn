@@ -6,8 +6,8 @@
   var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
-        if ('code' in response && 'msg' in response && 'data' in response) {
-          return response.data;
+        if ('code' in response && 'msg' in response && this.collection.key in response) {
+          return response[this.collection.key];
         }
         return response;
       },
@@ -28,7 +28,8 @@
       pagesize: 10,
       isLoading: false,
       initialize: function(models, options) {
-        this.key = tp.PROJECT + location.hash + '-pagesize';
+        this.key = options.key || 'data';
+        this.save = tp.PROJECT + location.hash + '-pagesize';
         Backbone.Collection.prototype.initialize.call(this, models, options);
         if (!options) {
           return;
@@ -36,7 +37,7 @@
         if (options.url) {
           this.url = options.url;
         }
-        var size = localStorage.getItem(this.key);
+        var size = localStorage.getItem(this.save);
         this.pagesize = size || options.pagesize || this.pagesize;
       },
       fetch: function (options) {
@@ -62,7 +63,7 @@
       },
       setPagesize: function (size) {
         this.pagesize = size;
-        localStorage.setItem(this.key, size);
+        localStorage.setItem(this.save, size);
       }
     });
 
@@ -72,10 +73,9 @@
     }
 
     var params = _.extend({}, options);
-    if (!options.model || !(options.model instanceof Function)) {
-      params.model = ('idAttribute' in options ? Model.extend({
-        idAttribute: options.idAttribute
-      }) : Model);
+    if (!params.model || !(params.model instanceof Backbone.Model)) {
+      var init = _.pick(params, 'idAttribute', 'defaults');
+      params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
     var collection = new Collection(null, params);
     if (options.collectionId) {
