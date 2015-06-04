@@ -556,7 +556,7 @@
         if (!_.isEmpty(previous)) {
           json.previous = previous;
         }
-        return _.extend(json, this.collection.options);
+        return _.extend(json, this.options, this.collection ? this.collection.options : null);
       }
     })
     , Collection = ns.ListCollection = Backbone.Collection.extend({
@@ -659,7 +659,7 @@
     },
     syncHandler: function () {
       if (autoNext) {
-        //setTimeout(this.fetch, TIMEOUT);
+        setTimeout(this.fetch, TIMEOUT);
       }
     }
   });
@@ -2210,6 +2210,7 @@
         url: tp.API + 'channel/'
       });
       collection.options = {
+        channel_types: this.model.options.channel_types,
         relativeSales: this.model.options.relativeSales
       };
       collection.reset(this.model.options.channels);
@@ -2612,7 +2613,7 @@
     },
     render: function () {
       ns.BaseList.prototype.render.call(this);
-      this.$context.trigger('table-rendered');
+      this.$context.trigger('table-rendered', this);
       // 排序
       if ('order' in this.model.changed || 'seq' in  this.model.changed) {
         var container = this.container;

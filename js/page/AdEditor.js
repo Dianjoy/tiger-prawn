@@ -37,6 +37,7 @@
         url: tp.API + 'channel/'
       });
       collection.options = {
+        channel_types: this.model.options.channel_types,
         relativeSales: this.model.options.relativeSales
       };
       collection.reset(this.model.options.channels);

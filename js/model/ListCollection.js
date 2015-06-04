@@ -20,7 +20,7 @@
         if (!_.isEmpty(previous)) {
           json.previous = previous;
         }
-        return _.extend(json, this.collection.options);
+        return _.extend(json, this.options, this.collection ? this.collection.options : null);
       }
     })
     , Collection = ns.ListCollection = Backbone.Collection.extend({

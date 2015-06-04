@@ -351,7 +351,7 @@
         <select name="channel" id="channel" class="form-control collection-select" data-collection-id="channel" data-url="{{API}}channel/" required>
         {{{{raw-helper}}}}
           <script type="text/x-handlebars-template">
-          <option value="{{id}}">{{full_name}}（{{pick type '广告主' '网盟' '个人' '换量'}}）</option>
+          <option value="{{id}}">{{full_name}}（{{pick type channel_types}}）</option>
           </script>
         {{{{/raw-helper}}}}
         </select>

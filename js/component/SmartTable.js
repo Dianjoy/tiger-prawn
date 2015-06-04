@@ -109,7 +109,7 @@
     },
     render: function () {
       ns.BaseList.prototype.render.call(this);
-      this.$context.trigger('table-rendered');
+      this.$context.trigger('table-rendered', this);
       // 排序
       if ('order' in this.model.changed || 'seq' in  this.model.changed) {
         var container = this.container;

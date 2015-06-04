@@ -11,10 +11,9 @@
   <div class="form-group">
     <label for="type">渠道类型</label>
     <select class="form-control" name="type" id="type">
-      <option value="0">广告主</option>
-      <option value="1">网盟</option>
-      <option value="2">个人</option>
-      <option value="3">换量</option>
+      {{#each channel_types}}
+        <option value="{{@key}}">{{.}}</option>
+      {{/each}}
     </select>
   </div>
   {{#if relativeSales}}
