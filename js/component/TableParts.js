@@ -97,15 +97,10 @@
         end: 0
       }, _.pick(options, 'start', 'end'));
 
-      if (options.start || options.end) {
-        var reg = /^\d{4}-\d{2}-\d{2}$/, start = options.start, end = options.end;
-        if (reg.test(start) && reg.test(end)) {
-          range.start = this.$('[name=start]').val();
-          range.end = this.$('[name=end]').val();
-        } else {
-          range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
-          range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
-        }
+      var reg = /^\d{4}-\d{2}-\d{2}$/;
+      if (!(reg.test(range.start) && reg.test(range.end))) {
+        range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
+        range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
       }
 
       this.$('[name=start]').val(range.start);
