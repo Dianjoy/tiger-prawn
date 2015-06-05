@@ -91,22 +91,23 @@
       this.trigger(range, {silent: true});
     },
     render: function (options) {
-      var hash = location.hash
-        ,reg = /(\d{4})-(\d{2})-(\d{2})/g;
-      var result = hash.match(reg);
       // 默认显示一个月
       var range = _.extend({
         start: -31,
         end: 0
       }, _.pick(options, 'start', 'end'));
-      if (result) {
-        var start = result[0], end = result[1];
-        range.start = start;
-        range.end = end;
-      } else {
-        range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
-        range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
+
+      if (options.start || options.end) {
+        var reg = /^\d{4}-\d{2}-\d{2}$/, start = options.start, end = options.end;
+        if (reg.test(start) && reg.test(end)) {
+          range.start = this.$('[name=start]').val();
+          range.end = this.$('[name=end]').val();
+        } else {
+          range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
+          range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
+        }
       }
+
       this.$('[name=start]').val(range.start);
       this.$('[name=end]').val(range.end);
       return range;
