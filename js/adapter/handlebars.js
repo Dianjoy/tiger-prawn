@@ -105,4 +105,11 @@
   h.registerHelper('raw-helper', function (options) {
     return options.fn();
   });
+
+  // inject
+  h.registerHelper('inject', function (target, key) {
+    var context = h.$context;
+    target = context.getValue(target);
+    return target instanceof Backbone.Model ? target.get(key) : target[key];
+  });
 }(Handlebars));

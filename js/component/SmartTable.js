@@ -156,12 +156,12 @@
     },
     archiveButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
-        , msg = button.data('msg') || '确定归档么？'
+        , msg = button.data('msg') || '确定归档么？';
       if (!confirm(msg)) {
         return;
       }
       var id = button.closest('tr').attr('id');
-      this.saveModel(button, id, target.attr('name'), target.val(), {remove: true});
+      this.saveModel(button, id, button.attr('name'), button.val(), {remove: true});
     },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
@@ -173,7 +173,7 @@
       if (!confirm(msg)) {
         return;
       }
-      var id = target.closest('tr').attr('id');
+      var id = button.closest('tr').attr('id');
       button.spinner();
       this.collection.get(id).destroy({
         fadeOut: true,

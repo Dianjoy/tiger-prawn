@@ -20,6 +20,7 @@ $(function () {
     .inject(tp.service.Manager)
     .mapEvent('edit-model', tp.controller.editModelCommand)
     .mapEvent('add-model', tp.controller.addModelCommand);
+  Handlebars.$context = context;
 
   // routers
   context.createInstance(tp.router.Base);
