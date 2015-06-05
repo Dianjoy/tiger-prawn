@@ -133,17 +133,16 @@
       });
       this.$('.filters').append(labels);
     },
-    saveModel: function (target, id, prop, value, options) {
-      target.prop('disabled', true)
-        .find('i').addClass('fa-spin fa-spinner');
+    saveModel: function (button, id, prop, value, options) {
+      button.spinner();
       this.collection.get(id).save(prop, value, {
         patch: true,
         wait: true,
         context: this,
         success: function () {
-          target.prop('disabled', false);
+          button.spinner(false);
           if (options && options.remove) {
-            this.collection.remove(id);
+            this.collection.remove(id, {fadeOut: true});
           }
         }
       });
@@ -156,34 +155,32 @@
       });
     },
     archiveButton_clickHandler: function (event) {
-      var target = $(event.currentTarget)
-        , msg = target.data('msg') || '确定归档么？'
+      var button = $(event.currentTarget)
+        , msg = button.data('msg') || '确定归档么？'
       if (!confirm(msg)) {
         return;
       }
-      var id = target.closest('tr').attr('id');
-      this.saveModel(target, id, target.attr('name'), target.val(), {remove: true});
+      var id = button.closest('tr').attr('id');
+      this.saveModel(button, id, target.attr('name'), target.val(), {remove: true});
     },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
     },
     deleteButton_clickHandler: function (event) {
-      var target = $(event.currentTarget)
-        , msg = target.data('msg') || '确定删除么？';
+      var button = $(event.currentTarget)
+        , msg = button.data('msg') || '确定删除么？';
       if (!confirm(msg)) {
         return;
       }
       var id = target.closest('tr').attr('id');
-      target.prop('disabled', true)
-        .find('i').addClass('fa-spin fa-spinner');
+      button.spinner();
       this.collection.get(id).destroy({
         fadeOut: true,
         wait: true,
         error: function (model, xhr) {
           var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
-          target.prop('disabled', false)
-            .find('i').removeClass('fa-spin fa-spinner');
+          button.spinner(false);
           console.log(response.msg);
           alert(response.msg || '删除失败');
         }

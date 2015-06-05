@@ -36,10 +36,10 @@
     },
     collection_changeHandler: function (model) {
       var html = this.template(model.toJSON());
-      this.$('#' + (model.id || model.cid)).replaceWith(html);
+      $(document.getElementById(model.id || model.cid)).replaceWith(html); // 因为id里可能有.
     },
     collection_removeHandler: function (model, collection, options) {
-      var item = this.$('#' + (model.id || model.cid));
+      var item = $(document.getElementById(model.id || model.cid));
       if (options.fadeOut) {
         item.fadeOut(function () {
           $(this).remove();

@@ -126,6 +126,27 @@
   });
 }(Handlebars));
 ;
+(function ($) {
+  $.fn.spinner = function (roll) {
+    roll = roll === null ? true : roll;
+    return this.each(function (i) {
+      if (this.tagName.toLowerCase() === 'a') {
+        $(this).toggleClass('disabled', roll);
+      } else if (this.tagName.toLowerCase() === 'button') {
+        $(this).prop('disabled', roll);
+      } else {
+        return true;
+      }
+
+      $(this).find('i').toggle(!roll);
+      if (roll) {
+        $(this).prepend(tp.component.spinner);
+      } else {
+        $(this).find('.fa-spin').remove();
+      }
+    });
+  };
+}(jQuery));;
 (function () {
   var data = {}
 
@@ -699,17 +720,11 @@
     },
     displayProcessing: function () {
       this.$el.addClass('processing');
-      this.submit
-        .prop('disabled', true)
-        .find('i').hide()
-        .end().prepend('<i class="fa fa-spin fa-spinner"></i>');
+      this.submit.spinner();
     },
     displayResult: function (isSuccess, msg, icon) {
       msg = (icon ? '<i class="fa fa-' + icon + '"></i> ' : '') + msg;
-      this.submit
-        .prop('disabled', false)
-        .find('i:hidden').show()
-        .end().find('.fa-spin').remove();
+      this.submit.spinner(false);
       this.$el.removeClass('processing');
       this.$('.alert-msg')
         .hide()
@@ -1213,10 +1228,10 @@
     },
     collection_changeHandler: function (model) {
       var html = this.template(model.toJSON());
-      this.$('#' + (model.id || model.cid)).replaceWith(html);
+      $(document.getElementById(model.id || model.cid)).replaceWith(html); // 因为id里可能有.
     },
     collection_removeHandler: function (model, collection, options) {
-      var item = this.$('#' + (model.id || model.cid));
+      var item = $(document.getElementById(model.id || model.cid));
       if (options.fadeOut) {
         item.fadeOut(function () {
           $(this).remove();
@@ -1291,8 +1306,7 @@
   });
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
-  var DATE_FORMAT = 'YYYY-MM-DD'
-    , spinner = '<i class="fa fa-spin fa-spinner"></i>';
+  var DATE_FORMAT = 'YYYY-MM-DD';
 
   ns.Pager = Backbone.View.extend({
     events: {
@@ -1361,7 +1375,7 @@
       var href = target.attr('href')
         , index = Number(href.substr(href.lastIndexOf('/') + 1));
       this.model.set('page', index);
-      target.html(spinner);
+      target.html(tp.component.spinner);
       this.$el.children().addClass('disabled');
       event.preventDefault();
     }
@@ -1384,8 +1398,13 @@
         start: -31,
         end: 0
       }, _.pick(options, 'start', 'end'));
-      range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
-      range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
+
+      var reg = /^\d{4}-\d{2}-\d{2}$/;
+      if (!(reg.test(range.start) && reg.test(range.end))) {
+        range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
+        range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
+      }
+
       this.$('[name=start]').val(range.start);
       this.$('[name=end]').val(range.end);
       return range;
@@ -1451,7 +1470,7 @@
           page: 0
         });
         this.$el.prop('readonly', true);
-        this.spinner = this.spinner || $(spinner);
+        this.spinner = this.spinner || $(tp.component.spinner);
         this.spinner.insertAfter(this.$el);
       }
     }
@@ -1650,6 +1669,7 @@
       return true;
     }
   };
+  ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
 
@@ -2637,17 +2657,16 @@
       });
       this.$('.filters').append(labels);
     },
-    saveModel: function (target, id, prop, value, options) {
-      target.prop('disabled', true)
-        .find('i').addClass('fa-spin fa-spinner');
+    saveModel: function (button, id, prop, value, options) {
+      button.spinner();
       this.collection.get(id).save(prop, value, {
         patch: true,
         wait: true,
         context: this,
         success: function () {
-          target.prop('disabled', false);
+          button.spinner(false);
           if (options && options.remove) {
-            this.collection.remove(id);
+            this.collection.remove(id, {fadeOut: true});
           }
         }
       });
@@ -2660,34 +2679,32 @@
       });
     },
     archiveButton_clickHandler: function (event) {
-      var target = $(event.currentTarget)
-        , msg = target.data('msg') || '确定归档么？'
+      var button = $(event.currentTarget)
+        , msg = button.data('msg') || '确定归档么？'
       if (!confirm(msg)) {
         return;
       }
-      var id = target.closest('tr').attr('id');
-      this.saveModel(target, id, target.attr('name'), target.val(), {remove: true});
+      var id = button.closest('tr').attr('id');
+      this.saveModel(button, id, target.attr('name'), target.val(), {remove: true});
     },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
     },
     deleteButton_clickHandler: function (event) {
-      var target = $(event.currentTarget)
-        , msg = target.data('msg') || '确定删除么？';
+      var button = $(event.currentTarget)
+        , msg = button.data('msg') || '确定删除么？';
       if (!confirm(msg)) {
         return;
       }
       var id = target.closest('tr').attr('id');
-      target.prop('disabled', true)
-        .find('i').addClass('fa-spin fa-spinner');
+      button.spinner();
       this.collection.get(id).destroy({
         fadeOut: true,
         wait: true,
         error: function (model, xhr) {
           var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
-          target.prop('disabled', false)
-            .find('i').removeClass('fa-spin fa-spinner');
+          button.spinner(false);
           console.log(response.msg);
           alert(response.msg || '删除失败');
         }

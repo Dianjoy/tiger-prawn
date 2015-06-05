@@ -3,8 +3,7 @@
  */
 'use strict';
 (function (ns) {
-  var DATE_FORMAT = 'YYYY-MM-DD'
-    , spinner = '<i class="fa fa-spin fa-spinner"></i>';
+  var DATE_FORMAT = 'YYYY-MM-DD';
 
   ns.Pager = Backbone.View.extend({
     events: {
@@ -73,7 +72,7 @@
       var href = target.attr('href')
         , index = Number(href.substr(href.lastIndexOf('/') + 1));
       this.model.set('page', index);
-      target.html(spinner);
+      target.html(tp.component.spinner);
       this.$el.children().addClass('disabled');
       event.preventDefault();
     }
@@ -168,7 +167,7 @@
           page: 0
         });
         this.$el.prop('readonly', true);
-        this.spinner = this.spinner || $(spinner);
+        this.spinner = this.spinner || $(tp.component.spinner);
         this.spinner.insertAfter(this.$el);
       }
     }

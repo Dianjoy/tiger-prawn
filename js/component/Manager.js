@@ -132,4 +132,5 @@
       return true;
     }
   };
+  ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';
 }(Nervenet.createNameSpace('tp.component')));

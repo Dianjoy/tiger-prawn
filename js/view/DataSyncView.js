@@ -9,17 +9,11 @@
     },
     displayProcessing: function () {
       this.$el.addClass('processing');
-      this.submit
-        .prop('disabled', true)
-        .find('i').hide()
-        .end().prepend('<i class="fa fa-spin fa-spinner"></i>');
+      this.submit.spinner();
     },
     displayResult: function (isSuccess, msg, icon) {
       msg = (icon ? '<i class="fa fa-' + icon + '"></i> ' : '') + msg;
-      this.submit
-        .prop('disabled', false)
-        .find('i:hidden').show()
-        .end().find('.fa-spin').remove();
+      this.submit.spinner(false);
       this.$el.removeClass('processing');
       this.$('.alert-msg')
         .hide()
