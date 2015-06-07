@@ -1,0 +1,72 @@
+<table class="table table-bordered table-hover responsive-table" data-url="{{API}}competitor_ad/" data-id-attribute="pack_name" data-mediator-class="admin.page.Competitor" data-key="ad" data-collection-id="competitor" data-pagination=".pagination" data-pagesize="20">
+  <thead>
+  <tr>
+    <th>产品名</th>
+    <th>来源</th>
+    <th>类型</th>
+    <th>开发商/代理商</th>
+    <th>投放历史</th>
+    <th>初步沟通</th>
+    <th>是否投放</th>
+    <th>投放量级</th>
+    <th>360</th>
+    <th>百度</th>
+    <th>应用宝</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    <tr id="{{pack_name}}">
+      <td>{{app_name}}{{#if new}}<sup class="new">new</sup>{{/if}}</td>
+      <td>
+        {{#each sources}}
+        <span class="label label-info">{{substring . 0 1}}</span>
+        {{/each}}
+      </td>
+      <td>{{category}}</td>
+      <td>{{corp}}</td>
+      <td>{{#if delivery_status}}OFF{{else}}NO{{/if}}</td>
+      <td>
+        <a href="communication" class="edit" data-type="select" data-list="#communication-status">
+          {{#if communication}}<i class="fa fa-check text-success"></i>{{/if}}
+        </a>
+      </td>
+      <td>
+        <a href="delivery" class="edit" data-type="select" data-list="#delivery-status">
+          {{#if delivery}}<i class="fa fa-check text-success"></i>{{else}}<i class="fa fa-times text-danger"></i>{{/if}}
+        </a>
+      </td>
+      <td><a href="delivery_num" class="edit" data-type="number">{{delivery_num}}</a> </td>
+      <td>{{short_n down_count_360}}</td>
+      <td>{{short_n down_count_baidu}}</td>
+      <td>{{short_n down_count_myapp}}</td>
+    </tr>
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="11"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</td>
+  </tr>
+  </tfoot>
+</table>
+
+<nav class="pull-right">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+      <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+    </script>
+  </ul>
+</nav>
+
+<datalist id="communication-status">
+  <option value="0">未沟通</option>
+  <option value="1">已沟通</option>
+</datalist>
+<datalist id="delivery-status">
+  <option value="0">不投放</option>
+  <option value="1">投放</option>
+</datalist>

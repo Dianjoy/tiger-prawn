@@ -23,6 +23,11 @@
         "title": "我的渠道",
         "icon": "list",
         "link": "#/ad/channel"
+      },
+      {
+        "title": "竞品广告",
+        "icon": "bell",
+        "link": "#/competitor_ad/"
       }
     ]
   },

@@ -14,6 +14,7 @@
       "ad/:id": "edit",
       "apply/(:id)": "listApplies",
       "info/(:query)": "showHistoryInfo",
+      'competitor_ad/': 'listCompetitorAds'
     },
     create: function () {
       var model = new tp.model.AD();
@@ -45,6 +46,11 @@
       this.$body
         .load('page/ad/apply.html')
         .setFramework('apply', '我的申请');
+    },
+    listCompetitorAds: function () {
+      this.$body
+        .load('page/ad/competitor.html')
+        .setFramework('competitor', '竞品广告状态');
     },
     showHistoryInfo: function (query) {
       this.$body
