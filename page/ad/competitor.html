@@ -1,4 +1,4 @@
-<table class="table table-bordered table-hover responsive-table" data-url="{{API}}competitor_ad/" data-id-attribute="pack_name" data-mediator-class="admin.page.Competitor" data-key="ad" data-collection-id="competitor" data-pagination=".pagination" data-pagesize="20">
+<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}competitor_ad/" data-id-attribute="pack_name" data-key="ad" data-collection-id="competitor" data-pagination=".pagination" data-pagesize="20">
   <thead>
   <tr>
     <th>产品名</th>
@@ -27,16 +27,16 @@
       <td>{{corp}}</td>
       <td>{{#if delivery_status}}OFF{{else}}NO{{/if}}</td>
       <td>
-        <a href="communication" class="edit" data-type="select" data-list="#communication-status">
+        <a href="#communication" class="edit" data-type="select" data-list="#communication-status">
           {{#if communication}}<i class="fa fa-check text-success"></i>{{/if}}
         </a>
       </td>
       <td>
-        <a href="delivery" class="edit" data-type="select" data-list="#delivery-status">
+        <a href="#delivery" class="edit" data-type="select" data-list="#delivery-status">
           {{#if delivery}}<i class="fa fa-check text-success"></i>{{else}}<i class="fa fa-times text-danger"></i>{{/if}}
         </a>
       </td>
-      <td><a href="delivery_num" class="edit" data-type="number">{{delivery_num}}</a> </td>
+      <td><a href="#delivery_num" class="edit" data-type="number">{{delivery_num}}</a> </td>
       <td>{{short_n down_count_360}}</td>
       <td>{{short_n down_count_baidu}}</td>
       <td>{{short_n down_count_myapp}}</td>
