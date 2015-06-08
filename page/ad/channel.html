@@ -32,17 +32,17 @@
         <a href="#alias" class="edit" title="修改渠道简称" data-refresh="true" data-title="修改渠道简称" data-input-type="alias">{{alias}}</a>
       </td>
       <td data-title="类型">
-        <a href="#type" class="edit" title="修改类型" data-refresh="true" data-title="修改类型" data-type="select" data-options="types">{{type}}</a>
+        <a href="#type" class="edit" title="修改类型" data-refresh="true" data-title="修改类型" data-type="select" data-options="types">{{pick type channel_types}}</a>
       </td>
       <td data-title="渠道全称">
         <a href="#full_name" class="edit" title="修改渠道全称" data-refresh="true" data-title="修改渠道全称">{{full_name}}</a>
       </td>
       <td data-title="操作">
         <div class="btn-group">
-          {{#if relativeSales}}
-          <a href="#sales" class="btn btn-primary edit" title="修改负责人" data-type="select" data-options="relativeSales"><i class="fa fa-edit"></i></a>
-          {{/if}}
-          <button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>
+        {{#if relativeSales}}
+        <a href="#sales" class="btn btn-info edit" title="修改负责人" data-type="select" data-options="relativeSales">{{pick sales relativeSales}}</a>
+        {{/if}}
+        <button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>
         </div>
       </td>
     </tr>

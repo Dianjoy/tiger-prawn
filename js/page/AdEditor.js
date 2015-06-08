@@ -34,7 +34,8 @@
 
       var collection = tp.model.ListCollection.getInstance({
         collectionId: 'channel',
-        url: tp.API + 'channel/'
+        url: tp.API + 'channel/',
+        key: 'channel'
       });
       collection.options = {
         channel_types: this.model.options.channel_types,
