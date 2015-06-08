@@ -5,7 +5,7 @@
 'use strict';
 (function ($) {
   $.fn.spinner = function (roll) {
-    roll = roll === null ? true : roll;
+    roll = roll === undefined ? true : roll;
     return this.each(function (i) {
       if (this.tagName.toLowerCase() === 'a') {
         $(this).toggleClass('disabled', roll);

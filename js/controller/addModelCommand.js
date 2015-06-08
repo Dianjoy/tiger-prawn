@@ -10,6 +10,7 @@
     options.content = 'page/' + options.template;
     model.options = collection.options;
     model.urlRoot = collection.url;
+    model.key = collection.key;
     options.model = model;
     var popup = tp.popup.Manager.popup(options);
     popup.on('success', function () {

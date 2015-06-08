@@ -6,8 +6,9 @@
   var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
-        if ('code' in response && 'msg' in response && this.collection.key in response) {
-          return response[this.collection.key];
+        var key = this.key || (this.collection ? this.collection.key : 'data');
+        if ('code' in response && 'msg' in response && key in response) {
+          return response[key];
         }
         return response;
       },

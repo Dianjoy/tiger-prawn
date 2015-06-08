@@ -135,7 +135,7 @@
 ;
 (function ($) {
   $.fn.spinner = function (roll) {
-    roll = roll === null ? true : roll;
+    roll = roll === undefined ? true : roll;
     return this.each(function (i) {
       if (this.tagName.toLowerCase() === 'a') {
         $(this).toggleClass('disabled', roll);
@@ -415,6 +415,7 @@
     options.content = 'page/' + options.template;
     model.options = collection.options;
     model.urlRoot = collection.url;
+    model.key = collection.key;
     options.model = model;
     var popup = tp.popup.Manager.popup(options);
     popup.on('success', function () {
@@ -570,8 +571,9 @@
 ;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
-        if ('code' in response && 'msg' in response && this.collection.key in response) {
-          return response[this.collection.key];
+        var key = this.key || (this.collection ? this.collection.key : 'data');
+        if ('code' in response && 'msg' in response && key in response) {
+          return response[key];
         }
         return response;
       },
