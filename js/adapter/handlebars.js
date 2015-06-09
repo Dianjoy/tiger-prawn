@@ -66,7 +66,7 @@
       , count = 0;
     while (value / 10000 >= 1) {
       value /= 10000;
-      str = (value % 1 === 0 ? value : (value * 100 >> 0 / 100)) + units[count];
+      str = (value % 1 === 0 ? value : ((value * 100 >> 0) / 100)) + units[count];
       count++;
     }
     return str;

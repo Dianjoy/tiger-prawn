@@ -85,7 +85,7 @@
       , count = 0;
     while (value / 10000 >= 1) {
       value /= 10000;
-      str = (value % 1 === 0 ? value : (value * 100 >> 0 / 100)) + units[count];
+      str = (value % 1 === 0 ? value : ((value * 100 >> 0) / 100)) + units[count];
       count++;
     }
     return str;
@@ -295,11 +295,11 @@
         var collection = tp.model.ListCollection.getInstance(options)
         options.model = collection.get(options.id);
       }
-      if (target.tagName.toLowerCase() === 'a') {
+      if (target.tagName.toLowerCase() === 'a' && !options.content) {
         options.content = target.href;
         options.isRemote = true;
-        options.title = options.title || target.title;
       }
+      options.title = options.title || target.title;
       this.popup(options);
       event.preventDefault();
     }
@@ -689,7 +689,7 @@
     },
     syncHandler: function () {
       if (autoNext) {
-        setTimeout(this.fetch, TIMEOUT);
+        //setTimeout(this.fetch, TIMEOUT);
       }
     }
   });
@@ -2236,7 +2236,8 @@
 
       var collection = tp.model.ListCollection.getInstance({
         collectionId: 'channel',
-        url: tp.API + 'channel/'
+        url: tp.API + 'channel/',
+        key: 'channel'
       });
       collection.options = {
         channel_types: this.model.options.channel_types,

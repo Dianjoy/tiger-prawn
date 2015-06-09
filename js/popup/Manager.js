@@ -48,8 +48,8 @@
       if (target.tagName.toLowerCase() === 'a') {
         options.content = target.href;
         options.isRemote = true;
-        options.title = options.title || target.title;
       }
+      options.title = options.title || target.title;
       this.popup(options);
       event.preventDefault();
     }
