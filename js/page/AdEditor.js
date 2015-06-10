@@ -5,19 +5,22 @@
  */
 'use strict';
 ;(function (ns) {
-  var IOS_PREFIX = 'itms-apps://';
+  var IOS_PREFIX = 'itms-apps://'
+    , option_template = '{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}';
   
   ns.AdEditor = tp.view.Loader.extend({
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
+      'change [name=ad_name]': 'adName_changeHandler',
       'change [name=ad_app_type]': 'platform_changeHandler',
       'change [name=search_flag]': 'searchFlag_changeHandler',
-      'change [name=replace-with]': 'replaceWith_changeHandler',
+      'change .ad-source-list': 'adSource_changeHandler',
       'change #replace-ad': 'replaceAD_changeHandler',
       'change .domestic input': 'area_changeHandler',
       'change .isp input': 'isp_changeHandler',
       'change #feedback': 'feedback_changeHandler',
-      'change #app-uploader [name=ad_url]': 'adURL_changeHandler'
+      'change #app-uploader [name=ad_url]': 'adURL_changeHandler',
+      'click .search-ad-button': 'searchADButton_clickHandler'
     },
     render: function () {
       tp.view.Loader.prototype.render.call(this);
@@ -56,6 +59,14 @@
         this.$('input[name=ad_app_type][value=1]').prop('checked', true);
       }
     },
+    adName_changeHandler: function (event) {
+      this.$('.search-ad-button').prop('disabled', !event.target.value);
+    },
+    adSource_changeHandler: function (event) {
+      var list = $(event.target).data('list')
+        , data = _.omit(list[event.target.selectedIndex], 'id', 'ad_lib', 'ad_size', 'ad_url');
+      this.$('form').trigger('data', data);
+    },
     adURL_blurHandler: function (event) {
       if (this.$el.hasClass('iPhone') && event.target.value.substr(0, 12) !== IOS_PREFIX) {
         event.target.value = event.target.value.replace(/^https?:\/\//i, IOS_PREFIX);
@@ -78,14 +89,15 @@
         .next().removeClass('spin');
     },
     fetchAD_successHandler: function (response) {
-      var template = Handlebars.compile('{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}')
+      var template = Handlebars.compile(option_template)
         , options = template(response);
       this.hasAD = true;
-      this.replace = response;
-      this.$('[name=replace-with]').html(options);
+      this.$('[name=replace-with]')
+        .data('list', response.list)
+        .html(options);
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', false);
       this.$('#replace-ad').next().removeClass('spin');
-      this.$('form').trigger('data', _.omit(response.list[0], 'ad_url', 'ad_lib', 'ad_size', 'id', 'pack_name'));
+      this.$('form').trigger('data', _.omit(response.list[0], 'ad_url', 'ad_lib', 'ad_size', 'id'));
     },
     isp_changeHandler: function (event) {
       var target = $(event.target)
@@ -141,9 +153,31 @@
       }
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
     },
-    replaceWith_changeHandler: function (event) {
-      var data = _.omit(this.replace.list[event.target.selectedIndex], 'id', 'ad_lib', 'ad_size', 'ad_url', 'pack_name');
-      this.$('form').trigger('data', data);
+    searchAD_errorHandler: function () {
+      alert('未找到符合广告名的广告');
+      this.$('.search-ad-button').spinner(false);
+    },
+    searchAD_successHandler: function (response) {
+      var template = Handlebars.compile(option_template)
+        , data = _.omit(response.list[0], 'id', 'ad_lib', 'ad_size', 'ad_url');
+      this.$('.ad-list-container').slideDown()
+        .find('select')
+          .html(template(response))
+          .data('list', response.list);
+      this.$('form').trigger('data', _.omit(response.list[0], 'id', 'ad_lib', 'ad_size', 'ad_url'));
+      this.$('.search-ad-button').spinner(false);
+    },
+    searchADButton_clickHandler: function () {
+      var ad_name = this.$('[name=ad_name]').val();
+      tp.service.Manager.call(tp.API + 'ad_basic/', {
+        ad_name: ad_name
+      }, {
+        success: this.searchAD_successHandler,
+        error: this.searchAD_errorHandler,
+        context: this,
+        method: 'get'
+      });
+      this.$('.search-ad-button').spinner();
     },
     searchFlag_changeHandler: function (event) {
       this.$('.aso').toggle(event.target.value === '1');

@@ -14,10 +14,6 @@
     check: function ($el, mediator) {
       var components = [];
       $el.data('components', components);
-      $el.popover({
-        html: true,
-        selector: '[data-type=popover]'
-      });
 
       var dateFields = $el.find('.datetimepicker');
       if (dateFields.length) {
@@ -64,7 +60,6 @@
       });
     },
     clear: function ($el) {
-      $el.popover('destroy');
       var dateFields = $el.find('.datetimepicker');
       if (dateFields.destroy) {
         dateFields.destroy();

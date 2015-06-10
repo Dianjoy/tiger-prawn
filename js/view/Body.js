@@ -15,6 +15,9 @@
       this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
       this.model.on('change:fullname', this.model_nameChangeHandler, this);
+      this.$el.popover({
+        selector: '[data-toggle=popover]'
+      });
     },
     clear: function () {
       this.$context.removeValue('model');
