@@ -1,14 +1,21 @@
-<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}competitor_ad/" data-id-attribute="pack_name" data-key="ad" data-collection-id="competitor" data-pagination=".pagination" data-pagesize="20">
+<div class="table-header form-inline">
+  <div class="form-group">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query">
+  </div>
+</div>
+
+<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}competitor_ad/" data-id-attribute="pack_name" data-key="ad" data-collection-id="competitor" data-pagination=".pagination" data-pagesize="20" data-search="#search-query">
   <thead>
   <tr>
     <th>产品名</th>
-    <th>来源</th>
+    <th class="filters">来源</th>
     <th>类型</th>
     <th>开发商/代理商</th>
     <th>投放历史</th>
-    <th>初步沟通</th>
-    <th>是否投放</th>
-    <th>投放量级</th>
+    <th><a href="#communication" class="order">初步沟通</a></th>
+    <th><a href="#delivery" class="order">是否投放</a></th>
+    <th><a href="#delivery_num" class="order">投放量级</a></th>
     <th>360</th>
     <th>百度</th>
     <th>应用宝</th>
@@ -20,21 +27,23 @@
       <td>{{app_name}}{{#if new}}<sup class="new">new</sup>{{/if}}</td>
       <td>
         {{#each sources}}
-        <span class="label label-info">{{substring . 0 1}}</span>
+        <a href="#/source/{{.}}" class="label label-info filter">{{substring . 0 1}}</a>
         {{/each}}
       </td>
       <td>{{category}}</td>
       <td>{{corp}}</td>
       <td>{{#if delivery_status}}OFF{{else}}NO{{/if}}</td>
       <td>
-        <a href="#communication" class="edit" data-type="select" data-list="#communication-status">
+        <a href="#communication" class="edit" data-type="select" data-list="#communication-status" data-comment="communication_comment">
           {{#if communication}}<i class="fa fa-check text-success"></i>{{/if}}
         </a>
+        {{communication_comment}}
       </td>
       <td>
-        <a href="#delivery" class="edit" data-type="select" data-list="#delivery-status">
+        <a href="#delivery" class="edit" data-type="select" data-list="#delivery-status" data-comment="delivery_num_comment">
           {{#if delivery}}<i class="fa fa-check text-success"></i>{{else}}<i class="fa fa-times text-danger"></i>{{/if}}
         </a>
+        {{delivery_comment}}
       </td>
       <td><a href="#delivery_num" class="edit" data-type="number">{{delivery_num}}</a> </td>
       <td>{{short_n down_count_360}}</td>

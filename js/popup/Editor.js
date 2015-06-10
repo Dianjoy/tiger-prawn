@@ -36,11 +36,12 @@
         className: 'editor-form model-editor',
         model: this.model
       });
-      this.form.$el.html(template(_.extend(this.model.toJSON(), this.options))).insertAfter(this.$('.alert-msg'));
+      var html = template(_.extend(this.model.toJSON(), this.options));
+      this.form.$el.html(html).insertAfter(this.$('.alert-msg'));
       this.form.on('success', this.form_successHandler, this);
       this.form.on('error', this.form_errorHandler, this);
 
-      var html = this.$('.item-grid').html();
+      html = this.$('.item-grid').html();
       if (html) {
         this.template = Handlebars.compile(html);
         this.$('.item-grid').empty();
