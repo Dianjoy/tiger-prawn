@@ -243,14 +243,15 @@
         var attr = {}
           , self = this;
         _.each(this.$el.serializeArray(), function (element) {
-          var key = element.name.replace('[]', '');
+          var key = element.name.replace('[]', '')
+            , value = isNaN(element.value) ? element.value : Number(element.value);
           if (attr[key] !== undefined) {
             if (!_.isArray(attr[key])) {
               attr[key] = [attr[key]];
             }
-            attr[key].push(element.value);
+            attr[key].push(value);
           } else {
-            attr[key] = element.value;
+            attr[key] = value;
           }
         }, this);
         this.$('.switch').each(function () {
