@@ -24,7 +24,7 @@
   <tbody>
   <script type="text/x-handlebars-template">
     <tr id="{{pack_name}}">
-      <td>{{app_name}}{{#if new}}<sup class="new">new</sup>{{/if}}</td>
+      <td>{{app_name}}{{#if important}} <span class="label label-danger">重</span>{{/if}}</td>
       <td>
         {{#each sources}}
         <a href="#/source/{{.}}" class="label label-info filter">{{substring . 0 1}}</a>
