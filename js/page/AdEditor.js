@@ -6,7 +6,8 @@
 'use strict';
 ;(function (ns) {
   var IOS_PREFIX = 'itms-apps://'
-    , option_template = '{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}';
+    , option_template = '{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
+    , omit = ['ad_url', 'ad_lib', 'ad_size', 'id'];
   
   ns.AdEditor = tp.view.Loader.extend({
     events: {
@@ -64,7 +65,7 @@
     },
     adSource_changeHandler: function (event) {
       var list = $(event.target).data('list')
-        , data = _.omit(list[event.target.selectedIndex], 'id', 'ad_lib', 'ad_size', 'ad_url');
+        , data = _.omit(list[event.target.selectedIndex], omit);
       this.$('form').trigger('data', data);
     },
     adURL_blurHandler: function (event) {
@@ -97,7 +98,7 @@
         .html(options);
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', false);
       this.$('#replace-ad').next().removeClass('spin');
-      this.$('form').trigger('data', _.omit(response.list[0], 'ad_url', 'ad_lib', 'ad_size', 'id'));
+      this.$('form').trigger('data', _.omit(response.list[0], omit));
     },
     isp_changeHandler: function (event) {
       var target = $(event.target)
@@ -159,12 +160,12 @@
     },
     searchAD_successHandler: function (response) {
       var template = Handlebars.compile(option_template)
-        , data = _.omit(response.list[0], 'id', 'ad_lib', 'ad_size', 'ad_url');
+        , data = _.omit(response.list[0], omit);
       this.$('.ad-list-container').slideDown()
         .find('select')
           .html(template(response))
           .data('list', response.list);
-      this.$('form').trigger('data', _.omit(response.list[0], 'id', 'ad_lib', 'ad_size', 'ad_url'));
+      this.$('form').trigger('data', data);
       this.$('.search-ad-button').spinner(false);
     },
     searchADButton_clickHandler: function () {
