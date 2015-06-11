@@ -89,6 +89,7 @@
       <td data-title="创建时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td data-title="变更时间"><time datetime="{{status_time}}">{{moment status_time}}</time></td>
       <td data-title="备注">
+        {{#in status 0 1}}
         {{#if others}}<p>{{others}}</p>{{/if}}
         <ul>
         {{#each cm_others}}
@@ -97,6 +98,9 @@
         {{/each}}
         </ul>
         <a href="#comment" data-type="long-text" class="edit btn btn-info btn-sm"><i class="fa fa-comment"></i> 添加备注</a>
+        {{else}}
+        <a href="#others" class="edit" data-type="long-text">{{others}}</a>
+        {{/in}}
       </td>
       <td data-title="操作">
         <div class="btn-group">
