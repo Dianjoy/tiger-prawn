@@ -197,6 +197,7 @@
 
     <div class="alert alert-info">
       <h4>广告备注</h4>
+      {{#in status '0' '1'}}
       <p>{{others}}</p>
       <ul>
         {{#each cm_others}}
@@ -207,6 +208,9 @@
       <a href="#comment" class="edit btn btn-primary btn-sm" data-type="long-text">
         <i class="fa fa-comment"></i> 添加备注
       </a>
+      {{else}}
+        <a href="#others" class="edit" data-type="long-text">{{others}}</a>
+      {{/in}}
     </div>
   </div>
 </div>
