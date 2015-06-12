@@ -21,7 +21,9 @@
       'change .isp input': 'isp_changeHandler',
       'change #feedback': 'feedback_changeHandler',
       'change #app-uploader [name=ad_url]': 'adURL_changeHandler',
-      'click .search-ad-button': 'searchADButton_clickHandler'
+      'click .search-ad-button': 'searchADButton_clickHandler',
+      'click .search-channel-button': 'searchChannelButton_clickHandler',
+      'keydown .channel-keyword': 'channelKeyword_keyDownHandler'
     },
     render: function () {
       tp.view.Loader.prototype.render.call(this);
@@ -36,20 +38,26 @@
         items.length > 0 || this.$('[name=' + key + ']').val(init[key]); // select
       }
 
-      var collection = tp.model.ListCollection.getInstance({
+      this.channels = tp.model.ListCollection.getInstance({
         collectionId: 'channel',
         url: tp.API + 'channel/',
         key: 'channel'
       });
-      collection.options = {
+      this.channels.options = {
         channel_types: this.model.options.channel_types,
         relativeSales: this.model.options.relativeSales
       };
-      collection.reset(this.model.options.channels);
+      this.channels.reset(this.model.options.channels);
+      this.channels.on('reset', function () {
+        this.$('.channel').find('input').prop('disabled', false);
+        this.$('.search-channel-button').spinner(false);
+      }, this);
     },
     remove: function () {
       Backbone.View.prototype.remove.call(this);
       this.model.off(null, null, this);
+      this.channels.off();
+      this.channels = null;
     },
     checkADURL: function (value) {
       if (/\.ipa$/.test(value) || /itunes.apple.com/.test(value)) {
@@ -59,6 +67,18 @@
       if (/\.apk$/.test(value)) {
         this.$('input[name=ad_app_type][value=1]').prop('checked', true);
       }
+    },
+    searchChannel: function () {
+      var keyword = $.trim(this.$('.channel-keyword').val());
+      if (!keyword) {
+        return false;
+      }
+      this.$('.channel').find('input').prop('disabled', true);
+      this.$('.search-channel-button').spinner();
+      this.channels.fetch({
+        data: {keyword: keyword},
+        reset: true
+      });
     },
     adName_changeHandler: function (event) {
       this.$('.search-ad-button').prop('disabled', !event.target.value);
@@ -80,6 +100,12 @@
     area_changeHandler: function (event) {
       var target = $(event.target);
       this.$el.toggleClass(target.data('class'), target.val() === '1');
+    },
+    channelKeyword_keyDownHandler: function (event) {
+      if (event.keyCode === 13) {
+        this.searchChannel();
+        event.preventDefault();
+      }
     },
     feedback_changeHandler: function (event) {
       this.$el.toggleClass('show-feedback-detail', event.target.value === '2' || event.target.value === '3');
@@ -179,6 +205,9 @@
         method: 'get'
       });
       this.$('.search-ad-button').spinner();
+    },
+    searchChannelButton_clickHandler: function () {
+      this.searchChannel();
     },
     searchFlag_changeHandler: function (event) {
       this.$('.aso').toggle(event.target.value === '1');
