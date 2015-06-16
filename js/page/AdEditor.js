@@ -28,16 +28,6 @@
     render: function () {
       tp.view.Loader.prototype.render.call(this);
 
-      var init = this.model.pick(_.keys(this.model.defaults));
-      for (var key in init) {
-        if (!init.hasOwnProperty(key)) {
-          continue;
-        }
-        var items = this.$('[name=' + key + '][value=' + init[key] + ']').prop('checked', true); // radio
-        items.length > 0 || (items = this.$('[name="' + key + '[]"][value=' + init[key] + ']').prop('checked', true)); // checkbox
-        items.length > 0 || this.$('[name=' + key + ']').val(init[key]); // select
-      }
-
       this.channels = tp.model.ListCollection.getInstance({
         collectionId: 'channel',
         url: tp.API + 'channel/',
@@ -52,6 +42,12 @@
         this.$('.channel').find('input').prop('disabled', false);
         this.$('.search-channel-button').spinner(false);
       }, this);
+
+      var init = this.model.pick(_.keys(this.model.defaults))
+        , form = this.$('form');
+      setTimeout(function () {
+        form.trigger('data', init);
+      }, 50);
     },
     remove: function () {
       Backbone.View.prototype.remove.call(this);

@@ -1,9 +1,10 @@
 {
   "name": "tiger-prawn",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "homepage": "https://github.com/Dianjoy/tiger-prawn",
   "authors": [
-    "Meathill <lujia.zhai@dianjoy.com>"
+    "Meathill <lujia.zhai@dianjoy.com>",
+    "Csonshen <sheng.chen@dianjoy.com>"
   ],
   "description": "a admin panel ui framework",
   "main": "index.html",
@@ -28,7 +29,7 @@
     "handlebars": "~3.0.3",
     "animate.css": "~3.3.0",
     "moment": "~2.10.3",
-    "eonasdan-bootstrap-datetimepicker": "~4.7.14",
+    "eonasdan-bootstrap-datetimepicker": "~4.14.30",
     "morrisjs": "~0.5.1",
     "jquery": "~2.1.4",
     "mh-simple-uploader": "~0.6.1",

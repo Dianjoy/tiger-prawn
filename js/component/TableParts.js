@@ -169,6 +169,7 @@
         this.$el.prop('readonly', true);
         this.spinner = this.spinner || $(tp.component.spinner);
         this.spinner.insertAfter(this.$el);
+        tp.component.SmartForm.recordHistory('keyword', event.target.value);
       }
     }
   });

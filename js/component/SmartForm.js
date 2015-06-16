@@ -1,5 +1,7 @@
 'use strict';
 (function (ns) {
+  var history = 'history-recorder';
+
   function showErrorPopup(target, msgs) {
     if (msgs.length === 0) {
       return;
@@ -24,11 +26,11 @@
       .closest('.form-group').addClass('error');
   }
 
-  ns.SmartForm = tp.view.DataSyncView.extend({
+  var smart = ns.SmartForm = tp.view.DataSyncView.extend({
     $router: null,
     uploaders: [],
     events: {
-      "blur input,textarea,select": "input_blurHandler",
+      "blur input,textarea": "input_blurHandler",
       'focus input': 'input_focusHandler',
       'submit': 'submitHandler',
       'data': 'dataHandler',
@@ -180,6 +182,7 @@
     },
     submit_successHandler: function(response) {
       this.displayResult(true, response.msg, 'smile-o');
+      smart.recordHistory(this.el);
       this.$el.trigger('success');
       this.trigger('success', response);
     },
@@ -276,4 +279,22 @@
       return isPass;
     }
   });
+
+  smart.recordHistory = function (form, value) {
+    var iframe = document.getElementById(history).contentWindow.document;
+    if (form.tagName && form.tagName.toLowerCase() === 'form') {
+      form = form.cloneNode(true);
+    } else {
+      var input = document.createElement('input');
+      input.name = form;
+      input.value = value;
+      form = document.createElement('form');
+      form.action = 'about:blank';
+      form.appendChild(input);
+    }
+    iframe.body.appendChild(form);
+    form.onsubmit = null;
+    form.submit();
+    iframe.body.innerHTML = '';
+  };
 }(Nervenet.createNameSpace('tp.component')));
