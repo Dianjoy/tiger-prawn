@@ -21,7 +21,7 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "~3.3.4",
+    "bootstrap": "~3.3.5",
     "font-awesome": "~4.3.0",
     "colors": "~2.2.0",
     "backbone": "~1.2.1",
@@ -36,7 +36,7 @@
     "spark-md5": "~0.0.5"
   },
   "devDependencies": {
-    "bootstrap-sass": "twbs/bootstrap-sass#~3.3.4",
+    "bootstrap-sass": "twbs/bootstrap-sass#~3.3.5",
     "qunit": "~1.18.0"
   }
 }

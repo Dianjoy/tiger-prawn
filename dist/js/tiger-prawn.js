@@ -295,7 +295,7 @@
         var collection = tp.model.ListCollection.getInstance(options)
         options.model = collection.get(options.id);
       }
-      if (target.tagName.toLowerCase() === 'a' && !options.content) {
+      if (target.tagName.toLowerCase() === 'a') {
         options.content = target.href;
         options.isRemote = true;
       }
@@ -689,7 +689,7 @@
     },
     syncHandler: function () {
       if (autoNext) {
-        //setTimeout(this.fetch, TIMEOUT);
+        setTimeout(this.fetch, TIMEOUT);
       }
     }
   });
@@ -927,6 +927,8 @@
   });
 }(Nervenet.createNameSpace('tp.notification')));;
 (function (ns) {
+  var history = 'history-recorder';
+
   function showErrorPopup(target, msgs) {
     if (msgs.length === 0) {
       return;
@@ -951,11 +953,11 @@
       .closest('.form-group').addClass('error');
   }
 
-  ns.SmartForm = tp.view.DataSyncView.extend({
+  var smart = ns.SmartForm = tp.view.DataSyncView.extend({
     $router: null,
     uploaders: [],
     events: {
-      "blur input,textarea,select": "input_blurHandler",
+      "blur input,textarea": "input_blurHandler",
       'focus input': 'input_focusHandler',
       'submit': 'submitHandler',
       'data': 'dataHandler',
@@ -1107,6 +1109,7 @@
     },
     submit_successHandler: function(response) {
       this.displayResult(true, response.msg, 'smile-o');
+      smart.recordHistory(this.el);
       this.$el.trigger('success');
       this.trigger('success', response);
     },
@@ -1145,8 +1148,8 @@
         action = action.replace(/\/:(\w+)/g, function(str, key) {
           return '/' + form.elements[key].value;
         });
-        this.$router.navigate(action);
-        return false;
+        location.href = action;
+        event.preventDefault();
       }
 
       // 防止多次提交
@@ -1170,14 +1173,15 @@
         var attr = {}
           , self = this;
         _.each(this.$el.serializeArray(), function (element) {
-          var key = element.name.replace('[]', '');
+          var key = element.name.replace('[]', '')
+            , value = isNaN(element.value) ? element.value : Number(element.value);
           if (attr[key] !== undefined) {
             if (!_.isArray(attr[key])) {
               attr[key] = [attr[key]];
             }
-            attr[key].push(element.value);
+            attr[key].push(value);
           } else {
-            attr[key] = element.value;
+            attr[key] = value;
           }
         }, this);
         this.$('.switch').each(function () {
@@ -1202,6 +1206,24 @@
       return isPass;
     }
   });
+
+  smart.recordHistory = function (form, value) {
+    var iframe = document.getElementById(history).contentWindow.document;
+    if (form.tagName && form.tagName.toLowerCase() === 'form') {
+      form = form.cloneNode(true);
+    } else {
+      var input = document.createElement('input');
+      input.name = form;
+      input.value = value;
+      form = document.createElement('form');
+      form.action = 'about:blank';
+      form.appendChild(input);
+    }
+    iframe.body.appendChild(form);
+    form.onsubmit = null;
+    form.submit();
+    iframe.body.innerHTML = '';
+  };
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
   ns.BaseList = Backbone.View.extend({
@@ -1481,6 +1503,7 @@
         this.$el.prop('readonly', true);
         this.spinner = this.spinner || $(tp.component.spinner);
         this.spinner.insertAfter(this.$el);
+        tp.component.SmartForm.recordHistory('keyword', event.target.value);
       }
     }
   });
@@ -1560,10 +1583,6 @@
     check: function ($el, mediator) {
       var components = [];
       $el.data('components', components);
-      $el.popover({
-        html: true,
-        selector: '[data-type=popover]'
-      });
 
       var dateFields = $el.find('.datetimepicker');
       if (dateFields.length) {
@@ -1610,7 +1629,6 @@
       });
     },
     clear: function ($el) {
-      $el.popover('destroy');
       var dateFields = $el.find('.datetimepicker');
       if (dateFields.destroy) {
         dateFields.destroy();
@@ -1805,11 +1823,12 @@
         className: 'editor-form model-editor',
         model: this.model
       });
-      this.form.$el.html(template(_.extend(this.model.toJSON(), this.options))).insertAfter(this.$('.alert-msg'));
+      var html = template(_.extend(this.model.toJSON(), this.options));
+      this.form.$el.html(html).insertAfter(this.$('.alert-msg'));
       this.form.on('success', this.form_successHandler, this);
       this.form.on('error', this.form_errorHandler, this);
 
-      var html = this.$('.item-grid').html();
+      html = this.$('.item-grid').html();
       if (html) {
         this.template = Handlebars.compile(html);
         this.$('.item-grid').empty();
@@ -2113,6 +2132,9 @@
       this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
       this.model.on('change:fullname', this.model_nameChangeHandler, this);
+      this.$el.popover({
+        selector: '[data-toggle=popover]'
+      });
     },
     clear: function () {
       this.$context.removeValue('model');
@@ -2207,47 +2229,55 @@
   });
 }(Nervenet.createNameSpace('tp.view')));;
 ;(function (ns) {
-  var IOS_PREFIX = 'itms-apps://';
+  var IOS_PREFIX = 'itms-apps://'
+    , option_template = '{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
+    , omit = ['ad_url', 'ad_lib', 'ad_size', 'id'];
   
   ns.AdEditor = tp.view.Loader.extend({
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
+      'change [name=ad_name]': 'adName_changeHandler',
       'change [name=ad_app_type]': 'platform_changeHandler',
       'change [name=search_flag]': 'searchFlag_changeHandler',
-      'change [name=replace-with]': 'replaceWith_changeHandler',
+      'change .ad-source-list': 'adSource_changeHandler',
       'change #replace-ad': 'replaceAD_changeHandler',
       'change .domestic input': 'area_changeHandler',
       'change .isp input': 'isp_changeHandler',
       'change #feedback': 'feedback_changeHandler',
-      'change #app-uploader [name=ad_url]': 'adURL_changeHandler'
+      'change #app-uploader [name=ad_url]': 'adURL_changeHandler',
+      'click .search-ad-button': 'searchADButton_clickHandler',
+      'click .search-channel-button': 'searchChannelButton_clickHandler',
+      'keydown .channel-keyword': 'channelKeyword_keyDownHandler'
     },
     render: function () {
       tp.view.Loader.prototype.render.call(this);
 
-      var init = this.model.pick(_.keys(this.model.defaults));
-      for (var key in init) {
-        if (!init.hasOwnProperty(key)) {
-          continue;
-        }
-        var items = this.$('[name=' + key + '][value=' + init[key] + ']').prop('checked', true); // radio
-        items.length > 0 || (items = this.$('[name="' + key + '[]"][value=' + init[key] + ']').prop('checked', true)); // checkbox
-        items.length > 0 || this.$('[name=' + key + ']').val(init[key]); // select
-      }
-
-      var collection = tp.model.ListCollection.getInstance({
+      this.channels = tp.model.ListCollection.getInstance({
         collectionId: 'channel',
         url: tp.API + 'channel/',
         key: 'channel'
       });
-      collection.options = {
+      this.channels.options = {
         channel_types: this.model.options.channel_types,
         relativeSales: this.model.options.relativeSales
       };
-      collection.reset(this.model.options.channels);
+      this.channels.reset(this.model.options.channels);
+      this.channels.on('reset', function () {
+        this.$('.channel').find('input').prop('disabled', false);
+        this.$('.search-channel-button').spinner(false);
+      }, this);
+
+      var init = this.model.pick(_.keys(this.model.defaults))
+        , form = this.$('form');
+      setTimeout(function () {
+        form.trigger('data', init);
+      }, 50);
     },
     remove: function () {
       Backbone.View.prototype.remove.call(this);
       this.model.off(null, null, this);
+      this.channels.off();
+      this.channels = null;
     },
     checkADURL: function (value) {
       if (/\.ipa$/.test(value) || /itunes.apple.com/.test(value)) {
@@ -2257,6 +2287,26 @@
       if (/\.apk$/.test(value)) {
         this.$('input[name=ad_app_type][value=1]').prop('checked', true);
       }
+    },
+    searchChannel: function () {
+      var keyword = $.trim(this.$('.channel-keyword').val());
+      if (!keyword) {
+        return false;
+      }
+      this.$('.channel').find('input').prop('disabled', true);
+      this.$('.search-channel-button').spinner();
+      this.channels.fetch({
+        data: {keyword: keyword},
+        reset: true
+      });
+    },
+    adName_changeHandler: function (event) {
+      this.$('.search-ad-button').prop('disabled', !event.target.value);
+    },
+    adSource_changeHandler: function (event) {
+      var list = $(event.target).data('list')
+        , data = _.omit(list[event.target.selectedIndex], omit);
+      this.$('form').trigger('data', data);
     },
     adURL_blurHandler: function (event) {
       if (this.$el.hasClass('iPhone') && event.target.value.substr(0, 12) !== IOS_PREFIX) {
@@ -2271,6 +2321,12 @@
       var target = $(event.target);
       this.$el.toggleClass(target.data('class'), target.val() === '1');
     },
+    channelKeyword_keyDownHandler: function (event) {
+      if (event.keyCode === 13) {
+        this.searchChannel();
+        event.preventDefault();
+      }
+    },
     feedback_changeHandler: function (event) {
       this.$el.toggleClass('show-feedback-detail', event.target.value === '2' || event.target.value === '3');
     },
@@ -2280,14 +2336,15 @@
         .next().removeClass('spin');
     },
     fetchAD_successHandler: function (response) {
-      var template = Handlebars.compile('{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}')
+      var template = Handlebars.compile(option_template)
         , options = template(response);
       this.hasAD = true;
-      this.replace = response;
-      this.$('[name=replace-with]').html(options);
+      this.$('[name=replace-with]')
+        .data('list', response.list)
+        .html(options);
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', false);
       this.$('#replace-ad').next().removeClass('spin');
-      this.$('form').trigger('data', _.omit(response.list[0], 'ad_url', 'ad_lib', 'ad_size', 'id', 'pack_name'));
+      this.$('form').trigger('data', _.omit(response.list[0], omit));
     },
     isp_changeHandler: function (event) {
       var target = $(event.target)
@@ -2343,9 +2400,34 @@
       }
       this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
     },
-    replaceWith_changeHandler: function (event) {
-      var data = _.omit(this.replace.list[event.target.selectedIndex], 'id', 'ad_lib', 'ad_size', 'ad_url', 'pack_name');
+    searchAD_errorHandler: function () {
+      alert('未找到符合广告名的广告');
+      this.$('.search-ad-button').spinner(false);
+    },
+    searchAD_successHandler: function (response) {
+      var template = Handlebars.compile(option_template)
+        , data = _.omit(response.list[0], omit);
+      this.$('.ad-list-container').slideDown()
+        .find('select')
+          .html(template(response))
+          .data('list', response.list);
       this.$('form').trigger('data', data);
+      this.$('.search-ad-button').spinner(false);
+    },
+    searchADButton_clickHandler: function () {
+      var ad_name = this.$('[name=ad_name]').val();
+      tp.service.Manager.call(tp.API + 'ad_basic/', {
+        ad_name: ad_name
+      }, {
+        success: this.searchAD_successHandler,
+        error: this.searchAD_errorHandler,
+        context: this,
+        method: 'get'
+      });
+      this.$('.search-ad-button').spinner();
+    },
+    searchChannelButton_clickHandler: function () {
+      this.searchChannel();
     },
     searchFlag_changeHandler: function (event) {
       this.$('.aso').toggle(event.target.value === '1');

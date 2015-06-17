@@ -221,8 +221,8 @@
         action = action.replace(/\/:(\w+)/g, function(str, key) {
           return '/' + form.elements[key].value;
         });
-        this.$router.navigate(action);
-        return false;
+        location.href = action;
+        event.preventDefault();
       }
 
       // 防止多次提交
