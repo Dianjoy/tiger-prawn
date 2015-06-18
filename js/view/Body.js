@@ -63,10 +63,26 @@
 
       return this;
     },
-    setFramework: function (classes, title) {
+    setFramework: function (classes, title, sub, model) {
       this.$el.addClass(classes);
       this.lastClass = classes;
-      this.$('#content h1').text(title);
+      if (model instanceof Backbone.Model) {
+        model.once('sync', function () {
+          this.setTitle(title, sub, model);
+        }, this);
+        return this;
+      } else {
+        return this.setTitle(title, sub, model);
+      }
+    },
+    setTitle: function (title, sub, model) {
+      if (model) {
+        model = model instanceof Backbone.Model ? model.toJSON() : model;
+        title = Handlebars.compile(title)(model);
+        sub = Handlebars.compile(sub)(model);
+      }
+      title = title + (sub ? ' <small>' + sub + '</small>' : '');
+      this.$('#content > .page-header > h1').html(title);
       return this;
     },
     start: function (showFramework) {

@@ -1,0 +1,20 @@
+<table class="table table-bordered table-striped smart-table" data-url="{{API}}ad/{{id}}/upload/">
+  <thead>
+  <tr>
+    <th>上传时间</th>
+    <th>文件名</th>
+    <th>上传人</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <tr>
+      <td>{{moment time}}</td>
+      <td><a href="{{url}}" target="_blank" title="下载文件">{{file_name}}{{fetch_from}} <i class="fa fa-download"></i></a></td>
+      <td>{{NAME}}</td>
+    </tr>
+    {{{{/raw-helper}}}}
+  </script>
+  </tbody>
+</table>

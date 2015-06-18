@@ -23,9 +23,9 @@
         pagesize: 10,
         autoFetch: true
       }, options, init);
-      if (init.model) {
-        options.model = Nervenet.parseNamespace(init.model);
-      }
+
+      // 可能会从别的地方带来model
+      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
       // 特定的过滤器
       this.params = tp.utils.decodeURLParam(init.params);
 
