@@ -1,7 +1,8 @@
 /**
  * Created by meathill on 14/11/13.
  */
-;(function (ns) {
+'use strict';
+(function (ns) {
   ns.Me = Backbone.Model.extend({
     $body: null,
     url: tp.API + 'user/',
@@ -27,7 +28,8 @@
           });
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
-          location.hash = tp.startPage || '#/dashboard';
+          var from = localStorage.getItem(tp.PROJECT + '-from');
+          location.hash = from || tp.startPage || '#/dashboard';
         }
       } else {
         if (this.$body.isStart && location.hash !== '#/user/logout') {
@@ -42,12 +44,14 @@
             isRemote: true
           }, login));
         } else {
+          localStorage.setItem(tp.PROJECT + '-from', location.hash);
           location.hash = '#/user/login';
         }
       }
     },
     onError: function () {
       this.$body.start();
+      localStorage.setItem(tp.PROJECT + '-from', location.hash);
       location.hash = '#/user/login';
       Backbone.history.start({
         root: tp.BASE

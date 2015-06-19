@@ -21,6 +21,10 @@
     {{#if active}}<label>{{active}}</label>{{/if}}
   </div>
   <div class="form-group">
+    <input type="checkbox" name="cover_all" id="cover_all" checked>
+    <label for="cover_all">同步修改同渠道同包名的广告。</label>
+  </div>
+  <div class="form-group">
     <label for="status-time">生效时间</label>
     <div class="input-group">
       <input type="datetime" class="form-control" name="status-time" id="status-time" data-format="YYYY-MM-DD HH:mm:ss">

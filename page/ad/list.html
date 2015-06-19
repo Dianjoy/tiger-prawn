@@ -43,21 +43,21 @@
         {{else if cp}}
         <span>{{quote_rmb}}</span>
         {{else}}
-        <a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-comment="message" data-refresh="true" data-template="ad/popup/popup-number">{{quote_rmb}}</a>
+        <a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-comment="message" data-refresh="true" data-template="ad/popup/number-edit">{{quote_rmb}}</a>
         {{/if}}
       </td>
       <td data-title="每日投放">
         {{#if set_job_num}}
           <span title="申请已提交，等待核准">{{#if previous}}{{previous.job_num}}{{else}}{{../job_num}}{{/if}} / {{set_job_num}}</span>
         {{else}}
-        <a href="#job_num" class="edit" title="调整日投放量" data-refresh="true" data-title="调整每日投放量" data-template="ad/job-edit">{{job_num}}</a>
+        <a href="#job_num" class="edit" title="调整日投放量" data-refresh="true" data-title="调整每日投放量" data-template="ad/popup/job-edit">{{job_num}}</a>
         {{/if}}
       </td>
       <td data-title="今日尚余">
         {{#if set_rmb}}
           <span title="申请已提交，等待核准">{{#if previous}}{{previous.num}}{{else}}{{../num}}{{/if}} / {{set_rmb}}</span>
         {{else}}
-        <a href="#num" class="edit" title="调整今日余量" data-type="number" data-min="0" data-comment="message" data-refresh="true">{{num}}</a>
+        <a href="#num" class="edit" title="调整今日余量" data-type="number" data-min="0" data-comment="message" data-refresh="true" data-template="ad/popup/number-edit">{{num}}</a>
         {{/if}}
       </td>
       <td data-title="状态">
@@ -71,7 +71,7 @@
         <span class="popup label label-info" data-title="被拒绝原因" data-content="{{comment}} (by: {{author}} {{create_time}})" data-confirm="false" data-cancel="false">原因</span>
         {{/with}}
         {{else}}
-        <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线' '' '' '申请重审'}}" data-type="status" data-deactive="下线" data-active="上线" data-open="0" data-comment="message" data-refresh="true" data-template="ad/status-edit">{{pick status 'ON' 'OFF' '' '' '被拒绝'}}</a>
+        <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线' '' '' '申请重审'}}" data-type="status" data-deactive="下线" data-active="上线" data-open="0" data-comment="message" data-refresh="true" data-template="ad/popup/status-edit">{{pick status 'ON' 'OFF' '' '' '被拒绝'}}</a>
         {{/if}}
         {{else}}
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
