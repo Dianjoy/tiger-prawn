@@ -2180,10 +2180,26 @@
 
       return this;
     },
-    setFramework: function (classes, title) {
+    setFramework: function (classes, title, sub, model) {
       this.$el.addClass(classes);
       this.lastClass = classes;
-      this.$('#content h1').text(title);
+      if (model instanceof Backbone.Model) {
+        model.once('sync', function () {
+          this.setTitle(title, sub, model);
+        }, this);
+        return this;
+      } else {
+        return this.setTitle(title, sub, model);
+      }
+    },
+    setTitle: function (title, sub, model) {
+      if (model) {
+        model = model instanceof Backbone.Model ? model.toJSON() : model;
+        title = Handlebars.compile(title)(model);
+        sub = Handlebars.compile(sub)(model);
+      }
+      title = title + (sub ? ' <small>' + sub + '</small>' : '');
+      this.$('#content > .page-header > h1').html(title);
       return this;
     },
     start: function (showFramework) {
@@ -2639,9 +2655,9 @@
         pagesize: 10,
         autoFetch: true
       }, options, init);
-      if (init.model) {
-        options.model = Nervenet.parseNamespace(init.model);
-      }
+
+      // 可能会从别的地方带来model
+      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
       // 特定的过滤器
       this.params = tp.utils.decodeURLParam(init.params);
 
@@ -2845,7 +2861,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.collection.fetch({data: _.extend(model.toJSON(), this.params)});
+      this.collection.fetch({data: _.extend(this.model.toJSON(), this.params)});
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)
