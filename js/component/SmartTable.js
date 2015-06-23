@@ -229,7 +229,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.collection.fetch({data: _.extend(model.toJSON(), this.params)});
+      this.collection.fetch({data: _.extend(this.model.toJSON(), this.params)});
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)
