@@ -106,6 +106,11 @@
     return options.fn();
   });
 
+  // 输出json数组
+  h.registerHelper('json', function (value) {
+    return JSON.stringify(value);
+  });
+
   // inject
   h.registerHelper('inject', function (target, key) {
     var context = h.$context;

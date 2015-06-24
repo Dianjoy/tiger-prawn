@@ -125,6 +125,11 @@
     return options.fn();
   });
 
+  // 输出json数组
+  h.registerHelper('json', function (value) {
+    return JSON.stringify(value);
+  });
+
   // inject
   h.registerHelper('inject', function (target, key) {
     var context = h.$context;
@@ -514,7 +519,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-;(function (ns) {
+(function (ns) {
   ns.Me = Backbone.Model.extend({
     $body: null,
     url: tp.API + 'user/',
@@ -540,7 +545,8 @@
           });
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
-          location.hash = tp.startPage || '#/dashboard';
+          var from = localStorage.getItem(tp.PROJECT + '-from');
+          location.hash = from || tp.startPage || '#/dashboard';
         }
       } else {
         if (this.$body.isStart && location.hash !== '#/user/logout') {
@@ -555,12 +561,14 @@
             isRemote: true
           }, login));
         } else {
+          localStorage.setItem(tp.PROJECT + '-from', location.hash);
           location.hash = '#/user/login';
         }
       }
     },
     onError: function () {
       this.$body.start();
+      localStorage.setItem(tp.PROJECT + '-from', location.hash);
       location.hash = '#/user/login';
       Backbone.history.start({
         root: tp.BASE
