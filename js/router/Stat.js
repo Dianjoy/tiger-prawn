@@ -8,7 +8,8 @@
     routes: {
       'stat(/)': 'showStat',
       'stat/:id': 'showADStat',
-      'stat/:id/:date': 'showADStatDate'
+      'stat/:id/:date': 'showADStatDate',
+      'admin/stat/': 'showAdminADStat'
     },
     showADStat: function (id) {
       var model = new tp.model.AD({
@@ -31,6 +32,10 @@
     showStat: function () {
       this.$body.load('page/stat/list.html');
       this.$body.setFramework('has-date-range');
+    },
+    showAdminADStat: function () {
+      this.$body.load('page/stat/admin-list.html');
+      this.$body.setFramework('has-date-range', '广告数据分析');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));

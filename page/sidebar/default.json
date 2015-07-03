@@ -39,6 +39,10 @@
       {
         "title": "广告统计",
         "link": "#/stat/"
+      },
+      {
+        "title": "广告数据分析",
+        "link": "#/admin/stat/"
       }
     ]
   },
