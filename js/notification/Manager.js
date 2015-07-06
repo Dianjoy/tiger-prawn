@@ -66,7 +66,9 @@
       collection: collection
     });
 
-  ns.Manager = new Manager({
-    collection: collection
-  });
+  if (tp.NOTICE_KEY) {
+    ns.Manager = new Manager({
+      collection: collection
+    });
+  }
 }(Nervenet.createNameSpace('tp.notification')));

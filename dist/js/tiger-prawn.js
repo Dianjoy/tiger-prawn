@@ -633,6 +633,11 @@
         if (response.options) {
           this.options = response.options;
         }
+        for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
+          if (response.hasOwnProperty(key) && _.isArray(response[key])) {
+            this.trigger('data:' + key, response[key]);
+          }
+        }
         return _.isArray(response) ? response : response.list;
       },
       setPagesize: function (size) {
@@ -1607,6 +1612,7 @@
     $context: null,
     map: {
       '.smart-table': 'tp.component.SmartTable',
+      '.add-on-list': 'tp.component.AddOnList',
       '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
       '#login-form': 'tp.component.LoginForm',
@@ -1779,7 +1785,7 @@
     },
     onLoadComplete: function (response) {
       if (response) {
-        if (this.options.isMD) {
+        if (this.options && this.options.isMD) {
           response = marked(response);
         }
         this.$('.modal-body').html(response);
@@ -2556,6 +2562,27 @@
   });
 }(Nervenet.createNameSpace('tp.page')));
 ;
+(function (ns) {
+  ns.AddOnList = ns.BaseList.extend({
+    initialize: function (options) {
+      options = _.extend({
+        container: 'tbody'
+      }, options);
+      this.collection = new Backbone.Collection();
+      ns.BaseList.prototype.initialize.call(this, options);
+
+      var id = this.$el.data('collection-id')
+        , key = this.$el.data('key')
+        , collection = tp.model.ListCollection.getInstance({
+          collectionId: id
+        });
+      collection.on('data:' + key, this.collection_dataHandler, this);
+    },
+    collection_dataHandler: function (list) {
+      this.collection.reset(list);
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {

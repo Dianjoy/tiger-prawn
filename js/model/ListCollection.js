@@ -60,6 +60,11 @@
         if (response.options) {
           this.options = response.options;
         }
+        for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
+          if (response.hasOwnProperty(key) && _.isArray(response[key])) {
+            this.trigger('data:' + key, response[key]);
+          }
+        }
         return _.isArray(response) ? response : response.list;
       },
       setPagesize: function (size) {
