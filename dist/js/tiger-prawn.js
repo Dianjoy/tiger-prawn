@@ -195,6 +195,10 @@
           }
         });
       }
+      if (page === 'login' && this.$me.id) {
+        this.navigate(tp.startPage || '#/dashboard');
+        return;
+      }
       tp.config.login.api = this.$me.url;
       this.$body.load(tp.path + 'page/' + page + '.hbs', tp.config.login, {
         isFull: true
@@ -546,6 +550,7 @@
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
           var from = localStorage.getItem(tp.PROJECT + '-from');
+          from = from === '#/user/login' ? '' : from;
           location.hash = from || tp.startPage || '#/dashboard';
         }
       } else {
@@ -959,9 +964,11 @@
       collection: collection
     });
 
-  ns.Manager = new Manager({
-    collection: collection
-  });
+  if (tp.NOTICE_KEY) {
+    ns.Manager = new Manager({
+      collection: collection
+    });
+  }
 }(Nervenet.createNameSpace('tp.notification')));;
 (function (ns) {
   var history = 'history-recorder';
