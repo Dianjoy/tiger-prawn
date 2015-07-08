@@ -8,7 +8,9 @@
     routes: {
       'stat(/)': 'showStat',
       'stat/:id': 'showADStat',
-      'stat/:id/:date': 'showADStatDate'
+      'stat/:id/:date': 'showADStatDate',
+      'receipt/': 'showReceipt',
+      'receipt/detail':'applyReceipt'
     },
     showADStat: function (id) {
       var model = new tp.model.AD({
@@ -31,6 +33,14 @@
     showStat: function () {
       this.$body.load('page/stat/list.html');
       this.$body.setFramework('has-date-range');
+    },
+    showReceipt: function () {
+      this.$body.load('page/stat/receipt.html');
+      this.$body.setFramework('has-date-range', '发票统计');
+    },
+    applyReceipt: function () {
+      this.$body.load('page/stat/receipt-detail.html');
+      this.$body.setFramework('a','发票开具清单');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));

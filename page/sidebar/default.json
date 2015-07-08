@@ -39,6 +39,10 @@
       {
         "title": "广告统计",
         "link": "#/stat/"
+      },
+      {
+        "title": "发票统计",
+        "link": "#/receipt/"
       }
     ]
   },

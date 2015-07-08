@@ -62,6 +62,7 @@
       ga('send', 'pageview', url);
 
       return this;
+
     },
     setFramework: function (classes, title, sub, model) {
       this.$el.addClass(classes);
