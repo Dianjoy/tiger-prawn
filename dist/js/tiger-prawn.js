@@ -159,6 +159,9 @@
     });
   };
 }(jQuery));;
+(function (m) {
+  m.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
+}(moment));;
 (function () {
   var data = {}
 
@@ -2463,7 +2466,7 @@
         $(event.target).next().addClass('spin');
         return;
       }
-      this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
+      this.$('[name=replace-with],#replace-time').prop('disabled', !replace);
     },
     searchAD_errorHandler: function () {
       alert('未找到符合广告名的广告');
