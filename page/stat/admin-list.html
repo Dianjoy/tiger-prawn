@@ -1,9 +1,55 @@
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}admin/stat/" data-ranger=".date-range" data-start="-31" data-end="0">
+<table class="table table-bordered table-striped responsive-table add-on-list" data-collection-id="admin-list" data-key="sublist">
+  <thead>
+  <tr>
+    <th></th>
+    <th>总包数</th>
+    <th>总CPA投放数</th>
+    <th>总渠道CPA数</th>
+    <th>结算率</th>
+    <th>推广支出</th>
+    <th>其他支出</th>
+    <th>总支出</th>
+    <th>总收入</th>
+    <th>CPA单价</th>
+    <th>毛利润</th>
+    <th>毛利润率</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    <tr>
+      <td>{{pick bonus_status '总计' '总计(不含红包锁屏)' '红包锁屏'}}</td>
+      <td data-title="总包数">{{count}}</td>
+      <td data-title="总CPA投放数">{{stat}}</td>
+      <td data-title="总渠道CPA数">{{cpa}}</td>
+      <td data-title="结算率"><span>{{ratio}}</span>%</td>
+      <td data-title="推广支出">{{out}}</td>
+      <td data-title="其他支出">{{operation_cost}}</td>
+      <td data-title="总支出">{{total_cost}}</td>
+      <td data-title="总收入">{{income}}</td>
+      <td data-title="CPA单价">{{average_rmb}}</td>
+      <td data-title="毛利润">{{profit}}</td>
+      <td data-title="毛利润率"><span>{{rate}}</span>%</td>
+    </tr>
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+    <tr>
+      <td colspan="12">
+        <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<p>红包锁屏支出为红包锁屏对用户的支出，即“总支出”为该段时间的实际支出，只是拆分展示为推广支出和其他支出。</p>
+
+<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}admin/stat/" data-ranger=".date-range" data-start="-31" data-end="0" data-collection-id="admin-list">
   <thead>
     <tr>
-      <th class="filters">渠道</th>
-      <th>广告</th>
-      <th>上线</th>
+      <th class="filters">管理名</th>
+      <th>上线时间</th>
+      <th>状态</th>
       <th>收入</th>
       <th>CPA</th>
       <th>渠道CPA</th>
@@ -18,15 +64,13 @@
   <tbody>
     <script type="text/x-handlebars-template">
       <tr id="{{id}}">
-        <td data-title="渠道">
-          <a href="#ch-{{cid}}" class="label label-channel">{{channel}}</a>
+        <td data-title="管理名">
+          <a href="#/channel/{{channel}}" class="label label-channel filter">{{channel}}</a>
+          <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
           {{channel_id}}
         </td>
-        <td data-title="广告">
-          <a href="#ad-{{aid}}" class="label label-ad_name">{{ad_name}}</a>
-        </td>
-        <td data-title="上线">
-          {{ctime}}<br/>
+        <td data-title="上线时间">{{ctime}}</td>
+        <td data-title="状态">
           <span class="label status-{{status}}">
             {{pick status 'ON' 'OFF'}}
           </span>
@@ -39,16 +83,20 @@
         <td data-title="毛利润">{{profit}}</td>
         <td data-title="毛利润率">{{rate}}%</td>
         <td data-title="结算率">{{ratio}}%</td>
-        <td data-title="操作"></td>
+        <td data-title="操作">
+          <a href="#/admin/stat/daily-ad/{{id}}/{{start}}/{{end}}" class="btn btn-default" title="多日详情">
+            <i class="fa fa-list"></i>
+          </a>
+        </td>
       </tr>
     </script>
   </tbody>
 
   <tfoot class="waiting">
-  <tr>
-    <td colspan="12">
-      <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
-    </td>
-  </tr>
+    <tr>
+      <td colspan="12">
+        <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
+      </td>
+    </tr>
   </tfoot>
 </table>
