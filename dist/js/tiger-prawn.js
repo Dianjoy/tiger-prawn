@@ -160,7 +160,9 @@
   };
 }(jQuery));;
 (function (m) {
-  m.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
+  m.DATE_FORMAT = 'YYYY-MM-DD';
+  m.TIME_FORMAT = 'HH:mm:ss';
+  m.defaultFormat = m.DATE_FORMAT + ' ' + m.TIME_FORMAT;
 }(moment));;
 (function () {
   var data = {}
@@ -1855,7 +1857,7 @@
       this.submit = this.$('.btn-primary');
       this.options = options;
       var type = options.type || 'short-text'
-        , template = tp.path + (options.template ? 'page/' + options.template : ('template/popup-' + type));
+        , template = options.template ? 'page/' + options.template : (tp.path + 'template/popup-' + type);
       $.get(template + '.hbs', _.bind(this.loadCompleteHandler, this), 'html');
 
       // 补充信息

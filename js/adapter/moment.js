@@ -3,5 +3,7 @@
  */
 'use strict';
 (function (m) {
-  m.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
+  m.DATE_FORMAT = 'YYYY-MM-DD';
+  m.TIME_FORMAT = 'HH:mm:ss';
+  m.defaultFormat = m.DATE_FORMAT + ' ' + m.TIME_FORMAT;
 }(moment));

@@ -16,7 +16,7 @@
       this.submit = this.$('.btn-primary');
       this.options = options;
       var type = options.type || 'short-text'
-        , template = tp.path + (options.template ? 'page/' + options.template : ('template/popup-' + type));
+        , template = options.template ? 'page/' + options.template : (tp.path + 'template/popup-' + type);
       $.get(template + '.hbs', _.bind(this.loadCompleteHandler, this), 'html');
 
       // 补充信息
