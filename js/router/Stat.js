@@ -9,8 +9,8 @@
       'stat(/)': 'showStat',
       'stat/:id': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
-      'admin/stat/': 'showAdminADStat',
-      'admin/stat/daily-ad/:id/:start/:end': 'showDailyADStat'
+      'stat/analyse/': 'showAdminADStat',
+      'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
     showADStat: function (id) {
       var model = new tp.model.AD({
