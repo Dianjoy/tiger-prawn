@@ -40,7 +40,7 @@
     },
     applyReceipt: function () {
       this.$body.load('page/stat/receipt-detail.html');
-      this.$body.setFramework('a','发票开具清单');
+      this.$body.setFramework('','发票开具清单');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));

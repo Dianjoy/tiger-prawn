@@ -1,38 +1,52 @@
-<table class="table table-bordered table-striped">
-  <h4>选择结算的广告：</h4>
-    <form class="ajax" action="{{API}}baobei/{{id}}" method="post" id="popup-form">
-        <div>
-            <label class="col-md-4">
-               <input type="checkbox"  value="option1"> 沃游戏
-            </label>
-            <label class="col-md-4">
-                <input type="checkbox" value="option2"> 360卫士
-            </label>
-            <label class="col-md-4">
-                <input type="checkbox" value="option3"> 看点
-            </label>
-        </div>
-        <div>
-            <label class="col-md-4">
-                <input type="checkbox"  value="option1"> 一号店
-            </label>
-            <label class="col-md-4">
-                <input type="checkbox"  value="option2"> 去动
-            </label>
-            <label class="col-md-4">
-                <input type="checkbox"  value="option3"> 360问股
-            </label>
-        </div>
-        <div>
-            <label class="col-md-4">
-                <input type="checkbox"  value="option1"> 职脉圈
-            </label>
-            <label class="col-md-4">
-                <input type="checkbox"  value="option2"> 虾米音乐
-            </label>
-            <label class="col-md-4">
-                <input type="checkbox"  value="option3"> 脸蛋
-            </label>
-        </div>
-    </form>
-</table>
+<h4>选择结算的广告：</h4>
+<form class="form-horizontal" action="" method="post" style="padding: 15px">
+  <div class="form-group clearfix">
+    <label class="control-label pull-left">结算日期：</label>
+    <div class="date input-group col-sm-4 col-md-4 pull-left">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+      <input type="date" class="form-control" name="start" id="settle-start-date">
+    </div>
+    <label class="control-label pull-left">--</label>
+    <div class="date input-group col-sm-4 col-md-4 pull-left">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+      <input type="date" class="form-control" name="end" id="settle-end-date">
+    </div>
+    <button type="button" class="btn btn-primary pull-right"><i class="fa fa-play"></i> 检索</button>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-4">
+      <input type="checkbox"  value="option1"> 沃游戏
+    </label>
+    <label class="col-sm-4">
+      <input type="checkbox" value="option2"> 360卫士
+    </label>
+    <label class="col-sm-4">
+      <input type="checkbox" value="option3"> 看点
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-4">
+      <input type="checkbox"  value="option1"> 一号店
+    </label>
+    <label class="col-sm-4">
+      <input type="checkbox"  value="option2"> 去动
+    </label>
+    <label class="col-sm-4">
+      <input type="checkbox"  value="option3"> 360问股
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-4">
+      <input type="checkbox"  value="option1"> 职脉圈
+    </label>
+    <label class="col-sm-4">
+      <input type="checkbox"  value="option2"> 虾米音乐
+    </label>
+    <label class="col-sm-4">
+      <input type="checkbox"  value="option3"> 脸蛋
+    </label>
+  </div>
+</form>
