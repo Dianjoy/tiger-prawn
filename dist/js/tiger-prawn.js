@@ -461,7 +461,8 @@
       cycle: 2
     },
     urlRoot: tp.API + 'ad/',
-    initialize: function () {
+    initialize: function (attrs, options) {
+      Backbone.Model.prototype.initialize.call(this, attrs, options);
       if (this.isNew()) {
         this.isEmpty = true;
         this.urlRoot += 'init';
@@ -1605,6 +1606,9 @@
       if (this.collection.length) {
         this.collection_resetHandler();
       }
+      if (init.autoFetch) {
+        this.collection.fetch();
+      }
     },
     collection_addHandler: function (model, collection, options) {
       var item = ns.BaseList.prototype.collection_addHandler.call(this, model, collection, options);
@@ -2727,7 +2731,6 @@
       var init = this.$el.data();
       init.url = init.url.replace('{{API}}', tp.API);
       options = _.extend({
-        pagesize: 10,
         autoFetch: true
       }, options, init);
 

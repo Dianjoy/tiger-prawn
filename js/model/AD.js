@@ -22,7 +22,8 @@
       cycle: 2
     },
     urlRoot: tp.API + 'ad/',
-    initialize: function () {
+    initialize: function (attrs, options) {
+      Backbone.Model.prototype.initialize.call(this, attrs, options);
       if (this.isNew()) {
         this.isEmpty = true;
         this.urlRoot += 'init';
