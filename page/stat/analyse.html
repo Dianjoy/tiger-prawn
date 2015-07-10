@@ -17,8 +17,9 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
+    {{#equal bonus_status 0}}
     <tr>
-      <td>{{pick bonus_status '总计' '总计(不含红包锁屏)' '红包锁屏'}}</td>
+      <td>总计</td>
       <td data-title="总包数">{{count}}</td>
       <td data-title="总CPA投放数">{{stat}}</td>
       <td data-title="总渠道CPA数">{{cpa}}</td>
@@ -31,6 +32,39 @@
       <td data-title="毛利润">{{profit}}</td>
       <td data-title="毛利润率"><span>{{rate}}</span>%</td>
     </tr>
+    {{/equal}}
+    {{#equal bonus_status 1}}
+    <tr>
+      <td>总计(不含红包锁屏)</td>
+      <td data-title="总包数">-</td>
+      <td data-title="总CPA投放数">{{stat}}</td>
+      <td data-title="总渠道CPA数">-</td>
+      <td data-title="结算率">-</td>
+      <td data-title="推广支出">{{out}}</td>
+      <td data-title="其他支出">{{operation_cost}}</td>
+      <td data-title="总支出">{{total_cost}}</td>
+      <td data-title="总收入">-</td>
+      <td data-title="CPA单价">{{average_rmb}}</td>
+      <td data-title="毛利润">-</td>
+      <td data-title="毛利润率">-</td>
+    </tr>
+    {{/equal}}
+    {{#equal bonus_status 2}}
+    <tr>
+      <td>红包锁屏</td>
+      <td data-title="总包数">-</td>
+      <td data-title="总CPA投放数">{{stat}}</td>
+      <td data-title="总渠道CPA数">-</td>
+      <td data-title="结算率">-</td>
+      <td data-title="推广支出">{{out}}</td>
+      <td data-title="其他支出">{{operation_cost}}</td>
+      <td data-title="总支出">{{total_cost}}</td>
+      <td data-title="总收入">-</td>
+      <td data-title="CPA单价">{{average_rmb}}</td>
+      <td data-title="毛利润">-</td>
+      <td data-title="毛利润率">-</td>
+    </tr>
+    {{/equal}}
   </script>
   </tbody>
   <tfoot class="waiting">
@@ -75,7 +109,7 @@
             {{pick status 'ON' 'OFF'}}
           </span>
         </td>
-        <td data-title="收入">{{d100 income}}</td>
+        <td data-title="收入">{{income}}</td>
         <td data-title="CPA">{{stat}}</td>
         <td data-title="渠道CPA">{{cpa}}</td>
         <td data-title="单价/元">{{price}}</td>
