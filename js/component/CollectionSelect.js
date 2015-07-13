@@ -12,6 +12,9 @@
       if (this.collection.length) {
         this.collection_resetHandler();
       }
+      if (init.autoFetch) {
+        this.collection.fetch();
+      }
     },
     collection_addHandler: function (model, collection, options) {
       var item = ns.BaseList.prototype.collection_addHandler.call(this, model, collection, options);

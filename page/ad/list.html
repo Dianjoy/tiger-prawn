@@ -30,7 +30,7 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
-    <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}} ch-{{channel_id}} ad-{{aid}} {{pack_name}}" id="{{id}}">
+    <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}} {{pack_name}}" id="{{id}}">
       <td data-title="管理名">
         {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>{{/if}}
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>

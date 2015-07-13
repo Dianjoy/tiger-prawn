@@ -78,7 +78,7 @@
 
 <p>红包锁屏支出为红包锁屏对用户的支出，即“总支出”为该段时间的实际支出，只是拆分展示为推广支出和其他支出。</p>
 
-<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}stat/analyse/" data-ranger=".date-range" data-start="-31" data-end="0" data-collection-id="admin-list">
+<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}stat/analyse/" data-ranger=".date-range" data-start="2015-06-01" data-end="2015-06-30" data-collection-id="admin-list">
   <thead>
     <tr>
       <th class="filters">管理名</th>
@@ -97,7 +97,7 @@
   </thead>
   <tbody>
     <script type="text/x-handlebars-template">
-      <tr id="{{id}}">
+      <tr id="{{id}}" class="{{pick ad_app_type '' 'Android' 'iPhone'}}">
         <td data-title="管理名">
           <a href="#/channel/{{channel}}" class="label label-channel filter">{{channel}}</a>
           <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
@@ -108,6 +108,7 @@
           <span class="label status-{{status}}">
             {{pick status 'ON' 'OFF'}}
           </span>
+          <i class="fa fa-{{pick ad_app_type '' 'android' 'apple'}} platform"></i>
         </td>
         <td data-title="收入">{{income}}</td>
         <td data-title="CPA">{{stat}}</td>

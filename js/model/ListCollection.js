@@ -74,8 +74,13 @@
     });
 
   Collection.getInstance = function (options) {
+    var collection;
     if (options.collectionId && options.collectionId in collections) {
-      return collections[options.collectionId];
+      collection = collections[options.collectionId];
+      if (!collection.url && options.url) {
+        collection.url = options.url;
+      }
+      return collection;
     }
 
     var params = _.extend({}, options);
@@ -83,7 +88,7 @@
       var init = _.pick(params, 'idAttribute', 'defaults');
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
-    var collection = new Collection(null, params);
+    collection = new Collection(null, params);
     if (options.collectionId) {
       collections[options.collectionId] = collection;
     }
