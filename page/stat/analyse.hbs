@@ -17,6 +17,7 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
     {{#equal bonus_status 0}}
     <tr>
       <td>总计</td>
@@ -65,6 +66,7 @@
       <td data-title="毛利润率">-</td>
     </tr>
     {{/equal}}
+    {{{{/raw-helper}}}}
   </script>
   </tbody>
   <tfoot class="waiting">
@@ -76,9 +78,7 @@
   </tfoot>
 </table>
 
-<p>红包锁屏支出为红包锁屏对用户的支出，即“总支出”为该段时间的实际支出，只是拆分展示为推广支出和其他支出。</p>
-
-<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}stat/analyse/" data-ranger=".date-range" data-start="2015-06-01" data-end="2015-06-30" data-collection-id="admin-list">
+<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}stat/analyse/" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list">
   <thead>
     <tr>
       <th class="filters">管理名</th>
@@ -97,6 +97,7 @@
   </thead>
   <tbody>
     <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
       <tr id="{{id}}" class="{{pick ad_app_type '' 'Android' 'iPhone'}}">
         <td data-title="管理名">
           <a href="#/channel/{{channel}}" class="label label-channel filter">{{channel}}</a>
@@ -124,6 +125,7 @@
           </a>
         </td>
       </tr>
+      {{{{/raw-helper}}}}
     </script>
   </tbody>
 
