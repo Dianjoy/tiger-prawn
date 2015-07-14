@@ -72,12 +72,12 @@
       {{/if}}
       <td data-title="CPA">{{transfer}}</td>
       <td data-title="渠道CPA">{{cpa}}</td>
-      <td data-title="单价/元">{{quote_rmb}}</td>
-      <td data-title="结算率">{{ratio}}</td>
+      <td data-title="单价/元">{{d100 quote_rmb}}</td>
+      <td data-title="结算率">{{ratio}}%</td>
       <td data-title="实际价格">{{real}}</td>
-      <td data-title="支出">{{outcome}}</td>
-      <td data-title="收入">{{income}}</td>
-      <td data-title="毛利润">{{profit}}</td>
+      <td data-title="支出">{{d100 outcome}}</td>
+      <td data-title="收入">{{d100 income}}</td>
+      <td data-title="毛利润">{{d100 profit}}</td>
     </tr>
     {{{{/raw-helper}}}}
   </script>
