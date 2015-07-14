@@ -658,8 +658,13 @@
     });
 
   Collection.getInstance = function (options) {
+    var collection;
     if (options.collectionId && options.collectionId in collections) {
-      return collections[options.collectionId];
+      collection = collections[options.collectionId];
+      if (!collection.url && options.url) {
+        collection.url = options.url;
+      }
+      return collection;
     }
 
     var params = _.extend({}, options);
@@ -667,7 +672,7 @@
       var init = _.pick(params, 'idAttribute', 'defaults');
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
-    var collection = new Collection(null, params);
+    collection = new Collection(null, params);
     if (options.collectionId) {
       collections[options.collectionId] = collection;
     }
@@ -1274,6 +1279,15 @@
     form.submit();
     iframe.body.innerHTML = '';
   };
+
+  // 全局表单元素增加事件
+  $(document)
+    .on('change', '[type=range]', function (event) {
+      $(event.target).next().html(event.target.value);
+    })
+    .on('change', '.auto-submit', function (event) {
+      $(event.target).closest('form').submit();
+    })
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
   ns.BaseList = Backbone.View.extend({
@@ -2180,7 +2194,6 @@
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
-      'change [type=range]': 'range_changeHandler',
       'click .add-button': 'addButton_clickHandler',
       'click .refresh-button': 'refreshButton_clickHandler'
     },
@@ -2280,9 +2293,6 @@
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
-    },
-    range_changeHandler: function (event) {
-      $(event.target).next().html(event.target.value);
     },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
@@ -2617,29 +2627,39 @@
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
     initialize: function (options) {
+      if (options.data) {
+        this.createOptions(options);
+        this.drawChart();
+        return;
+      }
+
       var init = this.$el.data();
       options = _.extend({
         autoFetch: true
       }, options, init);
       if (options.url) {
         this.collection = tp.model.ListCollection.getInstance(options);
-        this.collection.on('sync reset', this.collection_fetchHandler, this);
         this.createOptions(options);
         if (options.autoFetch) {
+          this.collection.once('sync reset', this.collection_fetchHandler, this);
           this.collection.fetch();
+        } else {
+          this.collection_fetchHandler();
         }
-      } else {
-        var data = this.$('script');
-        if (data.length) {
-          var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
-          if (chartData.data.length) {
-            this.createOptions(options, chartData);
-            this.drawChart();
-            return;
-          }
-        }
-        this.showEmpty();
+        return;
       }
+
+      var data = this.$('script');
+      if (data.length) {
+        var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
+        if (chartData.data.length) {
+          this.createOptions(options, chartData);
+          this.drawChart();
+          return;
+        }
+      }
+
+      this.showEmpty();
     },
     createOptions: function (options, chartData) {
       options = _.extend({
@@ -2648,7 +2668,7 @@
       }, options, chartData);
       this.className = 'type' in options ? options.type.charAt(0).toUpperCase() + options.type.substr(1) : 'Line';
       if ('colors' in options) {
-        options.colors = options.lineColors = options.barColors = options.colors.split(',');
+        options.colors = options.lineColors = options.barColors = _.isArray(options.colors) ? options.colors : options.colors.split(',');
       } else {
         options.colors = options.lineColors = options.barColors = this.$colors;
       }
@@ -2672,11 +2692,11 @@
     showEmpty: function () {
       this.$el.addClass('empty').text('（无数据）');
     },
-    collection_fetchHandler: function (collection) {
-      if (collection.length === 0) {
+    collection_fetchHandler: function () {
+      if (this.collection.length === 0) {
         this.showEmpty();
       }
-      this.options.data = collection.toJSON();
+      this.options.data = this.collection.toJSON();
       this.drawChart();
     }
   });

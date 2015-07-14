@@ -6,29 +6,39 @@
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
     initialize: function (options) {
+      if (options.data) {
+        this.createOptions(options);
+        this.drawChart();
+        return;
+      }
+
       var init = this.$el.data();
       options = _.extend({
         autoFetch: true
       }, options, init);
       if (options.url) {
         this.collection = tp.model.ListCollection.getInstance(options);
-        this.collection.on('sync reset', this.collection_fetchHandler, this);
         this.createOptions(options);
         if (options.autoFetch) {
+          this.collection.once('sync reset', this.collection_fetchHandler, this);
           this.collection.fetch();
+        } else {
+          this.collection_fetchHandler();
         }
-      } else {
-        var data = this.$('script');
-        if (data.length) {
-          var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
-          if (chartData.data.length) {
-            this.createOptions(options, chartData);
-            this.drawChart();
-            return;
-          }
-        }
-        this.showEmpty();
+        return;
       }
+
+      var data = this.$('script');
+      if (data.length) {
+        var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
+        if (chartData.data.length) {
+          this.createOptions(options, chartData);
+          this.drawChart();
+          return;
+        }
+      }
+
+      this.showEmpty();
     },
     createOptions: function (options, chartData) {
       options = _.extend({
@@ -37,7 +47,7 @@
       }, options, chartData);
       this.className = 'type' in options ? options.type.charAt(0).toUpperCase() + options.type.substr(1) : 'Line';
       if ('colors' in options) {
-        options.colors = options.lineColors = options.barColors = options.colors.split(',');
+        options.colors = options.lineColors = options.barColors = _.isArray(options.colors) ? options.colors : options.colors.split(',');
       } else {
         options.colors = options.lineColors = options.barColors = this.$colors;
       }
@@ -61,11 +71,11 @@
     showEmpty: function () {
       this.$el.addClass('empty').text('（无数据）');
     },
-    collection_fetchHandler: function (collection) {
-      if (collection.length === 0) {
+    collection_fetchHandler: function () {
+      if (this.collection.length === 0) {
         this.showEmpty();
       }
-      this.options.data = collection.toJSON();
+      this.options.data = this.collection.toJSON();
       this.drawChart();
     }
   });

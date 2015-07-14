@@ -5,7 +5,6 @@
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
-      'change [type=range]': 'range_changeHandler',
       'click .add-button': 'addButton_clickHandler',
       'click .refresh-button': 'refreshButton_clickHandler'
     },
@@ -105,9 +104,6 @@
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
-    },
-    range_changeHandler: function (event) {
-      $(event.target).next().html(event.target.value);
     },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
