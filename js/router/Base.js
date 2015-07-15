@@ -23,6 +23,10 @@
           }
         });
       }
+      if (page === 'login' && this.$me.id) {
+        this.navigate(tp.startPage || '#/dashboard');
+        return;
+      }
       tp.config.login.api = this.$me.url;
       this.$body.load(tp.path + 'page/' + page + '.hbs', tp.config.login, {
         isFull: true

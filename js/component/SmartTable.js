@@ -20,7 +20,6 @@
       var init = this.$el.data();
       init.url = init.url.replace('{{API}}', tp.API);
       options = _.extend({
-        pagesize: 10,
         autoFetch: true
       }, options, init);
 

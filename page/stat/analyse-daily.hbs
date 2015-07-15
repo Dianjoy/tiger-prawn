@@ -1,0 +1,95 @@
+<a href="#/stat/analyse/" class="btn btn-info navbar-btn pull-left back-button" title="返回">
+  <i class="fa fa-chevron-left">返回</i>
+</a>
+
+<table class="table table-bordered table-hover responsive-table add-on-list" data-collection-id="list" data-key="sublist">
+  <thead>
+    <tr>
+      <th>管理名</th>
+      <th>状态</th>
+      <th>类型</th>
+      <th>后台地址</th>
+      <th>账号</th>
+      <th>密码</th>
+      <th>渠道号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+      <tr>
+        <td data-title="管理名">
+          {{channel}} {{ad_name}} {{cid}}
+        </td>
+        <td data-title="状态">
+          {{pick status '上线' '下线'}}
+        </td>
+        <td data-title="类型">
+          {{pick ad_app_type '' 'Android' 'IOS'}}
+        </td>
+        <td data-title="后台地址">{{url}}</td>
+        <td data-title="账号">{{user}}</td>
+        <td data-title="密码">{{pwd}}</td>
+        <td data-title="渠道号">{{cid}}</td>
+      </tr>
+      {{{{/raw-helper}}}}
+    </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="9">
+      <p align="center">
+        <i class="fa fa-spin fa-spinner fa-2x"></i><br>
+        加载中，请稍候
+      </p>
+    </td>
+  </tr>
+  </tfoot>
+</table>
+
+<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}stat/analyse/daily/{{id}}" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="list">
+  <thead>
+    <tr>
+      <th>日期</th>
+      <th>CPA</th>
+      <th>渠道CPA</th>
+      <th>单价/元</th>
+      <th>结算率</th>
+      <th>实际价格</th>
+      <th>支出</th>
+      <th>收入</th>
+      <th>毛利润</th>
+    </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <tr>
+      {{#if is_amount}}
+      <td>总计</td>
+      {{else}}
+      <td data-title="日期">{{date}}</td>
+      {{/if}}
+      <td data-title="CPA">{{transfer}}</td>
+      <td data-title="渠道CPA">{{cpa}}</td>
+      <td data-title="单价/元">{{d100 quote_rmb}}</td>
+      <td data-title="结算率">{{ratio}}%</td>
+      <td data-title="实际价格">{{real}}</td>
+      <td data-title="支出">{{d100 outcome}}</td>
+      <td data-title="收入">{{d100 income}}</td>
+      <td data-title="毛利润">{{d100 profit}}</td>
+    </tr>
+    {{{{/raw-helper}}}}
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+    <tr>
+      <td colspan="9">
+        <p align="center">
+          <i class="fa fa-spin fa-spinner fa-2x"></i><br>
+          加载中，请稍候
+        </p>
+      </td>
+    </tr>
+  </tfoot>
+</table>

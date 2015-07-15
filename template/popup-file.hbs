@@ -17,12 +17,14 @@
             {{/if}}
           </div>
         {{/each}}
-      {{else}}
-        {{#if value}}
-          <div class="su-item">
-            <a href="{{value}}" download="{{ad_name}}.{{ext value}}">文件链接</a>
-          </div>
-        {{/if}}
+      {{else if value}}
+        <div class="su-item">
+          {{#if isImage}}
+          <img src="{{value}}" class="img-thumbnail">
+          {{else}}
+          <a href="{{value}}" download="{{ad_name}}.{{ext value}}">文件链接</a>
+          {{/if}}
+        </div>
       {{/if}}
     </div>
     <label class="btn btn-info btn-block su-upload-button">

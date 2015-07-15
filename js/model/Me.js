@@ -29,6 +29,7 @@
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
           var from = localStorage.getItem(tp.PROJECT + '-from');
+          from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
           location.hash = from || tp.startPage || '#/dashboard';
         }
       } else {

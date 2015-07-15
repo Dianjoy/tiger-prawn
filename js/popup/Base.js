@@ -24,9 +24,10 @@
       if (options.isRemote) {
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
-        if (/\.hbs/.test(options.content)) {
+        if (/\.hbs$/.test(options.content)) {
           $.get(options.content, _.bind(this.template_loadedHandler, this));
         } else {
+          options.isMD = /\.md$/.test(options.content);
           $.get(options.content, _.bind(this.onLoadComplete, this));
         }
 
@@ -51,6 +52,9 @@
     },
     onLoadComplete: function (response) {
       if (response) {
+        if (this.options && this.options.isMD) {
+          response = marked(response);
+        }
         this.$('.modal-body').html(response);
       }
       this.$el.removeClass('loading')

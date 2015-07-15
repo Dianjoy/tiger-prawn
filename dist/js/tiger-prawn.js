@@ -24,7 +24,8 @@
 }(Backbone));;
 (function (h) {
   var slice = Array.prototype.slice
-    , pop = Array.prototype.pop;
+    , pop = Array.prototype.pop
+    , counter = {};
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
@@ -136,6 +137,18 @@
     target = context.getValue(target);
     return target instanceof Backbone.Model ? target.get(key) : target[key];
   });
+
+  // 输出排序值
+  h.registerHelper('counter', function (key) {
+    key = key || '_';
+    counter[key] = counter[key] || 1;
+    return counter[key]++;
+  });
+  h.registerHelper('counter-reset', function (key) {
+    key = key || '_';
+    counter[key] = 1;
+    return '';
+  });
 }(Handlebars));
 ;
 (function ($) {
@@ -159,6 +172,11 @@
     });
   };
 }(jQuery));;
+(function (m) {
+  m.DATE_FORMAT = 'YYYY-MM-DD';
+  m.TIME_FORMAT = 'HH:mm:ss';
+  m.defaultFormat = m.DATE_FORMAT + ' ' + m.TIME_FORMAT;
+}(moment));;
 (function () {
   var data = {}
 
@@ -194,6 +212,10 @@
             location.hash = '#/user/login';
           }
         });
+      }
+      if (page === 'login' && this.$me.id) {
+        this.navigate(tp.startPage || '#/dashboard');
+        return;
       }
       tp.config.login.api = this.$me.url;
       this.$body.load(tp.path + 'page/' + page + '.hbs', tp.config.login, {
@@ -452,7 +474,8 @@
       cycle: 2
     },
     urlRoot: tp.API + 'ad/',
-    initialize: function () {
+    initialize: function (attrs, options) {
+      Backbone.Model.prototype.initialize.call(this, attrs, options);
       if (this.isNew()) {
         this.isEmpty = true;
         this.urlRoot += 'init';
@@ -546,6 +569,7 @@
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
           var from = localStorage.getItem(tp.PROJECT + '-from');
+          from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
           location.hash = from || tp.startPage || '#/dashboard';
         }
       } else {
@@ -633,6 +657,11 @@
         if (response.options) {
           this.options = response.options;
         }
+        for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
+          if (response.hasOwnProperty(key) && _.isArray(response[key])) {
+            this.trigger('data:' + key, response[key]);
+          }
+        }
         return _.isArray(response) ? response : response.list;
       },
       setPagesize: function (size) {
@@ -642,8 +671,13 @@
     });
 
   Collection.getInstance = function (options) {
+    var collection;
     if (options.collectionId && options.collectionId in collections) {
-      return collections[options.collectionId];
+      collection = collections[options.collectionId];
+      if (!collection.url && options.url) {
+        collection.url = options.url;
+      }
+      return collection;
     }
 
     var params = _.extend({}, options);
@@ -651,7 +685,7 @@
       var init = _.pick(params, 'idAttribute', 'defaults');
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
-    var collection = new Collection(null, params);
+    collection = new Collection(null, params);
     if (options.collectionId) {
       collections[options.collectionId] = collection;
     }
@@ -954,9 +988,11 @@
       collection: collection
     });
 
-  ns.Manager = new Manager({
-    collection: collection
-  });
+  if (tp.NOTICE_KEY) {
+    ns.Manager = new Manager({
+      collection: collection
+    });
+  }
 }(Nervenet.createNameSpace('tp.notification')));;
 (function (ns) {
   var history = 'history-recorder';
@@ -1256,6 +1292,15 @@
     form.submit();
     iframe.body.innerHTML = '';
   };
+
+  // 全局表单元素增加事件
+  $(document)
+    .on('change', '[type=range]', function (event) {
+      $(event.target).next().html(event.target.value);
+    })
+    .on('change', '.auto-submit', function (event) {
+      $(event.target).closest('form').submit();
+    })
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
   ns.BaseList = Backbone.View.extend({
@@ -1588,6 +1633,9 @@
       if (this.collection.length) {
         this.collection_resetHandler();
       }
+      if (init.autoFetch) {
+        this.collection.fetch();
+      }
     },
     collection_addHandler: function (model, collection, options) {
       var item = ns.BaseList.prototype.collection_addHandler.call(this, model, collection, options);
@@ -1607,6 +1655,7 @@
     $context: null,
     map: {
       '.smart-table': 'tp.component.SmartTable',
+      '.add-on-list': 'tp.component.AddOnList',
       '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
       '#login-form': 'tp.component.LoginForm',
@@ -1751,9 +1800,10 @@
       if (options.isRemote) {
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
-        if (/\.hbs/.test(options.content)) {
+        if (/\.hbs$/.test(options.content)) {
           $.get(options.content, _.bind(this.template_loadedHandler, this));
         } else {
+          options.isMD = /\.md$/.test(options.content);
           $.get(options.content, _.bind(this.onLoadComplete, this));
         }
 
@@ -1778,6 +1828,9 @@
     },
     onLoadComplete: function (response) {
       if (response) {
+        if (this.options && this.options.isMD) {
+          response = marked(response);
+        }
         this.$('.modal-body').html(response);
       }
       this.$el.removeClass('loading')
@@ -1835,7 +1888,7 @@
       this.submit = this.$('.btn-primary');
       this.options = options;
       var type = options.type || 'short-text'
-        , template = tp.path + (options.template ? 'page/' + options.template : ('template/popup-' + type));
+        , template = options.template ? 'page/' + options.template : (tp.path + 'template/popup-' + type);
       $.get(template + '.hbs', _.bind(this.loadCompleteHandler, this), 'html');
 
       // 补充信息
@@ -2154,7 +2207,6 @@
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
-      'change [type=range]': 'range_changeHandler',
       'click .add-button': 'addButton_clickHandler',
       'click .refresh-button': 'refreshButton_clickHandler'
     },
@@ -2254,9 +2306,6 @@
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
-    },
-    range_changeHandler: function (event) {
-      $(event.target).next().html(event.target.value);
     },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
@@ -2446,7 +2495,7 @@
         $(event.target).next().addClass('spin');
         return;
       }
-      this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
+      this.$('[name=replace-with],#replace-time').prop('disabled', !replace);
     },
     searchAD_errorHandler: function () {
       alert('未找到符合广告名的广告');
@@ -2553,6 +2602,27 @@
 }(Nervenet.createNameSpace('tp.page')));
 ;
 (function (ns) {
+  ns.AddOnList = ns.BaseList.extend({
+    initialize: function (options) {
+      options = _.extend({
+        container: 'tbody'
+      }, options);
+      this.collection = new Backbone.Collection();
+      ns.BaseList.prototype.initialize.call(this, options);
+
+      var id = this.$el.data('collection-id')
+        , key = this.$el.data('key')
+        , collection = tp.model.ListCollection.getInstance({
+          collectionId: id
+        });
+      collection.on('data:' + key, this.collection_dataHandler, this);
+    },
+    collection_dataHandler: function (list) {
+      this.collection.reset(list);
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));;
+(function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {
       'click #verify-code': 'verifyCode_clickHandler'
@@ -2570,29 +2640,39 @@
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
     initialize: function (options) {
+      if (options.data) {
+        this.createOptions(options);
+        this.drawChart();
+        return;
+      }
+
       var init = this.$el.data();
       options = _.extend({
         autoFetch: true
       }, options, init);
       if (options.url) {
         this.collection = tp.model.ListCollection.getInstance(options);
-        this.collection.on('sync reset', this.collection_fetchHandler, this);
         this.createOptions(options);
         if (options.autoFetch) {
+          this.collection.once('sync reset', this.collection_fetchHandler, this);
           this.collection.fetch();
+        } else {
+          this.collection_fetchHandler();
         }
-      } else {
-        var data = this.$('script');
-        if (data.length) {
-          var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
-          if (chartData.data.length) {
-            this.createOptions(options, chartData);
-            this.drawChart();
-            return;
-          }
-        }
-        this.showEmpty();
+        return;
       }
+
+      var data = this.$('script');
+      if (data.length) {
+        var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
+        if (chartData.data.length) {
+          this.createOptions(options, chartData);
+          this.drawChart();
+          return;
+        }
+      }
+
+      this.showEmpty();
     },
     createOptions: function (options, chartData) {
       options = _.extend({
@@ -2601,7 +2681,7 @@
       }, options, chartData);
       this.className = 'type' in options ? options.type.charAt(0).toUpperCase() + options.type.substr(1) : 'Line';
       if ('colors' in options) {
-        options.colors = options.lineColors = options.barColors = options.colors.split(',');
+        options.colors = options.lineColors = options.barColors = _.isArray(options.colors) ? options.colors : options.colors.split(',');
       } else {
         options.colors = options.lineColors = options.barColors = this.$colors;
       }
@@ -2625,44 +2705,15 @@
     showEmpty: function () {
       this.$el.addClass('empty').text('（无数据）');
     },
-    collection_fetchHandler: function (collection) {
-      if (collection.length === 0) {
+    collection_fetchHandler: function () {
+      if (this.collection.length === 0) {
         this.showEmpty();
       }
-      this.options.data = collection.toJSON();
+      this.options.data = this.collection.toJSON();
       this.drawChart();
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-;(function (ns) {var init = {
-    events: {
-      'change .auto-submit': 'autoSubmit_Handler',
-      'click .add-row-button': 'addRowButton_clickHandler'
-    },
-    initialize: function () {
-      var cid = this.$el.data('collection-id');
-      if (cid) {
-        this.collection = tp.model.ListCollection.createInstance(null, {
-          id: cid
-        });
-      }
-
-      this.render();
-    },
-    render: function () {
-      this.$('.keyword-form').find('[name=query]').val(this.model.get('keyword'));
-    },
-    addRowButton_clickHandler: function (event) {
-      this.collection.add({});
-      event.preventDefault();
-    },
-    autoSubmit_Handler: function (event) {
-      $(event.currentTarget).closest('form').submit();
-    }
-  };
-  ns.SmartNavbar = Backbone.View.extend(init);
-}(Nervenet.createNameSpace('tp.component')));
-;
 (function (ns) {
   var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{value}}</a>');
 
@@ -2684,7 +2735,6 @@
       var init = this.$el.data();
       init.url = init.url.replace('{{API}}', tp.API);
       options = _.extend({
-        pagesize: 10,
         autoFetch: true
       }, options, init);
 

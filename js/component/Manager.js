@@ -6,6 +6,7 @@
     $context: null,
     map: {
       '.smart-table': 'tp.component.SmartTable',
+      '.add-on-list': 'tp.component.AddOnList',
       '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
       '#login-form': 'tp.component.LoginForm',

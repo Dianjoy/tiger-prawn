@@ -297,4 +297,13 @@
     form.submit();
     iframe.body.innerHTML = '';
   };
+
+  // 全局表单元素增加事件
+  $(document)
+    .on('change', '[type=range]', function (event) {
+      $(event.target).next().html(event.target.value);
+    })
+    .on('change', '.auto-submit', function (event) {
+      $(event.target).closest('form').submit();
+    })
 }(Nervenet.createNameSpace('tp.component')));
