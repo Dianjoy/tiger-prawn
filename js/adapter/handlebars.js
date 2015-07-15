@@ -5,7 +5,8 @@
 'use strict';
 (function (h) {
   var slice = Array.prototype.slice
-    , pop = Array.prototype.pop;
+    , pop = Array.prototype.pop
+    , counter = {};
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
@@ -116,5 +117,17 @@
     var context = h.$context;
     target = context.getValue(target);
     return target instanceof Backbone.Model ? target.get(key) : target[key];
+  });
+
+  // 输出排序值
+  h.registerHelper('counter', function (key) {
+    key = key || '_';
+    counter[key] = counter[key] || 1;
+    return counter[key]++;
+  });
+  h.registerHelper('counter-reset', function (key) {
+    key = key || '_';
+    counter[key] = 1;
+    return '';
   });
 }(Handlebars));

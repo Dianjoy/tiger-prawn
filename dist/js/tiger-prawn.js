@@ -24,7 +24,8 @@
 }(Backbone));;
 (function (h) {
   var slice = Array.prototype.slice
-    , pop = Array.prototype.pop;
+    , pop = Array.prototype.pop
+    , counter = {};
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
@@ -135,6 +136,18 @@
     var context = h.$context;
     target = context.getValue(target);
     return target instanceof Backbone.Model ? target.get(key) : target[key];
+  });
+
+  // 输出排序值
+  h.registerHelper('counter', function (key) {
+    key = key || '_';
+    counter[key] = counter[key] || 1;
+    return counter[key]++;
+  });
+  h.registerHelper('counter-reset', function (key) {
+    key = key || '_';
+    counter[key] = 1;
+    return '';
   });
 }(Handlebars));
 ;
@@ -556,7 +569,7 @@
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
           var from = localStorage.getItem(tp.PROJECT + '-from');
-          from = from === '#/user/login' ? '' : from;
+          from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
           location.hash = from || tp.startPage || '#/dashboard';
         }
       } else {
@@ -2701,35 +2714,6 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-;(function (ns) {var init = {
-    events: {
-      'change .auto-submit': 'autoSubmit_Handler',
-      'click .add-row-button': 'addRowButton_clickHandler'
-    },
-    initialize: function () {
-      var cid = this.$el.data('collection-id');
-      if (cid) {
-        this.collection = tp.model.ListCollection.createInstance(null, {
-          id: cid
-        });
-      }
-
-      this.render();
-    },
-    render: function () {
-      this.$('.keyword-form').find('[name=query]').val(this.model.get('keyword'));
-    },
-    addRowButton_clickHandler: function (event) {
-      this.collection.add({});
-      event.preventDefault();
-    },
-    autoSubmit_Handler: function (event) {
-      $(event.currentTarget).closest('form').submit();
-    }
-  };
-  ns.SmartNavbar = Backbone.View.extend(init);
-}(Nervenet.createNameSpace('tp.component')));
-;
 (function (ns) {
   var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{value}}</a>');
 
