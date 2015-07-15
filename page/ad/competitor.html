@@ -3,52 +3,80 @@
     <label for="search-query">搜索：</label>
     <input type="search" class="form-control" id="search-query">
   </div>
+  <div class="form-group">
+    <label for="dj_status">点乐投放状态：</label>
+    <select class="form-control" name="dj_status" id="dj_status">
+      <option value="-1">未推广</option>
+      <option value="0">已下线</option>
+      <option value="1">正在投</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="fund_status">融资状态：</label>
+    <select class="form-control" name="fund_status" id="fund_status">
+      <option value="">全部</option>
+      <option value="0">有</option>
+      <option value="1">无</option>
+    </select>
+  </div>
 </div>
 
-<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}competitor_ad/" data-id-attribute="pack_name" data-key="ad" data-collection-id="competitor" data-pagination=".pagination" data-pagesize="20" data-search="#search-query">
+<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}competitor_ad/" data-id-attribute="pack_name" data-key="ad" data-collection-id="competitor" data-pagination=".pagination" data-pagesize="20" data-search="#search-query" data-filter=".table-header">
   <thead>
   <tr>
-    <th>产品名</th>
-    <th class="filters">来源</th>
-    <th>类型</th>
-    <th>开发商/代理商</th>
-    <th>投放历史</th>
-    <th><a href="#communication" class="order">初步沟通</a></th>
-    <th><a href="#delivery" class="order">是否投放</a></th>
-    <th><a href="#delivery_num" class="order">投放量级</a></th>
-    <th>360</th>
-    <th>百度</th>
-    <th>应用宝</th>
+    <th>应用名</th>
+    <th>公司名</th>
+    <th>广告来源</th>
+    <th class="order"  href="#update_time">抓取时间</th>
+    <th>点乐投放状态</th>
+    <th class="order" href="#dj_transfer">过去一周激活数</th>
+    <th class="order" href="#fund_money">融资金额</th>
+    <th>融资状态</th>
+    <th>竞争对手信息</th>
+    <th>应用市场信息</th>
+    <th class="order"  href="#da">日活</th>
+    <th class="order"  href="#now_count">估计安装量</th>
+    <th class="order"  href="#cc">日增</th>
+    <th><a class="order" href="#owner">跟单负责人</a></th>
+    <th><a class="order" href="#communication">初步沟通</a></th>
+    <th><a class="order" href="#delivery">是否投放</a></th>
+    <th>百度下载数</th>
+    <th>应用宝下载数</th>
+    <th>360下载数</th>
   </tr>
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
     <tr id="{{pack_name}}">
-      <td>{{app_name}}{{#if important}} <span class="label label-danger">重</span>{{/if}}</td>
+      <td data-title="应用名">{{app_name}}</td>
+      <td data-title="公司名">{{company_name}}</td>
+      <td data-title="广告来源">{{source}}</td>
+      <td data-title="抓取时间"><time datetime="{{update_time}}">{{moment update_time}}</time></td>
+      <td data-title="点乐投放状态">{{dj_status}}</td>
+      <td data-title="过去一周激活数">{{dj_transfer}}</td>
+      <td data-title="融资金额">{{fund_money}}</td>
+      <td data-title="融资状态">{{fund_status}}</td>
+      <td data-title="竞争对手信息">{{competitor}}</td>
+      <td data-title="应用市场信息">{{market}}</td>
+      <td data-title="日活">{{da}}</td>
+      <td data-title="估计安装量">{{now_count}}</td>
+      <td data-title="日增">{{cc}}</td>
       <td>
-        {{#each sources}}
-        <a href="#/source/{{.}}" class="label label-info filter">{{substring . 0 1}}</a>
-        {{/each}}
-      </td>
-      <td>{{category}}</td>
-      <td>{{corp}}</td>
-      <td>{{#if delivery_status}}OFF{{else}}NO{{/if}}</td>
-      <td>
-        <a href="#communication" class="edit" data-type="select" data-list="#communication-status" data-comment="communication_comment">
-          {{#if communication}}<i class="fa fa-check text-success"></i>{{/if}}
-        </a>
-        {{communication_comment}}
+        {{#if is_sales_manager}}
+        <a href="#owner" class="edit" data-type="select" data-options="{{inject 'me' 'id'}}">{{owner}}</a>
+        {{else}}
+        {{pick owner_manager id}}
+        {{/if}}
       </td>
       <td>
-        <a href="#delivery" class="edit" data-type="select" data-list="#delivery-status" data-comment="delivery_num_comment">
-          {{#if delivery}}<i class="fa fa-check text-success"></i>{{else}}<i class="fa fa-times text-danger"></i>{{/if}}
-        </a>
-        {{delivery_comment}}
+        <span class="fa popup {{#if communication}}fa-check text-success{{else}}fa-times text-danger{{/if}} " title="初步沟通" data-content="商务反馈：{{communication_comment}}" data-cancel="关闭"></span>
       </td>
-      <td><a href="#delivery_num" class="edit" data-type="number">{{delivery_num}}</a> </td>
-      <td>{{short_n down_count_360}}</td>
-      <td>{{short_n down_count_baidu}}</td>
-      <td>{{short_n down_count_myapp}}</td>
+      <td>
+        <span class="fa popup {{#if delivery}}fa-check text-success{{else}}fa-times text-danger{{/if}}" title="是否投放" data-content="商务反馈：{{delivery_comment}}" data-cancel="关闭"></span>
+      </td>
+      <td data-title="百度下载数">{{down_count_baidu}}</td>
+      <td data-title="应用宝下载数">{{down_count_myapp}}</td>
+      <td data-title="360下载数">{{down_count_360}}</td>
     </tr>
   </script>
   </tbody>
