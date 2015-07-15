@@ -41,6 +41,7 @@
       this.clear();
       this.$el.toggleClass('full-page', !!options.isFull)
         .removeClass(this.lastClass);
+      $('#navbar-side').removeClass('in');
 
       // html or hbs
       if (/.hbs$/.test(url)) {
