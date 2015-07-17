@@ -1,3 +1,6 @@
+{{#if cp}}
+  <div class="alert alert-info">如需要做技术对接，请联系点乐技术。</div>
+{{/if}}
 <form class="form-horizontal model-editor {{#if cp}}iPhone{{else}}Android{{/if}} {{pick province_type '' 'show-provinces'}}" method="post" enctype="multipart/form-data" id="ad-editor">
   <input type="hidden" name="id" value="">
   <input type="hidden" name="pack_md5" value="">

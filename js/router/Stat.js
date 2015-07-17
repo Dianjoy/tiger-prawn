@@ -19,7 +19,7 @@
       this.$body.load('page/stat/daily.hbs', model, {
         className: 'stat stat-ad'
       });
-      this.$body.setFramework('has-date-range');
+      this.$body.setFramework('has-date-range', '单个广告按日期统计');
     },
     showADStatDate: function (id, date) {
       var model = new tp.model.AD({
@@ -29,10 +29,11 @@
       this.$body.load('page/stat/hourly.hbs', model, {
         className: 'stat stat-date'
       });
+      this.$body.setFramework('has-date-range', '单个广告一天内统计');
     },
     showStat: function () {
       this.$body.load('page/stat/list.html');
-      this.$body.setFramework('has-date-range');
+      this.$body.setFramework('has-date-range', '广告统计');
     },
     showAdminADStat: function () {
       this.$body.load('page/stat/analyse.hbs', {

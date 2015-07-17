@@ -13,7 +13,7 @@
     <div class="tab-pane active" id="ad-dashboard" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
-          <th>当前状态</th>
+          <th width="10%">当前状态</th>
           <td>
             {{pick status '上线' '下线' '待审批' '待审批' '被拒绝'}}
             {{#equal status 4}}
@@ -25,22 +25,41 @@
         </tr>
         <tr>
           <th>每日限量</th>
-          <td>{{job_num}}</td>
+          <td>{{jobnum}}</td>
         </tr>
         <tr>
           <th>今日余量</th>
           <td>{{num}}</td>
         </tr>
         <tr>
-          <th>今日投放</th>
-          <td>{{history}}</td>
+          <th>今日投放曲线</th>
+          <td>
+            <div class="morris-chart" style="height: 200px">
+              <script type="application/json">
+                {
+                  "data": [
+                    {{#each today_stat}}
+                    {
+                      "hour": "{{hour}}:00:00"
+                      {{#if transfer}},"transfer": {{transfer}}{{/if}}
+                      {{#if click}},"click": {{click}}{{/if}}
+                    }{{#unless @last}},{{/unless}}
+                    {{/each}}
+                  ],
+                  "xkey": "hour",
+                  "ykeys": ["transfer", "click"],
+                  "labels": ["激活数", "点击数"]
+                }
+              </script>
+            </div>
+          </td>
         </tr>
       </table>
     </div>
     <div class="tab-pane" id="base-info" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
-          <th>所属平台</th>
+          <th width="10%">所属平台</th>
           <td>{{pick ad_app_type '' 'Android' 'iOS'}}</td>
         </tr>
         <tr>
@@ -49,7 +68,7 @@
         </tr>
         <tr>
           <th>广告类型</th>
-          <td><a class="edit" href="#ad_type" data-type="select" data-options="ad_types">{{pick ad_type ad_types}}</a></td>
+          <td><a class="edit" href="#ad_type" data-type="select" data-options="ad_types">{{#pick_with ad_type ad_types}}{{label}}{{/pick_with}}</a></td>
         </tr>
         <tr>
           <th>广告描述</th>
@@ -77,7 +96,7 @@
         </tr>
         <tr>
           <th>广告包名</th>
-          <td><a class="edit" href="#pack_name">{{pack_name}}</a></td>
+          <td>{{pack_name}}</td>
         </tr>
         <tr>
           <th>广告LOGO</th>
@@ -102,12 +121,8 @@
     <div  class="tab-pane"id="put" role="tabpanel">
       <table class="table table-bordered table-striped">
         <tr>
-          <th>广告主报价</th>
+          <th width="10%">广告主报价</th>
           <td><a class="edit" href="#quote_rmb" data-type="number">{{quote_rmb}}</a></td>
-        </tr>
-        <tr>
-          <th>日投放量</th>
-          <td><a class="edit" href="#job_num" data-type="number">{{job_num}}</a></td>
         </tr>
         <tr>
           <th>完成条件</th>
@@ -139,7 +154,7 @@
         </tr>
         {{/if}}
         <tr>
-          <th>渠道名称</th>
+          <th width="10%">渠道名称</th>
           <td><a href="#channel" class="edit" data-type="select" data-add-new="true" data-options="channels" data-template="ad/channel-edit" data-url="channel/">{{channel}}</a></td>
         </tr>
         <tr>
@@ -178,7 +193,7 @@
       <table class="table table-bordered table-striped">
         <thead>
         <tr>
-          <th>运营</th>
+          <th width="10%">运营</th>
           <th>点评</th>
           <th>发表时间</th>
         </tr>
