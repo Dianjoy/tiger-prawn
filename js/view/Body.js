@@ -66,7 +66,7 @@
     setFramework: function (classes, title, sub, model) {
       this.$el.addClass(classes);
       this.lastClass = classes;
-      if (model instanceof Backbone.Model) {
+      if (model instanceof Backbone.Model && title) {
         model.once('sync', function () {
           this.setTitle(title, sub, model);
         }, this);

@@ -29,10 +29,10 @@
         </tr>
         <tr>
           <th>今日余量</th>
-          <td>{{today_left}}</td>
+          <td>{{num}}</td>
         </tr>
         <tr>
-          <th>历史状态</th>
+          <th>今日投放</th>
           <td>{{history}}</td>
         </tr>
       </table>
@@ -91,7 +91,7 @@
           <th>广告截图</th>
           <td>
             <a class="edit" href="#ad_shoot" data-type="file" data-accept="image/*" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
-              {{#each shoots}}
+              {{#each ad_shoot}}
                 <img src="{{.}}" class="img-thumbnail">
               {{/each}}
             </a>

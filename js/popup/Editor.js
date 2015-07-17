@@ -225,7 +225,7 @@
       options.isImage = /image\/\*/.test(options.accept);
       options.API = tp.API;
       if (options.multiple) {
-        options.items = options.value.split(',');
+        options.items = _.isArray(options.value) ? options.value : options.value.split(',');
       }
       // 防止误触导致退出窗体
       options.backdrop = 'static';
