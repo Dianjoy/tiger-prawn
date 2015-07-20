@@ -9,7 +9,7 @@
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard': 'showDashboard'
+      'dashboard(/)': 'showDashboard'
     },
     showDashboard: function () {
       this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());

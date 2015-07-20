@@ -199,7 +199,7 @@
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard': 'showDashboard'
+      'dashboard(/)': 'showDashboard'
     },
     showDashboard: function () {
       this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
@@ -948,7 +948,11 @@
     count: 0,
     initialize: function () {
       if (notification.permission !== 'granted') {
-        notification.requestPermission();
+        try {
+          notification.requestPermission();
+        } catch (e) {
+
+        }
       }
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
@@ -1619,7 +1623,7 @@
       this.model.set(name, value, {
         reset: true
       });
-      $(target).after(spinner);
+      $(target).after(tp.component.spinner);
     }
   });
 }(Nervenet.createNameSpace('tp.component.table')));;
@@ -2097,7 +2101,7 @@
       options.isImage = /image\/\*/.test(options.accept);
       options.API = tp.API;
       if (options.multiple) {
-        options.items = options.value.split(',');
+        options.items = _.isArray(options.value) ? options.value : options.value.split(',');
       }
       // 防止误触导致退出窗体
       options.backdrop = 'static';
@@ -2243,6 +2247,7 @@
       this.clear();
       this.$el.toggleClass('full-page', !!options.isFull)
         .removeClass(this.lastClass);
+      $('#navbar-side').removeClass('in');
 
       // html or hbs
       if (/.hbs$/.test(url)) {
@@ -2267,7 +2272,7 @@
     setFramework: function (classes, title, sub, model) {
       this.$el.addClass(classes);
       this.lastClass = classes;
-      if (model instanceof Backbone.Model) {
+      if (model instanceof Backbone.Model && title) {
         model.once('sync', function () {
           this.setTitle(title, sub, model);
         }, this);

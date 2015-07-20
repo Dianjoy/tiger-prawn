@@ -145,6 +145,11 @@
         <input name="ad_size" id="ad_size" value="{{ad_size}}" class="form-control" />
       </div>
     </div>
+    {{#if cp}}
+    <input type="hidden" name="pack_name" id="pack_name">
+    <input type="hidden" name="process_name" id="process_name">
+    <input type="hidden" name="url_type" id="url_type">
+    {{else}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pack_name">广告包名</label>
       <div class="col-sm-10">
@@ -163,6 +168,7 @@
         <input name="url_type" id="url_type" value="{{url_type}}" class="form-control">
       </div>
     </div>
+    {{/if}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pic_path">广告LOGO</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="pic_path">

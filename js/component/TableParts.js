@@ -208,7 +208,7 @@
       this.model.set(name, value, {
         reset: true
       });
-      $(target).after(spinner);
+      $(target).after(tp.component.spinner);
     }
   });
 }(Nervenet.createNameSpace('tp.component.table')));

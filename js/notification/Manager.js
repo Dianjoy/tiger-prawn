@@ -26,7 +26,11 @@
     count: 0,
     initialize: function () {
       if (notification.permission !== 'granted') {
-        notification.requestPermission();
+        try {
+          notification.requestPermission();
+        } catch (e) {
+
+        }
       }
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
