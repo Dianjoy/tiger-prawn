@@ -94,10 +94,20 @@
           <th>广告大小</th>
           <td><a class="edit" href="#ad_size">{{ad_size}}</a></td>
         </tr>
+        {{#unless cp}}
         <tr>
           <th>广告包名</th>
           <td>{{pack_name}}</td>
         </tr>
+        <tr>
+          <th>进程名</th>
+          <td>{{process_name}}</td>
+        </tr>
+        <tr>
+          <th>URL scheme</th>
+          <td>{{url_type}}</td>
+        </tr>
+        {{/unless}}
         <tr>
           <th>广告LOGO</th>
           <td>
@@ -124,10 +134,23 @@
           <th width="10%">广告主报价</th>
           <td><a class="edit" href="#quote_rmb" data-type="number">{{quote_rmb}}</a></td>
         </tr>
+        {{#equal ad_app_type 1}}
         <tr>
           <th>完成条件</th>
           <td><a class="edit" href="#cate" data-type="select" data-options="cates">{{pick cate cates}}</a></td>
         </tr>
+        {{else}}
+        <tr>
+          <th>投放类型</th>
+          <th><a class="edit" href="#search_flag" data-type="select" data-list="search_flags">{{pick search_flag '普通' 'ASO'}}</a></th>
+        </tr>
+        {{#if search_flag}}
+          <tr>
+            <th>ASO搜索词</th>
+            <th><a class="edit" href="#keywords">{{keywords}}</a></th>
+          </tr>
+        {{/if}}
+        {{/equal}}
         <tr>
           <th>投放运营商</th>
           <td><a class="edit" href="#net_type" data-type="select" data-options="net_types">{{pick net_type net_types}}</a></td>
@@ -258,4 +281,8 @@
   <option value="2">一周两次数据</option>
   <option value="3">隔周数据</option>
   <option value="4">隔月数据</option>
+</datalist>
+<datalist id="search_flags">
+  <option value="0">普通广告</option>
+  <option value="1">ASO广告</option>
 </datalist>

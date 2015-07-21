@@ -77,7 +77,7 @@
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
         {{/in}}
         {{#if search_flag}}
-        <span class="label label-default">ASO</span>
+        <span class="label label-default" title="关键词" data-toggle="popover" data-content="{{keywords}}" data-placement="top">ASO</span>
         {{/if}}
         {{#if is_baobei}}
         <span class="label label-success"><i class="fa fa-check"></i> 已报备</span>
