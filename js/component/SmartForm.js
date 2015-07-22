@@ -183,7 +183,7 @@
     submit_successHandler: function(response) {
       this.displayResult(true, response.msg, 'smile-o');
       smart.recordHistory(this.el);
-      this.$el.trigger('success');
+      this.$el.trigger('success', response);
       this.trigger('success', response);
     },
     submit_errorHandler: function(xhr, status, error) {
@@ -306,4 +306,10 @@
     .on('change', '.auto-submit', function (event) {
       $(event.target).closest('form').submit();
     })
+    .on('change', '.check-all', function (event) {
+      var button = event.target
+        , name = button.value
+        , prop = button.checked;
+      $('[name="' + name + '"]').prop('checked', prop);
+    });
 }(Nervenet.createNameSpace('tp.component')));
