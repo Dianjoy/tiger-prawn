@@ -1660,7 +1660,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-;(function (ns) {
+(function (ns) {
   ns.Manager = {
     $context: null,
     map: {
@@ -1678,7 +1678,19 @@
       var dateFields = $el.find('.datetimepicker');
       if (dateFields.length) {
         dateFields.each(function () {
-          $(this).datetimepicker($(this).data());
+          var options = $(this).data();
+          options = _.mapObject(options, function (value, key) {
+            switch (key) {
+              case 'maxDate':
+              case 'minDate':
+              case 'defaultDate':
+                return moment().add(value, 'days');
+                break;
+              default:
+                return value;
+            }
+          });
+          $(this).datetimepicker(options);
         });
       }
 
