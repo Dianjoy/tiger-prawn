@@ -23,25 +23,21 @@
       'change #feedback': 'feedback_changeHandler',
       'change #app-uploader [name=ad_url]': 'adURL_changeHandler',
       'click .search-ad-button': 'searchADButton_clickHandler',
-      'click .search-channel-button': 'searchChannelButton_clickHandler',
-      'keydown .channel-keyword': 'channelKeyword_keyDownHandler'
+      'click .search-agreement-button': 'searchAgreementButton_clickHandler',
+      'keydown .agreement-keyword': 'agreementKeyword_keyDownHandler'
     },
     render: function () {
       tp.view.Loader.prototype.render.call(this);
 
-      this.channels = tp.model.ListCollection.getInstance({
-        collectionId: 'channel',
-        url: tp.API + 'channel/',
-        key: 'channel'
+      this.agreements = tp.model.ListCollection.getInstance({
+        collectionId: 'agreement',
+        url: tp.API + 'agreement/',
+        key: 'agreement'
       });
-      this.channels.options = {
-        channel_types: this.model.options.channel_types,
-        relativeSales: this.model.options.relativeSales
-      };
-      this.channels.reset(this.model.options.channels);
-      this.channels.on('reset', function () {
-        this.$('.channel').find('input').prop('disabled', false);
-        this.$('.search-channel-button').spinner(false);
+      this.agreements.reset(this.model.options.agreements);
+      this.agreements.on('reset', function () {
+        this.$('.agreement').find('input').prop('disabled', false);
+        this.$('.search-agreement-button').spinner(false);
       }, this);
 
       var init = this.model.pick(_.keys(this.model.defaults))
