@@ -99,6 +99,10 @@ module.exports = function (grunt) {
       if (/^js\/router\//.test(src) && filename != 'Base.js') {
         return '';
       }
+      // 不打包page目录里的专用业务逻辑
+      if (/^js\/page\//.test(src)) {
+        return '';
+      }
       jsFiles.push(src);
       return match;
     });
