@@ -4,9 +4,10 @@
  * @since 2013-08-08
  */
 'use strict';
-;(function (ns) {
+(function (ns) {
   var IOS_PREFIX = 'itms-apps://'
     , option_template = '{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
+    , aso_desc = 'App Store搜索关键字“XX”，找到“XXX”（约第X位）\n下载并注册帐号后，二次登录体验可得奖励。'
     , omit = ['ad_url', 'ad_lib', 'ad_size', 'id'];
   
   ns.AdEditor = tp.view.Loader.extend({
@@ -206,7 +207,10 @@
       this.searchChannel();
     },
     searchFlag_changeHandler: function (event) {
-      this.$('.aso').toggle(event.target.value === '1');
+      var is_aso = event.target.value === '1';
+      this.$('.aso').toggle(is_aso);
+      $('#keywords').prop('required', is_aso);
+      $('#ad_desc').val(is_aso ? aso_desc : this.model.get('ad_url'));
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

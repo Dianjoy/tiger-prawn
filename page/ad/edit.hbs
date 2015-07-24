@@ -153,7 +153,7 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pack_name">广告包名</label>
       <div class="col-sm-10">
-        <input name="pack_name" id="pack_name" value="{{pack_name}}" class="form-control" required readonly />
+        <input name="pack_name" id="pack_name" value="{{pack_name}}" class="form-control" readonly />
       </div>
     </div>
     <div class="form-group iPhone">
@@ -228,7 +228,7 @@
       <div class="col-sm-10">
         <input type="text" name="keywords" class="form-control" id="keywords">
         <p class="help-block">
-          搜索ASO搜索词时，对应的应用排序需要在15名以内
+          搜索ASO搜索词时，对应的应用排序需要在1-1000名以内。
         </p>
       </div>
     </div>
@@ -246,7 +246,7 @@
       <div class="col-sm-4">
         <div class="input-group">
           <span class="input-group-addon">&yen;</span>
-          <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required="required" min="{{#if cp}}100{{else}}0{{/if}}" />
+          <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required min="{{#if cp}}100{{else}}0{{/if}}" />
           <span class="input-group-addon">分</span>
         </div>
       </div>
@@ -400,13 +400,6 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="ratio">渠道扣点</label>
-      <div class="col-sm-10">
-        <input type="range" min="0.0001" max="1" step="0.0001" name="ratio" id="ratio" value="{{ratio}}" />
-        <span class="help-inline">1</span>
-      </div>
-    </div>
-    <div class="form-group">
       <label class="col-sm-2 control-label" for="feedback">数据反馈形式</label>
       <div class="col-sm-10">
         <select name="feedback" id="feedback" class="form-control" required>
@@ -415,7 +408,7 @@
           <option value="2">官方后台</option>
           <option value="3">渠道后台</option>
           <option value="4">API接口</option>
-          <option value="5" class="iPhone">核对mac地址</option>
+          <option value="5" class="iPhone">核对idfa</option>
           <option value="6">实时数据</option>
           <option value="7">按点乐数据结算</option>
         </select>
