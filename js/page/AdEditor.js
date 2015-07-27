@@ -49,8 +49,8 @@
     remove: function () {
       Backbone.View.prototype.remove.call(this);
       this.model.off(null, null, this);
-      this.channels.off();
-      this.channels = null;
+      this.agreements.off();
+      this.agreements = null;
     },
     checkADURL: function (value) {
       if (/\.ipa$/.test(value) || /itunes.apple.com/.test(value)) {
@@ -61,14 +61,14 @@
         this.$('input[name=ad_app_type][value=1]').prop('checked', true);
       }
     },
-    searchChannel: function () {
-      var keyword = $.trim(this.$('.channel-keyword').val());
+    searchAgreement: function () {
+      var keyword = $.trim(this.$('.agreement-keyword').val());
       if (!keyword) {
         return false;
       }
-      this.$('.channel').find('input').prop('disabled', true);
-      this.$('.search-channel-button').spinner();
-      this.channels.fetch({
+      this.$('.agreement').find('input').prop('disabled', true);
+      this.$('.search-agreement-button').spinner();
+      this.agreements.fetch({
         data: {keyword: keyword},
         reset: true
       });
@@ -94,9 +94,9 @@
       var target = $(event.target);
       this.$el.toggleClass(target.data('class'), target.val() === '1');
     },
-    channelKeyword_keyDownHandler: function (event) {
+    agreementKeyword_keyDownHandler: function (event) {
       if (event.keyCode === 13) {
-        this.searchChannel();
+        this.searchAgreement();
         event.preventDefault();
       }
     },
@@ -199,8 +199,8 @@
       });
       this.$('.search-ad-button').spinner();
     },
-    searchChannelButton_clickHandler: function () {
-      this.searchChannel();
+    searchAgreementButton_clickHandler: function () {
+      this.searchAgreement();
     },
     searchFlag_changeHandler: function (event) {
       var is_aso = event.target.value === '1';

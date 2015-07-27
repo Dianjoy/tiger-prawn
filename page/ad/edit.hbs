@@ -368,12 +368,12 @@
     </div>
     {{/if}}
     <div class="form-group agreement">
-      <label class="col-sm-2 control-label" for="agreement">关联合同</label>
+      <label class="col-sm-2 control-label" for="agreement_id">关联合同</label>
       <div class="col-sm-5">
-        <select name="agreement" id="agreement" class="form-control collection-select" data-collection-id="agreement" data-url="{{API}}agreement/" required>
+        <select name="agreement_id" id="agreement_id" class="form-control collection-select" data-collection-id="agreement" data-url="{{API}}agreement/" required>
         {{{{raw-helper}}}}
           <script type="text/x-handlebars-template">
-          <option value="{{id}}">{{full_name}}（{{pick type channel_types}}）</option>
+          <option value="{{id}}">{{company}}（{{agreement_id}}）</option>
           </script>
         {{{{/raw-helper}}}}
         </select>

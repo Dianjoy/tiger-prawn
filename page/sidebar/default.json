@@ -20,9 +20,9 @@
         "link": "#/apply/"
       },
       {
-        "title": "我的渠道",
-        "icon": "list",
-        "link": "#/ad/channel"
+        "title": "我的合同",
+        "icon": "archive",
+        "link": "#/agreement/"
       },
       {
         "title": "竞品广告",
