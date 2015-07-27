@@ -2549,10 +2549,11 @@
       }
 
       if (options.autoFetch) {
-        var options = this.collection.length ? {reset: true} : null;
-        this.collection.fetch({
-          data: _.extend(this.model.toJSON(), this.params)
-        }, options);
+        options = {data: _.extend(this.model.toJSON(), this.params)};
+        if (this.collection.length) {
+          options.reset = true;
+        }
+        this.collection.fetch(options);
       }
     },
     remove: function () {
