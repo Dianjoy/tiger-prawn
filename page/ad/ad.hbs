@@ -177,9 +177,15 @@
         </tr>
         {{/if}}
         <tr>
-          <th width="10%">渠道名称</th>
-          <td><a href="#channel" class="edit" data-type="select" data-add-new="true" data-options="channels" data-template="ad/channel-edit" data-url="channel/">{{channel}}</a></td>
+          <td width="10%">关联合同</td>
+          <td><a href="#agreement_id" class="edit" data-type="select" data-options="agreements" data-template="ad/popup/agreement-select" data-url="agreement/">{{agreement}}</a></td>
         </tr>
+        {{#if channel}}
+        <tr>
+          <th>渠道名称</th>
+          <td><a href="#channel" class="edit" data-type="select" data-add-new="true" data-options="channels" data-template="ad/popup/channel-edit" data-url="channel/">{{channel}}</a></td>
+        </tr>
+        {{/if}}
         <tr>
           <th>渠道号</th>
           <td><a href="#cid" class="edit">{{cid}}</a></td>

@@ -1,0 +1,10 @@
+<div class="form-group">
+  <label for="editor-popup-input">选择关联合同</label>
+  <select class="form-control collection-select" name="{{prop}}" id="editor-popup-input" data-collection-id="{{prop}}">
+    <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+      <option value="{{id}}">{{company}}（{{agreement_id}}）</option>
+    {{{{/raw-helper}}}}
+    </script>
+  </select>
+</div>
