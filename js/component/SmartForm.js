@@ -247,7 +247,7 @@
           , self = this;
         _.each(this.$el.serializeArray(), function (element) {
           var key = element.name.replace('[]', '')
-            , value = isNaN(element.value) ? element.value : Number(element.value);
+            , value = isNaN(element.value) || /^0\d+$/.test(element.value) ? element.value : Number(element.value);
           if (attr[key] !== undefined) {
             if (!_.isArray(attr[key])) {
               attr[key] = [attr[key]];
