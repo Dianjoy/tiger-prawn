@@ -57,10 +57,10 @@
         }
       }
       if (!_.isArray(options.ykeys)) {
-        options.ykeys = [options.ykeys];
+        options.ykeys = options.ykeys.split(',');
       }
       if (!_.isArray(options.labels)) {
-        options.labels = [options.labels];
+        options.labels = options.labels.split(',');
       }
       this.options = options;
     },
