@@ -62,7 +62,7 @@
           {{#each record}}
             <li class="list-group-item list-group-item-{{pick status 'info' 'success' 'default' 'default' 'danger'}}" id="{{id}}">
               <i class="fa fa-{{pick status 'play' 'check' 'pause' 'pause' 'times'}}"></i>
-              <a href="#/ad/{{id}}">{{channel}} {{ad_name}} {{cid}}</a>
+              <a href="#/ad/{{id}}">{{agreement}} {{channel_alias}} {{ad_name}} {{cid}}</a>
               {{#if is_checked}}于 <time datetime="{{status_time}}">{{from-now status_time}}</time>{{/if}}
               <strong>{{pick status '上线' '完成下线' '等待审核' '等待审核' '被拒绝'}}</strong>
             </li>
