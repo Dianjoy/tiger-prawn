@@ -10,8 +10,10 @@
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
+    var options = arguments[arguments.length - 1];
+    options.hash.start = options.hash.start || 0;
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
-    return array[value];
+    return array[value + options.hash.start];
   });
 
   h.registerHelper('pick_with', function (value, array, options) {

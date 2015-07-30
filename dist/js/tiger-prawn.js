@@ -29,8 +29,10 @@
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
+    var options = arguments[arguments.length - 1];
+    options.hash.start = options.hash.start || 0;
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
-    return array[value];
+    return array[value + options.hash.start];
   });
 
   h.registerHelper('pick_with', function (value, array, options) {
@@ -203,6 +205,7 @@
     },
     showDashboard: function () {
       this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
+      this.$body.setFramework('dashboard', '新近数据统计');
     },
     showUserPage: function (page) {
       if (page === 'logout') {
@@ -221,7 +224,7 @@
       this.$body.load(tp.path + 'page/' + page + '.hbs', tp.config.login, {
         isFull: true
       });
-      this.$body.setFramework('login');
+      this.$body.setFramework('login', '登录');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));;
@@ -455,8 +458,7 @@
   };
 }(Nervenet.createNameSpace('tp.controller')));;
 (function (ns) {
-  var OWNER = 'ad_owner'
-    , CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
+  var CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
   ns.AD = Backbone.Model.extend({
     defaults: {
@@ -477,7 +479,6 @@
     initialize: function (attrs, options) {
       Backbone.Model.prototype.initialize.call(this, attrs, options);
       if (this.isNew()) {
-        this.isEmpty = true;
         this.urlRoot += 'init';
         this.on('sync', this.syncHandler, this);
       }
@@ -489,19 +490,7 @@
         this.options.UPLOAD = tp.UPLOAD;
       }
       var has_ad = response.ad && _.isObject(response.ad);
-      if (has_ad && !response.ad.owner) {
-        response.ad.owner = Number(localStorage.getItem(OWNER));
-      }
       return has_ad ? response.ad : response;
-    },
-    save: function (key, value, options) {
-      if (key === 'owner' && value) {
-        localStorage.setItem(OWNER, value);
-      }
-      if (key.owner) {
-        localStorage.setItem(OWNER, key.owner);
-      }
-      return Backbone.Model.prototype.save.call(this, key, value, options);
     },
     toJSON: function (options) {
       var json = Backbone.Model.prototype.toJSON.call(this, options);

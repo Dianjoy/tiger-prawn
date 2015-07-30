@@ -22,7 +22,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.5",
-    "font-awesome": "~4.3.0",
+    "font-awesome": "~4.4.0",
     "colors": "~2.2.0",
     "backbone": "~1.2.1",
     "nervenet": "~0.1.9",
@@ -33,7 +33,7 @@
     "morrisjs": "~0.5.1",
     "jquery": "~2.1.4",
     "mh-simple-uploader": "~0.6.3",
-    "marked": "~0.3.3"
+    "marked": "~0.3.4 "
   },
   "devDependencies": {
     "bootstrap-sass": "twbs/bootstrap-sass#~3.3.5",
