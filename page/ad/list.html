@@ -32,8 +32,8 @@
   <script type="text/x-handlebars-template">
     <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}} {{pack_name}}" id="{{id}}">
       <td data-title="管理名">
-        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>{{/if}}
-        {{#if agreement}}<a href="#/agreement/{{agreement_id}}" class="filter label label-agreement">{{agreement}}</a>{{/if}}
+        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel_alias}}</a>{{/if}}
+        {{#if agreement}}<a href="#/agreement_id/{{agreement_id}}" class="filter label label-agreement">{{agreement}}</a>{{/if}}
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
         {{cid}}
       </td>
