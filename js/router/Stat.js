@@ -10,7 +10,8 @@
       'stat/:id': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
       'receipt/': 'showReceipt',
-      'receipt/detail':'applyReceipt'
+      'receipt/detail/(:id)':'receiptDetail',
+      'receipt/view/:id': 'viewReceipt'
     },
     showADStat: function (id) {
       var model = new tp.model.AD({
@@ -38,9 +39,28 @@
       this.$body.load('page/stat/receipt.html');
       this.$body.setFramework('has-date-range', '发票统计');
     },
-    applyReceipt: function () {
-      this.$body.load('page/stat/receipt-detail.html');
-      this.$body.setFramework('','发票开具清单');
+    receiptDetail: function (id) {
+      var model = new tp.model.ReceiptDetail({
+        id: id
+      });
+      this.$body
+        .load('page/stat/new-receipt-detail.hbs',model, {
+          className: 'stat stat-detail',
+          loader: tp.page.ReceiptEditor
+        })
+        .setFramework('stat stat-detail', '发票开具申请单');
+    },
+    viewReceipt: function (id) {
+      var model = new tp.model.ReceiptDetail({
+        id: id,
+        view: true
+      });
+      this.$body
+        .load('page/stat/receipt-detail.hbs',model,{
+          className: 'stat stat-view',
+          loader: tp.page.ReceiptEditor
+        })
+        .setFramework('stat stat-view', '发票详情');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));
