@@ -424,7 +424,7 @@
     }
   };
 }(Nervenet.createNameSpace('tp')));;
-;(function (ns) {
+(function (ns) {
   function callPopup(model, prop, options) {
     options.model = model;
     options.prop = prop;
@@ -661,7 +661,7 @@
 
   Collection.getInstance = function (options) {
     var collection;
-    if (options.collectionId && options.collectionId in collections) {
+    if (options && options.collectionId && options.collectionId in collections) {
       collection = collections[options.collectionId];
       if (!collection.url && options.url) {
         collection.url = options.url;
@@ -675,7 +675,7 @@
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
     collection = new Collection(null, params);
-    if (options.collectionId) {
+    if (options && options.collectionId) {
       collections[options.collectionId] = collection;
     }
     return collection;
@@ -1889,7 +1889,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));;
-;(function (ns) {
+(function (ns) {
   var timeout;
   var Editor = ns.Editor = tp.view.DataSyncView.extend({
     $context: null,
@@ -1928,10 +1928,10 @@
       this.form.on('success', this.form_successHandler, this);
       this.form.on('error', this.form_errorHandler, this);
 
-      html = this.$('.item-grid').html();
+      html = this.$('script').remove().html();
       if (html) {
         this.template = Handlebars.compile(html);
-        this.$('.item-grid').empty();
+        this.$('script').empty();
       }
 
       var dateFields = this.$('[type=datetime]');
@@ -1939,6 +1939,10 @@
         dateFields.each(function () {
           $(this).datetimepicker($(this).data());
         });
+      }
+
+      if (this.options.hasComponents) {
+        tp.component.Manager.check(this.form.$el);
       }
 
       this.submit.prop('disabled', false);
@@ -1989,8 +1993,14 @@
     }),
     initialize: function (options) {
       Editor.prototype.initialize.call(this, options);
+      this.collection = tp.model.ListCollection.getInstance();
+      this.collection.url = tp.API + options.url;
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off();
+      Backbone.View.prototype.remove.call(this);
     },
     render: function (response) {
       Editor.prototype.render.call(this, response);
@@ -2001,14 +2011,17 @@
         return;
       }
       this.collection.fetch({data: {keyword: keyword}});
-      this.$('[type=search], .search-button').prop('disabled', true);
+      this.$('[type=search]').prop('disabled', true);
+      this.$('.search-button').spinner();
     },
     collection_addHandler: function (model) {
-      this.fragment += this.template(model.toJSON());
+      this.fragment += this.template(_.extend(model.toJSON(), this.options));
     },
     collection_syncHandler: function () {
-      this.$('.search-result').html(this.fragment + '<hr />');
-      this.$('[type=search], .search-button').prop('disabled', false);
+      this.fragment = this.fragment || '没有与此关键词接近的结果。';
+      this.$('.search-result').html(this.fragment);
+      this.$('[type=search]').prop('disabled', false);
+      this.$('.search-button').spinner(false);
       this.fragment = '';
     },
     searchButton_clickHandler: function () {
@@ -2039,7 +2052,7 @@
           model.set('tag', model.get(prop));
         });
       }
-      this.$('.item-grid').html(this.template({value: this.collection.toJSON()}));
+      this.$('.tags').html(this.template({value: this.collection.toJSON()}));
     },
     add: function () {
       var value = this.$('[name=query]').val().replace(/^\s+|\s+$/, '');

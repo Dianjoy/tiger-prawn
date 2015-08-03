@@ -54,6 +54,10 @@
         });
       }
 
+      if (this.options.hasComponents) {
+        tp.component.Manager.check(this.form.$el);
+      }
+
       this.submit.prop('disabled', false);
     },
     hide: function (delay) {
