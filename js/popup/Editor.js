@@ -127,7 +127,8 @@
       this.fragment += this.template(_.extend(model.toJSON(), this.options));
     },
     collection_syncHandler: function () {
-      this.$('.search-result').html(this.fragment + '<hr />');
+      this.fragment = this.fragment || '没有与此关键词接近的结果。';
+      this.$('.search-result').html(this.fragment);
       this.$('[type=search]').prop('disabled', false);
       this.$('.search-button').spinner(false);
       this.fragment = '';
