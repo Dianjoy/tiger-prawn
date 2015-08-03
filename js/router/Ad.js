@@ -34,7 +34,7 @@
           className: 'ad ad-detail',
           fresh: true
         })
-        .setFramework('ad', '{{channel}} {{ad_name}} {{cid}}', '广告详情', model);
+        .setFramework('ad', '{{agreement}} {{channel_alias}} {{ad_name}} {{cid}}', '广告详情', model);
       this.$context.mapValue('model', model);
     },
     list: function () {

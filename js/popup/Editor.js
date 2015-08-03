@@ -2,7 +2,7 @@
  * Created by meathill on 14-9-17.
  */
 'use strict';
-;(function (ns) {
+(function (ns) {
   var timeout;
   var Editor = ns.Editor = tp.view.DataSyncView.extend({
     $context: null,
@@ -41,10 +41,10 @@
       this.form.on('success', this.form_successHandler, this);
       this.form.on('error', this.form_errorHandler, this);
 
-      html = this.$('.item-grid').html();
+      html = this.$('script').remove().html();
       if (html) {
         this.template = Handlebars.compile(html);
-        this.$('.item-grid').empty();
+        this.$('script').empty();
       }
 
       var dateFields = this.$('[type=datetime]');
@@ -102,8 +102,14 @@
     }),
     initialize: function (options) {
       Editor.prototype.initialize.call(this, options);
+      this.collection = tp.model.ListCollection.getInstance();
+      this.collection.url = tp.API + options.url;
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off();
+      Backbone.View.prototype.remove.call(this);
     },
     render: function (response) {
       Editor.prototype.render.call(this, response);
@@ -114,14 +120,16 @@
         return;
       }
       this.collection.fetch({data: {keyword: keyword}});
-      this.$('[type=search], .search-button').prop('disabled', true);
+      this.$('[type=search]').prop('disabled', true);
+      this.$('.search-button').spinner();
     },
     collection_addHandler: function (model) {
-      this.fragment += this.template(model.toJSON());
+      this.fragment += this.template(_.extend(model.toJSON(), this.options));
     },
     collection_syncHandler: function () {
       this.$('.search-result').html(this.fragment + '<hr />');
-      this.$('[type=search], .search-button').prop('disabled', false);
+      this.$('[type=search]').prop('disabled', false);
+      this.$('.search-button').spinner(false);
       this.fragment = '';
     },
     searchButton_clickHandler: function () {
@@ -152,7 +160,7 @@
           model.set('tag', model.get(prop));
         });
       }
-      this.$('.item-grid').html(this.template({value: this.collection.toJSON()}));
+      this.$('.tags').html(this.template({value: this.collection.toJSON()}));
     },
     add: function () {
       var value = this.$('[name=query]').val().replace(/^\s+|\s+$/, '');

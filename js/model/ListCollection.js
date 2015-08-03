@@ -75,7 +75,7 @@
 
   Collection.getInstance = function (options) {
     var collection;
-    if (options.collectionId && options.collectionId in collections) {
+    if (options && options.collectionId && options.collectionId in collections) {
       collection = collections[options.collectionId];
       if (!collection.url && options.url) {
         collection.url = options.url;
@@ -89,7 +89,7 @@
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
     collection = new Collection(null, params);
-    if (options.collectionId) {
+    if (options && options.collectionId) {
       collections[options.collectionId] = collection;
     }
     return collection;

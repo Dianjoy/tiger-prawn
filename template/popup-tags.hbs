@@ -8,9 +8,13 @@
   </div>
 </div>
 <h4>已有标签</h4>
-<div class="form-group item-grid label-button tags">
-  ${#each value}
-    <input type="checkbox" id="prop-${id}" name="{{prop}}[]" value="${id}" checked class="item"><label for="prop-${id}" class="item-label">${tag}</label>
-  ${/each}
-  ${#unless append}<hr />${/unless}
+<div class="form-group select-button tags">
+  <script type="text/x-handlebars-template">
+  {{{{raw-helper}}}}
+  {{#each value}}
+    <input type="checkbox" id="prop-{{id}}" name="{{prop}}[]" value="{{id}}" checked class="item"><label for="prop-{{id}}" class="item-label">{{tag}}</label>
+  {{/each}}
+  {{#unless append}}<hr />{{/unless}}
+  {{{{/raw-helper}}}}
+  </script>
 </div>

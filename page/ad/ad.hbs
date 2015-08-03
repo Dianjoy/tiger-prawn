@@ -1,4 +1,4 @@
-<div role="tabpanel" id="ad-detail" class="tabpanel">
+<div role="tabpanel" class="tabpanel">
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#ad-dashboard" aria-controls="status" role="tab" data-toggle="tab"><i class="fa fa-dashboard"></i> 运行状态</a></li>
     <li role="presentation"><a href="#base-info" aria-controls="base-info" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i> 基础信息</a></li>
@@ -108,6 +108,12 @@
           <td>{{url_type}}</td>
         </tr>
         {{/unless}}
+        {{#if ios}}
+        <tr>
+          <th>iTunes ID</th>
+          <td>{{itunes_id}}</td>
+        </tr>
+        {{/if}}
         <tr>
           <th>广告LOGO</th>
           <td>
@@ -178,7 +184,7 @@
         {{/if}}
         <tr>
           <th width="10%">关联合同</th>
-          <td><a href="#agreement_id" class="edit" data-type="select" data-options="agreements" data-template="ad/popup/agreement-select" data-url="agreement/">{{agreement}}</a></td>
+          <td><a href="#agreement_id" class="edit" data-type="search" data-template="ad/popup/agreement-select" data-url="agreement/">{{agreement}}</a></td>
         </tr>
         {{#if channel}}
         <tr>
