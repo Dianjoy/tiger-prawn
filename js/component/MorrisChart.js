@@ -5,10 +5,11 @@
 (function (ns) {
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
+    src: {},
     initialize: function (options) {
       if (options.data) {
         this.createOptions(options);
-        this.drawChart();
+        this.render();
         return;
       }
 
@@ -20,7 +21,7 @@
         this.collection = tp.model.ListCollection.getInstance(options);
         this.createOptions(options);
         if (options.autoFetch) {
-          this.collection.once('sync reset', this.collection_fetchHandler, this);
+          this.collection.on('sync reset', this.collection_fetchHandler, this);
           this.collection.fetch();
         } else {
           this.collection_fetchHandler();
@@ -33,12 +34,22 @@
         var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
         if (chartData.data.length) {
           this.createOptions(options, chartData);
-          this.drawChart();
+          this.render();
           return;
         }
       }
 
       this.showEmpty();
+    },
+    remove: function () {
+      if (this.collection) {
+        this.collection.off(null, null, this);
+      }
+      Backbone.View.prototype.remove.call(this);
+    },
+    render: function () {
+      this.$el.empty();
+      this.chart = new Morris[this.className](this.options);
     },
     createOptions: function (options, chartData) {
       options = _.extend({
@@ -57,16 +68,12 @@
         }
       }
       if (!_.isArray(options.ykeys)) {
-        options.ykeys = options.ykeys.split(',');
+        this.src.ykeys = options.ykeys = options.ykeys.split(',');
       }
       if (!_.isArray(options.labels)) {
-        options.labels = options.labels.split(',');
+        this.src.labels = options.labels = options.labels.split(',');
       }
       this.options = options;
-    },
-    drawChart: function () {
-      this.$('.fa-spin').remove();
-      this.chart = new Morris[this.className](this.options);
     },
     showEmpty: function () {
       this.$el.addClass('empty').text('（无数据）');
@@ -75,8 +82,16 @@
       if (this.collection.length === 0) {
         this.showEmpty();
       }
+      if (this.collection.options) {
+        if (this.collection.options.ykeys) {
+          this.options.ykeys = this.src.ykeys.concat(this.collection.options.ykeys);
+        }
+        if (this.collection.options.labels) {
+          this.options.labels = this.src.labels.concat(this.collection.options.labels);
+        }
+      }
       this.options.data = this.collection.toJSON();
-      this.drawChart();
+      this.render();
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
