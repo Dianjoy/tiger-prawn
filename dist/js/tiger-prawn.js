@@ -32,7 +32,7 @@
     var options = arguments[arguments.length - 1];
     options.hash.start = options.hash.start || 0;
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
-    return array[value + options.hash.start];
+    return array[value - options.hash.start];
   });
 
   h.registerHelper('pick_with', function (value, array, options) {
