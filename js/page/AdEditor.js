@@ -6,7 +6,7 @@
 'use strict';
 (function (ns) {
   var IOS_PREFIX = 'itms-apps://'
-    , option_template = '{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
+    , option_template = '{{#each list}}<option value="{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
     , aso_desc = 'App Store搜索关键字“XX”，找到“XXX”（约第X位）\n下载并注册帐号后，二次登录体验可得奖励。'
     , omit = ['ad_url', 'ad_lib', 'ad_size', 'id'];
   
@@ -35,6 +35,11 @@
         key: 'agreement'
       });
       this.agreements.reset(this.model.options.agreements);
+      this.agreements.add({
+        id: 1735,
+        company: '商务免费测试合同',
+        agreement_id: '测试专用'
+      }, {at: 0});
       this.agreements.on('reset', function () {
         this.$('.agreement').find('input').prop('disabled', false);
         this.$('.search-agreement-button').spinner(false);

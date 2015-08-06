@@ -377,11 +377,11 @@
       <label class="col-sm-2 control-label" for="agreement_id">关联合同</label>
       <div class="col-sm-5">
         <select name="agreement_id" id="agreement_id" class="form-control collection-select" data-collection-id="agreement" data-url="{{API}}agreement/" required>
+        <script type="text/x-handlebars-template">
         {{{{raw-helper}}}}
-          <script type="text/x-handlebars-template">
           <option value="{{id}}">{{company}}（{{agreement_id}}）</option>
-          </script>
         {{{{/raw-helper}}}}
+        </script>
         </select>
       </div>
       <div class="col-sm-5">
