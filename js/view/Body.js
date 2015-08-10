@@ -6,6 +6,7 @@
     $context: null,
     events: {
       'click .add-button': 'addButton_clickHandler',
+      'click .print-button': 'printButton_clickHandler',
       'click .refresh-button': 'refreshButton_clickHandler'
     },
     initialize: function () {
@@ -112,6 +113,14 @@
     },
     page_loadCompleteHandler: function () {
       this.loading.remove();
+    },
+    printButton_clickHandler: function (event) {
+      var target = event.currentTarget.getAttribute('href')
+        , content = $(target).html()
+        , printWindow = window.open('', 'print-window');
+      printWindow.document.body.innerHTML = content;
+      printWindow.document.head.innerHTML = '<link rel="stylesheet" href="css/screen.css">';
+      printWindow.print();
     },
     loadCompleteHandler: function (response, status) {
       if (status === 'error') {

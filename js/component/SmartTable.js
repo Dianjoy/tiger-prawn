@@ -17,77 +17,57 @@
       'change .status-button': 'statusButton_changeHandler'
     },
     initialize: function (options) {
-      var init = this.$el.data();
-      init.url = init.url.replace('{{API}}', tp.API);
-      options = _.extend({
-        autoFetch: true
-      }, options, init);
-
-      // 可能会从别的地方带来model
-      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
-      // 特定的过滤器
-      this.params = tp.utils.decodeURLParam(init.params);
-
-      if (options.start || options.end) {
-        options.defaults = _.pick(options, 'start', 'end');
-      }
-      this.collection = tp.model.ListCollection.getInstance(options);
-      ns.BaseList.prototype.initialize.call(this, {container: 'tbody'});
-
       // 通过页面中介来实现翻页等功能
       this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento();
       this.model.on('change', this.model_changeHandler, this);
       this.model.on('invalid', this.model_invalidHandler, this);
       this.renderHeader();
 
+      ns.BaseList.prototype.initialize.call(this, _.extend(options, {
+        container: 'tbody',
+        reset: true
+      }));
+
       // 启用搜索
-      if ('search' in init) {
+      if ('search' in options) {
         this.search = new ns.table.Search({
-          el: init.search,
+          el: options.search,
           model: this.model,
           collection: this.collection
         });
       }
 
       // 翻页
-      if ('pagesize' in init && init.pagesize > 0) {
+      if ('pagesize' in options && options.pagesize > 0) {
         this.pagination = new ns.table.Pager(_.extend({}, options, {
-          el: 'pagination' in init ? init.pagination : '.pager',
+          el: 'pagination' in options ? options.pagination : '.pager',
           model: this.model,
           collection: this.collection
         }));
       }
 
       // 调整每页数量
-      if ('pagesizeController' in init) {
-        this.pagesizeController = $(init.pagesizeController);
+      if ('pagesizeController' in options) {
+        this.pagesizeController = $(options.pagesizeController);
         this.pagesizeController.val(this.collection.pagesize);
         this.pagesizeController.on('change', _.bind(this.pagesize_changeHandler, this));
       }
 
       // 起止日期
-      if ('ranger' in init) {
+      if ('ranger' in options) {
         this.ranger = new ns.table.Ranger(_.extend({}, options, {
-          el: init.ranger,
+          el: options.ranger,
           model: this.model
         }));
       }
 
       // 删选器
-      if ('filter' in init) {
+      if ('filter' in options) {
         this.filter = new ns.table.Filter({
-          el: init.filter,
+          el: options.filter,
           model: this.model,
           collection: this.collection
         });
-      }
-
-      if (options.autoFetch) {
-        options = {data: _.extend(this.model.toJSON(), this.params)};
-        if (this.collection.length) {
-          options.reset = true;
-        }
-        this.collection.fetch(options);
       }
     },
     remove: function () {
@@ -118,6 +98,11 @@
           container.append(container.find('#' + model.id));
         });
       }
+    },
+    refresh: function (options) {
+      options = options || {};
+      options.data = _.extend(this.model.toJSON(), this.params, options.data);
+      this.collection.fetch(options);
     },
     renderHeader: function () {
       // 排序
@@ -208,9 +193,11 @@
     },
     model_changeHandler: function (model, options) {
       options = _.omit(options, 'unset') || {};
-      options.data = _.extend(model.toJSON(), this.params);
-      _.extend(this.collection.model.prototype.defaults, _.pick(model.changed, 'start', 'end'));
-      this.collection.fetch(options);
+      this.refresh(options);
+
+      if ('start' in model.changed || 'end' in model.changed) {
+        _.extend(this.collection.model.prototype.defaults, _.pick(model.changed, 'start', 'end'));
+      }
       this.$el.addClass('loading');
       model.warting = true;
     },
@@ -230,7 +217,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.collection.fetch({data: _.extend(this.model.toJSON(), this.params)});
+      this.refresh();
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)

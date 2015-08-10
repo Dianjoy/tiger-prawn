@@ -4,6 +4,7 @@
 'use strict';
 (function (ns) {
   ns.AddOnList = ns.BaseList.extend({
+    autoFetch: false,
     initialize: function (options) {
       options = _.extend({
         container: 'tbody'
