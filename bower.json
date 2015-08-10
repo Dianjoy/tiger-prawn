@@ -27,7 +27,7 @@
     "backbone": "~1.2.1",
     "nervenet": "~0.1.9",
     "handlebars": "~3.0.3",
-    "animate.css": "~3.3.1",
+    "animate.css": "~3.4.0",
     "moment": "~2.10.6",
     "eonasdan-bootstrap-datetimepicker": "~4.15.35",
     "morrisjs": "~0.5.1",

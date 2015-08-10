@@ -84,7 +84,7 @@
     }
 
     var params = _.extend({}, options);
-    if (!params.model || !(params.model instanceof Backbone.Model)) {
+    if (!params.model || !(params.model instanceof Function)) {
       var init = _.pick(params, 'idAttribute', 'defaults');
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
