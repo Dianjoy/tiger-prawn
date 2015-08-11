@@ -322,7 +322,7 @@
       var target = event.currentTarget
         , options = $(target).data();
       if (options.collectionId) {
-        var collection = tp.model.ListCollection.getInstance(options)
+        var collection = tp.model.ListCollection.getInstance(options);
         options.model = collection.get(options.id);
       }
       if (target.tagName.toLowerCase() === 'a') {
@@ -670,7 +670,7 @@
     }
 
     var params = _.extend({}, options);
-    if (!params.model || !(params.model instanceof Backbone.Model)) {
+    if (!params.model || !(params.model instanceof Function)) {
       var init = _.pick(params, 'idAttribute', 'defaults');
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
@@ -2532,7 +2532,7 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
-    autoFetch: false,
+    autoFetch: true,
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
@@ -2556,6 +2556,9 @@
         container: 'tbody',
         reset: true
       }));
+      if (!('autoFetch' in options)) {
+        options.autoFetch = this.autoFetch;
+      }
 
       // 启用搜索
       if ('search' in options) {
@@ -2599,7 +2602,9 @@
         });
       }
 
-      this.refresh(options);
+      if (options.autoFetch) {
+        this.refresh(options);
+      }
     },
     remove: function () {
       if (this.pagination) {

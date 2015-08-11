@@ -4,7 +4,7 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
-    autoFetch: false,
+    autoFetch: true,
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
@@ -28,6 +28,9 @@
         container: 'tbody',
         reset: true
       }));
+      if (!('autoFetch' in options)) {
+        options.autoFetch = this.autoFetch;
+      }
 
       // 启用搜索
       if ('search' in options) {
@@ -71,7 +74,9 @@
         });
       }
 
-      this.refresh(options);
+      if (options.autoFetch) {
+        this.refresh(options);
+      }
     },
     remove: function () {
       if (this.pagination) {
