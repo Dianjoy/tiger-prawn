@@ -1,7 +1,10 @@
 /**
  * Created by meathill on 14/11/13.
  */
-;(function (ns) {
+'use strict';
+(function (ns) {
+  var print_header = '<link rel="stylesheet" href="{{url}}css/screen.css"><link rel="stylesheet" href="{{url}}css/print.css"><title>{{title}}</title>';
+
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
@@ -115,11 +118,18 @@
       this.loading.remove();
     },
     printButton_clickHandler: function (event) {
-      var target = event.currentTarget.getAttribute('href')
-        , content = $(target).html()
-        , printWindow = window.open('', 'print-window');
-      printWindow.document.body.innerHTML = content;
-      printWindow.document.head.innerHTML = '<link rel="stylesheet" href="css/screen.css">';
+      var target = event.currentTarget
+        , selector = target.getAttribute('href')
+        , title = target.title
+        , printWindow = window.open('', 'print-window')
+        , url = location.href
+        , header = Handlebars.compile(print_header);
+      url = url.substr(0, url.lastIndexOf('/') + 1);
+      printWindow.document.body.innerHTML = $(selector).html();
+      printWindow.document.head.innerHTML = header({
+        title: title,
+        url: url
+      });
       printWindow.print();
     },
     loadCompleteHandler: function (response, status) {

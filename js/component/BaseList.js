@@ -43,7 +43,7 @@
       options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
       // 起止日期
       if (options.start || options.end) {
-        options.defaults = _.pick(this.options, 'start', 'end');
+        options.defaults = _.pick(options, 'start', 'end');
       }
 
       return tp.model.ListCollection.getInstance(options);

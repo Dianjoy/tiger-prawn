@@ -4,6 +4,7 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
+    autoFetch: false,
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
@@ -69,6 +70,8 @@
           collection: this.collection
         });
       }
+
+      this.refresh(options);
     },
     remove: function () {
       if (this.pagination) {

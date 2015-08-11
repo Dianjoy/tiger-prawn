@@ -4,12 +4,12 @@
 'use strict';
 (function (ns) {
   ns.CollectionSelect = ns.BaseList.extend({
-    autoFetch: false,
-    refresh: function () {
+    autoFetch: true,
+    refresh: function (options) {
       if (this.collection.length) {
         this.collection_resetHandler();
       } else {
-        ns.BaseList.prototype.refresh.call(this);
+        ns.BaseList.prototype.refresh.call(this, options);
       }
     },
     collection_addHandler: function (model, collection, options) {
