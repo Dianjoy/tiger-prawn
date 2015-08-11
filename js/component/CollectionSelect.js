@@ -4,13 +4,12 @@
 'use strict';
 (function (ns) {
   ns.CollectionSelect = ns.BaseList.extend({
-    initialize: function (options) {
-      var init = this.$el.data();
-      this.collection = tp.model.ListCollection.getInstance(init);
-      ns.BaseList.prototype.initialize.call(this, options);
-
+    autoFetch: true,
+    refresh: function (options) {
       if (this.collection.length) {
         this.collection_resetHandler();
+      } else {
+        ns.BaseList.prototype.refresh.call(this, options);
       }
     },
     collection_addHandler: function (model, collection, options) {

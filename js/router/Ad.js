@@ -10,7 +10,7 @@
     routes: {
       "ad(/)": "list",
       "ad/create": "create",
-      "ad/channel": "listChannels",
+      "agreement/": "listAgreements",
       "ad/:id": "edit",
       "apply/(:id)": "listApplies",
       "info/(:query)": "showHistoryInfo",
@@ -34,7 +34,7 @@
           className: 'ad ad-detail',
           fresh: true
         })
-        .setFramework('ad', '{{channel}} {{ad_name}} {{cid}}', '广告详情', model);
+        .setFramework('ad', '{{agreement}} {{channel_alias}} {{ad_name}} {{cid}}', '广告详情', model);
       this.$context.mapValue('model', model);
     },
     list: function () {
@@ -57,10 +57,10 @@
         .load('page/info.html')
         .setFramework('info', '广告投放情报');
     },
-    listChannels: function () {
+    listAgreements: function () {
       this.$body
-        .load('page/ad/channel.html')
-        .setFramework('ad ad-channel', '我的渠道');
+        .load('page/ad/agreement.html')
+        .setFramework('agreement', '我的合同');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));

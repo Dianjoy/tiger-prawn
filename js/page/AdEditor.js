@@ -4,9 +4,10 @@
  * @since 2013-08-08
  */
 'use strict';
-;(function (ns) {
+(function (ns) {
   var IOS_PREFIX = 'itms-apps://'
-    , option_template = '{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
+    , option_template = '{{#each list}}<option value="{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
+    , aso_desc = 'App Store搜索关键字“XX”，找到“XXX”（约第X位）\n下载并注册帐号后，二次登录体验可得奖励。'
     , omit = ['ad_url', 'ad_lib', 'ad_size', 'id'];
   
   ns.AdEditor = tp.view.Loader.extend({
@@ -22,25 +23,26 @@
       'change #feedback': 'feedback_changeHandler',
       'change #app-uploader [name=ad_url]': 'adURL_changeHandler',
       'click .search-ad-button': 'searchADButton_clickHandler',
-      'click .search-channel-button': 'searchChannelButton_clickHandler',
-      'keydown .channel-keyword': 'channelKeyword_keyDownHandler'
+      'click .search-agreement-button': 'searchAgreementButton_clickHandler',
+      'keydown .agreement-keyword': 'agreementKeyword_keyDownHandler'
     },
     render: function () {
       tp.view.Loader.prototype.render.call(this);
 
-      this.channels = tp.model.ListCollection.getInstance({
-        collectionId: 'channel',
-        url: tp.API + 'channel/',
-        key: 'channel'
+      this.agreements = tp.model.ListCollection.getInstance({
+        collectionId: 'agreement',
+        url: tp.API + 'agreement/',
+        key: 'agreement'
       });
-      this.channels.options = {
-        channel_types: this.model.options.channel_types,
-        relativeSales: this.model.options.relativeSales
-      };
-      this.channels.reset(this.model.options.channels);
-      this.channels.on('reset', function () {
-        this.$('.channel').find('input').prop('disabled', false);
-        this.$('.search-channel-button').spinner(false);
+      this.agreements.reset(this.model.options.agreements);
+      this.agreements.add({
+        id: 1735,
+        company: '商务免费测试合同',
+        agreement_id: '测试专用'
+      }, {at: 0});
+      this.agreements.on('reset', function () {
+        this.$('.agreement').find('input').prop('disabled', false);
+        this.$('.search-agreement-button').spinner(false);
       }, this);
 
       var init = this.model.pick(_.keys(this.model.defaults))
@@ -52,8 +54,8 @@
     remove: function () {
       Backbone.View.prototype.remove.call(this);
       this.model.off(null, null, this);
-      this.channels.off();
-      this.channels = null;
+      this.agreements.off();
+      this.agreements = null;
     },
     checkADURL: function (value) {
       if (/\.ipa$/.test(value) || /itunes.apple.com/.test(value)) {
@@ -64,14 +66,14 @@
         this.$('input[name=ad_app_type][value=1]').prop('checked', true);
       }
     },
-    searchChannel: function () {
-      var keyword = $.trim(this.$('.channel-keyword').val());
+    searchAgreement: function () {
+      var keyword = $.trim(this.$('.agreement-keyword').val());
       if (!keyword) {
         return false;
       }
-      this.$('.channel').find('input').prop('disabled', true);
-      this.$('.search-channel-button').spinner();
-      this.channels.fetch({
+      this.$('.agreement').find('input').prop('disabled', true);
+      this.$('.search-agreement-button').spinner();
+      this.agreements.fetch({
         data: {keyword: keyword},
         reset: true
       });
@@ -97,9 +99,9 @@
       var target = $(event.target);
       this.$el.toggleClass(target.data('class'), target.val() === '1');
     },
-    channelKeyword_keyDownHandler: function (event) {
+    agreementKeyword_keyDownHandler: function (event) {
       if (event.keyCode === 13) {
-        this.searchChannel();
+        this.searchAgreement();
         event.preventDefault();
       }
     },
@@ -174,7 +176,7 @@
         $(event.target).next().addClass('spin');
         return;
       }
-      this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
+      this.$('[name=replace-with],#replace-time').prop('disabled', !replace);
     },
     searchAD_errorHandler: function () {
       alert('未找到符合广告名的广告');
@@ -202,11 +204,14 @@
       });
       this.$('.search-ad-button').spinner();
     },
-    searchChannelButton_clickHandler: function () {
-      this.searchChannel();
+    searchAgreementButton_clickHandler: function () {
+      this.searchAgreement();
     },
     searchFlag_changeHandler: function (event) {
-      this.$('.aso').toggle(event.target.value === '1');
+      var is_aso = event.target.value === '1';
+      this.$('.aso').toggle(is_aso);
+      $('#keywords').prop('required', is_aso);
+      $('#ad_desc').val(is_aso ? aso_desc : this.model.get('ad_url'));
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

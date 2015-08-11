@@ -3,8 +3,7 @@
  */
 'use strict';
 (function (ns) {
-  var OWNER = 'ad_owner'
-    , CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
+  var CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
   ns.AD = Backbone.Model.extend({
     defaults: {
@@ -22,9 +21,9 @@
       cycle: 2
     },
     urlRoot: tp.API + 'ad/',
-    initialize: function () {
+    initialize: function (attrs, options) {
+      Backbone.Model.prototype.initialize.call(this, attrs, options);
       if (this.isNew()) {
-        this.isEmpty = true;
         this.urlRoot += 'init';
         this.on('sync', this.syncHandler, this);
       }
@@ -36,19 +35,7 @@
         this.options.UPLOAD = tp.UPLOAD;
       }
       var has_ad = response.ad && _.isObject(response.ad);
-      if (has_ad && !response.ad.owner) {
-        response.ad.owner = Number(localStorage.getItem(OWNER));
-      }
       return has_ad ? response.ad : response;
-    },
-    save: function (key, value, options) {
-      if (key === 'owner' && value) {
-        localStorage.setItem(OWNER, value);
-      }
-      if (key.owner) {
-        localStorage.setItem(OWNER, key.owner);
-      }
-      return Backbone.Model.prototype.save.call(this, key, value, options);
     },
     toJSON: function (options) {
       var json = Backbone.Model.prototype.toJSON.call(this, options);

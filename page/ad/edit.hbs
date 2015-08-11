@@ -1,3 +1,6 @@
+{{#if cp}}
+  <div class="alert alert-info">如需要做技术对接，请联系点乐技术。</div>
+{{/if}}
 <form class="form-horizontal model-editor {{#if cp}}iPhone{{else}}Android{{/if}} {{pick province_type '' 'show-provinces'}}" method="post" enctype="multipart/form-data" id="ad-editor">
   <input type="hidden" name="id" value="">
   <input type="hidden" name="pack_md5" value="">
@@ -10,7 +13,7 @@
       <div class="col-sm-6 col-md-4 uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="*.ipa" id="app-uploader" data-name="ad_url">
         <div class="btn-group su-tabs">
           <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
-          <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络地址</button>
+          <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络或AppStore地址</button>
         </div>
         <button type="button" class="btn fetch-button" disabled><i class="fa fa-cloud-download"></i> 抓取</button>
         <div class="su-placeholder" data-initial="请上传ipa文件。" data-progress="上传文件中.."></div>
@@ -142,10 +145,15 @@
         <input name="ad_size" id="ad_size" value="{{ad_size}}" class="form-control" />
       </div>
     </div>
+    {{#if cp}}
+    <input type="hidden" name="pack_name" id="pack_name">
+    <input type="hidden" name="process_name" id="process_name">
+    <input type="hidden" name="url_type" id="url_type">
+    {{else}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pack_name">广告包名</label>
       <div class="col-sm-10">
-        <input name="pack_name" id="pack_name" value="{{pack_name}}" class="form-control" required readonly />
+        <input name="pack_name" id="pack_name" value="{{pack_name}}" class="form-control" readonly />
       </div>
     </div>
     <div class="form-group iPhone">
@@ -160,6 +168,13 @@
         <input name="url_type" id="url_type" value="{{url_type}}" class="form-control">
       </div>
     </div>
+    <div class="form-group iPhone">
+      <label class="col-sm-2 control-label" for="itunes_id">iTunes ID</label>
+      <div class="col-sm-10">
+        <input name="itunes_id" id="itunes_id" value="" class="form-control">
+      </div>
+    </div>
+    {{/if}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pic_path">广告LOGO</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="pic_path">
@@ -176,7 +191,7 @@
         <input type="hidden" name="pic_path" value="{{pic_path}}" class="su-url">
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group Android">
       <label class="col-sm-2 control-label" for="ad_shoot">广告截图</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="ad_shoot" data-multiple="true" data-append="true">
         {{#if shoots}}
@@ -219,17 +234,17 @@
       <div class="col-sm-10">
         <input type="text" name="keywords" class="form-control" id="keywords">
         <p class="help-block">
-          搜索ASO搜索词时，对应的应用排序需要在15名以内
+          搜索ASO搜索词时，对应的应用排序需要在1-1000名以内。
         </p>
       </div>
     </div>
     <div class="form-group iPhone aso">
-      <label class="col-sm-2 control-label">ASO中间页</label>
+      <label class="col-sm-2 control-label">是否需要用户手动搜索</label>
       <div class="col-sm-10">
-        <label class="control-label">不启用</label>
+        <label class="control-label">不需要</label>
         <input type="checkbox" class="switch" name="aso_middle_page" value="1" id="aso_middle_page" checked>
         <label for="aso_middle_page"></label>
-        <label class="control-label">启用</label>
+        <label class="control-label">需要</label>
       </div>
     </div>
     <div class="form-group">
@@ -237,7 +252,7 @@
       <div class="col-sm-4">
         <div class="input-group">
           <span class="input-group-addon">&yen;</span>
-          <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required="required" min="{{#if cp}}100{{else}}0{{/if}}" />
+          <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required min="{{#if cp}}100{{else}}0{{/if}}" />
           <span class="input-group-addon">分</span>
         </div>
       </div>
@@ -358,43 +373,35 @@
       </div>
     </div>
     {{/if}}
-    <div class="form-group channel">
-      <label class="col-sm-2 control-label" for="channel">渠道名称</label>
+    <div class="form-group agreement">
+      <label class="col-sm-2 control-label" for="agreement_id">关联合同</label>
       <div class="col-sm-5">
-        <select name="channel" id="channel" class="form-control collection-select" data-collection-id="channel" data-url="{{API}}channel/" required>
+        <select name="agreement_id" id="agreement_id" class="form-control collection-select" data-collection-id="agreement" data-url="{{API}}agreement/" required>
+        <script type="text/x-handlebars-template">
         {{{{raw-helper}}}}
-          <script type="text/x-handlebars-template">
-          <option value="{{id}}">{{full_name}}（{{pick type channel_types}}）</option>
-          </script>
+          <option value="{{id}}">{{company}}（{{agreement_id}}）</option>
         {{{{/raw-helper}}}}
+        </script>
         </select>
       </div>
       <div class="col-sm-5">
         <div class="input-group">
-          <input class="form-control channel-keyword">
+          <input class="form-control agreement-keyword" placeholder="合同名称，或编号">
           <span class="input-group-btn">
-            <button type="button" class="btn btn-default search-channel-button">
+            <button type="button" class="btn btn-default search-agreement-button">
               <i class="fa fa-search"></i>
             </button>
-            <a href="#channel" type="button" class="btn btn-default add-button" data-template="ad/new-channel-popup.hbs" title="添加新渠道" data-confirm="创建"><i class="fa fa-plus"></i> 添加新渠道</a>
           </span>
         </div>
       </div>
       <p class="help-block col-sm-10 col-sm-offset-2">
-        默认取最近的10个渠道，您还可以通过旁边的搜索框搜索需要的渠道。
+        默认取最近的10份合同，您也可以通过旁边的搜索框搜索别的合同。
       </p>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="cid">渠道号</label>
       <div class="col-sm-10">
         <input type="text" name="cid" id="cid" value="{{cid}}" class="form-control" required />
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="ratio">渠道扣点</label>
-      <div class="col-sm-10">
-        <input type="range" min="0.0001" max="1" step="0.0001" name="ratio" id="ratio" value="{{ratio}}" />
-        <span class="help-inline">1</span>
       </div>
     </div>
     <div class="form-group">
@@ -406,7 +413,7 @@
           <option value="2">官方后台</option>
           <option value="3">渠道后台</option>
           <option value="4">API接口</option>
-          <option value="5" class="iPhone">核对mac地址</option>
+          <option value="5" class="iPhone">核对idfa</option>
           <option value="6">实时数据</option>
           <option value="7">按点乐数据结算</option>
         </select>

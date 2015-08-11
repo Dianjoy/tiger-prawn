@@ -24,12 +24,15 @@
 }(Backbone));;
 (function (h) {
   var slice = Array.prototype.slice
-    , pop = Array.prototype.pop;
+    , pop = Array.prototype.pop
+    , counter = {};
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
+    var options = arguments[arguments.length - 1];
+    options.hash.start = options.hash.start || 0;
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
-    return array[value];
+    return array[value - options.hash.start];
   });
 
   h.registerHelper('pick_with', function (value, array, options) {
@@ -136,6 +139,18 @@
     target = context.getValue(target);
     return target instanceof Backbone.Model ? target.get(key) : target[key];
   });
+
+  // 输出排序值
+  h.registerHelper('counter', function (key) {
+    key = key || '_';
+    counter[key] = counter[key] || 1;
+    return counter[key]++;
+  });
+  h.registerHelper('counter-reset', function (key) {
+    key = key || '_';
+    counter[key] = 1;
+    return '';
+  });
 }(Handlebars));
 ;
 (function ($) {
@@ -159,6 +174,11 @@
     });
   };
 }(jQuery));;
+(function (m) {
+  m.DATE_FORMAT = 'YYYY-MM-DD';
+  m.TIME_FORMAT = 'HH:mm:ss';
+  m.defaultFormat = m.DATE_FORMAT + ' ' + m.TIME_FORMAT;
+}(moment));;
 (function () {
   var data = {}
 
@@ -181,10 +201,11 @@
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard': 'showDashboard'
+      'dashboard(/)': 'showDashboard'
     },
     showDashboard: function () {
       this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
+      this.$body.setFramework('dashboard', '新近数据统计');
     },
     showUserPage: function (page) {
       if (page === 'logout') {
@@ -195,11 +216,15 @@
           }
         });
       }
+      if (page === 'login' && this.$me.id) {
+        this.navigate(tp.startPage || '#/dashboard');
+        return;
+      }
       tp.config.login.api = this.$me.url;
       this.$body.load(tp.path + 'page/' + page + '.hbs', tp.config.login, {
         isFull: true
       });
-      this.$body.setFramework('login');
+      this.$body.setFramework('login', '登录');
     }
   });
 }(Nervenet.createNameSpace('tp.router')));;
@@ -297,7 +322,7 @@
       var target = event.currentTarget
         , options = $(target).data();
       if (options.collectionId) {
-        var collection = tp.model.ListCollection.getInstance(options)
+        var collection = tp.model.ListCollection.getInstance(options);
         options.model = collection.get(options.id);
       }
       if (target.tagName.toLowerCase() === 'a') {
@@ -399,7 +424,7 @@
     }
   };
 }(Nervenet.createNameSpace('tp')));;
-;(function (ns) {
+(function (ns) {
   function callPopup(model, prop, options) {
     options.model = model;
     options.prop = prop;
@@ -433,8 +458,7 @@
   };
 }(Nervenet.createNameSpace('tp.controller')));;
 (function (ns) {
-  var OWNER = 'ad_owner'
-    , CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
+  var CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
   ns.AD = Backbone.Model.extend({
     defaults: {
@@ -452,9 +476,9 @@
       cycle: 2
     },
     urlRoot: tp.API + 'ad/',
-    initialize: function () {
+    initialize: function (attrs, options) {
+      Backbone.Model.prototype.initialize.call(this, attrs, options);
       if (this.isNew()) {
-        this.isEmpty = true;
         this.urlRoot += 'init';
         this.on('sync', this.syncHandler, this);
       }
@@ -466,19 +490,7 @@
         this.options.UPLOAD = tp.UPLOAD;
       }
       var has_ad = response.ad && _.isObject(response.ad);
-      if (has_ad && !response.ad.owner) {
-        response.ad.owner = Number(localStorage.getItem(OWNER));
-      }
       return has_ad ? response.ad : response;
-    },
-    save: function (key, value, options) {
-      if (key === 'owner' && value) {
-        localStorage.setItem(OWNER, value);
-      }
-      if (key.owner) {
-        localStorage.setItem(OWNER, key.owner);
-      }
-      return Backbone.Model.prototype.save.call(this, key, value, options);
     },
     toJSON: function (options) {
       var json = Backbone.Model.prototype.toJSON.call(this, options);
@@ -546,6 +558,7 @@
         }
         if (!route || /^#\/user\/\w+$/.test(location.hash)) {
           var from = localStorage.getItem(tp.PROJECT + '-from');
+          from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
           location.hash = from || tp.startPage || '#/dashboard';
         }
       } else {
@@ -633,6 +646,11 @@
         if (response.options) {
           this.options = response.options;
         }
+        for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
+          if (response.hasOwnProperty(key) && (_.isArray(response[key]) || _.isObject(response[key]))) {
+            this.trigger('data:' + key, response[key]);
+          }
+        }
         return _.isArray(response) ? response : response.list;
       },
       setPagesize: function (size) {
@@ -642,17 +660,22 @@
     });
 
   Collection.getInstance = function (options) {
-    if (options.collectionId && options.collectionId in collections) {
-      return collections[options.collectionId];
+    var collection;
+    if (options && options.collectionId && options.collectionId in collections) {
+      collection = collections[options.collectionId];
+      if (!collection.url && options.url) {
+        collection.url = options.url;
+      }
+      return collection;
     }
 
     var params = _.extend({}, options);
-    if (!params.model || !(params.model instanceof Backbone.Model)) {
+    if (!params.model || !(params.model instanceof Function)) {
       var init = _.pick(params, 'idAttribute', 'defaults');
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
-    var collection = new Collection(null, params);
-    if (options.collectionId) {
+    collection = new Collection(null, params);
+    if (options && options.collectionId) {
       collections[options.collectionId] = collection;
     }
     return collection;
@@ -914,7 +937,11 @@
     count: 0,
     initialize: function () {
       if (notification.permission !== 'granted') {
-        notification.requestPermission();
+        try {
+          notification.requestPermission();
+        } catch (e) {
+
+        }
       }
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
@@ -954,9 +981,11 @@
       collection: collection
     });
 
-  ns.Manager = new Manager({
-    collection: collection
-  });
+  if (tp.NOTICE_KEY) {
+    ns.Manager = new Manager({
+      collection: collection
+    });
+  }
 }(Nervenet.createNameSpace('tp.notification')));;
 (function (ns) {
   var history = 'history-recorder';
@@ -1142,7 +1171,7 @@
     submit_successHandler: function(response) {
       this.displayResult(true, response.msg, 'smile-o');
       smart.recordHistory(this.el);
-      this.$el.trigger('success');
+      this.$el.trigger('success', response);
       this.trigger('success', response);
     },
     submit_errorHandler: function(xhr, status, error) {
@@ -1206,7 +1235,7 @@
           , self = this;
         _.each(this.$el.serializeArray(), function (element) {
           var key = element.name.replace('[]', '')
-            , value = isNaN(element.value) ? element.value : Number(element.value);
+            , value = element.value === '' || isNaN(element.value) || /^0\d+$/.test(element.value) ? element.value : Number(element.value);
           if (attr[key] !== undefined) {
             if (!_.isArray(attr[key])) {
               attr[key] = [attr[key]];
@@ -1256,18 +1285,38 @@
     form.submit();
     iframe.body.innerHTML = '';
   };
+
+  // 全局表单元素增加事件
+  $(document)
+    .on('change', '[type=range]', function (event) {
+      $(event.target).next().html(event.target.value);
+    })
+    .on('change', '.auto-submit', function (event) {
+      $(event.target).closest('form').submit();
+    })
+    .on('change', '.check-all', function (event) {
+      var button = event.target
+        , name = button.value
+        , prop = button.checked;
+      $('[name="' + name + '"]').prop('checked', prop);
+    });
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
   ns.BaseList = Backbone.View.extend({
+    autoFetch: true,
     fragment: '',
     initialize: function (options) {
       this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
       this.container = options.container ? this.$(options.container) : this.$el;
+      this.collection = this.getCollection(options);
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
+      if (this.autoFetch) {
+        this.refresh(options);
+      }
     },
     remove: function () {
       this.collection.off(null, null, this);
@@ -1278,6 +1327,30 @@
       this.container.append(this.fragment);
       this.fragment = '';
       this.$el.removeClass('loading');
+    },
+    getCollection: function (options) {
+      if (this.collection) {
+        return this.collection;
+      }
+
+      var init = this.$el.data();
+      init.url = init.url.replace('{{API}}', tp.API);
+      options = _.extend(options, init);
+
+      this.params = tp.utils.decodeURLParam(options.params);
+      // 可能会从别的地方带来model
+      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
+      // 起止日期
+      if (options.start || options.end) {
+        options.defaults = _.pick(options, 'start', 'end');
+      }
+
+      return tp.model.ListCollection.getInstance(options);
+    },
+    refresh: function (options) {
+      options = options || {};
+      options.data = _.extend(options.data, this.params);
+      this.collection.fetch(options);
     },
     collection_addHandler: function (model, collection, options) {
       this.fragment += this.template(model.toJSON());
@@ -1571,22 +1644,25 @@
       var target = event.target
         , name = target.name
         , value = target.value;
-      this.model.set(name, value, {
-        reset: true
-      });
-      $(target).after(spinner);
+      if (!value) {
+        this.model.unset(name, {reset: true});
+      } else {
+        this.model.set(name, value, {
+          reset: true
+        });
+      }
+      $(target).after(tp.component.spinner);
     }
   });
 }(Nervenet.createNameSpace('tp.component.table')));;
 (function (ns) {
   ns.CollectionSelect = ns.BaseList.extend({
-    initialize: function (options) {
-      var init = this.$el.data();
-      this.collection = tp.model.ListCollection.getInstance(init);
-      ns.BaseList.prototype.initialize.call(this, options);
-
+    autoFetch: true,
+    refresh: function (options) {
       if (this.collection.length) {
         this.collection_resetHandler();
+      } else {
+        ns.BaseList.prototype.refresh.call(this, options);
       }
     },
     collection_addHandler: function (model, collection, options) {
@@ -1602,11 +1678,13 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-;(function (ns) {
+(function (ns) {
   ns.Manager = {
     $context: null,
     map: {
+      '.base-list': 'tp.component.BaseList',
       '.smart-table': 'tp.component.SmartTable',
+      '.add-on-list': 'tp.component.AddOnList',
       '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
       '#login-form': 'tp.component.LoginForm',
@@ -1619,7 +1697,19 @@
       var dateFields = $el.find('.datetimepicker');
       if (dateFields.length) {
         dateFields.each(function () {
-          $(this).datetimepicker($(this).data());
+          var options = $(this).data();
+          options = _.mapObject(options, function (value, key) {
+            switch (key) {
+              case 'maxDate':
+              case 'minDate':
+              case 'defaultDate':
+                return moment().add(value, 'days');
+                break;
+              default:
+                return value;
+            }
+          });
+          $(this).datetimepicker(options);
         });
       }
 
@@ -1779,7 +1869,7 @@
     },
     onLoadComplete: function (response) {
       if (response) {
-        if (this.options.isMD) {
+        if (this.options && this.options.isMD) {
           response = marked(response);
         }
         this.$('.modal-body').html(response);
@@ -1825,7 +1915,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));;
-;(function (ns) {
+(function (ns) {
   var timeout;
   var Editor = ns.Editor = tp.view.DataSyncView.extend({
     $context: null,
@@ -1839,7 +1929,7 @@
       this.submit = this.$('.btn-primary');
       this.options = options;
       var type = options.type || 'short-text'
-        , template = tp.path + (options.template ? 'page/' + options.template : ('template/popup-' + type));
+        , template = options.template ? 'page/' + options.template : (tp.path + 'template/popup-' + type);
       $.get(template + '.hbs', _.bind(this.loadCompleteHandler, this), 'html');
 
       // 补充信息
@@ -1864,10 +1954,10 @@
       this.form.on('success', this.form_successHandler, this);
       this.form.on('error', this.form_errorHandler, this);
 
-      html = this.$('.item-grid').html();
+      html = this.$('script').remove().html();
       if (html) {
         this.template = Handlebars.compile(html);
-        this.$('.item-grid').empty();
+        this.$('script').empty();
       }
 
       var dateFields = this.$('[type=datetime]');
@@ -1875,6 +1965,10 @@
         dateFields.each(function () {
           $(this).datetimepicker($(this).data());
         });
+      }
+
+      if (this.options.hasComponents) {
+        tp.component.Manager.check(this.form.$el);
       }
 
       this.submit.prop('disabled', false);
@@ -1925,8 +2019,14 @@
     }),
     initialize: function (options) {
       Editor.prototype.initialize.call(this, options);
+      this.collection = tp.model.ListCollection.getInstance();
+      this.collection.url = tp.API + options.url;
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
+    },
+    remove: function () {
+      this.collection.off();
+      Backbone.View.prototype.remove.call(this);
     },
     render: function (response) {
       Editor.prototype.render.call(this, response);
@@ -1937,14 +2037,17 @@
         return;
       }
       this.collection.fetch({data: {keyword: keyword}});
-      this.$('[type=search], .search-button').prop('disabled', true);
+      this.$('[type=search]').prop('disabled', true);
+      this.$('.search-button').spinner();
     },
     collection_addHandler: function (model) {
-      this.fragment += this.template(model.toJSON());
+      this.fragment += this.template(_.extend(model.toJSON(), this.options));
     },
     collection_syncHandler: function () {
-      this.$('.search-result').html(this.fragment + '<hr />');
-      this.$('[type=search], .search-button').prop('disabled', false);
+      this.fragment = this.fragment || '没有与此关键词接近的结果。';
+      this.$('.search-result').html(this.fragment);
+      this.$('[type=search]').prop('disabled', false);
+      this.$('.search-button').spinner(false);
       this.fragment = '';
     },
     searchButton_clickHandler: function () {
@@ -1975,7 +2078,7 @@
           model.set('tag', model.get(prop));
         });
       }
-      this.$('.item-grid').html(this.template({value: this.collection.toJSON()}));
+      this.$('.tags').html(this.template({value: this.collection.toJSON()}));
     },
     add: function () {
       var value = this.$('[name=query]').val().replace(/^\s+|\s+$/, '');
@@ -2048,7 +2151,7 @@
       options.isImage = /image\/\*/.test(options.accept);
       options.API = tp.API;
       if (options.multiple) {
-        options.items = options.value.split(',');
+        options.items = _.isArray(options.value) ? options.value : options.value.split(',');
       }
       // 防止误触导致退出窗体
       options.backdrop = 'static';
@@ -2154,12 +2257,14 @@
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
-;(function (ns) {
+(function (ns) {
+  var print_header = '<link rel="stylesheet" href="{{url}}css/screen.css"><link rel="stylesheet" href="{{url}}css/print.css"><title>{{title}}</title>';
+
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
-      'change [type=range]': 'range_changeHandler',
       'click .add-button': 'addButton_clickHandler',
+      'click .print-button': 'printButton_clickHandler',
       'click .refresh-button': 'refreshButton_clickHandler'
     },
     initialize: function () {
@@ -2195,6 +2300,7 @@
       this.clear();
       this.$el.toggleClass('full-page', !!options.isFull)
         .removeClass(this.lastClass);
+      $('#navbar-side').removeClass('in');
 
       // html or hbs
       if (/.hbs$/.test(url)) {
@@ -2219,7 +2325,7 @@
     setFramework: function (classes, title, sub, model) {
       this.$el.addClass(classes);
       this.lastClass = classes;
-      if (model instanceof Backbone.Model) {
+      if (model instanceof Backbone.Model && title) {
         model.once('sync', function () {
           this.setTitle(title, sub, model);
         }, this);
@@ -2259,15 +2365,27 @@
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
     },
-    range_changeHandler: function (event) {
-      $(event.target).next().html(event.target.value);
-    },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
       event.preventDefault();
     },
     page_loadCompleteHandler: function () {
       this.loading.remove();
+    },
+    printButton_clickHandler: function (event) {
+      var target = event.currentTarget
+        , selector = target.getAttribute('href')
+        , title = target.title
+        , printWindow = window.open('', 'print-window')
+        , url = location.href
+        , header = Handlebars.compile(print_header);
+      url = url.substr(0, url.lastIndexOf('/') + 1);
+      printWindow.document.body.innerHTML = $(selector).html();
+      printWindow.document.head.innerHTML = header({
+        title: title,
+        url: url
+      });
+      printWindow.print();
     },
     loadCompleteHandler: function (response, status) {
       if (status === 'error') {
@@ -2280,282 +2398,28 @@
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
-;(function (ns) {
-  var IOS_PREFIX = 'itms-apps://'
-    , option_template = '{{#each list}}<option value="{{id}}">{{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
-    , omit = ['ad_url', 'ad_lib', 'ad_size', 'id'];
-  
-  ns.AdEditor = tp.view.Loader.extend({
-    events: {
-      'blur [name=ad_url]': 'adURL_blurHandler',
-      'change [name=ad_name]': 'adName_changeHandler',
-      'change [name=ad_app_type]': 'platform_changeHandler',
-      'change [name=search_flag]': 'searchFlag_changeHandler',
-      'change .ad-source-list': 'adSource_changeHandler',
-      'change #replace-ad': 'replaceAD_changeHandler',
-      'change .domestic input': 'area_changeHandler',
-      'change .isp input': 'isp_changeHandler',
-      'change #feedback': 'feedback_changeHandler',
-      'change #app-uploader [name=ad_url]': 'adURL_changeHandler',
-      'click .search-ad-button': 'searchADButton_clickHandler',
-      'click .search-channel-button': 'searchChannelButton_clickHandler',
-      'keydown .channel-keyword': 'channelKeyword_keyDownHandler'
-    },
-    render: function () {
-      tp.view.Loader.prototype.render.call(this);
-
-      this.channels = tp.model.ListCollection.getInstance({
-        collectionId: 'channel',
-        url: tp.API + 'channel/',
-        key: 'channel'
-      });
-      this.channels.options = {
-        channel_types: this.model.options.channel_types,
-        relativeSales: this.model.options.relativeSales
-      };
-      this.channels.reset(this.model.options.channels);
-      this.channels.on('reset', function () {
-        this.$('.channel').find('input').prop('disabled', false);
-        this.$('.search-channel-button').spinner(false);
-      }, this);
-
-      var init = this.model.pick(_.keys(this.model.defaults))
-        , form = this.$('form');
-      setTimeout(function () {
-        form.trigger('data', init);
-      }, 50);
-    },
-    remove: function () {
-      Backbone.View.prototype.remove.call(this);
-      this.model.off(null, null, this);
-      this.channels.off();
-      this.channels = null;
-    },
-    checkADURL: function (value) {
-      if (/\.ipa$/.test(value) || /itunes.apple.com/.test(value)) {
-        this.$('input[name=ad_app_type][value=2]').prop('checked', true);
-        return;
-      }
-      if (/\.apk$/.test(value)) {
-        this.$('input[name=ad_app_type][value=1]').prop('checked', true);
-      }
-    },
-    searchChannel: function () {
-      var keyword = $.trim(this.$('.channel-keyword').val());
-      if (!keyword) {
-        return false;
-      }
-      this.$('.channel').find('input').prop('disabled', true);
-      this.$('.search-channel-button').spinner();
-      this.channels.fetch({
-        data: {keyword: keyword},
-        reset: true
-      });
-    },
-    adName_changeHandler: function (event) {
-      this.$('.search-ad-button').prop('disabled', !event.target.value);
-    },
-    adSource_changeHandler: function (event) {
-      var list = $(event.target).data('list')
-        , data = _.omit(list[event.target.selectedIndex], omit);
-      this.$('form').trigger('data', data);
-    },
-    adURL_blurHandler: function (event) {
-      if (this.$el.hasClass('iPhone') && event.target.value.substr(0, 12) !== IOS_PREFIX) {
-        event.target.value = event.target.value.replace(/^https?:\/\//i, IOS_PREFIX);
-      }
-    },
-    // 根据内容选择平台
-    adURL_changeHandler: function (event) {
-      this.checkADURL(event.target.value);
-    },
-    area_changeHandler: function (event) {
-      var target = $(event.target);
-      this.$el.toggleClass(target.data('class'), target.val() === '1');
-    },
-    channelKeyword_keyDownHandler: function (event) {
-      if (event.keyCode === 13) {
-        this.searchChannel();
-        event.preventDefault();
-      }
-    },
-    feedback_changeHandler: function (event) {
-      this.$el.toggleClass('show-feedback-detail', event.target.value === '2' || event.target.value === '3');
-    },
-    fetchAD_errorHandler: function (xhr, status, err) {
-      alert('加载已有广告失败');
-      this.$('#replace-ad').prop('disabled', false)
-        .next().removeClass('spin');
-    },
-    fetchAD_successHandler: function (response) {
-      var template = Handlebars.compile(option_template)
-        , options = template(response);
-      this.hasAD = true;
-      this.$('[name=replace-with]')
-        .data('list', response.list)
-        .html(options);
-      this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', false);
-      this.$('#replace-ad').next().removeClass('spin');
-      this.$('form').trigger('data', _.omit(response.list[0], omit));
-    },
-    isp_changeHandler: function (event) {
-      var target = $(event.target)
-        , value = event.target.value
-        , checked = event.target.checked;
-      if (checked) { // 选中
-        if (value === '0') { // 选中了全部
-          target.siblings().prop('checked', false);
-        } else { // 选中了某个ISP
-          target.siblings().first().prop('checked', false);
-        }
-      } else { // 取消选中
-        if (value === '0') {
-          target.siblings().prop('checked', true);
-        } else if (target.siblings().filter(':checked').length === 0) {
-          target.siblings().first().prop('checked', true);
-        }
-      }
-    },
-    platform_changeHandler: function (event) {
-      this.$('form')
-        .removeClass('Android iPhone')
-        .addClass(event.target.labels[0].innerText);
-      var is_ios = event.target.value === '2';
-      this.$('#process_name').prop('required', is_ios);
-      $('#feedback').val(function () { return is_ios ? 4 : this.value});
-      $('#app-uploader').data('accept', is_ios ? '*.ipa' : '*.apk');
-    },
-    replaceAD_changeHandler: function (event) {
-      var replace = event.target.checked
-        , pack_name = this.model.get('pack_name') || this.$('[name=pack_name]').val();
-      if (replace && !pack_name) {
-        alert('包名未知，请先上传安装包，或填写包名');
-        event.target.checked = false;
-        return;
-      }
-      if (replace && !this.hasAD) {
-        tp.service.Manager.call(tp.API + 'ad/', {
-          pack_name: pack_name,
-          status: 0
-        }, {
-          success: this.fetchAD_successHandler,
-          error: this.fetchAD_errorHandler,
-          context: this,
-          method: 'get'
-        });
-        this.$('#replace-time').datetimepicker({
-          format: 'YYYY-MM-DD HH:mm'
-        });
-        event.target.disabled = true;
-        $(event.target).next().addClass('spin');
-        return;
-      }
-      this.$('[name=replace-with],#replace-time,#replace-ad').prop('disabled', !replace);
-    },
-    searchAD_errorHandler: function () {
-      alert('未找到符合广告名的广告');
-      this.$('.search-ad-button').spinner(false);
-    },
-    searchAD_successHandler: function (response) {
-      var template = Handlebars.compile(option_template)
-        , data = _.omit(response.list[0], omit);
-      this.$('.ad-list-container').slideDown()
-        .find('select')
-          .html(template(response))
-          .data('list', response.list);
-      this.$('form').trigger('data', data);
-      this.$('.search-ad-button').spinner(false);
-    },
-    searchADButton_clickHandler: function () {
-      var ad_name = this.$('[name=ad_name]').val();
-      tp.service.Manager.call(tp.API + 'ad_basic/', {
-        ad_name: ad_name
-      }, {
-        success: this.searchAD_successHandler,
-        error: this.searchAD_errorHandler,
-        context: this,
-        method: 'get'
-      });
-      this.$('.search-ad-button').spinner();
-    },
-    searchChannelButton_clickHandler: function () {
-      this.searchChannel();
-    },
-    searchFlag_changeHandler: function (event) {
-      this.$('.aso').toggle(event.target.value === '1');
-    }
-  });
-}(Nervenet.createNameSpace('tp.page')));
-;
 (function (ns) {
-  var FORMAT = 'YYYY-MM-DD';
-  ns.DateRange = tp.popup.Base.extend({
-    events: _.extend(tp.popup.Base.prototype.events, {
-      'dp.change input[name="start-date"]': 'startDate_changeHandler',
-      'dp.change input[name="end-date"]': 'endDate_changeHandler'
-    }),
-    onLoadComplete: function (response) {
-      tp.popup.Base.prototype.onLoadComplete.call(this, response);
-      var start = $('input[name="start-date"]');
-      this.setMaxDate(start, moment());
+  ns.AddOnList = ns.BaseList.extend({
+    autoFetch: false,
+    initialize: function (options) {
+      options = _.extend({
+        container: 'tbody'
+      }, options);
+      this.collection = new Backbone.Collection();
+      ns.BaseList.prototype.initialize.call(this, options);
+
+      var id = this.$el.data('collection-id')
+        , key = this.$el.data('key')
+        , collection = tp.model.ListCollection.getInstance({
+          collectionId: id
+        });
+      collection.on('data:' + key, this.collection_dataHandler, this);
     },
-    startDate_changeHandler: function (event) {
-      var startDate = event.date,
-          start = $('input[name="start-date"]'),
-          end = $('input[name="end-date"]');
-      var result = this.getDateFromStart(end.val(), startDate.format(FORMAT));
-      end.val(result);
-      this.setEndDateRange(startDate, startDate.clone().add(6, 'days'));
-    },
-    endDate_changeHandler: function(event) {
-      var start = $('input[name="start-date"]'),
-          end = $('input[name="end-date"]'),
-          endDate = event.date;
-      var result = this.getDateFromEnd(start.val(), endDate.format(FORMAT));
-      start.val(result);
-      this.setEndDateRange(moment(result), moment(result).add(6, 'days'));
-    },
-    setMinDate: function (elem, date) {
-      elem.data("DateTimePicker").minDate(date);
-    },
-    setMaxDate: function (elem, date) {
-      elem.data("DateTimePicker").maxDate(date);
-    },
-    setEndDateRange: function (start, end) {
-      var endElem = $('input[name="end-date"]');
-      try {
-        this.setMinDate(endElem, start);
-        this.setMaxDate(endElem, end);
-      } catch (e) {
-        this.setMaxDate(endElem, end);
-        this.setMinDate(endElem, start);
-      }
-    },
-    getDateFromEnd: function (current, end) {
-      var min = current
-        , max = moment(current).add(6, 'days').format(FORMAT);
-      if (end >= min && end <= max) {
-        return current;
-      } else if (end < min) {
-        return end;
-      } else if (end > max) {
-        return end;
-      }
-    },
-    getDateFromStart: function (current, start) {
-      var min = moment(current).subtract(6, 'days').format(FORMAT),
-          max = current;
-      if (start < min) {
-        return moment(start).add(6,'days').format(FORMAT);
-      } else if (start >= min && start <= max) {
-        return current;
-      } else if (start > max) {
-        return moment(start).add(6,'days').format(FORMAT);
-      }
+    collection_dataHandler: function (list) {
+      this.collection.reset(list);
     }
   });
-}(Nervenet.createNameSpace('tp.page')));
-;
+}(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {
@@ -2573,30 +2437,51 @@
 (function (ns) {
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
+    src: {},
     initialize: function (options) {
+      if (options.data) {
+        this.createOptions(options);
+        this.render();
+        return;
+      }
+
       var init = this.$el.data();
       options = _.extend({
         autoFetch: true
       }, options, init);
       if (options.url) {
         this.collection = tp.model.ListCollection.getInstance(options);
-        this.collection.on('sync reset', this.collection_fetchHandler, this);
         this.createOptions(options);
         if (options.autoFetch) {
+          this.collection.on('sync reset', this.collection_fetchHandler, this);
           this.collection.fetch();
+        } else {
+          this.collection_fetchHandler();
         }
-      } else {
-        var data = this.$('script');
-        if (data.length) {
-          var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
-          if (chartData.data.length) {
-            this.createOptions(options, chartData);
-            this.drawChart();
-            return;
-          }
-        }
-        this.showEmpty();
+        return;
       }
+
+      var data = this.$('script');
+      if (data.length) {
+        var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
+        if (chartData.data.length) {
+          this.createOptions(options, chartData);
+          this.render();
+          return;
+        }
+      }
+
+      this.showEmpty();
+    },
+    remove: function () {
+      if (this.collection) {
+        this.collection.off(null, null, this);
+      }
+      Backbone.View.prototype.remove.call(this);
+    },
+    render: function () {
+      this.$el.empty();
+      this.chart = new Morris[this.className](this.options);
     },
     createOptions: function (options, chartData) {
       options = _.extend({
@@ -2605,7 +2490,7 @@
       }, options, chartData);
       this.className = 'type' in options ? options.type.charAt(0).toUpperCase() + options.type.substr(1) : 'Line';
       if ('colors' in options) {
-        options.colors = options.lineColors = options.barColors = options.colors.split(',');
+        options.colors = options.lineColors = options.barColors = _.isArray(options.colors) ? options.colors : options.colors.split(',');
       } else {
         options.colors = options.lineColors = options.barColors = this.$colors;
       }
@@ -2615,63 +2500,39 @@
         }
       }
       if (!_.isArray(options.ykeys)) {
-        options.ykeys = [options.ykeys];
+        this.src.ykeys = options.ykeys = options.ykeys.split(',');
       }
       if (!_.isArray(options.labels)) {
-        options.labels = [options.labels];
+        this.src.labels = options.labels = options.labels.split(',');
       }
       this.options = options;
-    },
-    drawChart: function () {
-      this.$('.fa-spin').remove();
-      this.chart = new Morris[this.className](this.options);
     },
     showEmpty: function () {
       this.$el.addClass('empty').text('（无数据）');
     },
-    collection_fetchHandler: function (collection) {
-      if (collection.length === 0) {
+    collection_fetchHandler: function () {
+      if (this.collection.length === 0) {
         this.showEmpty();
       }
-      this.options.data = collection.toJSON();
-      this.drawChart();
+      if (this.collection.options) {
+        if (this.collection.options.ykeys) {
+          this.options.ykeys = this.src.ykeys.concat(this.collection.options.ykeys);
+        }
+        if (this.collection.options.labels) {
+          this.options.labels = this.src.labels.concat(this.collection.options.labels);
+        }
+      }
+      this.options.data = this.collection.toJSON();
+      this.render();
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-;(function (ns) {var init = {
-    events: {
-      'change .auto-submit': 'autoSubmit_Handler',
-      'click .add-row-button': 'addRowButton_clickHandler'
-    },
-    initialize: function () {
-      var cid = this.$el.data('collection-id');
-      if (cid) {
-        this.collection = tp.model.ListCollection.createInstance(null, {
-          id: cid
-        });
-      }
-
-      this.render();
-    },
-    render: function () {
-      this.$('.keyword-form').find('[name=query]').val(this.model.get('keyword'));
-    },
-    addRowButton_clickHandler: function (event) {
-      this.collection.add({});
-      event.preventDefault();
-    },
-    autoSubmit_Handler: function (event) {
-      $(event.currentTarget).closest('form').submit();
-    }
-  };
-  ns.SmartNavbar = Backbone.View.extend(init);
-}(Nervenet.createNameSpace('tp.component')));
-;
 (function (ns) {
   var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{value}}</a>');
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
+    autoFetch: true,
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
@@ -2685,76 +2546,64 @@
       'change .status-button': 'statusButton_changeHandler'
     },
     initialize: function (options) {
-      var init = this.$el.data();
-      init.url = init.url.replace('{{API}}', tp.API);
-      options = _.extend({
-        pagesize: 10,
-        autoFetch: true
-      }, options, init);
-
-      // 可能会从别的地方带来model
-      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
-      // 特定的过滤器
-      this.params = tp.utils.decodeURLParam(init.params);
-
-      if (options.start || options.end) {
-        options.defaults = _.pick(options, 'start', 'end');
-      }
-      this.collection = tp.model.ListCollection.getInstance(options);
-      ns.BaseList.prototype.initialize.call(this, {container: 'tbody'});
-
       // 通过页面中介来实现翻页等功能
       this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento();
       this.model.on('change', this.model_changeHandler, this);
       this.model.on('invalid', this.model_invalidHandler, this);
       this.renderHeader();
 
+      ns.BaseList.prototype.initialize.call(this, _.extend(options, {
+        container: 'tbody',
+        reset: true
+      }));
+      if (!('autoFetch' in options)) {
+        options.autoFetch = this.autoFetch;
+      }
+
       // 启用搜索
-      if ('search' in init) {
+      if ('search' in options) {
         this.search = new ns.table.Search({
-          el: init.search,
+          el: options.search,
           model: this.model,
           collection: this.collection
         });
       }
 
       // 翻页
-      if ('pagesize' in init && init.pagesize > 0) {
+      if ('pagesize' in options && options.pagesize > 0) {
         this.pagination = new ns.table.Pager(_.extend({}, options, {
-          el: 'pagination' in init ? init.pagination : '.pager',
+          el: 'pagination' in options ? options.pagination : '.pager',
           model: this.model,
           collection: this.collection
         }));
       }
 
       // 调整每页数量
-      if ('pagesizeController' in init) {
-        this.pagesizeController = $(init.pagesizeController);
+      if ('pagesizeController' in options) {
+        this.pagesizeController = $(options.pagesizeController);
         this.pagesizeController.val(this.collection.pagesize);
         this.pagesizeController.on('change', _.bind(this.pagesize_changeHandler, this));
       }
 
       // 起止日期
-      if ('ranger' in init) {
+      if ('ranger' in options) {
         this.ranger = new ns.table.Ranger(_.extend({}, options, {
-          el: init.ranger,
+          el: options.ranger,
           model: this.model
         }));
       }
 
       // 删选器
-      if ('filter' in init) {
+      if ('filter' in options) {
         this.filter = new ns.table.Filter({
-          el: init.filter,
+          el: options.filter,
           model: this.model,
           collection: this.collection
         });
       }
 
       if (options.autoFetch) {
-        this.collection.fetch({
-          data: _.extend(this.model.toJSON(), this.params)
-        });
+        this.refresh(options);
       }
     },
     remove: function () {
@@ -2785,6 +2634,11 @@
           container.append(container.find('#' + model.id));
         });
       }
+    },
+    refresh: function (options) {
+      options = options || {};
+      options.data = _.extend(this.model.toJSON(), this.params, options.data);
+      this.collection.fetch(options);
     },
     renderHeader: function () {
       // 排序
@@ -2875,9 +2729,11 @@
     },
     model_changeHandler: function (model, options) {
       options = _.omit(options, 'unset') || {};
-      options.data = _.extend(model.toJSON(), this.params);
-      _.extend(this.collection.model.prototype.defaults, _.pick(model.changed, 'start', 'end'));
-      this.collection.fetch(options);
+      this.refresh(options);
+
+      if ('start' in model.changed || 'end' in model.changed) {
+        _.extend(this.collection.model.prototype.defaults, _.pick(model.changed, 'start', 'end'));
+      }
       this.$el.addClass('loading');
       model.warting = true;
     },
@@ -2897,7 +2753,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.collection.fetch({data: _.extend(this.model.toJSON(), this.params)});
+      this.refresh();
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)

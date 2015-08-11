@@ -5,12 +5,15 @@
 'use strict';
 (function (h) {
   var slice = Array.prototype.slice
-    , pop = Array.prototype.pop;
+    , pop = Array.prototype.pop
+    , counter = {};
   // 从后面给的值中挑出一个
   h.registerHelper('pick', function (value, array) {
     value = parseInt(value);
+    var options = arguments[arguments.length - 1];
+    options.hash.start = options.hash.start || 0;
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
-    return array[value];
+    return array[value - options.hash.start];
   });
 
   h.registerHelper('pick_with', function (value, array, options) {
@@ -116,5 +119,17 @@
     var context = h.$context;
     target = context.getValue(target);
     return target instanceof Backbone.Model ? target.get(key) : target[key];
+  });
+
+  // 输出排序值
+  h.registerHelper('counter', function (key) {
+    key = key || '_';
+    counter[key] = counter[key] || 1;
+    return counter[key]++;
+  });
+  h.registerHelper('counter-reset', function (key) {
+    key = key || '_';
+    counter[key] = 1;
+    return '';
   });
 }(Handlebars));

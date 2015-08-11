@@ -4,15 +4,20 @@
 'use strict';
 (function (ns) {
   ns.BaseList = Backbone.View.extend({
+    autoFetch: true,
     fragment: '',
     initialize: function (options) {
       this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
       this.container = options.container ? this.$(options.container) : this.$el;
+      this.collection = this.getCollection(options);
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('change', this.collection_changeHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
+      if (this.autoFetch) {
+        this.refresh(options);
+      }
     },
     remove: function () {
       this.collection.off(null, null, this);
@@ -23,6 +28,30 @@
       this.container.append(this.fragment);
       this.fragment = '';
       this.$el.removeClass('loading');
+    },
+    getCollection: function (options) {
+      if (this.collection) {
+        return this.collection;
+      }
+
+      var init = this.$el.data();
+      init.url = init.url.replace('{{API}}', tp.API);
+      options = _.extend(options, init);
+
+      this.params = tp.utils.decodeURLParam(options.params);
+      // 可能会从别的地方带来model
+      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
+      // 起止日期
+      if (options.start || options.end) {
+        options.defaults = _.pick(options, 'start', 'end');
+      }
+
+      return tp.model.ListCollection.getInstance(options);
+    },
+    refresh: function (options) {
+      options = options || {};
+      options.data = _.extend(options.data, this.params);
+      this.collection.fetch(options);
     },
     collection_addHandler: function (model, collection, options) {
       this.fragment += this.template(model.toJSON());

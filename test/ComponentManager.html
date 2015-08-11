@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>测试组件管理器</title>
+  <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css">
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+  <style>
+    #check-me {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<div id="check-me" class="container">
+  <form>
+    <div class="form-group">
+      <input class="datetimepicker form-controlb" data-max-date="1" data-min-date="-7" data-default-date="0" data-format="YYYY-MM-DD">
+    </div>
+  </form>
+</div>
+<script src="../bower_components/qunit/qunit/qunit.js"></script>
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../bower_components/underscore/underscore-min.js"></script>
+<script src="../bower_components/backbone/backbone-min.js"></script>
+<script src="../bower_components/moment/min/moment-with-locales.min.js"></script>
+<script src="../bower_components/nervenet/nervenet.min.js"></script>
+<script src="../bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="../js/component/Manager.js"></script>
+<script src="../js/view/DataSyncView.js"></script>
+<script src="../js/component/SmartForm.js"></script>
+<script src="ComponentManager.js"></script>
+</body>
+</html>

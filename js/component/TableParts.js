@@ -205,10 +205,14 @@
       var target = event.target
         , name = target.name
         , value = target.value;
-      this.model.set(name, value, {
-        reset: true
-      });
-      $(target).after(spinner);
+      if (!value) {
+        this.model.unset(name, {reset: true});
+      } else {
+        this.model.set(name, value, {
+          reset: true
+        });
+      }
+      $(target).after(tp.component.spinner);
     }
   });
 }(Nervenet.createNameSpace('tp.component.table')));

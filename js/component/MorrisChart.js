@@ -5,30 +5,51 @@
 (function (ns) {
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
+    src: {},
     initialize: function (options) {
+      if (options.data) {
+        this.createOptions(options);
+        this.render();
+        return;
+      }
+
       var init = this.$el.data();
       options = _.extend({
         autoFetch: true
       }, options, init);
       if (options.url) {
         this.collection = tp.model.ListCollection.getInstance(options);
-        this.collection.on('sync reset', this.collection_fetchHandler, this);
         this.createOptions(options);
         if (options.autoFetch) {
+          this.collection.on('sync reset', this.collection_fetchHandler, this);
           this.collection.fetch();
+        } else {
+          this.collection_fetchHandler();
         }
-      } else {
-        var data = this.$('script');
-        if (data.length) {
-          var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
-          if (chartData.data.length) {
-            this.createOptions(options, chartData);
-            this.drawChart();
-            return;
-          }
-        }
-        this.showEmpty();
+        return;
       }
+
+      var data = this.$('script');
+      if (data.length) {
+        var chartData = JSON.parse(data.remove().html().replace(/,\s?]/, ']'));
+        if (chartData.data.length) {
+          this.createOptions(options, chartData);
+          this.render();
+          return;
+        }
+      }
+
+      this.showEmpty();
+    },
+    remove: function () {
+      if (this.collection) {
+        this.collection.off(null, null, this);
+      }
+      Backbone.View.prototype.remove.call(this);
+    },
+    render: function () {
+      this.$el.empty();
+      this.chart = new Morris[this.className](this.options);
     },
     createOptions: function (options, chartData) {
       options = _.extend({
@@ -37,7 +58,7 @@
       }, options, chartData);
       this.className = 'type' in options ? options.type.charAt(0).toUpperCase() + options.type.substr(1) : 'Line';
       if ('colors' in options) {
-        options.colors = options.lineColors = options.barColors = options.colors.split(',');
+        options.colors = options.lineColors = options.barColors = _.isArray(options.colors) ? options.colors : options.colors.split(',');
       } else {
         options.colors = options.lineColors = options.barColors = this.$colors;
       }
@@ -47,26 +68,30 @@
         }
       }
       if (!_.isArray(options.ykeys)) {
-        options.ykeys = [options.ykeys];
+        this.src.ykeys = options.ykeys = options.ykeys.split(',');
       }
       if (!_.isArray(options.labels)) {
-        options.labels = [options.labels];
+        this.src.labels = options.labels = options.labels.split(',');
       }
       this.options = options;
-    },
-    drawChart: function () {
-      this.$('.fa-spin').remove();
-      this.chart = new Morris[this.className](this.options);
     },
     showEmpty: function () {
       this.$el.addClass('empty').text('（无数据）');
     },
-    collection_fetchHandler: function (collection) {
-      if (collection.length === 0) {
+    collection_fetchHandler: function () {
+      if (this.collection.length === 0) {
         this.showEmpty();
       }
-      this.options.data = collection.toJSON();
-      this.drawChart();
+      if (this.collection.options) {
+        if (this.collection.options.ykeys) {
+          this.options.ykeys = this.src.ykeys.concat(this.collection.options.ykeys);
+        }
+        if (this.collection.options.labels) {
+          this.options.labels = this.src.labels.concat(this.collection.options.labels);
+        }
+      }
+      this.options.data = this.collection.toJSON();
+      this.render();
     }
   });
 }(Nervenet.createNameSpace('tp.component')));

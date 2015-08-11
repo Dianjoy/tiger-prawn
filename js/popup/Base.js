@@ -52,7 +52,7 @@
     },
     onLoadComplete: function (response) {
       if (response) {
-        if (this.options.isMD) {
+        if (this.options && this.options.isMD) {
           response = marked(response);
         }
         this.$('.modal-body').html(response);

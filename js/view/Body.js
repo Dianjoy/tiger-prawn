@@ -1,12 +1,15 @@
 /**
  * Created by meathill on 14/11/13.
  */
-;(function (ns) {
+'use strict';
+(function (ns) {
+  var print_header = '<link rel="stylesheet" href="{{url}}css/screen.css"><link rel="stylesheet" href="{{url}}css/print.css"><title>{{title}}</title>';
+
   ns.Body = Backbone.View.extend({
     $context: null,
     events: {
-      'change [type=range]': 'range_changeHandler',
       'click .add-button': 'addButton_clickHandler',
+      'click .print-button': 'printButton_clickHandler',
       'click .refresh-button': 'refreshButton_clickHandler'
     },
     initialize: function () {
@@ -42,6 +45,7 @@
       this.clear();
       this.$el.toggleClass('full-page', !!options.isFull)
         .removeClass(this.lastClass);
+      $('#navbar-side').removeClass('in');
 
       // html or hbs
       if (/.hbs$/.test(url)) {
@@ -67,7 +71,7 @@
     setFramework: function (classes, title, sub, model) {
       this.$el.addClass(classes);
       this.lastClass = classes;
-      if (model instanceof Backbone.Model) {
+      if (model instanceof Backbone.Model && title) {
         model.once('sync', function () {
           this.setTitle(title, sub, model);
         }, this);
@@ -107,15 +111,27 @@
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
     },
-    range_changeHandler: function (event) {
-      $(event.target).next().html(event.target.value);
-    },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
       event.preventDefault();
     },
     page_loadCompleteHandler: function () {
       this.loading.remove();
+    },
+    printButton_clickHandler: function (event) {
+      var target = event.currentTarget
+        , selector = target.getAttribute('href')
+        , title = target.title
+        , printWindow = window.open('', 'print-window')
+        , url = location.href
+        , header = Handlebars.compile(print_header);
+      url = url.substr(0, url.lastIndexOf('/') + 1);
+      printWindow.document.body.innerHTML = $(selector).html();
+      printWindow.document.head.innerHTML = header({
+        title: title,
+        url: url
+      });
+      printWindow.print();
     },
     loadCompleteHandler: function (response, status) {
       if (status === 'error') {

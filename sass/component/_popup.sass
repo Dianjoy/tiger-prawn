@@ -9,8 +9,15 @@
     background-color: $topbar-background-color
     color: $white
 
+  .modal-body
+    max-height: 600px
+    overflow-y: auto
+
   .modal-footer
     background-color: $background-color
+
+    &:blank
+      display: none
 
   &.loading
     p

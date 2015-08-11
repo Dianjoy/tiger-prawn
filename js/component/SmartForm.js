@@ -183,7 +183,7 @@
     submit_successHandler: function(response) {
       this.displayResult(true, response.msg, 'smile-o');
       smart.recordHistory(this.el);
-      this.$el.trigger('success');
+      this.$el.trigger('success', response);
       this.trigger('success', response);
     },
     submit_errorHandler: function(xhr, status, error) {
@@ -247,7 +247,7 @@
           , self = this;
         _.each(this.$el.serializeArray(), function (element) {
           var key = element.name.replace('[]', '')
-            , value = isNaN(element.value) ? element.value : Number(element.value);
+            , value = element.value === '' || isNaN(element.value) || /^0\d+$/.test(element.value) ? element.value : Number(element.value);
           if (attr[key] !== undefined) {
             if (!_.isArray(attr[key])) {
               attr[key] = [attr[key]];
@@ -297,4 +297,19 @@
     form.submit();
     iframe.body.innerHTML = '';
   };
+
+  // 全局表单元素增加事件
+  $(document)
+    .on('change', '[type=range]', function (event) {
+      $(event.target).next().html(event.target.value);
+    })
+    .on('change', '.auto-submit', function (event) {
+      $(event.target).closest('form').submit();
+    })
+    .on('change', '.check-all', function (event) {
+      var button = event.target
+        , name = button.value
+        , prop = button.checked;
+      $('[name="' + name + '"]').prop('checked', prop);
+    });
 }(Nervenet.createNameSpace('tp.component')));

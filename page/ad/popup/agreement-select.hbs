@@ -1,0 +1,19 @@
+<div class="form-group">
+  <label for="editor-popup-input">{{label}}</label>
+  <label for="editor-popup-search">请输入关键词：</label>
+  <div class="form-group input-group">
+    <input type="search" class="form-control" id="editor-popup-search" autofocus>
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-default search-button"><i class="fa fa-search"></i></button>
+    </span>
+  </div>
+</div>
+<h4>搜索结果</h4>
+<hr>
+<div class="form-group search-result select-button">
+  <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <input type="radio" id="prop-{{id}}" name="{{prop}}" value="{{id}}"><label for="prop-{{id}}">{{company}}（{{company_short}} {{agreement_id}}）</label>
+    {{{{/raw-helper}}}}
+  </script>
+</div>

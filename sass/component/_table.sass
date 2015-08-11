@@ -52,6 +52,9 @@ table
     &.weight
       background: #FF9933
 
+    &[data-toggle]
+      cursor: pointer
+
   th .label
     margin-left: 0.5em
 
@@ -87,7 +90,8 @@ table
     text-align: center
 
 .label-channel,
-.label-source
+.label-source,
+.label-agreement
   background: $label-info-bg
 
 .label-ad_name
@@ -104,3 +108,6 @@ table
 
   .form-group
     position: relative
+
+.table:last-child
+  margin-bottom: 0

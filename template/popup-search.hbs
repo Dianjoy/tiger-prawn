@@ -7,9 +7,11 @@
       <button type="button" class="btn btn-default search-button"><i class="fa fa-search"></i></button>
     </span>
   </div>
-  <div class="form-group search-result item-grid label-button">
-    ${#each list}
-    <input type="radio" id="prop-${@index}" name="{{prop}}" value="${id}"><label for="prop-${@index}">${#if icon_path}<img src="${icon_path}" class="icon-mh-25"> ${/if}${topic}${label}</label>
-    ${/each}
+  <div class="form-group search-result select-button">
+    <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <input type="radio" id="prop-{{@index}}" name="{{prop}}" value="{{id}}"><label for="prop-{{@index}}">{{#if icon_path}}<img src="{{icon_path}}" class="icon-mh-25"> {{/if}}{{topic}}{{label}}</label>
+    {{{{/raw-helper}}}}
+    </script>
   </div>
 </div>

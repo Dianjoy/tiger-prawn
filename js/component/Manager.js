@@ -1,11 +1,14 @@
 /**
  * Created by meathill on 14-5-14.
  */
-;(function (ns) {
+'use strict';
+(function (ns) {
   ns.Manager = {
     $context: null,
     map: {
+      '.base-list': 'tp.component.BaseList',
       '.smart-table': 'tp.component.SmartTable',
+      '.add-on-list': 'tp.component.AddOnList',
       '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
       '#login-form': 'tp.component.LoginForm',
@@ -18,7 +21,19 @@
       var dateFields = $el.find('.datetimepicker');
       if (dateFields.length) {
         dateFields.each(function () {
-          $(this).datetimepicker($(this).data());
+          var options = $(this).data();
+          options = _.mapObject(options, function (value, key) {
+            switch (key) {
+              case 'maxDate':
+              case 'minDate':
+              case 'defaultDate':
+                return moment().add(value, 'days');
+                break;
+              default:
+                return value;
+            }
+          });
+          $(this).datetimepicker(options);
         });
       }
 

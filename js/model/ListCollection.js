@@ -60,6 +60,11 @@
         if (response.options) {
           this.options = response.options;
         }
+        for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
+          if (response.hasOwnProperty(key) && (_.isArray(response[key]) || _.isObject(response[key]))) {
+            this.trigger('data:' + key, response[key]);
+          }
+        }
         return _.isArray(response) ? response : response.list;
       },
       setPagesize: function (size) {
@@ -69,17 +74,22 @@
     });
 
   Collection.getInstance = function (options) {
-    if (options.collectionId && options.collectionId in collections) {
-      return collections[options.collectionId];
+    var collection;
+    if (options && options.collectionId && options.collectionId in collections) {
+      collection = collections[options.collectionId];
+      if (!collection.url && options.url) {
+        collection.url = options.url;
+      }
+      return collection;
     }
 
     var params = _.extend({}, options);
-    if (!params.model || !(params.model instanceof Backbone.Model)) {
+    if (!params.model || !(params.model instanceof Function)) {
       var init = _.pick(params, 'idAttribute', 'defaults');
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
-    var collection = new Collection(null, params);
-    if (options.collectionId) {
+    collection = new Collection(null, params);
+    if (options && options.collectionId) {
       collections[options.collectionId] = collection;
     }
     return collection;

@@ -30,9 +30,10 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
-    <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}} ch-{{channel_id}} ad-{{aid}} {{pack_name}}" id="{{id}}">
+    <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}} {{pack_name}}" id="{{id}}">
       <td data-title="管理名">
-        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>{{/if}}
+        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel_alias}}</a>{{/if}}
+        {{#if agreement}}<a href="#/agreement_id/{{agreement_id}}" class="filter label label-agreement">{{agreement}}</a>{{/if}}
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
         {{cid}}
       </td>
@@ -77,7 +78,7 @@
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
         {{/in}}
         {{#if search_flag}}
-        <span class="label label-default">ASO</span>
+        <span class="label label-default" title="关键词" data-toggle="popover" data-content="{{keywords}}" data-placement="top">ASO</span>
         {{/if}}
         {{#if is_baobei}}
         <span class="label label-success"><i class="fa fa-check"></i> 已报备</span>
@@ -125,12 +126,12 @@
 </table>
 
 
-<script type="text/x-handlebars-template" id="editor-info">
+<script type="text/x-handlebars-template" class="editor-info">
   <table class="table table-bordered">
     <tbody>
     <tr>
       <th>管理名</th>
-      <td>{{channel}} {{ad_name}} {{cid}}</td>
+      <td>{{agreement}} {{channel_alias}} {{ad_name}} {{cid}}</td>
     </tr>
     <tr></tr>
     </tbody>
