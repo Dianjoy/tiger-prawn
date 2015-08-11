@@ -42,7 +42,7 @@
       var target = event.currentTarget
         , options = $(target).data();
       if (options.collectionId) {
-        var collection = tp.model.ListCollection.getInstance(options)
+        var collection = tp.model.ListCollection.getInstance(options);
         options.model = collection.get(options.id);
       }
       if (target.tagName.toLowerCase() === 'a') {
