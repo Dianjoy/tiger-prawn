@@ -263,16 +263,22 @@
           value = this.checked ? value : !value;
           attr[this.name] = isNumber ? Number(value) : value;
         });
-        this.model.save(attr, {
-          patch: true,
-          wait: true,
-          success: function (model, response) {
-            self.submit_successHandler(response);
-          },
-          error: function (model, response) {
-            self.submit_errorHandler(response);
-          }
-        });
+
+        // 有url就保存，不然就直接记录值
+        if (_.result(this.model, 'urlRoot') || _.result(this.model.collection, 'url')) {
+          this.model.save(attr, {
+            patch: true,
+            wait: true,
+            success: function (model, response) {
+              self.submit_successHandler(response);
+            },
+            error: function (model, response) {
+              self.submit_errorHandler(response);
+            }
+          });
+        } else {
+          this.model.set(attr);
+        }
         return false;
       }
 
