@@ -35,7 +35,9 @@
       }
 
       var init = this.$el.data();
-      init.url = init.url.replace('{{API}}', tp.API);
+      if ('url' in init) {
+        init.url = init.url.replace('{{API}}', tp.API);
+      }
       options = _.extend(options, init);
 
       this.params = tp.utils.decodeURLParam(options.params);
@@ -44,6 +46,9 @@
       // 起止日期
       if (options.start || options.end) {
         options.defaults = _.pick(options, 'start', 'end');
+      }
+      if ('autoFetch' in options) {
+        this.autoFetch = options.autoFetch;
       }
 
       return tp.model.ListCollection.getInstance(options);

@@ -28,9 +28,6 @@
         container: 'tbody',
         reset: true
       }));
-      if (!('autoFetch' in options)) {
-        options.autoFetch = this.autoFetch;
-      }
 
       // 启用搜索
       if ('search' in options) {
@@ -74,7 +71,7 @@
         });
       }
 
-      if (options.autoFetch) {
+      if (this.autoFetch) {
         this.refresh(options);
       }
     },
