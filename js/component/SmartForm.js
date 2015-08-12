@@ -309,7 +309,14 @@
     .on('change', '[type=range]', function (event) {
       $(event.target).next().html(event.target.value);
     })
-    .on('change', '.auto-submit', function (event) {
+    .on('change dp.change', '.auto-submit', function (event) {
+      if (event.type === 'dp') {
+        var target = $(event.target);
+        if (!target.hasClass('ready')) {
+          target.addClass('ready');
+          return;
+        }
+      }
       $(event.target).closest('form').submit();
     })
     .on('change', '.check-all', function (event) {

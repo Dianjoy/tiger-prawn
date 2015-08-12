@@ -22,11 +22,15 @@
       this.$body.setFramework('has-date-range', '单个广告按日期统计');
     },
     showADStatDate: function (id, date) {
+      if (this.$body.page && this.$body.page.$el.is('.stat.stat-date')) {
+        this.$body.page.model.set('date', date);
+      }
       var model = new tp.model.AD({
         id: id,
         date: date
       });
       this.$body.load('page/stat/hourly.hbs', model, {
+        fresh: true,
         className: 'stat stat-date'
       });
       this.$body.setFramework('has-date-range', '单个广告一天内统计');
