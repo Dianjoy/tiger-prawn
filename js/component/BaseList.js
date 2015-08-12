@@ -15,7 +15,7 @@
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
-      if (this.autoFetch) {
+      if (options.autoFetch || !('autoFetch' in options) && this.autoFetch) {
         this.refresh(options);
       }
     },
@@ -46,9 +46,6 @@
       // 起止日期
       if (options.start || options.end) {
         options.defaults = _.pick(options, 'start', 'end');
-      }
-      if ('autoFetch' in options) {
-        this.autoFetch = options.autoFetch;
       }
 
       return tp.model.ListCollection.getInstance(options);

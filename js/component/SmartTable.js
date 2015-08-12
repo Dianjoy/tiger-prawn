@@ -24,7 +24,9 @@
       this.model.on('invalid', this.model_invalidHandler, this);
       this.renderHeader();
 
+      var autoFetch = options.autoFetch || !('autoFetch' in options) && this.autoFetch;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
+        autoFetch: false,
         container: 'tbody',
         reset: true
       }));
@@ -71,7 +73,7 @@
         });
       }
 
-      if (this.autoFetch) {
+      if (autoFetch) {
         this.refresh(options);
       }
     },
