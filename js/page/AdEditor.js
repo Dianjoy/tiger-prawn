@@ -162,7 +162,8 @@
       if (replace && !this.hasAD) {
         tp.service.Manager.call(tp.API + 'ad/', {
           pack_name: pack_name,
-          status: 0
+          status: 0,
+          pagesize: 30
         }, {
           success: this.fetchAD_successHandler,
           error: this.fetchAD_errorHandler,

@@ -197,6 +197,22 @@
     collection_syncHandler: function () {
       this.$('.fa-spin').remove();
       this.$('select').prop('disabled', false);
+
+      // 用options里的值填充select
+      var options = this.collection.options;
+      this.$('select').html(function (i, html) {
+        var name = $(this).data('options');
+        if (!(name in options)) {
+          return html;
+        }
+        var template = $(this).data('template');
+        if (!template) {
+          template = $(this).find('script').html();
+          template = Handlebars.compile(template);
+          $(this).data('template', template);
+        }
+        return template(options[name]);
+      });
     },
     model_changeHandler: function () {
       this.$('select').prop('disabled', true);
