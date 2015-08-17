@@ -12,7 +12,7 @@
     <input type="search" class="form-control" id="search-query" name="query" placeholder="关键词">
   </div>
 </div>
-<table class="table table-bordered smart-table responsive-table"  data-mediator-class="tp.page.ReceiptList"  data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-start="-31" data-end="0" data-search="#search-query" data-collection-id="stat">
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-start="-31" data-end="0" data-search="#search-query" data-mediator-class="tp.page.ReceiptList">
   <thead>
   <tr>
     <th class="filters">广告名</th>
@@ -29,6 +29,7 @@
     <tr id="{{id}}">
       <td data-title="管理名">
         {{#if agreement}}<a href="#/agreement_id/{{agreement_id}}" class="filter label label-agreement">{{agreement}}</a>{{/if}}
+
         {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel_alias}}</a>{{/if}}
         <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
         {{cid}}
@@ -44,7 +45,7 @@
       <td>
         <div class="btn-group">
           <a href="#/stat/{{id}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a>
-          <a class="btn btn-info receipt-button" title="发票申请-{{full_name}}" id="fromList"><i class="fa fa-file-text"></i></a>
+          <a class="btn btn-info receipt-button" title="发票申请-{{channel_alias}}" id="fromList" data-agreement="{{agreement_id}}"><i class="fa fa-file-text"></i></a>
         </div>
       </td>
     </tr>

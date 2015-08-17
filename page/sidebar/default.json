@@ -41,12 +41,12 @@
         "link": "#/stat/"
       },
       {
-        "title": "发票统计",
-        "link": "#/receipt/"
-      },
-      {
         "title": "广告数据分析",
         "link": "#/stat/analyse/"
+      },
+      {
+        "title": "发票统计",
+        "link": "#/receipt/"
       }
     ]
   },

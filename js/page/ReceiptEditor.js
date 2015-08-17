@@ -1,45 +1,132 @@
 'use strict';
 (function (ns) {
   ns.ReceiptEditor = tp.view.Loader.extend({
+    $context:null,
+    products_copy:null,
     events: {
-      'change #income': 'income_changeHandler',
-      'change #count-amount': 'count_changeHandler',
+      'click .edit': 'edit_clickHandler',
+      'click .edit-button': 'editButton_clickHandler',
       'click .receipt-button': 'receiptButton_clickHandler',
       'success':'success_handler'
     },
     render: function () {
+      var self =this;
+      var opt = this.model.options;
+      var cpa_first_total = 0
+        ,cpa_after_total =0
+        ,income_after_total = 0
+        ,rmb = ''
+        ,joy_income = 0
+        ,red_ad_income = 0
+        ,red_ios_income = 0;
+      var products = this.model.get('products');
+
+      _.each(products,function (element) {
+        if(!element.quote_rmb_after){
+          _.extend(element,{
+            quote_rmb_after:element.quote_rmb,
+            cpa_after:element.cpa,
+            income_after:element.income,
+            rate: ((1 - element.cpa * element.quote_rmb/element.income)*100).toFixed(2),
+            money_cut:element.income - element.income,
+            remark:''
+          });
+        }
+        else{
+          _.extend(element,{
+            income_after: element.quote_rmb_after * element.cpa_after,
+            rate: ((1 - element.cpa_after * element.quote_rmb_after / element.income) * 100).toFixed(2),
+            money_cut: element.income - element.quote_rmb_after * element.cpa_after
+          })
+        }
+        cpa_first_total += Number(element.cpa);
+        cpa_after_total += Number(element.cpa_after);
+        income_after_total += element.income_after;
+        rmb = self.convertCurrency(income_after_total);
+        switch (element.sdk_type) {
+          case "0":
+            joy_income += element.income_after;
+            break;
+          case "1":
+            red_ad_income += element.income_after;
+            break;
+          case "2":
+            red_ios_income += element.income_after;
+            break;
+        }
+      });
+
+      _.extend(this.model.options,{
+        cpa_first_total: cpa_first_total,
+        cpa_after_total: cpa_after_total,
+        income_after_total: income_after_total,
+        joy_income: joy_income,
+        red_ad_income: red_ad_income,
+        red_ios_income:red_ios_income
+      });
+
       tp.view.Loader.prototype.render.call(this);
-      var rmb = this.$('#income').val() || this.$('#income').text() ? this.convertCurrency(this.model.get('income')) : '';
-      this.$('#receipt-capital-amount').text(rmb);
+
+      var smartTable = this.$context.createInstance(tp.component.SmartTable,{el:this.$('#ad_table')});
+      smartTable.collection.model.prototype.toJSON = function () {
+        var json = Backbone.Model.prototype.toJSON.call(this);
+        _.extend(json,opt);
+        return json;
+      };
+
+      products.push({rmb:rmb});
+      smartTable.collection.reset(products);
+      products.pop();
     },
-    income_changeHandler: function () {
-      var income = this.$('#income').val();
-      if(income){
-        this.$("#receipt-amount").text(income);
-        this.$("#receipt-capital-amount").text(this.convertCurrency(income));
-        this.model.set('income',income);
+    editButton_clickHandler: function (event) {
+      var target = event.currentTarget;
+      var options = {
+        model:this.model,
+        title:'编辑',
+        confirm: '确定',
+        content:'page/stat/receipt-detail-edit.hbs',
+        isRemote: true,
+        target: target
+      };
+      var popup = tp.popup.Manager.popup(options);
+      popup.on('confirm', this.editPopup_confirmHandler, this);
+    },
+    editPopup_confirmHandler: function (popup) {
+      var val = popup.$('input').val()
+        ,target = popup.options.target
+        ,index = $(target).closest('tr').attr('id')
+        ,product = _.findWhere(this.model.get('products'),{id:index});
+
+      if(val){
+        switch ($(target).attr('class')){
+          case 'edit-button cpa-after':
+            product = _.extend(product,{cpa_after:val});
+            break;
+
+          case 'edit-button price-after':
+            product = _.extend(product,{quote_rmb_after:val});
+            break;
+
+          case 'edit-button comment':
+            product = _.extend(product,{remark:val});
+            break;
+        }
+      }
+      this.render();
+
+      if(!this.model.options.init){
+        this.model.save({products:this.model.get('products')},{patch:true});
       }
     },
-    count_changeHandler: function () {
-      var count_amount = this.$("#count-amount").val();
-      if(count_amount){
-        this.$('#settle-amount').val(count_amount);
-      }
-    },
+
     success_handler: function () {
       window.location ='#/receipt/';
-      localStorage.removeItem("products");
-      localStorage.removeItem("ad_name");
-      localStorage.removeItem("channel_id");
-      localStorage.removeItem("full_name");
-      localStorage.removeItem("settle_start_date");
-      localStorage.removeItem("settle_end_date");
     },
     receiptButton_clickHandler: function (event) {
       var target = event.currentTarget;
       var ad_id = this.$('.ad_id').attr('id');
-      var settle_start = localStorage.getItem('settle_start_date');
-      var settle_end = localStorage.getItem('settle_end_date');
+      var start = this.model.get('start');
+      var end = this.model.get('end');
       var options = {
         title: target.title,
         id: ad_id,
@@ -47,10 +134,9 @@
         confirm: '确定',
         content: "page/stat/choose-ad.hbs",
         isRemote: true,
-        start: settle_start,
-        end: settle_end
+        start: start,
+        end: end
       };
-
       var collection = tp.model.ListCollection.getInstance(options);
 
       options.model = collection.get(options.id);
@@ -61,14 +147,32 @@
     },
 
     receiptPopup_confirmHandler: function (popup) {
-      var products = [];
-      popup.$(':checked').each(function () {
-        products.push({'ad_id': $(this).attr('id'),'ad_name':$(this).parent().text()});
-      });
-      var options = _.extend(this.model.options,{init_invoice:[]});
-      this.model.set('options',options);
-      this.model.set('products',products);
-      this.render();
+      var products = this.products_copy ? this.products_copy : this.model.get('products');
+      var checked = []
+        ,unchecked = [];
+      if(popup.$(':checked').length){
+        popup.$(':checked').each(function () {
+          var ad_id = $(this).attr('id');
+          var product = _.filter(products,function (product) {
+            if(_.isMatch(product,{ad_id:ad_id})){
+              return product;
+            }
+          });
+          checked = _.union(checked,product);
+          unchecked = _.difference(products,checked);
+        });
+
+        this.model.set('products',checked);
+        this.render();
+        this.products_copy =  _.union(checked,unchecked);
+
+        if(!this.model.options.init){
+          this.model.save({products:this.model.get("products")},{patch:true}); //如果是二次编辑，就直接save
+        }
+      }
+      else{
+        alert("还未选中任何广告")
+      }
     },
     convertCurrency: function (currencyDigits) {
 // Constants:

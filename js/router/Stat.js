@@ -9,9 +9,12 @@
       'stat(/)': 'showStat',
       'stat/:id': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
+
       'receipt/': 'showReceipt',
       'receipt/detail/(:id)':'receiptDetail',
+      'receipt/apply/:start/:end/:channel/:agreement/*ids':'applyReceipt',
       'receipt/view/:id': 'viewReceipt',
+
       'stat/analyse/': 'showAdminADStat',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
@@ -25,11 +28,15 @@
       this.$body.setFramework('has-date-range', '单个广告按日期统计');
     },
     showADStatDate: function (id, date) {
+      if (this.$body.page && this.$body.page.$el.is('.stat.stat-date')) {
+        this.$body.page.model.set('date', date);
+      }
       var model = new tp.model.AD({
         id: id,
         date: date
       });
       this.$body.load('page/stat/hourly.hbs', model, {
+        fresh: true,
         className: 'stat stat-date'
       });
       this.$body.setFramework('has-date-range', '单个广告一天内统计');
@@ -38,6 +45,7 @@
       this.$body.load('page/stat/list.html');
       this.$body.setFramework('has-date-range', '广告统计');
     },
+
     showReceipt: function () {
       this.$body.load('page/stat/receipt.html');
       this.$body.setFramework('has-date-range', '发票统计');
@@ -49,9 +57,25 @@
       this.$body
         .load('page/stat/new-receipt-detail.hbs',model, {
           className: 'stat stat-detail',
-          loader: tp.page.ReceiptEditor
+          loader: tp.page.ReceiptEditor,
+          fresh: true
         })
         .setFramework('stat stat-detail', '发票开具申请单');
+    },
+    applyReceipt: function (start,end,channel,agreement,ids) {
+      var model = new tp.model.ReceiptDetail({
+        start:start,
+        end:end,
+        channel_id:channel,
+        agreement_id:agreement,
+        ids: ids
+      });
+      this.$body
+        .load('page/stat/new-receipt-detail.hbs',model, {
+          className: 'stat stat-apply',
+          loader: tp.page.ReceiptEditor
+        })
+        .setFramework('stat stat-apply', '发票开具申请单');
     },
     viewReceipt: function (id) {
       var model = new tp.model.ReceiptDetail({
@@ -59,12 +83,13 @@
         view: true
       });
       this.$body
-        .load('page/stat/receipt-detail.hbs',model,{
+        .load('page/stat/new-receipt-detail.hbs',model,{
           className: 'stat stat-view',
           loader: tp.page.ReceiptEditor
         })
         .setFramework('stat stat-view', '发票详情');
     },
+
     showAdminADStat: function () {
       this.$body.load('page/stat/analyse.hbs', {
         start: moment().startOf('month').format(moment.DATE_FORMAT),

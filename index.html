@@ -103,18 +103,18 @@
       <li class="sidebar-nav-item">
         {{#if sub}}
         <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#{{sub-id}}">
-        {{else}}
-        <a href="{{link}}">
-        {{/if}}
-          {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}} {{title}} {{#if sub}}<span class="caret"></span>{{/if}}
-        </a>
-        {{#if sub}}
-        <ul class="nav collapse" id="{{sub-id}}">
-          {{#each sub}}
-          <li><a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}} {{title}}</a></li>
-          {{/each}}
-        </ul>
-        {{/if}}
+          {{else}}
+          <a href="{{link}}">
+            {{/if}}
+            {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}} {{title}} {{#if sub}}<span class="caret"></span>{{/if}}
+          </a>
+          {{#if sub}}
+          <ul class="nav collapse" id="{{sub-id}}">
+            {{#each sub}}
+            <li><a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}} {{title}}</a></li>
+            {{/each}}
+          </ul>
+          {{/if}}
       </li>
       {{/each}}
     </script>
@@ -281,6 +281,7 @@
 <script src="js/component/TableParts.js"></script>
 <script src="js/component/CollectionSelect.js"></script>
 <script src="js/component/Manager.js"></script>
+<script src="js/component/SmartTable.js"></script>
 <script src="js/popup/Base.js"></script>
 <script src="js/popup/Editor.js"></script>
 <script src="js/view/Loader.js"></script>

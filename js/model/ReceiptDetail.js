@@ -2,9 +2,15 @@
 (function (ns) {
   ns.ReceiptDetail = Backbone.Model.extend({
     urlRoot: tp.API + 'invoice/',
-    initialize: function () {
+    initialize: function (options) {
       if(this.isNew()){
-        this.urlRoot += 'init';
+        var products = options.ids.split(',');
+        this.urlRoot += 'init'
+          + '?start=' + options.start
+          + '&end=' + options.end
+          + '&channel_id=' + options.channel_id
+          + '&agreement_id=' + options.agreement_id
+          + '&adids=' + products;
       }
     },
     parse: function (response) {
@@ -13,18 +19,7 @@
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
         if(this.isNew()){
-          this.options.channel_id = localStorage.getItem('channel_id');
-          this.options.full_name = localStorage.getItem('full_name');
-          this.options.settle_start = localStorage.getItem('settle_start_date');
-          this.options.settle_end = localStorage.getItem('settle_end_date');
-          this.options.init_invoice = [];
-
-          var products  = localStorage.getItem('products').split(',');
-          var ad_name  = localStorage.getItem('ad_name').split(',');
-          var self = this;
-          products.forEach(function (element,index) {
-            self.options.init_invoice.push({'ad_name':ad_name[index],'products':element});
-          });
+          this.options.init = true;
         }
       }
       return response.invoice;
