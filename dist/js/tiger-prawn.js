@@ -1668,7 +1668,7 @@
           template = Handlebars.compile(template);
           $(this).data('template', template);
         }
-        return template(options[name]);
+        return template(options);
       });
     },
     model_changeHandler: function () {
