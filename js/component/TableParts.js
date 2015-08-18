@@ -200,18 +200,22 @@
 
       // 用options里的值填充select
       var options = this.collection.options;
-      this.$('select').html(function (i, html) {
-        var name = $(this).data('options');
+      this.$('select').each(function () {
+        var self = $(this)
+          , name = self.data('options');
         if (!(name in options)) {
-          return html;
+          return true;
         }
-        var template = $(this).data('template');
+        var template = self.data('template')
+          , fixed = self.find('.fixed');
         if (!template) {
-          template = $(this).find('script').html();
+          template = self.find('script').html();
           template = Handlebars.compile(template);
-          $(this).data('template', template);
+          self.data('template', template);
         }
-        return template(options);
+        self
+          .html(template(options))
+          .prepend(fixed);
       });
     },
     model_changeHandler: function () {
