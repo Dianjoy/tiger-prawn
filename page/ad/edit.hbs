@@ -1,35 +1,8 @@
-{{#if cp}}
-  <div class="alert alert-info">如需要做技术对接，请联系点乐技术。</div>
-{{/if}}
-<form class="form-horizontal model-editor {{#if cp}}iPhone{{else}}Android{{/if}} {{pick province_type '' 'show-provinces'}}" method="post" enctype="multipart/form-data" id="ad-editor">
+<form class="form-horizontal model-editor Android {{pick province_type '' 'show-provinces'}}" method="post" enctype="multipart/form-data" id="ad-editor">
   <input type="hidden" name="id" value="">
   <input type="hidden" name="pack_md5" value="">
   <fieldset>
     <a name="pack"></a>
-    {{#if cp}}
-    <legend>请先上传安装包，我们会从中抓取广告信息。</legend>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">分析用安装包</label>
-      <div class="col-sm-6 col-md-4 uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="*.ipa" id="app-uploader" data-name="ad_url">
-        <div class="btn-group su-tabs">
-          <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
-          <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络或AppStore地址</button>
-        </div>
-        <button type="button" class="btn fetch-button" disabled><i class="fa fa-cloud-download"></i> 抓取</button>
-        <div class="su-placeholder" data-initial="请上传ipa文件。" data-progress="上传文件中.."></div>
-        <label class="btn btn-info btn-block su-upload-button">
-          <i class="fa fa-upload"></i> 选择安装包并上传
-        </label>
-        <input type="hidden" class="su-url form-control">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="ad_url">App Store 下载地址</label>
-      <div class="col-sm-10">
-        <input type="url" name="ad_url" value="{{ad_url}}" class="form-control" id="ad_url">
-      </div>
-    </div>
-    {{else}}
     <legend>请先上传安装包，或填入抓取链接</legend>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="ad_url">广告链接</label>
@@ -74,7 +47,6 @@
         将选中的广告下线，并新建广告替换之。
       </p>
     </div>
-    {{/if}}
   </fieldset>
   <fieldset class="collapsible">
     <a name="basic-info"></a>
@@ -85,12 +57,10 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">所属平台</label>
       <div class="col-sm-10 platform select-button">
-        {{#unless cp}}
         <input type="radio" name="ad_app_type" value="1" id="platform-android">
         <label for="platform-android" class="btn btn-primary">
           <i class="fa fa-android"></i> Android
         </label>
-        {{/unless}}
         <input type="radio" name="ad_app_type" value="2" id="platform-ios">
         <label for="platform-ios" class="btn btn-primary">
           <i class="fa fa-apple"></i> iPhone
@@ -145,11 +115,6 @@
         <input name="ad_size" id="ad_size" value="{{ad_size}}" class="form-control" />
       </div>
     </div>
-    {{#if cp}}
-    <input type="hidden" name="pack_name" id="pack_name">
-    <input type="hidden" name="process_name" id="process_name">
-    <input type="hidden" name="url_type" id="url_type">
-    {{else}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pack_name">广告包名</label>
       <div class="col-sm-10">
@@ -174,7 +139,6 @@
         <input name="itunes_id" id="itunes_id" value="" class="form-control">
       </div>
     </div>
-    {{/if}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="pic_path">广告LOGO</label>
       <div class="col-sm-6 uploader" data-url="{{API}}file/" data-accept="image/*" data-name="pic_path">
@@ -247,12 +211,18 @@
         <label class="control-label">需要</label>
       </div>
     </div>
+    <div class="form-group iPhone aso">
+      <label class="col-sm-2 control-label" for="rank">目标排名</label>
+      <div class="col-sm-10">
+        <input type="range" min="1" max="15" name="rank" id="rank" value="10"><span class="help-inline">10</span>
+      </div>
+    </div>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="quote_rmb">广告主报价</label>
       <div class="col-sm-4">
         <div class="input-group">
           <span class="input-group-addon">&yen;</span>
-          <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required min="{{#if cp}}100{{else}}0{{/if}}" />
+          <input type="number" name="quote_rmb" id="quote_rmb" value="{{quote_rmb}}" class="form-control" required min="0" />
           <span class="input-group-addon">分</span>
         </div>
       </div>
@@ -263,14 +233,8 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="job_num">日投放量</label>
       <div class="col-sm-4">
-        <input type="number" id="job_num" value="{{job_num}}" class="form-control" name="job_num" {{#if cp}}min="1000" max="30000"{{/if}} required/>
+        <input type="number" id="job_num" value="{{job_num}}" class="form-control" name="job_num"  required/>
         <p class="help-block">投放量范围1000-30000</p>
-      </div>
-    </div>
-    <div class="form-group iPhone">
-      <label class="col-sm-2 control-label" for="rank">目标排名</label>
-      <div class="col-sm-10">
-        <input type="range" min="1" max="15" name="rank" id="rank" value="10"><span class="help-inline">10</span>
       </div>
     </div>
     <div class="form-group Android">
@@ -327,7 +291,6 @@
         <label for="put-ipad-iphone">只投iPhone</label>
       </div>
     </div>
-    {{#unless cp}}
     <div class="form-group iPhone">
       <label class="col-sm-2 control-label">投放目标：越狱</label>
       <div class="col-sm-10 select-button">
@@ -354,10 +317,8 @@
         <input type="text" name="salt" id="salt" value="{{salt}}" class="form-control" />
       </div>
     </div>
-    {{/unless}}
   </fieldset>
 
-  {{#unless cp}}
   <fieldset>
     <a name="channel-area"></a>
     <legend>渠道信息</legend>
@@ -397,6 +358,12 @@
       <p class="help-block col-sm-10 col-sm-offset-2">
         默认取最近的10份合同，您也可以通过旁边的搜索框搜索别的合同。
       </p>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="callback_reqs">回调条件/激活条件</label>
+      <div class="col-sm-10">
+        <input name="callback_reqs" id="callback_reqs" class="form-control">
+      </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="cid">渠道号</label>
@@ -450,10 +417,24 @@
       </div>
     </div>
   </fieldset>
-  {{/unless}}
 
   <fieldset>
     <legend>杂项</legend>
+    <div class="form-group iPhone">
+      <label class="col-sm-2 control-label" for="requirements">其它投放要求</label>
+      <div class="col-sm-10">
+        <textarea name="requirements" class="form-control" rows="6" id="requirements">
+上线时间：
+下线时间：
+合同是否签订：
+甲方商务负责人及电话：
+乙方商务负责人及电话：
+        </textarea>
+        <p class=help-block">
+          此处的内容会在报备邮件中出现，下面的内容不会。（仅限iOS）
+        </p>
+      </div>
+    </div>
     <div class="form-group">
       <label class="col-sm-2 control-label" for="others">备注</label>
       <div class="col-sm-10">

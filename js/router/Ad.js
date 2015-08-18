@@ -7,6 +7,7 @@
   ns.AD = Backbone.Router.extend({
     $body: null,
     $context: null,
+    $me: null,
     routes: {
       "ad(/)": "list",
       "ad/create": "create",
@@ -17,9 +18,10 @@
       'competitor_ad/': 'listCompetitorAds'
     },
     create: function () {
-      var model = new tp.model.AD();
+      var model = new tp.model.AD()
+        , page = this.$me.get('role') === 'cp' ? '_cp' : '';
       this.$body
-        .load('page/ad/edit.hbs', model, {
+        .load('page/ad/edit' + page + '.hbs', model, {
           className: 'ad ad-new',
           loader: tp.page.AdEditor
         })

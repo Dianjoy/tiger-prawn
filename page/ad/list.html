@@ -32,8 +32,9 @@
   <script type="text/x-handlebars-template">
     <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}} {{pack_name}}" id="{{id}}">
       <td data-title="管理名">
-        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel_alias}}</a>{{/if}}
+        <i class="platform fa fa-{{pick ad_app_type '' 'android' 'apple'}}"></i>
         {{#if agreement}}<a href="#/agreement_id/{{agreement_id}}" class="filter label label-agreement">{{agreement}}</a>{{/if}}
+        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel_alias}}</a>{{/if}}
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
         {{cid}}
       </td>
@@ -62,7 +63,6 @@
         {{/if}}
       </td>
       <td data-title="状态">
-        <i class="platform fa fa-{{pick ad_app_type '' 'android' 'apple'}}"></i>
         {{#in status 0 1 4}}
         {{#if set_status}}
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
@@ -114,6 +114,7 @@
           {{/if}}
           {{#in status 2 3 4}}<button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>{{/in}}
         </div>
+        {{#if op}}<hr><span class="text-info">负责人：{{op}}</span>{{/if}}
       </td>
     </tr>
   </script>
