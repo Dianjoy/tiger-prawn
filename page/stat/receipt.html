@@ -99,6 +99,8 @@
             </td>
             <td data-title="快递单号">
                 {{#if is_beijing}}
+                {{#equal operation_status 0}}
+                {{#equal special_status 0}}
                 {{#equal financy_status 0}}
                 {{#equal charger_status 0}}
                 {{#if express_number}}
@@ -106,6 +108,8 @@
                 {{else}}
                 <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
                 {{/if}}
+                {{/equal}}
+                {{/equal}}
                 {{/equal}}
                 {{/equal}}
                 {{else}}

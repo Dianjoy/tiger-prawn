@@ -88,6 +88,9 @@
         isRemote: true,
         target: target
       };
+      if($(target).attr('class') == 'edit-button comment'){
+        this.model.options.isComment = true;
+      }
       var popup = tp.popup.Manager.popup(options);
       popup.on('confirm', this.editPopup_confirmHandler, this);
     },
@@ -118,7 +121,6 @@
         this.model.save({products:this.model.get('products')},{patch:true});
       }
     },
-
     success_handler: function () {
       window.location ='#/receipt/';
     },
@@ -171,7 +173,7 @@
         }
       }
       else{
-        alert("还未选中任何广告")
+        alert("还未选中任何广告") ;
       }
     },
     convertCurrency: function (currencyDigits) {
