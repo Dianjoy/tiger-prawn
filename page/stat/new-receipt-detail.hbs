@@ -490,37 +490,26 @@
             </td>
           </tr>
           <tr>
-            <th>对账单</th>
+            <th>对账单描述</th>
             <td>
               {{#if view}}
                 {{attachment_desc}}
-                <hr>
-                <a href="{{UPLOAD}}{{attachment}}">{{attachment}}</a>
               {{else}}
                 <a class="edit" href="#attachment_desc">{{attachment_desc}}</a>
-                <hr>
-                <form>
-                  <div class="form-group">
-                    <div class="uploader fetcher" data-url="{{API}}file/" data-need-validate="true" id="app-uploader" data-name="ad_url">
-                      <div class="su-placeholder col-sm-6  col-sm-offset-2" data-initial="请上传文件。" data-progress="上传文件中..">
-                        {{#if ad_url}}
-                          <div class="su-item">
-                            <a href="{{UPLOAD}}{{ad_url}}">{{ad_url}}</a>
-                          </div>
-                        {{/if}}
-                        {{#if attachment}}
-                          <div class="su-item">
-                            <a href="{{UPLOAD}}{{attachment}}">{{attachment}}</a>
-                          </div>
-                        {{/if}}
-                      </div>
-                      <label class="btn btn-info su-upload-button col-sm-6 col-sm-offset-2">
-                        <i class="fa fa-upload"></i> 选择文件
-                      </label>
-                      <input type="hidden" name="attachment" value="{{ad_url}}" class="su-url form-control">
-                    </div>
-                  </div>
-                </form>
+              {{/if}}
+            </td>
+          </tr>
+          <tr>
+            <th>上传文件</th>
+            <td>
+              {{#if view}}
+                <a>
+                  <img src="{{UPLOAD}}{{attachment}}">
+                </a>
+              {{else}}
+              <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
+                <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
+              </a>
               {{/if}}
             </td>
           </tr>

@@ -5,7 +5,7 @@
     initialize: function (options) {
       if(this.isNew()){
         if(options.isReapply){
-          this.urlRoot += options.receipt_id;
+          this.urlRoot += options.invoice_id;
         }
         else{
           var products = options.ids.split(',');

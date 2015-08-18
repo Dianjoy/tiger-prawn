@@ -80,7 +80,7 @@
     },
     reapplyReceipt: function (receipt_id) {
       var model = new tp.model.ReceiptDetail({
-        receipt_id: receipt_id,
+        invoice_id: receipt_id,
         isReapply: true,
         init:true
       });
