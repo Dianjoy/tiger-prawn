@@ -4,13 +4,18 @@
     urlRoot: tp.API + 'invoice/',
     initialize: function (options) {
       if(this.isNew()){
-        var products = options.ids.split(',');
-        this.urlRoot += 'init'
-          + '?start=' + options.start
-          + '&end=' + options.end
-          + '&channel_id=' + options.channel_id
-          + '&agreement_id=' + options.agreement_id
-          + '&adids=' + products;
+        if(options.isReapply){
+          this.urlRoot += options.receipt_id;
+        }
+        else{
+          var products = options.ids.split(',');
+          this.urlRoot += 'init'
+            + '?start=' + options.start
+            + '&end=' + options.end
+            + '&channel_id=' + options.channel_id
+            + '&agreement_id=' + options.agreement_id
+            + '&adids=' + products;
+        }
       }
     },
     parse: function (response) {

@@ -12,7 +12,8 @@
 
       'receipt/': 'showReceipt',
       'receipt/detail/(:id)':'receiptDetail',
-      'receipt/apply/:start/:end/:channel/:agreement/*ids':'applyReceipt',
+      'receipt/apply/:start/:end/:channel/:agreement/*ids': 'applyReceipt',
+      'receipt/reapply/:receipt_id': 'reapplyReceipt',
       'receipt/view/:id': 'viewReceipt',
 
       'stat/analyse/': 'showAdminADStat',
@@ -76,6 +77,19 @@
           loader: tp.page.ReceiptEditor
         })
         .setFramework('stat stat-apply', '发票开具申请单');
+    },
+    reapplyReceipt: function (receipt_id) {
+      var model = new tp.model.ReceiptDetail({
+        receipt_id: receipt_id,
+        isReapply: true,
+        init:true
+      });
+      this.$body
+        .load('page/stat/new-receipt-detail.hbs',model, {
+          className: 'stat stat-reapply',
+          loader: tp.page.ReceiptEditor
+        })
+        .setFramework('stat stat-reapply', '重新申请');
     },
     viewReceipt: function (id) {
       var model = new tp.model.ReceiptDetail({

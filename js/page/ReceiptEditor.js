@@ -7,6 +7,7 @@
       'click .edit': 'edit_clickHandler',
       'click .edit-button': 'editButton_clickHandler',
       'click .receipt-button': 'receiptButton_clickHandler',
+      'click #reapply-button': 'reapplyButton_clickHandler',
       'success':'success_handler'
     },
     render: function () {
@@ -77,6 +78,10 @@
       products.push({rmb:rmb});
       smartTable.collection.reset(products);
       products.pop();
+    },
+    reapplyButton_clickHandler: function () {
+      this.model.id = null;
+      this.model.urlRoot = tp.API + 'invoice/init';
     },
     editButton_clickHandler: function (event) {
       var target = event.currentTarget;
