@@ -2,7 +2,6 @@
 <h4 class="text-center">{{start}} 至 {{end}}</h4>
 <div class="row">
   <div class="col-sm-10">
-    <!--<a class="btn btn-primary"><i class="fa fa-download"></i>导出</a>-->
   </div>
   <div class="small col-sm-2">
     <p class="form-control-static">点乐合同编号：{{agreement_number}}</p>
@@ -325,12 +324,12 @@
       </div>
     </div>
     <input type="hidden" name="income" value="{{income_after_total}}">
+    <input type="hidden" name="income_first" value="{{income_before_total}}">
     <input type="hidden" name="cpa_first_total" value="{{cpa_first_total}}">
     <input type="hidden" name="cpa_after_total" value="{{cpa_after_total}}">
     <input readonly="readonly" type="hidden" name="agreement_id" value="{{agreement_id}}">
     <input readonly="readonly" type="hidden" name="start" value= "{{start}}">
     <input readonly="readonly" type="hidden" name="end" value= "{{end}}">
-    <input type="hidden" name="apply_time" value="{{apply_time}}">
   </form>
 {{else}}
   <div role="tabpanel" class="tabpanel">
@@ -344,7 +343,7 @@
         <table class="table table-bordered table-striped">
           <tr>
             <th width="10%">付款方</th>
-            <td>{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}(确认盖章)</td>
+            <td>{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
           </tr>
           <tr>
             <th>发票抬头</th>
@@ -500,16 +499,20 @@
             </td>
           </tr>
           <tr>
-            <th>上传文件</th>
+            <th>客户对账单</th>
             <td>
               {{#if view}}
-                <a>
-                  <img src="{{UPLOAD}}{{attachment}}">
-                </a>
+                {{#if attachment}}
+                  <a>
+                    <img src="{{UPLOAD}}{{attachment}}">
+                  </a>
+                {{/if}}
               {{else}}
-              <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
-                <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
-              </a>
+                {{#if attachment}}
+                  <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
+                    <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
+                  </a>
+                {{/if}}
               {{/if}}
             </td>
           </tr>

@@ -13,14 +13,15 @@
     render: function () {
       var self =this;
       var opt = this.model.options;
+      var products = this.model.get('products');
       var cpa_first_total = 0
         ,cpa_after_total =0
+        ,income_before_total = 0
         ,income_after_total = 0
         ,rmb = ''
         ,joy_income = 0
         ,red_ad_income = 0
         ,red_ios_income = 0;
-      var products = this.model.get('products');
 
       _.each(products,function (element) {
         if(!element.quote_rmb_after){
@@ -43,6 +44,7 @@
         cpa_first_total += Number(element.cpa);
         cpa_after_total += Number(element.cpa_after);
         income_after_total += element.income_after;
+        income_before_total += element.income;
         rmb = self.convertCurrency(income_after_total);
         switch (element.sdk_type) {
           case "0":
@@ -61,6 +63,7 @@
         cpa_first_total: cpa_first_total,
         cpa_after_total: cpa_after_total,
         income_after_total: income_after_total,
+        income_before_total: income_before_total,
         joy_income: joy_income,
         red_ad_income: red_ad_income,
         red_ios_income:red_ios_income
@@ -91,11 +94,23 @@
         confirm: '确定',
         content:'page/stat/receipt-detail-edit.hbs',
         isRemote: true,
-        target: target
+        target: target,
       };
-      if($(target).attr('class') == 'edit-button comment'){
-        this.model.options.isComment = true;
+      switch ($(target).attr('class')){
+        case 'edit-button cpa-after':
+          this.model.options.val = $(target).text();
+          break;
+
+        case 'edit-button price-after':
+          this.model.options.val = $(target).text().substr(1);
+          break;
+
+        case 'edit-button comment':
+          this.model.options.isComment = true;
+          this.model.options.val = $(target).text()
+          break;
       }
+
       var popup = tp.popup.Manager.popup(options);
       popup.on('confirm', this.editPopup_confirmHandler, this);
     },

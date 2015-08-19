@@ -87,7 +87,7 @@
                 {{#if financy_reason}}
                 <a href="#" data-toggle="popover" data-content="{{financy_reason}}" data-title="未通过原因">{{pick financy_status sub_status}}</a>
                 {{else}}
-                {{pick financy_status sub_status}}
+                {{pick financy_status '通过' '未通过' '审核中'}}<!--{{pick financy_status sub_status}}-->
                 {{/if}}
             </td>
             <td data-title="地区负责人审核">
@@ -99,19 +99,59 @@
             </td>
             <td data-title="快递单号">
                 {{#if is_beijing}}
-                {{#equal operation_status 0}}
-                {{#equal special_status 0}}
-                {{#equal financy_status 0}}
-                {{#equal charger_status 0}}
-                {{#if express_number}}
-                <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
-                {{else}}
-                <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
-                {{/if}}
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
+                    {{#if operation_status}}
+                        {{#if special_status}}
+                            {{#equal operation_status 0}}
+                            {{#equal special_status 0}}
+                            {{#equal financy_status 0}}
+                            {{#equal charger_status 0}}
+                                {{#if express_number}}
+                                    <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+                                {{else}}
+                                    <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
+                                {{/if}}
+                            {{/equal}}
+                            {{/equal}}
+                            {{/equal}}
+                            {{/equal}}
+                        {{else}}
+                            {{#equal operation_status 0}}
+                            {{#equal financy_status 0}}
+                            {{#equal charger_status 0}}
+                                {{#if express_number}}
+                                    <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+                                {{else}}
+                                    <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
+                                {{/if}}
+                            {{/equal}}
+                            {{/equal}}
+                            {{/equal}}
+                        {{/if}}
+                    {{else}}
+                        {{#if special_status}}
+                            {{#equal special_status 0}}
+                            {{#equal financy_status 0}}
+                            {{#equal charger_status 0}}
+                                {{#if express_number}}
+                                    <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+                                {{else}}
+                                    <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
+                                {{/if}}
+                            {{/equal}}
+                            {{/equal}}
+                            {{/equal}}
+                        {{else}}
+                            {{#equal financy_status 0}}
+                            {{#equal charger_status 0}}
+                                {{#if express_number}}
+                                    <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+                                {{else}}
+                                    <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
+                                {{/if}}
+                            {{/equal}}
+                            {{/equal}}
+                        {{/if}}
+                    {{/if}}
                 {{else}}
                 {{express_number}}
                 {{/if}}

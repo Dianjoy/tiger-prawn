@@ -16,7 +16,7 @@
     </div>
   </div>
 {{/if}}
-<table class="table smart-table"  data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" {{#if fromList}}data-auto-fetch="false" {{else}}data-params="start={{start}}&end={{end}}"{{/if}}>
+<table class="table smart-table"  data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" {{#if fromList}}data-auto-fetch="false"{{else}}data-params="start={{start}}&end={{end}}"{{/if}}>
   <tbody>
   {{{{raw-helper}}}}
   <script type="text/x-handlebars-template">
