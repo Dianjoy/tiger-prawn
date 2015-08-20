@@ -104,7 +104,7 @@
 
         case 'edit-button comment':
           this.model.options.isComment = true;
-          this.model.options.val = $(target).text();
+          this.model.options.val = '';
           break;
       }
 
