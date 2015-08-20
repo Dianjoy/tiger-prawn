@@ -95,7 +95,7 @@
         confirm: '确定',
         content:'page/stat/receipt-detail-edit.hbs',
         isRemote: true,
-        target: target,
+        target: target
       };
       switch ($(target).attr('class')){
         case 'edit-button cpa-after':
@@ -185,7 +185,6 @@
             channel = $(this).data('channel');
             agreement = $(this).data('agreement');
           }
-
         });
 
         var newModel = new tp.model.ReceiptDetail({

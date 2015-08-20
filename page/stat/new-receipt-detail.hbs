@@ -509,12 +509,12 @@
                 {{/if}}
               {{else}}
                 {{#if attachment}}
+                <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
+                  <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
+                {{else}}
                   <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
                     上传对账单
                   </a>
-                {{else}}
-                  <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
-                  <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
                 {{/if}}
               {{/if}}
             </td>
