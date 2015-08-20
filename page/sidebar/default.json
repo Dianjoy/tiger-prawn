@@ -1,0 +1,45 @@
+﻿[
+  {
+    "title": "使用入门",
+    "link": "#/get-started",
+    "icon": "hand-spock-o"
+  },
+  {
+    "title": "组件",
+    "link": "#/components",
+    "icon": "cogs",
+    "sub-id": "sidebar-components",
+    "sub": [
+      {
+        "title": "表格",
+        "link": "#/components/smart-table",
+        "icon": "table"
+      },
+      {
+        "title": "表单",
+        "link": "#/components/morris-chart",
+        "icon": "pie-chart"
+      }
+    ]
+  },
+  {
+    "title": "用法范例",
+    "link": "#/example",
+    "icon": "flask"
+  },
+  {
+    "title": "定制功能与样式",
+    "link": "#/customize",
+    "icon": "edit"
+  },
+  {
+    "title": "报错与建议",
+    "link": "https://github.com/Dianjoy/tiger-prawn/issues",
+    "icon": "bug"
+  },
+  {
+    "title": "协议与鸣谢",
+    "link": "#/license",
+    "icon": "file-text"
+  }
+]
