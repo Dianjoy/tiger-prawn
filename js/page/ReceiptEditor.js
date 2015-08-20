@@ -136,7 +136,11 @@
       this.render();
 
       if(!this.model.options.init){
-        this.model.save({products:this.model.get('products')},{patch:true});
+        this.model.save({
+          products: this.model.get('products'),
+          income: this.model.options.income_after_total,
+          income_first: this.model.options.income_before_total
+        },{patch:true});
       }
     },
     success_handler: function () {

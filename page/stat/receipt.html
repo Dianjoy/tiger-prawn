@@ -73,14 +73,22 @@
         {{#if operation_reason}}
         <a href="#" data-toggle="popover" data-content="{{operation_reason}}" data-title="未通过原因">{{pick operation_status sub_status}}</a>
         {{else}}
+        {{#if operation_status}}
         {{pick operation_status sub_status}}
+        {{else}}
+        -
+        {{/if}}
         {{/if}}
       </td>
       <td data-title="特批">
         {{#if special_reason}}
         <a href="#" data-toggle="popover" data-content="{{special_reason}}" data-title="未通过原因">{{pick special_status sub_status}}</a>
         {{else}}
+        {{#if special_status}}
         {{pick special_status sub_status}}
+        {{else}}
+        -
+        {{/if}}
         {{/if}}
       </td>
       <td data-title="财务审核">
@@ -217,25 +225,83 @@
           {{#equal special_status 1}}
           <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
           {{/equal}}
+
           {{#if operation_status}}
-          {{#equal operation_status 0}}
-          <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-          {{/equal}}
+            {{#if special_status}}
+              {{#in operation_status '0' '2'}}
+              {{#in special_status '0' '2'}}
+              {{#in financy_status '0' '2'}}
+              {{#in charger_status '0' '2'}}
+                <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"
+                   {{#equal operation_status 2}}
+                   {{#equal special_status 2}}
+                   {{#equal financy_status 2}}
+                   {{#equal charger_status 2}}
+                      style="display:none"
+                  {{/equal}}
+                  {{/equal}}
+                  {{/equal}}
+                  {{/equal}}
+                >
+                  <i class="fa fa-file-text"></i>
+                </a>
+              {{/in}}
+              {{/in}}
+              {{/in}}
+              {{/in}}
+            {{else}}
+              {{#in operation_status '0' '2'}}
+              {{#in financy_status '0' '2'}}
+              {{#in charger_status '0' '2'}}
+                <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"
+                   {{#equal operation_status 2}}
+                   {{#equal financy_status 2}}
+                   {{#equal charger_status 2}}
+                   style="display:none"
+                   {{/equal}}
+                   {{/equal}}
+                   {{/equal}}
+                >
+                  <i class="fa fa-file-text"></i>
+                </a>
+              {{/in}}
+              {{/in}}
+              {{/in}}
+            {{/if}}
           {{else}}
-          {{#if special_status}}
-          {{#equal special_status 0}}
-          <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-          {{/equal}}
-          {{else}}
-          {{#equal financy_status 0}}
-          <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-          {{/equal}}
-          {{#equal charger_status 0}}
-          {{#equal financy_status 1}}
-          <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-          {{/equal}}
-          {{/equal}}
-          {{/if}}
+            {{#if special_status}}
+              {{#in special_status '0' '2'}}
+              {{#in financy_status '0' '2'}}
+              {{#in charger_status '0' '2'}}
+                <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"
+                   {{#equal special_status 2}}
+                   {{#equal financy_status 2}}
+                   {{#equal charger_status 2}}
+                   style="display:none"
+                   {{/equal}}
+                   {{/equal}}
+                   {{/equal}}
+                >
+                  <i class="fa fa-file-text"></i>
+                </a>
+              {{/in}}
+              {{/in}}
+              {{/in}}
+            {{else}}
+              {{#in financy_status '0' '2'}}
+              {{#in charger_status '0' '2'}}
+                <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"
+                   {{#equal financy_status 2}}
+                   {{#equal charger_status 2}}
+                   style="display:none"
+                   {{/equal}}
+                   {{/equal}}
+                >
+                  <i class="fa fa-file-text"></i>
+                </a>
+              {{/in}}
+              {{/in}}
+            {{/if}}
           {{/if}}
         </div>
       </td>
@@ -257,7 +323,7 @@
       <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
       {{/each}}
       <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
-    </script>Ø
+    </script>
   </ul>
 </nav>
 
