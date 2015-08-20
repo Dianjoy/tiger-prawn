@@ -15,15 +15,13 @@
       var options = {
         title: target.title,
         id: ad_id,
-        collectionId: 'stat',
+        //collectionId: 'stat',
         confirm: '确定',
         content: "page/stat/choose-ad.hbs",
         isRemote: true,
         fromList: true
       };
-      var collection = tp.model.ListCollection.getInstance(options);
 
-      options.model = collection.get(options.id);
       if(agreement_id){
         var popup = tp.popup.Manager.popup(options);
         popup.on('confirm', this.receiptPopup_confirmHandler, this);
@@ -31,6 +29,7 @@
       else{
         alert('合同未录入，无编号，请通过邮件将合同客户全称和客户类型发给邱咏霞申请合同备案，获取合同编号');
       }
+      localStorage.removeItem('ad-diy#applyReceipt');
     },
     receiptPopup_confirmHandler: function (popup) {
       var products = ""

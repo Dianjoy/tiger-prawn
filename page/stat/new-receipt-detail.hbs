@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<table class="table table-bordered table-striped responsive-table" data-url="useless" id="ad_table">
+<table class="table table-bordered table-striped responsive-table" data-url=" " id="ad_table">
   <thead>
   <tr>
     <th>推广期间</th>
@@ -510,8 +510,11 @@
               {{else}}
                 {{#if attachment}}
                   <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
-                    <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
+                    上传对账单
                   </a>
+                {{else}}
+                  <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
+                  <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
                 {{/if}}
               {{/if}}
             </td>
