@@ -11,16 +11,16 @@
     },
     render: function () {
       var self =this;
-      var opt = this.model.options;
       var products = this.model.get('products');
+      var opt = this.model.options;
       var cpa_first_total = 0
-         ,cpa_after_total =0
-         ,income_before_total = 0
-         ,income_after_total = 0
-         ,rmb = ''
-         ,joy_income = 0
-         ,red_ad_income = 0
-         ,red_ios_income = 0;
+        , cpa_after_total =0
+        , income_before_total = 0
+        , income_after_total = 0
+        , rmb = ''
+        , joy_income = 0
+        , red_ad_income = 0
+        , red_ios_income = 0;
 
       _.each(products,function (element) {
         if(!element.quote_rmb_after){
@@ -73,13 +73,9 @@
       tp.view.Loader.prototype.render.call(this);
 
       var smartTable = this.$context.createInstance(tp.component.SmartTable,{el:this.$('#ad_table')});
-      smartTable.collection.model.prototype.toJSON = function () {
-        var json = Backbone.Model.prototype.toJSON.call(this);
-        _.extend(json,opt);
-        return json;
-      };
 
       products.push({rmb:rmb});
+      smartTable.collection.options = opt;
       smartTable.collection.reset(products);
       products.pop();
     },

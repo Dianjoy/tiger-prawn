@@ -71,30 +71,30 @@
             <td data-title="金额">{{income}}</td>
             <td data-title="运营核对">
                 {{#if operation_reason}}
-                <a href="#" data-toggle="popover" data-content="{{operation_reason}}" data-title="未通过原因">{{pick operation_status '通过'  '未通过'  '审核中'}}</a>
+                <a href="#" data-toggle="popover" data-content="{{operation_reason}}" data-title="未通过原因">{{pick operation_status sub_status}}</a>
                 {{else}}
-                {{pick operation_status '通过'  '未通过'  '审核中'}}
+                {{pick operation_status sub_status}}
                 {{/if}}
             </td>
             <td data-title="特批">
                 {{#if special_reason}}
-                <a href="#" data-toggle="popover" data-content="{{special_reason}}" data-title="未通过原因">{{pick special_status '通过'  '未通过'  '审核中'}}</a>
+                <a href="#" data-toggle="popover" data-content="{{special_reason}}" data-title="未通过原因">{{pick special_status sub_status}}</a>
                 {{else}}
-                {{pick special_status '通过'  '未通过'  '审核中'}}
+                {{pick special_status sub_status}}
                 {{/if}}
             </td>
             <td data-title="财务审核">
                 {{#if financy_reason}}
-                <a href="#" data-toggle="popover" data-content="{{financy_reason}}" data-title="未通过原因">{{pick financy_status '通过'  '未通过'  '审核中'}}</a>
+                <a href="#" data-toggle="popover" data-content="{{financy_reason}}" data-title="未通过原因">{{pick financy_status sub_status}}</a>
                 {{else}}
-                {{pick financy_status '通过'  '未通过'  '审核中'}}
+                {{pick financy_status sub_status}}
                 {{/if}}
             </td>
             <td data-title="地区负责人审核">
                 {{#if charger_reason}}
-                <a href="#" data-toggle="popover" data-content="{{charger_reason}}" data-title="未通过原因">{{pick charger_status '通过'  '未通过'  '审核中'}}</a>
+                <a href="#" data-toggle="popover" data-content="{{charger_reason}}" data-title="未通过原因">{{pick charger_status sub_status}}</a>
                 {{else}}
-                {{pick charger_status '通过'  '未通过'  '审核中'}}
+                {{pick charger_status sub_status}}
                 {{/if}}
             </td>
             <td data-title="快递单号">
