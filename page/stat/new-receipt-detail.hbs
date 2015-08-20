@@ -294,9 +294,11 @@
           <input type="text" placeholder="可选的描述" class="form-control" name="attachment_desc">
         </div>
         <div class="su-placeholder col-sm-6  col-sm-offset-2" data-initial="请上传文件。" data-progress="上传文件中..">
-          {{#if ad_url}}
+          {{#if attachment}}
             <div class="su-item">
-              <a href="{{UPLOAD}}{{ad_url}}">{{ad_url}}</a>
+              <a>
+                <img src="{{UPLOAD}}{{attachment}}">
+              </a>
             </div>
           {{/if}}
         </div>

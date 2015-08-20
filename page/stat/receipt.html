@@ -47,213 +47,205 @@
 
 <table class="table table-bordered table-hover responsive-table smart-table" data-ranger=".date-range" data-url="{{API}}invoice/" data-start="-31" data-end="0" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query" data-filter=".table-header">
   <thead>
-    <tr>
-      <th>申请日期</th>
-      <th>付款方</th>
-      <th>金额</th>
-      <th>运营核对</th>
-      <th>特批</th>
-      <th>财务审核</th>
-      <th>地区负责人审核</th>
-      <th>快递单号</th>
-      <th>发票号码</th>
-      <th>开票日期</th>
-      <th>操作</th>
-    </tr>
+  <tr>
+    <th>申请日期</th>
+    <th>付款方</th>
+    <th>金额</th>
+    <th>运营核对</th>
+    <th>特批</th>
+    <th>财务审核</th>
+    <th>地区负责人审核</th>
+    <th>快递单号</th>
+    <th>发票号码</th>
+    <th>开票日期</th>
+    <th>操作</th>
+  </tr>
   </thead>
   <tbody>
-    <script type="text/x-handlebars-template">
-      <tr id="{{id}}">
-        <td data-title="申请日期">
-          {{apply_time}}
-        </td>
-        <td data-title="付款方">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
-        <td data-title="金额">{{income}}</td>
-        <td data-title="运营核对">
-          {{#if operation_reason}}
-            <a href="#" data-toggle="popover" data-content="{{operation_reason}}" data-title="未通过原因">{{pick operation_status sub_status}}</a>
-          {{else}}
-            {{#if operation_status}}
-              {{pick operation_status sub_status}}
-            {{else}}
-              -
-            {{/if}}
-          {{/if}}
-        </td>
-        <td data-title="特批">
-          {{#if special_reason}}
-            <a href="#" data-toggle="popover" data-content="{{special_reason}}" data-title="未通过原因">{{pick special_status sub_status}}</a>
-          {{else}}
-            {{#if special_status}}
-              {{pick special_status sub_status}}
-            {{else}}
-              -
-            {{/if}}
-          {{/if}}
-            </td>
-        <td data-title="财务审核">
-          {{#if financy_reason}}
-            <a href="#" data-toggle="popover" data-content="{{financy_reason}}" data-title="未通过原因">{{pick financy_status sub_status}}</a>
-          {{else}}
-            {{pick financy_status sub_status}}
-          {{/if}}
-        </td>
-        <td data-title="地区负责人审核">
-          {{#if charger_reason}}
-            <a href="#" data-toggle="popover" data-content="{{charger_reason}}" data-title="未通过原因">{{pick charger_status sub_status}}</a>
-          {{else}}
-            {pick charger_status sub_status}}
-           {{/if}}
-        </td>
-        <td data-title="快递单号">
-          {{#if is_beijing}}
-            {{#if operation_status}}
-              {{#if special_status}}
-                {{#equal operation_status 0}}
-                {{#equal special_status 0}}
-                {{#equal financy_status 0}}
-                {{#equal charger_status 0}}
-                  {{#if express_number}}
-                    <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
-                  {{else}}
-                    <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
-                  {{/if}}
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-              {{else}}
-                {{#equal operation_status 0}}
-                {{#equal financy_status 0}}
-                {{#equal charger_status 0}}
-                  {{#if express_number}}
-                    <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
-                  {{else}}
-                    <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
-                  {{/if}}
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-              {{/if}}
-            {{else}}
-              {{#if special_status}}
-                {{#equal special_status 0}}
-                {{#equal financy_status 0}}
-                {{#equal charger_status 0}}
-                  {{#if express_number}}
-                    <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
-                  {{else}}
-                    <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
-                  {{/if}}
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-              {{else}}
-                {{#equal financy_status 0}}
-                {{#equal charger_status 0}}
-                  {{#if express_number}}
-                    <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
-                  {{else}}
-                    <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
-                  {{/if}}
-                {{/equal}}
-                {{/equal}}
-              {{/if}}
-            {{/if}}
-          {{else}}
-            {{express_number}}
-          {{/if}}
-        </td>
+  <script type="text/x-handlebars-template">
+    <tr id="{{id}}">
+      <td data-title="申请日期">
+        {{apply_time}}
+      </td>
+      <td data-title="付款方">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
+      <td data-title="金额">{{income}}</td>
+      <td data-title="运营核对">
+        {{#if operation_reason}}
+        <a href="#" data-toggle="popover" data-content="{{operation_reason}}" data-title="未通过原因">{{pick operation_status sub_status}}</a>
+        {{else}}
+        {{pick operation_status sub_status}}
+        {{/if}}
+      </td>
+      <td data-title="特批">
+        {{#if special_reason}}
+        <a href="#" data-toggle="popover" data-content="{{special_reason}}" data-title="未通过原因">{{pick special_status sub_status}}</a>
+        {{else}}
+        {{pick special_status sub_status}}
+        {{/if}}
+      </td>
+      <td data-title="财务审核">
+        {{#if financy_reason}}
+        <a href="#" data-toggle="popover" data-content="{{financy_reason}}" data-title="未通过原因">{{pick financy_status sub_status}}</a>
+        {{else}}
+        {{pick financy_status sub_status}}
+        {{/if}}
+      </td>
+      <td data-title="地区负责人审核">
+        {{#if charger_reason}}
+        <a href="#" data-toggle="popover" data-content="{{charger_reason}}" data-title="未通过原因">{{pick charger_status sub_status}}</a>
+        {{else}}
+        {{pick charger_status sub_status}}
+        {{/if}}
+      </td>
+      <td data-title="快递单号">
+        {{#if is_beijing}}
+        {{#if operation_status}}
+        {{#if special_status}}
+        {{#equal operation_status 0}}
+        {{#equal special_status 0}}
+        {{#equal financy_status 0}}
+        {{#equal charger_status 0}}
+        {{#if express_number}}
+        <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+        {{else}}
+        <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
+        {{/if}}
+        {{/equal}}
+        {{/equal}}
+        {{/equal}}
+        {{/equal}}
+        {{else}}
+        {{#equal operation_status 0}}
+        {{#equal financy_status 0}}
+        {{#equal charger_status 0}}
+        {{#if express_number}}
+        <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+        {{else}}
+        <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
+        {{/if}}
+        {{/equal}}
+        {{/equal}}
+        {{/equal}}
+        {{/if}}
+        {{else}}
+        {{#if special_status}}
+        {{#equal special_status 0}}
+        {{#equal financy_status 0}}
+        {{#equal charger_status 0}}
+        {{#if express_number}}
+        <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+        {{else}}
+        <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
+        {{/if}}
+        {{/equal}}
+        {{/equal}}
+        {{/equal}}
+        {{else}}
+        {{#equal financy_status 0}}
+        {{#equal charger_status 0}}
+        {{#if express_number}}
+        <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+        {{else}}
+        <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
+        {{/if}}
+        {{/equal}}
+        {{/equal}}
+        {{/if}}
+        {{/if}}
+        {{else}}
+        {{express_number}}
+        {{/if}}
+      </td>
 
-        <td data-title="发票号码">{{number}}</td>
+      <td data-title="发票号码">{{number}}</td>
 
-        <td data-title="发票日期">{{handle_time}}</td>
+      <td data-title="发票日期">{{handle_time}}</td>
 
-        <td data-title="操作">
-          <div class="btn-group">
-            {{#if operation_status}}
-              {{#if special_status}}
-                {{#equal financy_status 2}}
-                {{#equal charger_status 2}}
-                {{#equal operation_status 2}}
-                {{#equal special_status 2}}
-                  <a href="#/receipt/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
-                  <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-              {{else}}
-                {#equal financy_status 2}}
-                {{#equal operation_status 2}}
-                {{#equal charger_status 2}}
-                  <a href="#/receipt/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
-                  <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-              {{/if}}
-            {{else}}
-              {{#if special_status}}
-                {{#equal financy_status 2}}
-                {{#equal charger_status 2}}
-                {{#equal special_status 2}}
-                  <a href="#/receipt/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
-                  <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
-                {{/equal}}
-                {{/equal}}
-                {{/equal}}
-              {{else}}
-                {{#equal financy_status 2}}
-                {{#equal charger_status 2}}
-                  <a href="#/receipt/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
-                  <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
-                {{/equal}}
-                {{/equal}}
-              {{/if}}
-            {{/if}}
+      <td data-title="操作">
+        <div class="btn-group">
+          {{#if operation_status}}
+          {{#if special_status}}
+          {{#equal financy_status 2}}
+          {{#equal charger_status 2}}
+          {{#equal operation_status 2}}
+          {{#equal special_status 2}}
+          <a href="#/receipt/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
+          <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+          {{/equal}}
+          {{/equal}}
+          {{/equal}}
+          {{/equal}}
+          {{else}}
+          {{#equal financy_status 2}}
+          {{#equal operation_status 2}}
+          {{#equal charger_status 2}}
+          <a href="#/receipt/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
+          <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+          {{/equal}}
+          {{/equal}}
+          {{/equal}}
+          {{/if}}
+          {{else}}
+          {{#if special_status}}
+          {{#equal financy_status 2}}
+          {{#equal charger_status 2}}
+          {{#equal special_status 2}}
+          <a href="#/receipt/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
+          <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+          {{/equal}}
+          {{/equal}}
+          {{/equal}}
+          {{else}}
+          {{#equal financy_status 2}}
+          {{#equal charger_status 2}}
+          <a href="#/receipt/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
+          <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+          {{/equal}}
+          {{/equal}}
+          {{/if}}
+          {{/if}}
 
-            {{#equal financy_status 1}}
-              <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
-            {{/equal}}
-            {{#equal charger_status 1}}
-              <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
-            {{/equal}}
-            {{#equal operation_status 1}}
-              <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
-            {{/equal}}
-            {{#equal special_status 1}}
-               <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
-            {{/equal}}
-            {{#if operation_status}}
-              {{#equal operation_status 0}}
-                <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-              {{/equal}}
-            {{else}}
-              {{#if special_status}}
-                {{#equal special_status 0}}
-                  <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-                {{/equal}}
-              {{else}}
-                {{#equal financy_status 0}}
-                  <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-                {{/equal}}
-                {{#equal charger_status 0}}
-                  {{#equal financy_status 1}}
-                    <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-                  {{/equal}}
-                {{/equal}}
-              {{/if}}
-            {{/if}}
-          </div>
-        </td>
-      </tr>
-    </script>
+          {{#equal financy_status 1}}
+          <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
+          {{/equal}}
+          {{#equal charger_status 1}}
+          <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
+          {{/equal}}
+          {{#equal operation_status 1}}
+          <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
+          {{/equal}}
+          {{#equal special_status 1}}
+          <a href="#/receipt/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
+          {{/equal}}
+          {{#if operation_status}}
+          {{#equal operation_status 0}}
+          <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
+          {{/equal}}
+          {{else}}
+          {{#if special_status}}
+          {{#equal special_status 0}}
+          <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
+          {{/equal}}
+          {{else}}
+          {{#equal financy_status 0}}
+          <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
+          {{/equal}}
+          {{#equal charger_status 0}}
+          {{#equal financy_status 1}}
+          <a href="#/receipt/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
+          {{/equal}}
+          {{/equal}}
+          {{/if}}
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+  </script>
   </tbody>
   <tfoot class="waiting">
-    <tr>
-      <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
-    </tr>
+  <tr>
+    <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
+  </tr>
   </tfoot>
 </table>
 
@@ -261,11 +253,12 @@
   <ul class="pagination">
     <script type="text/x-handlebars-template">
       <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
-        {{#each pages}}
+      {{#each pages}}
       <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
-        {{/each}}
+      {{/each}}
       <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
-    </script>
-    </ul>
+    </script>Ø
+  </ul>
 </nav>
+
 
