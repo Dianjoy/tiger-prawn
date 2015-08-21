@@ -161,11 +161,9 @@
         end: end
       };
 
-
       var popup = tp.popup.Manager.popup(options);
       popup.on('confirm', this.receiptPopup_confirmHandler, this);
     },
-
     receiptPopup_confirmHandler: function (popup) {
       var ids = ""
         ,channel = ""
