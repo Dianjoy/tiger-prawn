@@ -15,7 +15,6 @@
       var options = {
         title: target.title,
         id: ad_id,
-        //collectionId: 'stat',
         confirm: '确定',
         content: "page/stat/choose-ad.hbs",
         isRemote: true,
@@ -37,6 +36,7 @@
         ,agreement = ""
         ,settle_start_date = popup.$('#settle-start-date').val()
         ,settle_end_date = popup.$('#settle-end-date').val()
+        ,ad_with_agreement = popup.options.id
         ,len = popup.$(':checked').length;
 
       popup.$(':checked').each(function (i) {
@@ -50,6 +50,7 @@
         }
       });
       window.location = '#/receipt/apply/'
+        + ad_with_agreement + '/'
         + settle_start_date + '/'
         + settle_end_date + '/'
         + channel+ '/'

@@ -148,9 +148,9 @@
     },
     receiptButton_clickHandler: function (event) {
       var target = event.currentTarget;
-      var ad_id = this.$('.ad_id').attr('id');
       var start = this.model.get('start');
       var end = this.model.get('end');
+      var ad_id = this.model.get('ad_with_agreement');
       var options = {
         title: target.title,
         id: ad_id,

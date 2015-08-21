@@ -12,7 +12,7 @@
 
       'receipt/': 'showReceipt',
       'receipt/detail/(:id)':'receiptDetail',
-      'receipt/apply/:start/:end/:channel/:agreement/*ids': 'applyReceipt',
+      'receipt/apply/:ad_with_agreement/:start/:end/:channel/:agreement/*ids': 'applyReceipt',
       'receipt/reapply/:receipt_id': 'reapplyReceipt',
       'receipt/view/:id': 'viewReceipt',
 
@@ -63,8 +63,9 @@
         })
         .setFramework('stat stat-detail', '发票开具申请单');
     },
-    applyReceipt: function (start,end,channel,agreement,ids) {
+    applyReceipt: function (ad_with_agreement,start,end,channel,agreement,ids) {
       var model = new tp.model.ReceiptDetail({
+        ad_with_agreement:ad_with_agreement,
         start:start,
         end:end,
         channel_id:channel,
