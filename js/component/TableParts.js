@@ -203,17 +203,14 @@
       this.$('select').each(function () {
         var self = $(this)
           , name = self.data('options');
-        if (!(name in options)) {
+        if (!(name in options) || self.hasClass('ready')) {
           return true;
         }
-        var template = self.data('template')
+        var template = self.find('script').html()
           , fixed = self.find('.fixed');
-        if (!template) {
-          template = self.find('script').html();
-          template = Handlebars.compile(template);
-          self.data('template', template);
-        }
+        template = Handlebars.compile(template);
         self
+          .addClass('ready')
           .html(template(options))
           .prepend(fixed);
       });

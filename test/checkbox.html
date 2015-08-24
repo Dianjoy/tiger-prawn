@@ -27,6 +27,7 @@
     var value = _.chain(element)
       .filter(function (item) { return item.checked; })
       .map(function (item) { return item.value; })
+      .value();
 
     return value.join(',');
   }
