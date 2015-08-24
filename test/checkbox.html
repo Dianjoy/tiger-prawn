@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>测试获取checkbox的值</title>
+</head>
+<body>
+<form>
+  <p>
+    <input name="title" placeholder="title" value="haha">
+  </p>
+  <p>
+    <input type="checkbox" name="a[]" value="1"> 1
+    <input type="checkbox" name="a[]" value="2"> 2
+    <input type="checkbox" name="a[]" value="3"> 3
+    <input type="checkbox" name="a[]" value="4"> 4
+  </p>
+
+  <button>Test</button>
+</form>
+<script src="../bower_components/underscore/underscore-min.js"></script>
+<script>
+  function getValue (element) {
+    if (element.value) {
+      return element.value;
+    }
+    var value = _.chain(element)
+      .filter(function (item) { return item.checked; })
+      .map(function (item) { return item.value; })
+
+    return value.join(',');
+  }
+
+  f = document.getElementsByTagName('form')[0];
+  f.onsubmit = function (e) {
+    alert(getValue(this.elements.title));
+    alert(getValue(f.elements['a[]']));
+    e.preventDefault();
+  };
+</script>
+</body>
+</html>

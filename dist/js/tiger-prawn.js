@@ -265,6 +265,11 @@
       };
       $.ajax(options);
     },
+    fetch: function (url, handler, context) {
+      $.get(url, function (response) {
+        handler.call(context, response);
+      });
+    },
     postHandle: function (response) {
       // 以后可以扩展成循环，现在先逐个添加好了
       if ('me' in response) {
@@ -1102,6 +1107,16 @@
       }
       return submit;
     },
+    getValue: function (element) {
+      if (element.value) {
+        return element.value;
+      }
+      var value = _.chain(element)
+        .filter(function (item) { return item.checked; })
+        .map(function (item) { return item.value; })
+
+      return value.join(',');
+    },
     initUploader: function () {
       var id = this.model ? this.model.id : null
         , self = this
@@ -1207,10 +1222,11 @@
       }
 
       // 跳转类型
-      if (action.indexOf('#') !== -1) {
+      if (action.indexOf('#/') !== -1) {
         action = action.substr(action.indexOf('#'));
-        action = action.replace(/\/:(\w+)/g, function(str, key) {
-          return '/' + form.elements[key].value;
+        var getValue = this.getValue;
+        action = action.replace(/\/:([\w\[\]]+)/g, function(str, key) {
+          return '/' + getValue(form.elements[key]);
         });
         location.href = action;
         event.preventDefault();
@@ -2349,6 +2365,8 @@
           }, options));
         this.container.html(page.$el);
         page.once('complete', this.page_loadCompleteHandler, this);
+      } else if (/.md$/.test(url)) {
+        tp.service.Manager.get(url, this.md_loadCompleteHandler, this);
       } else {
         this.container.load(url, this.loadCompleteHandler);
       }
@@ -2399,6 +2417,11 @@
       options.collectionId = event.currentTarget.hash.substr(1);
       this.$context.trigger('add-model', options);
       event.preventDefault();
+    },
+    md_loadCompleteHandler: function (response) {
+      this.container.html(marked(response));
+      this.loading.remove();
+      this.trigger('load:complete');
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);

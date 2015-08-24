@@ -24,7 +24,7 @@
     "bootstrap": "~3.3.5",
     "font-awesome": "~4.4.0",
     "colors": "~2.2.0",
-    "backbone": "~1.2.1",
+    "backbone": "~1.2.2",
     "nervenet": "~0.1.9",
     "handlebars": "~3.0.3",
     "animate.css": "~3.4.0",

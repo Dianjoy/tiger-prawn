@@ -111,6 +111,16 @@
       }
       return submit;
     },
+    getValue: function (element) {
+      if (element.value) {
+        return element.value;
+      }
+      var value = _.chain(element)
+        .filter(function (item) { return item.checked; })
+        .map(function (item) { return item.value; })
+
+      return value.join(',');
+    },
     initUploader: function () {
       var id = this.model ? this.model.id : null
         , self = this
@@ -216,10 +226,11 @@
       }
 
       // 跳转类型
-      if (action.indexOf('#') !== -1) {
+      if (action.indexOf('#/') !== -1) {
         action = action.substr(action.indexOf('#'));
-        action = action.replace(/\/:(\w+)/g, function(str, key) {
-          return '/' + form.elements[key].value;
+        var getValue = this.getValue;
+        action = action.replace(/\/:([\w\[\]]+)/g, function(str, key) {
+          return '/' + getValue(form.elements[key]);
         });
         location.href = action;
         event.preventDefault();
