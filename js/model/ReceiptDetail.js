@@ -9,11 +9,11 @@
         }
         else{
           var products = options.ids.split(',');
+          var agreement = options.agreement_id ? '&agreement_id=' + options.agreement_id : '&channel_id=' + options.channel_id;
           this.urlRoot += 'init'
             + '?start=' + options.start
             + '&end=' + options.end
-            + '&channel_id=' + options.channel_id
-            + '&agreement_id=' + options.agreement_id
+            + agreement
             + '&adids=' + products;
         }
       }

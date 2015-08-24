@@ -12,7 +12,7 @@
 
       'receipt/': 'showReceipt',
       'receipt/detail/(:id)':'receiptDetail',
-      'receipt/apply/:ad_with_agreement/:start/:end/:channel/:agreement/*ids': 'applyReceipt',
+      'receipt/apply/:ad_with_agreement/:start/:end/:agreement/*ids': 'applyReceipt',
       'receipt/reapply/:receipt_id': 'reapplyReceipt',
       'receipt/view/:id': 'viewReceipt',
 
@@ -57,27 +57,36 @@
       });
       this.$body
         .load('page/stat/new-receipt-detail.hbs',model, {
-          className: 'stat stat-detail',
+          className: 'stat-detail',
           loader: tp.page.ReceiptEditor,
           fresh: true
         })
-        .setFramework('stat stat-detail', '发票开具申请单');
+        .setFramework('receipt-detail', '发票开具申请单');
     },
-    applyReceipt: function (ad_with_agreement,start,end,channel,agreement,ids) {
+    applyReceipt: function (ad_with_agreement,start,end,agreement,ids) {
+      var prefix = agreement.substr(0,2)
+        , agreement_id = ""
+        , channel_id = "";
+      if(prefix == "a_"){
+        agreement_id = agreement.substr(2);
+      }
+      if(prefix == "c_"){
+        channel_id = agreement.substr(2);
+      }
       var model = new tp.model.ReceiptDetail({
-        ad_with_agreement:ad_with_agreement,
-        start:start,
-        end:end,
-        channel_id:channel,
-        agreement_id:agreement,
+        ad_with_agreement: ad_with_agreement,
+        start: start,
+        end: end,
+        agreement_id: agreement_id,
+        channel_id: channel_id,
         ids: ids
       });
       this.$body
         .load('page/stat/new-receipt-detail.hbs',model, {
-          className: 'stat stat-apply',
+          className: 'receipt-apply',
           loader: tp.page.ReceiptEditor
         })
-        .setFramework('stat stat-apply', '发票开具申请单');
+        .setFramework('receipt-apply', '发票开具申请单');
     },
     reapplyReceipt: function (receipt_id) {
       var model = new tp.model.ReceiptDetail({
@@ -87,10 +96,10 @@
       });
       this.$body
         .load('page/stat/new-receipt-detail.hbs',model, {
-          className: 'stat stat-reapply',
+          className: 'receipt-reapply',
           loader: tp.page.ReceiptEditor
         })
-        .setFramework('stat stat-reapply', '重新申请');
+        .setFramework('receipt-reapply', '重新申请');
     },
     viewReceipt: function (id) {
       var model = new tp.model.ReceiptDetail({
@@ -99,10 +108,10 @@
       });
       this.$body
         .load('page/stat/new-receipt-detail.hbs',model,{
-          className: 'stat stat-view',
+          className: 'receipt-view',
           loader: tp.page.ReceiptEditor
         })
-        .setFramework('stat stat-view', '发票详情');
+        .setFramework('receipt-view', '发票详情');
     },
 
     showAdminADStat: function () {
