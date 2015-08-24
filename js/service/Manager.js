@@ -36,6 +36,11 @@
       };
       $.ajax(options);
     },
+    fetch: function (url, handler, context) {
+      $.get(url, function (response) {
+        handler.call(context, response);
+      });
+    },
     postHandle: function (response) {
       // 以后可以扩展成循环，现在先逐个添加好了
       if ('me' in response) {

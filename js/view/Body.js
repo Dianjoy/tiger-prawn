@@ -56,6 +56,8 @@
           }, options));
         this.container.html(page.$el);
         page.once('complete', this.page_loadCompleteHandler, this);
+      } else if (/.md$/.test(url)) {
+        tp.service.Manager.get(url, this.md_loadCompleteHandler, this);
       } else {
         this.container.load(url, this.loadCompleteHandler);
       }
@@ -106,6 +108,11 @@
       options.collectionId = event.currentTarget.hash.substr(1);
       this.$context.trigger('add-model', options);
       event.preventDefault();
+    },
+    md_loadCompleteHandler: function (response) {
+      this.container.html(marked(response));
+      this.loading.remove();
+      this.trigger('load:complete');
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);

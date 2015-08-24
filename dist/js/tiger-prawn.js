@@ -101,6 +101,9 @@
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
   });
+  h.registerHelper('to_date', function (value, plus) {
+    return value ? moment(value).add(plus, 'days').format(moment.DATE_FORMAT) : '';
+  });
 
   // 等于
   h.registerHelper('equal', function (value, target, options) {
@@ -261,6 +264,11 @@
         error.call(options.context, xhr, status, err);
       };
       $.ajax(options);
+    },
+    fetch: function (url, handler, context) {
+      $.get(url, function (response) {
+        handler.call(context, response);
+      });
     },
     postHandle: function (response) {
       // 以后可以扩展成循环，现在先逐个添加好了
@@ -1099,6 +1107,16 @@
       }
       return submit;
     },
+    getValue: function (element) {
+      if (element.value) {
+        return element.value;
+      }
+      var value = _.chain(element)
+        .filter(function (item) { return item.checked; })
+        .map(function (item) { return item.value; })
+
+      return value.join(',');
+    },
     initUploader: function () {
       var id = this.model ? this.model.id : null
         , self = this
@@ -1204,10 +1222,11 @@
       }
 
       // 跳转类型
-      if (action.indexOf('#') !== -1) {
+      if (action.indexOf('#/') !== -1) {
         action = action.substr(action.indexOf('#'));
-        action = action.replace(/\/:(\w+)/g, function(str, key) {
-          return '/' + form.elements[key].value;
+        var getValue = this.getValue;
+        action = action.replace(/\/:([\w\[\]]+)/g, function(str, key) {
+          return '/' + getValue(form.elements[key]);
         });
         location.href = action;
         event.preventDefault();
@@ -1251,16 +1270,22 @@
           value = this.checked ? value : !value;
           attr[this.name] = isNumber ? Number(value) : value;
         });
-        this.model.save(attr, {
-          patch: true,
-          wait: true,
-          success: function (model, response) {
-            self.submit_successHandler(response);
-          },
-          error: function (model, response) {
-            self.submit_errorHandler(response);
-          }
-        });
+
+        // 有url就保存，不然就直接记录值
+        if (_.result(this.model, 'urlRoot') || _.result(this.model.collection, 'url')) {
+          this.model.save(attr, {
+            patch: true,
+            wait: true,
+            success: function (model, response) {
+              self.submit_successHandler(response);
+            },
+            error: function (model, response) {
+              self.submit_errorHandler(response);
+            }
+          });
+        } else {
+          this.model.set(attr);
+        }
         return false;
       }
 
@@ -1291,7 +1316,14 @@
     .on('change', '[type=range]', function (event) {
       $(event.target).next().html(event.target.value);
     })
-    .on('change', '.auto-submit', function (event) {
+    .on('change dp.change', '.auto-submit', function (event) {
+      if (event.type === 'dp') {
+        var target = $(event.target);
+        if (!target.hasClass('ready')) {
+          target.addClass('ready');
+          return;
+        }
+      }
       $(event.target).closest('form').submit();
     })
     .on('change', '.check-all', function (event) {
@@ -1314,7 +1346,7 @@
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
-      if (this.autoFetch) {
+      if (options.autoFetch || !('autoFetch' in options) && this.autoFetch) {
         this.refresh(options);
       }
     },
@@ -1334,7 +1366,9 @@
       }
 
       var init = this.$el.data();
-      init.url = init.url.replace('{{API}}', tp.API);
+      if ('url' in init) {
+        init.url = init.url.replace('{{API}}', tp.API);
+      }
       options = _.extend(options, init);
 
       this.params = tp.utils.decodeURLParam(options.params);
@@ -1636,6 +1670,26 @@
     collection_syncHandler: function () {
       this.$('.fa-spin').remove();
       this.$('select').prop('disabled', false);
+
+      // 用options里的值填充select
+      var options = this.collection.options;
+      this.$('select').each(function () {
+        var self = $(this)
+          , name = self.data('options');
+        if (!(name in options)) {
+          return true;
+        }
+        var template = self.data('template')
+          , fixed = self.find('.fixed');
+        if (!template) {
+          template = self.find('script').html();
+          template = Handlebars.compile(template);
+          self.data('template', template);
+        }
+        self
+          .html(template(options))
+          .prepend(fixed);
+      });
     },
     model_changeHandler: function () {
       this.$('select').prop('disabled', true);
@@ -2311,6 +2365,8 @@
           }, options));
         this.container.html(page.$el);
         page.once('complete', this.page_loadCompleteHandler, this);
+      } else if (/.md$/.test(url)) {
+        tp.service.Manager.get(url, this.md_loadCompleteHandler, this);
       } else {
         this.container.load(url, this.loadCompleteHandler);
       }
@@ -2361,6 +2417,11 @@
       options.collectionId = event.currentTarget.hash.substr(1);
       this.$context.trigger('add-model', options);
       event.preventDefault();
+    },
+    md_loadCompleteHandler: function (response) {
+      this.container.html(marked(response));
+      this.loading.remove();
+      this.trigger('load:complete');
     },
     model_nameChangeHandler: function (model, name) {
       this.$('.username').html(name);
@@ -2552,13 +2613,12 @@
       this.model.on('invalid', this.model_invalidHandler, this);
       this.renderHeader();
 
+      var autoFetch = options.autoFetch || !('autoFetch' in options) && this.autoFetch;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
+        autoFetch: false,
         container: 'tbody',
         reset: true
       }));
-      if (!('autoFetch' in options)) {
-        options.autoFetch = this.autoFetch;
-      }
 
       // 启用搜索
       if ('search' in options) {
@@ -2602,7 +2662,7 @@
         });
       }
 
-      if (options.autoFetch) {
+      if (autoFetch) {
         this.refresh(options);
       }
     },

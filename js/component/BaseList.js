@@ -15,7 +15,7 @@
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
-      if (this.autoFetch) {
+      if (options.autoFetch || !('autoFetch' in options) && this.autoFetch) {
         this.refresh(options);
       }
     },
@@ -35,7 +35,9 @@
       }
 
       var init = this.$el.data();
-      init.url = init.url.replace('{{API}}', tp.API);
+      if ('url' in init) {
+        init.url = init.url.replace('{{API}}', tp.API);
+      }
       options = _.extend(options, init);
 
       this.params = tp.utils.decodeURLParam(options.params);

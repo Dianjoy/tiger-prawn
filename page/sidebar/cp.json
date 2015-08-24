@@ -1,3 +1,4 @@
+
 [
   {
     "title": "广告",
@@ -22,14 +23,8 @@
     ]
   },
   {
-    "title": "统计",
+    "title": "投统计",
     "icon": "line-chart",
-    "sub-id": "sidebar-stat",
-    "sub": [
-      {
-        "title": "广告统计",
-        "link": "#/stat/"
-      }
-    ]
+    "link": "#/stat/"
   }
 ]

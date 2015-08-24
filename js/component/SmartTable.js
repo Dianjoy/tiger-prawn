@@ -24,13 +24,12 @@
       this.model.on('invalid', this.model_invalidHandler, this);
       this.renderHeader();
 
+      var autoFetch = options.autoFetch || !('autoFetch' in options) && this.autoFetch;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
+        autoFetch: false,
         container: 'tbody',
         reset: true
       }));
-      if (!('autoFetch' in options)) {
-        options.autoFetch = this.autoFetch;
-      }
 
       // 启用搜索
       if ('search' in options) {
@@ -74,7 +73,7 @@
         });
       }
 
-      if (options.autoFetch) {
+      if (autoFetch) {
         this.refresh(options);
       }
     },

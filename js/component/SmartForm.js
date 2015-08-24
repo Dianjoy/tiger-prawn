@@ -111,6 +111,16 @@
       }
       return submit;
     },
+    getValue: function (element) {
+      if (element.value) {
+        return element.value;
+      }
+      var value = _.chain(element)
+        .filter(function (item) { return item.checked; })
+        .map(function (item) { return item.value; })
+
+      return value.join(',');
+    },
     initUploader: function () {
       var id = this.model ? this.model.id : null
         , self = this
@@ -216,10 +226,11 @@
       }
 
       // 跳转类型
-      if (action.indexOf('#') !== -1) {
+      if (action.indexOf('#/') !== -1) {
         action = action.substr(action.indexOf('#'));
-        action = action.replace(/\/:(\w+)/g, function(str, key) {
-          return '/' + form.elements[key].value;
+        var getValue = this.getValue;
+        action = action.replace(/\/:([\w\[\]]+)/g, function(str, key) {
+          return '/' + getValue(form.elements[key]);
         });
         location.href = action;
         event.preventDefault();
@@ -263,16 +274,22 @@
           value = this.checked ? value : !value;
           attr[this.name] = isNumber ? Number(value) : value;
         });
-        this.model.save(attr, {
-          patch: true,
-          wait: true,
-          success: function (model, response) {
-            self.submit_successHandler(response);
-          },
-          error: function (model, response) {
-            self.submit_errorHandler(response);
-          }
-        });
+
+        // 有url就保存，不然就直接记录值
+        if (_.result(this.model, 'urlRoot') || _.result(this.model.collection, 'url')) {
+          this.model.save(attr, {
+            patch: true,
+            wait: true,
+            success: function (model, response) {
+              self.submit_successHandler(response);
+            },
+            error: function (model, response) {
+              self.submit_errorHandler(response);
+            }
+          });
+        } else {
+          this.model.set(attr);
+        }
         return false;
       }
 
@@ -303,7 +320,14 @@
     .on('change', '[type=range]', function (event) {
       $(event.target).next().html(event.target.value);
     })
-    .on('change', '.auto-submit', function (event) {
+    .on('change dp.change', '.auto-submit', function (event) {
+      if (event.type === 'dp') {
+        var target = $(event.target);
+        if (!target.hasClass('ready')) {
+          target.addClass('ready');
+          return;
+        }
+      }
       $(event.target).closest('form').submit();
     })
     .on('change', '.check-all', function (event) {

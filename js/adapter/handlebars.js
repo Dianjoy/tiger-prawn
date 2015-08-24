@@ -82,6 +82,9 @@
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
   });
+  h.registerHelper('to_date', function (value, plus) {
+    return value ? moment(value).add(plus, 'days').format(moment.DATE_FORMAT) : '';
+  });
 
   // 等于
   h.registerHelper('equal', function (value, target, options) {
