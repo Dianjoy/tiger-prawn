@@ -1,0 +1,13 @@
+<table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-params="start={{start}}&end={{end}}">
+  <tbody id="chose-ad-table" class="well">
+  {{{{raw-helper}}}}
+  <script type="text/x-handlebars-template">
+    <div class="col-sm-3">
+      <label>
+        <input type="checkbox" id="{{id}}" data-channel={{channel_id}} data-agreement={{agreement_id}}>{{ad_name}}
+      </label>
+    </div>
+  </script>
+  {{{{/raw-helper}}}}
+  </tbody>
+</table>

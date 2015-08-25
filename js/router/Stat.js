@@ -74,6 +74,7 @@
         channel_id = agreement.substr(2);
       }
       var model = new tp.model.ReceiptDetail({
+        init: true,
         ad_with_agreement: ad_with_agreement,
         start: start,
         end: end,

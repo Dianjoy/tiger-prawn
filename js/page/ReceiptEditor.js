@@ -10,7 +10,6 @@
       'success':'success_handler'
     },
     render: function () {
-      var self =this;
       var products = this.model.get('products');
       var opt = this.model.options;
       var cpa_first_total = 0
@@ -25,12 +24,12 @@
       _.each(products,function (element) {
         if(!element.quote_rmb_after){
           _.extend(element,{
-            quote_rmb_after:element.quote_rmb,
-            cpa_after:element.cpa,
-            income_after:element.income,
-            rate: ((1 - element.cpa * element.quote_rmb/element.income)*100).toFixed(2),
-            money_cut:element.income - element.income,
-            remark:''
+            quote_rmb_after: element.quote_rmb,
+            cpa_after: element.cpa,
+            income_after: element.income,
+            rate: ((1 - element.cpa * element.quote_rmb / element.income) * 100).toFixed(2),
+            money_cut: element.income - element.income,
+            remark: ''
           });
         }
         else{
@@ -135,7 +134,7 @@
 
       this.render();
 
-      if(!this.model.options.init){
+      if(!this.model.init){
         this.model.save({
           products: this.model.get('products'),
           income: this.model.options.income_after_total,
@@ -155,11 +154,10 @@
         title: target.title,
         id: ad_id,
         confirm: '确定',
-        content: "page/stat/choose-ad.hbs",
+        content: "page/stat/rechoose-ad.hbs",
         isRemote: true,
         start: start,
-        end: end,
-        fromList: true
+        end: end
       };
 
       var popup = tp.popup.Manager.popup(options);
@@ -196,7 +194,7 @@
             var products = response.invoice.products;
             self.model.set('products',products);
             self.render();
-            if(!self.model.options.init){
+            if(!self.model.init){
               self.model.save({products:self.model.get("products")},{patch:true}); //如果是二次编辑，就直接save
             }
           }

@@ -23,9 +23,6 @@
         this.options = response.options;
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
-        if(this.isNew()){
-          this.options.init = true;
-        }
       }
       return response.invoice;
     },
