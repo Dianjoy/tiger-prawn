@@ -14,7 +14,9 @@
       <button type="button" class="btn btn-primary pull-right"><i class="fa fa-play"></i> 检索</button>
     </div>
   </div>
-  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}">
+  <input type="hidden" name="ad_with_agreement" value="{{id}}">
+  <input type="hidden" name="agreement" value="{{#if agreement_id}}a_{{agreement_id}}{{else}}c_{{channel_id}}{{/if}}">
+  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-auto-fetch="false">
     <tbody id="chose-ad-table" class="well">
     {{{{raw-helper}}}}
     <script type="text/x-handlebars-template">
@@ -27,8 +29,6 @@
     {{{{/raw-helper}}}}
     </tbody>
   </table>
-  <input type="hidden" name="ad_with_agreement" value="{{id}}">
-  <input type="hidden" name="agreement" value="{{#if agreement_id}}a_{{agreement_id}}{{else}}c_{{channel_id}}{{/if}}">
 </form>
 
 
