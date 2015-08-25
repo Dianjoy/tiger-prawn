@@ -98,6 +98,7 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
+        this.$el.toggleClass('cp', this.model.get('cp'));
       }
     },
     addButton_clickHandler: function (event) {

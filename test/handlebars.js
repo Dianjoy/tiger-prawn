@@ -36,3 +36,45 @@ QUnit.test('substring', function (assert) {
     , result = template(me);
   assert.ok(result === 'athil', 'oyeah');
 });
+
+QUnit.test('path', function (assert) {
+  var data = {
+      prop: 'abc',
+      value: 'Hello',
+      list: [
+        {
+          key: 1,
+          value: 'a'
+        },
+        {
+          key: 2,
+          value: 'b'
+        },
+        {
+          key: 3,
+          value: 'c'
+        },
+        {
+          id: 4,
+          value: 'd'
+        }
+      ]
+    }
+    , template = '[start]' +
+      '{{#each list}}' +
+      '  <p>' +
+      '    {{#if key}}' +
+      '      {{../../prop}} | {{key}} {{value}}' +
+      '    {{else}}' +
+      '      {{../../prop}} | {{id}}-{{value}}' +
+      '    {{/if}}' +
+      '  </p>' +
+      '{{/each}}' +
+      '{{#if prop}} {{value}}, world {{/if}}' +
+      '[end]'
+    , html;
+  template = Handlebars.compile(template);
+  html = template(data);
+  console.log(html);
+  assert.ok(html);
+});
