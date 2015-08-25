@@ -12,32 +12,34 @@
     <td>{{cid}}</td>
   </tr>
 </table>
-<form action="{{API}}data-load/{{id}}" method="get" id="popup-form" target="_blank">
+<form action="{{API}}data-load/{{id}}" method="get" id="popup-form" class="row" target="_blank">
   <div class="alert alert-msg" style="display: none"></div>
-  <div class="row">
-    <div class="col-md-6">
-      <label>开始日期</label>
-      <div class="input-group date">
-        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        <input class="form-control datetimepicker" name="start-date" data-format="YYYY-MM-DD" required>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <label>结束日期</label>
-      <div class="input-group date">
-        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        <input class="form-control datetimepicker" name="end-date" data-format="YYYY-MM-DD" required>
-      </div>
+  <div class="form-group col-md-6 col-xs-12">
+    <label>开始日期</label>
+    <div class="input-group date">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+      <input class="form-control datetimepicker" name="start-date" data-format="YYYY-MM-DD" required>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group col-md-6 col-xs-12">
+    <label>结束日期</label>
+    <div class="input-group date">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+      <input class="form-control datetimepicker" name="end-date" data-format="YYYY-MM-DD" required>
+    </div>
+  </div>
+  <div class="form-group col-md-12 col-xs-12">
     <label>导出类型</label>
     <div class="select-button">
       <input type="radio" name="type" value="0" id="type-0" checked/>
       <label for="type-0">普通</label>
+      {{#equal ad_app_type 2}}
       <input type="radio" name="type" value="1" id="type-1"/>
-      <label for="type-1">深度任务</label>
+      <label for="type-1">深度任务（次日留存）</label>
+      <input type="radio" name="type" value="2" id="type-2"/>
+      <label for="type-2">深度任务（三日留存）</label>
+      {{/equal}}
     </div>
   </div>
-  <label>注：仅能查询一周内的数据，若有其他需求，请联系技术。</label>
+  <label class="col-md-12 col-xs-12">注：仅能查询一周内的数据，若有其他需求，请联系技术。</label>
 </form>
