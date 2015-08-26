@@ -34,7 +34,7 @@
       this.$body
         .load('page/ad/ad.hbs', model, {
           className: 'ad ad-detail',
-          fresh: true
+          refresh: true
         })
         .setFramework('ad', '{{agreement}} {{channel_alias}} {{ad_name}} {{cid}}', '广告详情', model);
       this.$context.mapValue('model', model);

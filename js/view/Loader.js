@@ -13,21 +13,21 @@
     initialize: function (options) {
       if (this.model instanceof Backbone.Model && !options.hasData) {
         this.model.once('sync', this.model_syncHandler, this);
-        this.model.fetch();
+        this.model.fetch(options);
       } else {
         this.isModelReady = true;
       }
 
       $.get(options.template, _.bind(this.template_getHandler, this), 'html');
 
-      if ('fresh' in options) {
-        this.fresh = options.fresh;
+      if ('refresh' in options) {
+        this.refresh = options.refresh;
       }
     },
     render: function () {
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
-      if (this.fresh) {
-        this.fresh = false;
+      if (this.refresh) {
+        this.refresh = false;
         this.model.on('change', this.model_changeHandler, this);
       }
       var self = this

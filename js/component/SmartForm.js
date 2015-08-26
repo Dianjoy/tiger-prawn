@@ -41,6 +41,11 @@
       if (this.model instanceof Backbone.Model) {
         this.model.on('invalid', this.model_invalidHandler, this);
       }
+      // 表单中有{{API}}
+      var action = decodeURIComponent(this.$el.attr('action'));
+      if (action.indexOf('{{API}}') != -1) {
+        this.el.action = action.replace('{{API}}', tp.API);
+      }
       this.initUploader();
     },
     remove: function () {
@@ -276,7 +281,8 @@
         });
 
         // 有url就保存，不然就直接记录值
-        if (_.result(this.model, 'urlRoot') || _.result(this.model.collection, 'url')) {
+        try {
+          var url = _.result(this.model, 'url');
           this.model.save(attr, {
             patch: true,
             wait: true,
@@ -287,7 +293,7 @@
               self.submit_errorHandler(response);
             }
           });
-        } else {
+        } catch (e) {
           this.model.set(attr);
         }
         return false;

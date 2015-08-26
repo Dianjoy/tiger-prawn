@@ -1,4 +1,4 @@
 <div class="form-group">
   <label for="editor-popup-input">{{label}}</label>
-  <input {{#if inputType}}type="{{inputType}}"{{/if}} name="{{prop}}" class="form-control" id="editor-popup-input" value="{{value}}" autofocus required/>
+  <input {{#if inputType}}type="{{inputType}}"{{/if}} name="{{prop}}" class="form-control" id="editor-popup-input" value="{{value}}" autofocus required {{#if pattern}}pattern="{{pattern}}"{{/if}}/>
 </div>

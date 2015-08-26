@@ -26,6 +26,7 @@ $(function () {
   context.createInstance(tp.router.Base);
   context.createInstance(tp.router.AD);
   context.createInstance(tp.router.Stat);
+  context.createInstance(tp.router.Me);
 
   // 验证用户身份
   me.fetch();
