@@ -113,7 +113,7 @@
       var val = popup.$('input').val()
          ,target = popup.options.target
          ,index = $(target).closest('tr').attr('id')
-         ,product = _.findWhere(this.model.get('products'),{id:index});
+         ,product = _.findWhere(this.model.get('products'),{ad_id:index});
 
       if(val){
         switch ($(target).attr('class')){
@@ -132,7 +132,7 @@
       }
       this.render();
 
-      if(!this.model.init){
+      if(!this.model.get('init')){
         this.model.save({
           products: this.model.get('products'),
           income: this.model.options.income_after_total,
