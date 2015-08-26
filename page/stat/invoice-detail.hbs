@@ -214,12 +214,12 @@
       </div>
     </fieldset>
     <div class="form-group invoice-margin">
-      <div class="uploader fetcher" data-url="{{API}}file/" data-need-validate="true" id="app-uploader" data-name="ad_url">
+      <div class="uploader fetcher" data-url="{{API}}file/" data-need-validate="true" id="app-uploader">
         <label class="control-label col-sm-2">客户对账单：</label>
         <div class="col-sm-6" id="description">
           <input type="text" placeholder="可选的描述" class="form-control" name="attachment_desc">
         </div>
-        <div class="su-placeholder col-sm-6  col-sm-offset-2" data-initial="请上传文件。" data-progress="上传文件中..">
+        <div class="su-placeholder su-removable col-sm-6  col-sm-offset-2" data-initial="请上传文件。" data-progress="上传文件中..">
           {{#if attachment}}
             <div class="su-item">
               <a>
@@ -231,7 +231,7 @@
         <label class="btn btn-info su-upload-button col-sm-6 col-sm-offset-2">
           <i class="fa fa-upload"></i> 选择文件
         </label>
-        <input type="hidden" name="attachment" value="{{ad_url}}" class="su-url form-control">
+        <input type="hidden" name="attachment" class="su-url form-control">
       </div>
     </div>
     <div class="form-group">
