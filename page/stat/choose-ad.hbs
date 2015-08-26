@@ -1,36 +1,39 @@
 <h4>选择结算的广告：</h4>
-<form action="#/receipt/apply/:ad_with_agreement/:start/:end/:agreement/:ids" method="post" id="popup-form">
-  <div class="ad-date-range clearfix">
-    <div class="range">
-      <label class="control-label pull-left" id="settlement-period">结算周期：</label>
-      <div class="date input-group col-sm-3 col-md-3 pull-left">
-        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        <input type="date"  id="settle-start-date" class="form-control datetimepicker" name="start" data-format="YYYY-MM-DD">
+{{#unless fromInvoice}}
+  <form action="#/invoice/apply/:start/:end/:ids" method="post" id="popup-form">
+    <div class="ad-date-range clearfix">
+      <div class="range">
+        <label class="control-label pull-left" id="settlement-period">结算周期：</label>
+        <div class="date input-group col-sm-3 col-md-3 pull-left">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          <input type="date"  id="settle-start-date" class="form-control datetimepicker" name="start" data-format="YYYY-MM-DD">
+        </div>
+        <div class="date input-group col-sm-3 col-md-3 pull-left">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          <input type="date" id="settle-end-date" class="form-control datetimepicker" name="end" data-format="YYYY-MM-DD">
+        </div>
+        <button type="button" class="btn btn-primary pull-right"><i class="fa fa-play"></i> 检索</button>
       </div>
-      <div class="date input-group col-sm-3 col-md-3 pull-left">
-        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        <input type="date" id="settle-end-date" class="form-control datetimepicker" name="end" data-format="YYYY-MM-DD">
-      </div>
-      <button type="button" class="btn btn-primary pull-right"><i class="fa fa-play"></i> 检索</button>
     </div>
-  </div>
-  <input type="hidden" name="ad_with_agreement" value="{{id}}">
-  <input type="hidden" name="agreement" value="{{#if agreement_id}}a_{{agreement_id}}{{else}}c_{{channel_id}}{{/if}}">
-  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-auto-fetch="false">
+{{/unless}}
+  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" {{#if fromInvoice}}data-params="start={{start}}&end={{end}}"{{else}}data-start="{{start}}" data-end="{{end}}" data-auto-fetch="false"{{/if}}>
     <tbody id="chose-ad-table" class="well">
     {{{{raw-helper}}}}
     <script type="text/x-handlebars-template">
-      <div class="col-sm-3">
-        <label for="ids">
-          <input type="checkbox" name="ids" value="{{id}}" data-channel={{channel_id}} data-agreement={{agreement_id}}>{{ad_name}}
-        </label>
-      </div>
+      <tr>
+        <td>
+          <label for="ids">
+            <input type="checkbox" name="ids" value="{{id}}">{{ad_name}}
+          </label>
+        </td>
+      </tr>
     </script>
     {{{{/raw-helper}}}}
     </tbody>
   </table>
+{{#unless fromInvoice}}
 </form>
-
+{{/unless}}
 
 
 

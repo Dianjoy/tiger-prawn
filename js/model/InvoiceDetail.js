@@ -1,21 +1,21 @@
 'use strict';
 (function (ns) {
-  ns.ReceiptDetail = Backbone.Model.extend({
+  ns.InvoiceDetail = Backbone.Model.extend({
     urlRoot: tp.API + 'invoice/',
     initialize: function (options) {
       if(this.isNew()){
         if(options.isReapply){
           this.urlRoot += options.invoice_id;
-        }
-        else{
+        } else{
           var products = options.ids.split(',');
-          var agreement = options.agreement_id ? '&agreement_id=' + options.agreement_id : '&channel_id=' + options.channel_id;
           this.urlRoot += 'init'
             + '?start=' + options.start
             + '&end=' + options.end
-            + agreement
             + '&adids=' + products;
         }
+      }
+      if(options.view){
+        this.view = options.view;
       }
     },
     parse: function (response) {
@@ -23,6 +23,7 @@
         this.options = response.options;
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
+        this.options.view = this.view;
       }
       return response.invoice;
     },

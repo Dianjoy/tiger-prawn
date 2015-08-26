@@ -1,10 +1,8 @@
-<h3 class="text-center">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐结算单及开票申请单</h3>
-<h4 class="text-center">{{start}} 至 {{end}}</h4>
+<h3 class="tac">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐结算单及开票申请单</h3>
+<h4 class="tac">{{start}} 至 {{end}}</h4>
 <div class="row">
-  <div class="col-sm-10">
-  </div>
-  <div class="small col-sm-2">
-    <p class="form-control-static">点乐合同编号：{{agreement_number}}</p>
+  <div class="col-sm-2 col-sm-offset-10 col-xs-6">
+    <p><small>点乐合同编号：{{agreement_number}}</small></p>
   </div>
 </div>
 
@@ -14,9 +12,7 @@
     <th>推广期间</th>
     <th>
       广告名称
-      {{#unless view}}
-        <a class="receipt-button" title="添加广告" id="fromList"><i class="fa fa-plus-circle"></i></a>
-      {{/unless}}
+      {{#unless view}}<button class="btn btn-sm invoice-button" title="添加广告"><i class="fa fa-plus-circle"></i></button>{{/unless}}
     </th>
     <th>软著名称</th>
     <th>渠道包</th>
@@ -32,10 +28,9 @@
   </tr>
   </thead>
   <tbody>
-  {{#if view}}
     {{{{raw-helper}}}}
     <script type="text/x-handlebars-template">
-      <tr id="{{id}}">
+      <tr id="{{ad_id}}">
         {{#if rmb}}
           <td>合计人民币（大写）：</td>
           <td colspan="8"  id="rmb">{{rmb}}</td>
@@ -43,59 +38,30 @@
           <td colspan="3"></td>
         {{else}}
           <td data-title="推广期间">{{quote_start_date}} - {{quote_end_date}}</td>
-          <td data-title="广告名称" id="{{ad_id}}" class="ad_id">{{ad_name}}</td>
-          <td data-title="软著名称">{{pick sdk_type sdk_types}}</td>
-          <td data-title="渠道包">{{cid}}</td>
-          <td data-title="单价（元）" class="price">&yen; {{quote_rmb}}</td>
-          <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
-          <td data-title="应结算收入（核减前）" class="income-before">&yen; {{income}}</td>
-          <td data-title="单价（核减后）">&yen; {{quote_rmb_after}}</td>
-          <td data-title="渠道CPA（核减后）">{{cpa_after}}</td>
-          <td data-title="实际结算收入（核减后）" class="income-after">&yen; {{income_after}}</td>
-          <td data-title="核减比例" class="proportion">{{rate}}%</td>
-          <td data-title="核减金额" class="amount">&yen; {{money_cut}}</td>
-          <td data-title="备注">{{#if remark}}{{remark}}{{/if}}</td>
-        {{/if}}
-      </tr>
-    </script>
-    {{{{/raw-helper}}}}
-  {{else}}
-    {{{{raw-helper}}}}
-    <script type="text/x-handlebars-template">
-      <tr id="{{id}}">
-        {{#if rmb}}
-          <td>合计人民币（大写）：</td>
-          <td colspan="8"  id="rmb">{{rmb}}</td>
-          <td id="income-total">&yen; {{income_after_total}}</td>
-          <td colspan="3"></td>
-        {{else}}
-          <td data-title="推广期间">{{quote_start_date}} - {{quote_end_date}}</td>
-          <td data-title="广告名称" id="{{ad_id}}" class="ad_id">{{ad_name}}</td>
+          <td data-title="广告名称">{{ad_name}}</td>
           <td data-title="软著名称">{{pick sdk_type sdk_types}}</td>
           <td data-title="渠道包">{{cid}}</td>
           <td data-title="单价（元）" class="price">&yen; {{quote_rmb}}</td>
           <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
           <td data-title="应结算收入（核减前）" class="income-before">&yen; {{income}}</td>
           <td data-title="单价（核减后）">
-            <a class="edit-button price-after" title="单价（核减后）">&yen; {{quote_rmb_after}}</a>
+            {{#if view}}&yen; {{quote_rmb_after}}{{else}}<a class="edit-button price-after" title="单价（核减后）">&yen; {{quote_rmb_after}}</a>{{/if}}
           </td>
           <td data-title="渠道CPA（核减后）">
-            <a class="edit-button cpa-after" title="渠道CPA（核减后）">{{#if cpa_after}}{{cpa_after}}{{else}}编辑{{/if}}</a>
+            {{#if view}}{{cpa_after}}{{else}}<a class="edit-button cpa-after" title="渠道CPA（核减后）">{{#if cpa_after}}{{cpa_after}}{{else}}编辑{{/if}}</a>{{/if}}
           </td>
           <td data-title="实际结算收入（核减后）" class="income-after">&yen; {{income_after}}</td>
           <td data-title="核减比例" class="proportion">{{rate}}%</td>
           <td data-title="核减金额" class="amount">&yen; {{money_cut}}</td>
           <td data-title="备注">
-            <a class="edit-button comment" title="备注">{{#if remark}}{{remark}}{{else}}编辑{{/if}}</a>
+            {{#if view}}{{remark}}{{else}}<a class="edit-button comment" title="备注">{{#if remark}}{{remark}}{{else}}编辑{{/if}}</a>{{/if}}
           </td>
         {{/if}}
       </tr>
     </script>
     {{{{/raw-helper}}}}
-  {{/if}}
   </tbody>
 </table>
-
 {{#if init}}
   <form class="form-horizontal clearfix model-editor" method="post" enctype="multipart/form-data">
     <fieldset>
@@ -103,7 +69,7 @@
       <div class="form-group">
         <label class="control-label col-sm-2">付款方：</label>
         <div class="col-sm-2">
-          <input readonly="readonly" type="text" name="{{#if company}}company{{else}}full_name{{/if}}" value= "{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}" class="readonly">
+          <input type="text" name="{{#if company}}company{{else}}full_name{{/if}}" value="{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}" class="readonly" readonly>
         </div>
         <div class="col-sm-2">
           <p class="form-control-static">(确认盖章)</p>
@@ -118,58 +84,20 @@
       <div class="form-group">
         <label class="control-label col-sm-2">发票类型：</label>
         <div class="col-sm-2">
-          <select id="receipt-type" class="form-control" name="type">
-            {{#if type}}
-              {{#equal type 0}}
-                <option value="1">增值税专用发票</option>
-                <option selected value="0">增值税普通发票</option>
-              {{/equal}}
-              {{#equal type 1}}
-                <option selected value="1">增值税专用发票</option>
-                <option value="0">增值税普通发票</option>
-              {{/equal}}
-            {{else}}
-              <option value="1">增值税专用发票</option>
-              <option selected value="0">增值税普通发票</option>
-            {{/if}}
+          <select class="form-control" name="type">
+            <option value="0" {{#equal type 0}}selected{{/equal}}>增值税普通发票</option>
+            <option value="1"{{#equal type 1}}selected{{/equal}}>增值税专用发票</option>
           </select>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2">发票内容：</label>
         <div class="col-sm-2">
-          <select id="receipt-content" class="form-control" name="content_type">
-            {{#if content_type}}
-              {{#equal content_type 0}}
-                <option selected value="0">信息服务费</option>
-                <option value="1">信息技术服务费</option>
-                <option value="2">技术服务费</option>
-                <option value="3">广告服务费（慎用）</option>
-              {{/equal}}
-              {{#equal content_type 1}}
-                <option value="0">信息服务费</option>
-                <option selected value="1">信息技术服务费</option>
-                <option value="2">技术服务费</option>
-                <option value="3">广告服务费（慎用）</option>
-              {{/equal}}
-              {{#equal content_type 2}}
-                <option value="0">信息服务费</option>
-                <option value="1">信息技术服务费</option>
-                <option selected value="2">技术服务费</option>
-                <option value="3">广告服务费（慎用）</option>
-              {{/equal}}
-              {{#equal content_type 3}}
-                <option value="0">信息服务费</option>
-                <option value="1">信息技术服务费</option>
-                <option value="2">技术服务费</option>
-                <option selected value="3">广告服务费（慎用）</option>
-              {{/equal}}
-            {{else}}
-              <option selected value="0">信息服务费</option>
-              <option value="1">信息技术服务费</option>
-              <option value="2">技术服务费</option>
-              <option value="3">广告服务费（慎用）</option>
-            {{/if}}
+          <select class="form-control" name="content_type">
+            <option value="0" {{#equal content_type 0}}selected{{/equal}}>信息服务费</option>
+            <option value="1" {{#equal content_type 1}}selected{{/equal}}>信息技术服务费</option>
+            <option value="2" {{#equal content_type 2}}selected{{/equal}}>技术服务费</option>
+            <option value="3" {{#equal content_type 3}}selected{{/equal}}>广告服务费（慎用）</option>
           </select>
         </div>
       </div>
@@ -188,13 +116,13 @@
       <div class="form-group">
         <label class="control-label col-sm-2">开票金额：</label>
         <div class="col-sm-2">
-          <input readonly="readonly" type="text " name="joy_income" value= "{{joy_income}}" class="readonly">
+          <input readonly="readonly" type="text" name="joy_income" value="{{joy_income}}" class="readonly">
         </div>
         <div class="col-sm-2">
-          <input readonly="readonly" type="text " name="red_ad_income" value= "{{red_ad_income}}" class="readonly">
+          <input readonly="readonly" type="text" name="red_ad_income" value="{{red_ad_income}}" class="readonly">
         </div>
         <div class="col-sm-2">
-          <input readonly="readonly" type="text " name="red_ios_income" value= "{{red_ios_income}}" class="readonly">
+          <input readonly="readonly" type="text" name="red_ios_income" value="{{red_ios_income}}" class="readonly">
         </div>
       </div>
       <div class="form-group">
@@ -222,31 +150,30 @@
         </div>
       </div>
     </fieldset>
-
     <fieldset>
       <legend>收款方</legend>
       <div class="form-group">
         <label class="control-label col-sm-2">收款方：</label>
         <div class="col-sm-6">
-          <input readonly="readonly" type="text " value="{{accept_company}}" class="readonly">
+          <input readonly="readonly" type="text" value="{{accept_company}}" class="readonly">
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2">开户名称：</label>
         <div class="col-sm-6">
-          <input readonly="readonly" type="text " name="accept_company" value="{{accept_company}}"  class="readonly">
+          <input readonly="readonly" type="text" name="accept_company" value="{{accept_company}}" class="readonly">
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2">开户银行：</label>
         <div class="col-sm-6">
-          <input readonly="readonly" type="text " name="accept_bank" value="{{accept_bank}}" class="readonly">
+          <input readonly="readonly" type="text" name="accept_bank" value="{{accept_bank}}" class="readonly">
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2">开户账号：</label>
         <div class="col-sm-6">
-          <input readonly="readonly" type="text " name="accept_account" value="{{accept_account}}" class="readonly">
+          <input readonly="readonly" type="text" name="accept_account" value="{{accept_account}}" class="readonly">
         </div>
       </div>
       <div class="form-group">
@@ -260,7 +187,7 @@
                 {{/each}}
               </select>
             {{else}}
-              <input readonly="readonly" type="text " value={{applicant}}, name="applicant" class="readonly">
+              <input readonly="readonly" type="text" value={{applicant}} name="applicant" class="readonly">
             {{/if}}
           {{else}}
             <p class="form-control-static">{{#if charger}}{{charger}}{{else}}{{applicant}}{{/if}}</p>
@@ -286,8 +213,7 @@
         </div>
       </div>
     </fieldset>
-
-    <div class="form-group receipt-margin">
+    <div class="form-group invoice-margin">
       <div class="uploader fetcher" data-url="{{API}}file/" data-need-validate="true" id="app-uploader" data-name="ad_url">
         <label class="control-label col-sm-2">客户对账单：</label>
         <div class="col-sm-6" id="description">
@@ -308,35 +234,31 @@
         <input type="hidden" name="attachment" value="{{ad_url}}" class="su-url form-control">
       </div>
     </div>
-
     <div class="form-group">
       <label for="approval" class="control-label col-sm-2">特批：</label>
       <div class="col-sm-6"  id="approval" >
         <textarea class="form-control" rows="6" name="comment" maxlength="1024">{{comment}}</textarea>
       </div>
     </div>
-
     <div class="form-group">
       <div class="col-sm-offset-6 col-sm-2">
-        {{#if isReapply}}
-          <button class="btn btn-primary" id="reapply-button"><i class="fa fa-save"></i>重新申请</button>
-        {{else}}
-          <button class="btn btn-primary"><i class="fa fa-save"></i>提交</button>
-        {{/if}}
+        <button class="btn btn-primary"{{#if isReapply}}id="reapply-button"{{/if}}>
+          <i class="fa fa-save"></i>{{#if isReapply}}重新申请{{else}}提交{{/if}}
+        </button>
       </div>
     </div>
     <input type="hidden" name="income" value="{{income_after_total}}">
     <input type="hidden" name="income_first" value="{{income_before_total}}">
     <input type="hidden" name="cpa_first_total" value="{{cpa_first_total}}">
     <input type="hidden" name="cpa_after_total" value="{{cpa_after_total}}">
-    <input readonly="readonly" type="hidden" name="agreement_id" value="{{agreement_id}}">
-    <input readonly="readonly" type="hidden" name="start" value= "{{start}}">
-    <input readonly="readonly" type="hidden" name="end" value= "{{end}}">
+    <input type="hidden" name="agreement_id" value="{{agreement_id}}">
+    <input type="hidden" name="start" value= "{{start}}">
+    <input type="hidden" name="end" value= "{{end}}">
   </form>
 {{else}}
   <div role="tabpanel" class="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active"><a href="#pay" aria-controls="pay" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i> 付款方</a></li>
+      <li role="presentation" class="active"><a href="#pay" aria-controls="pay" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i>付款方</a></li>
       <li role="presentation"><a href="#accept" aria-controls="accept" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i>收款方</a></li>
       <li role="presentation"><a href="#extra" aria-controls="extra" role="tab" data-toggle="tab"><i class="fa fa-edit"></i>特批/对账单</a></li>
     </ul>
@@ -349,32 +271,15 @@
           </tr>
           <tr>
             <th>发票抬头</th>
-            <td>
-              {{#if view}}
-                {{header}}
-              {{else}}
-                <a class="edit" href="#header">{{header}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{header}}{{else}}<a class="edit" href="#header">{{header}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>发票类型</th>
-            <td>
-              {{#if view}}
-                {{pick type types}}
-              {{else}}
-                <a class="edit" href="#type" data-type="select" data-options="types">{{pick type types}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{pick type types}}{{else}}<a class="edit" href="#type" data-type="select" data-options="types">{{pick type types}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>发票内容</th>
-            <td>
-              {{#if view}}
-                {{pick content_type content_types}}
-              {{else}}
-                <a class="edit" href="#content_type" data-type="select" data-options="content_types">{{pick content_type content_types}}</a>
-              {{/if}}
+            <td>{{#if view}}{{pick content_type content_types}}{{else}}<a class="edit" href="#content_type" data-type="select" data-options="content_types">{{pick content_type content_types}}</a>{{/if}}
             </td>
           </tr>
           <tr>
@@ -384,7 +289,6 @@
               <p class="col-sm-3">红包锁屏V1.0(安卓) </p>
               <p class="col-sm-3">红包锁屏V1.0.0(IOS)</p>
             </td>
-
           </tr>
           <tr>
             <th>开票金额</th>
@@ -396,33 +300,15 @@
           </tr>
           <tr>
             <th>业务负责人</th>
-            <td>
-              {{#if view}}
-                {{pay_charger}}
-              {{else}}
-                <a class="edit" href="#pay_charger">{{pay_charger}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{pay_charger}}{{else}}<a class="edit" href="#pay_charger">{{pay_charger}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>手机号码</th>
-            <td>
-              {{#if view}}
-                {{pay_telephone}}
-              {{else}}
-                <a class="edit" href="#pay_telephone">{{pay_telephone}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{pay_telephone}}{{else}}<a class="edit" href="#pay_telephone">{{pay_telephone}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>地址</th>
-            <td>
-              {{#if view}}
-                {{pay_address}}
-              {{else}}
-                <a class="edit" href="#pay_address">{{pay_address}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{pay_address}}{{else}}<a class="edit" href="#pay_address">{{pay_address}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>日期</th>
@@ -454,23 +340,11 @@
           </tr>
           <tr>
             <th>手机号码</th>
-            <td>
-              {{#if view}}
-                {{accept_telephone}}
-              {{else}}
-                <a class="edit" href="#accept_telephone">{{accept_telephone}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{accept_telephone}}{{else}}<a class="edit" href="#accept_telephone">{{accept_telephone}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>地址</th>
-            <td>
-              {{#if view}}
-                {{accept_address}}
-              {{else}}
-                <a class="edit" href="#accept_address">{{accept_address}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{accept_address}}{{else}}<a class="edit" href="#accept_address">{{accept_address}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>日期</th>
@@ -482,41 +356,26 @@
         <table class="table table-bordered table-striped">
           <tr>
             <th width="10%">特批</th>
-            <td>
-              {{#if view}}
-                {{comment}}
-              {{else}}
-                <a class="edit" href="#comment">{{comment}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{comment}}{{else}}<a class="edit" href="#comment">{{comment}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>对账单描述</th>
-            <td>
-              {{#if view}}
-                {{attachment_desc}}
-              {{else}}
-                <a class="edit" href="#attachment_desc">{{attachment_desc}}</a>
-              {{/if}}
-            </td>
+            <td>{{#if view}}{{attachment_desc}}{{else}}<a class="edit" href="#attachment_desc">{{attachment_desc}}</a>{{/if}}</td>
           </tr>
           <tr>
             <th>客户对账单</th>
             <td>
               {{#if view}}
                 {{#if attachment}}
-                  <a>
-                    <img src="{{UPLOAD}}{{attachment}}">
-                  </a>
+                  <a><img src="{{UPLOAD}}{{attachment}}"></a>
                 {{/if}}
               {{else}}
                 {{#if attachment}}
                 <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
                   <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
+                </a>
                 {{else}}
-                  <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">
-                    上传对账单
-                  </a>
+                  <a class="edit" href="#attachment" data-type="file" data-multiple="true" data-append="true" data-refresh="true" data-removable="true">上传对账单</a>
                 {{/if}}
               {{/if}}
             </td>

@@ -73,8 +73,7 @@
       decimal = parts[1];
 
       decimal = decimal.substr(0, 2);
-    }
-    else {
+    } else {
       integral = parts[0];
       decimal = "";
     }
@@ -95,8 +94,7 @@
         modulus = p % 4;
         if (d == "0") {
           zeroCount++;
-        }
-        else {
+        } else {
           if (zeroCount > 0)
           {
             outputCharacters += digits[0];

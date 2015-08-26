@@ -1,11 +1,11 @@
 'use strict';
 (function (ns) {
-  ns.ReceiptEditor = tp.view.Loader.extend({
+  ns.InvoiceEditor = tp.view.Loader.extend({
     $context:null,
     events: {
       'click .edit': 'edit_clickHandler',
       'click .edit-button': 'editButton_clickHandler',
-      'click .receipt-button': 'receiptButton_clickHandler',
+      'click .invoice-button': 'invoiceButton_clickHandler',
       'click #reapply-button': 'reapplyButton_clickHandler',
       'success':'success_handler'
     },
@@ -31,8 +31,7 @@
             money_cut: element.income - element.income,
             remark: ''
           });
-        }
-        else{
+        } else{
           _.extend(element,{
             income_after: element.quote_rmb_after * element.cpa_after,
             rate: ((1 - element.cpa_after * element.quote_rmb_after / element.income) * 100).toFixed(2),
@@ -88,7 +87,7 @@
         model:this.model,
         title:'编辑',
         confirm: '确定',
-        content:'page/stat/receipt-detail-edit.hbs',
+        content:'page/stat/invoice-detail-edit.hbs',
         isRemote: true,
         target: target
       };
@@ -131,7 +130,6 @@
             break;
         }
       }
-
       this.render();
 
       if(!this.model.init){
@@ -143,50 +141,45 @@
       }
     },
     success_handler: function () {
-      window.location ='#/receipt/';
+      window.location ='#/invoice/';
     },
-    receiptButton_clickHandler: function (event) {
+    invoiceButton_clickHandler: function (event) {
       var target = event.currentTarget;
       var start = this.model.get('start');
       var end = this.model.get('end');
-      var ad_id = this.model.get('ad_with_agreement');
+      var ad_id = this.$('#ad_table tbody tr').eq(1).attr('id');
       var options = {
         title: target.title,
         id: ad_id,
         confirm: '确定',
-        content: "page/stat/rechoose-ad.hbs",
+        content: "page/stat/choose-ad.hbs",
         isRemote: true,
         start: start,
-        end: end
+        end: end,
+        fromInvoice: true
       };
 
       var popup = tp.popup.Manager.popup(options);
-      popup.on('confirm', this.receiptPopup_confirmHandler, this);
+      popup.on('confirm', this.invoicePopup_confirmHandler, this);
     },
-    receiptPopup_confirmHandler: function (popup) {
+    invoicePopup_confirmHandler: function (popup) {
       var ids = ""
-        ,channel = this.model.get('channel_id')
-        ,agreement = this.model.get('agreement_id')
-        ,start = this.model.get('start')
-        ,end = this.model.get('end')
-        ,len = popup.$(':checked').length
-        ,self = this;
+        , start = this.model.get('start')
+        , end = this.model.get('end')
+        , len = popup.$(':checked').length
+        , self = this;
 
       if(len){
         popup.$(':checked').each(function (i) {
           if(i + 1 != len){
-            ids += $(this).attr('id') + ',';
-          }
-          else{
-            ids += $(this).attr('id');
+            ids += $(this).val() + ',';
+          } else{
+            ids += $(this).val();
           }
         });
-
-        var newModel = new tp.model.ReceiptDetail({
+        var newModel = new tp.model.InvoiceDetail({
           start:start,
           end:end,
-          channel_id:channel,
-          agreement_id:agreement,
           ids: ids
         });
         newModel.fetch({
@@ -199,8 +192,7 @@
             }
           }
         });
-      }
-      else{
+      } else{
         alert("还未选中任何广告") ;
       }
     }

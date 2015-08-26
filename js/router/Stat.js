@@ -10,11 +10,11 @@
       'stat/:id': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
 
-      'receipt/': 'showReceipt',
-      'receipt/detail/(:id)':'receiptDetail',
-      'receipt/apply/:ad_with_agreement/:start/:end/:agreement/*ids': 'applyReceipt',
-      'receipt/reapply/:receipt_id': 'reapplyReceipt',
-      'receipt/view/:id': 'viewReceipt',
+      'invoice/': 'showInvoice',
+      'invoice/detail/(:id)':'invoiceDetail',
+      'invoice/apply/:start/:end/*ids': 'applyInvoice',
+      'invoice/reapply/:invoice_id': 'reapplyInvoice',
+      'invoice/view/:id': 'viewInvoice',
 
       'stat/analyse/': 'showAdminADStat',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
@@ -47,72 +47,59 @@
       this.$body.setFramework('has-date-range', '广告统计');
     },
 
-    showReceipt: function () {
-      this.$body.load('page/stat/receipt.html');
+    showInvoice: function () {
+      this.$body.load('page/stat/invoice.html');
       this.$body.setFramework('has-date-range', '发票统计');
     },
-    receiptDetail: function (id) {
-      var model = new tp.model.ReceiptDetail({
+    invoiceDetail: function (id) {
+      var model = new tp.model.InvoiceDetail({
         id: id
       });
       this.$body
-        .load('page/stat/new-receipt-detail.hbs',model, {
-          className: 'stat-detail',
-          loader: tp.page.ReceiptEditor,
+        .load('page/stat/invoice-detail.hbs',model, {
+          className: 'invoice-detail',
+          loader: tp.page.InvoiceEditor,
           fresh: true
         })
-        .setFramework('receipt-detail', '发票开具申请单');
+        .setFramework('invoice-detail', '发票开具申请单');
     },
-    applyReceipt: function (ad_with_agreement,start,end,agreement,ids) {
-      var prefix = agreement.substr(0,2)
-        , agreement_id = ""
-        , channel_id = "";
-      if(prefix == "a_"){
-        agreement_id = agreement.substr(2);
-      }
-      if(prefix == "c_"){
-        channel_id = agreement.substr(2);
-      }
-      var model = new tp.model.ReceiptDetail({
+    applyInvoice: function (start,end,ids) {
+      var model = new tp.model.InvoiceDetail({
         init: true,
-        ad_with_agreement: ad_with_agreement,
         start: start,
         end: end,
-        agreement_id: agreement_id,
-        channel_id: channel_id,
         ids: ids
       });
       this.$body
-        .load('page/stat/new-receipt-detail.hbs',model, {
-          className: 'receipt-apply',
-          loader: tp.page.ReceiptEditor
+        .load('page/stat/invoice-detail.hbs',model, {
+          className: 'invoice-apply',
+          loader: tp.page.InvoiceEditor
         })
-        .setFramework('receipt-apply', '发票开具申请单');
+        .setFramework('invoice-apply', '发票开具申请单');
     },
-    reapplyReceipt: function (receipt_id) {
-      var model = new tp.model.ReceiptDetail({
-        invoice_id: receipt_id,
+    reapplyInvoice: function (invoice_id) {
+      var model = new tp.model.InvoiceDetail({
+        invoice_id: invoice_id,
         isReapply: true,
         init:true
       });
       this.$body
-        .load('page/stat/new-receipt-detail.hbs',model, {
-          className: 'receipt-reapply',
-          loader: tp.page.ReceiptEditor
+        .load('page/stat/invoice-detail.hbs',model, {
+          className: 'invoice-reapply',
+          loader: tp.page.InvoiceEditor
         })
-        .setFramework('receipt-reapply', '重新申请');
+        .setFramework('invoice-reapply', '重新申请');
     },
-    viewReceipt: function (id) {
-      var model = new tp.model.ReceiptDetail({
+    viewInvoice: function (id) {
+      var model = new tp.model.InvoiceDetail({
         id: id,
         view: true
       });
       this.$body
-        .load('page/stat/new-receipt-detail.hbs',model,{
-          className: 'receipt-view',
-          loader: tp.page.ReceiptEditor
+        .load('page/stat/invoice-detail.hbs',model,{
+          className: 'invoice-view',
         })
-        .setFramework('receipt-view', '发票详情');
+        .setFramework('invoice-view', '发票详情');
     },
 
     showAdminADStat: function () {
