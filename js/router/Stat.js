@@ -98,6 +98,7 @@
       this.$body
         .load('page/stat/invoice-detail.hbs',model,{
           className: 'invoice-view',
+          loader: tp.page.InvoiceEditor
         })
         .setFramework('invoice-view', '发票详情');
     },
