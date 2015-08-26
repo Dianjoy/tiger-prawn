@@ -187,7 +187,7 @@
             var products = response.invoice.products;
             self.model.set('products',products);
             self.render();
-            if(!self.model.init){
+            if(!self.model.get('init')){
               self.model.save({products:self.model.get("products")},{patch:true}); //如果是二次编辑，就直接save
             }
           }
