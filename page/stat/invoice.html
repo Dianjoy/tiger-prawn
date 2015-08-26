@@ -74,9 +74,7 @@
       <td data-title="付款方">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
       <td data-title="金额">{{income}}</td>
       <td data-title="运营核对">
-        {{#in sub_status '1' '3'}}
-        审核中
-        {{/in}}
+        {{#in sub_status '1' '3'}}审核中{{/in}}
         {{#equal sub_status 10}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
@@ -84,17 +82,11 @@
         未通过
         {{/if}}
         {{/equal}}
-        {{#in sub_status '11' '20' '21' '30' '31' '40' '41'}}
-        通过
-        {{/in}}
-        {{#in sub_status '0' '2'}}
-          -
-        {{/in}}
+        {{#in sub_status '11' '20' '21' '30' '31' '40' '41'}}通过{{/in}}
+        {{#in sub_status '0' '2'}}-{{/in}}
       </td>
       <td data-title="特批">
-        {{#in sub_status '2' '3' '11'}}
-        审核中
-        {{/in}}
+        {{#in sub_status '2' '3' '11'}}审核中{{/in}}
         {{#equal sub_status 20}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
@@ -102,17 +94,11 @@
         未通过
         {{/if}}
         {{/equal}}
-        {{#in sub_status '21' '30' '31' '40' '41'}}
-        通过
-        {{/in}}
-        {{#in sub_status '0' '1' '10'}}
-        -
-        {{/in}}
+        {{#in sub_status '21' '30' '31' '40' '41'}}通过{{/in}}
+        {{#in sub_status '0' '1' '10'}}-{{/in}}
       </td>
       <td data-title="财务审核">
-        {{#in sub_status '0' '1' '2' '3' '11' '21'}}
-        审核中
-        {{/in}}
+        {{#in sub_status '0' '1' '2' '3' '11' '21'}}审核中{{/in}}
         {{#equal sub_status 30}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
@@ -120,17 +106,11 @@
         未通过
         {{/if}}
         {{/equal}}
-        {{#in sub_status '31' '40' '41'}}
-        通过
-        {{/in}}
-        {{#in sub_status '10' '20'}}
-        -
-        {{/in}}
+        {{#in sub_status '31' '40' '41'}}通过{{/in}}
+        {{#in sub_status '10' '20'}}-{{/in}}
       </td>
       <td data-title="地区负责人审核">
-        {{#in sub_status '0' '1' '2' '3' '11' '21' '31'}}
-        审核中
-        {{/in}}
+        {{#in sub_status '0' '1' '2' '3' '11' '21' '31'}}审核中{{/in}}
         {{#equal sub_status 40}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
@@ -138,12 +118,8 @@
         未通过
         {{/if}}
         {{/equal}}
-        {{#in sub_status '41'}}
-        通过
-        {{/in}}
-        {{#in sub_status '10' '20' '30'}}
-        -
-        {{/in}}
+        {{#in sub_status '41'}}通过{{/in}}
+        {{#in sub_status '10' '20' '30'}}-{{/in}}
       </td>
       <td data-title="快递单号">
         {{#if is_beijing}}
