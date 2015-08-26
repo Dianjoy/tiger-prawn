@@ -13,6 +13,7 @@
       <option value="">全部</option>
       <option value="31,40,41">通过</option>
       <option value="30">未通过</option>
+      <option value="0,1,2,3,11,21">审核中</option>
     </select>
   </div>
   <div class="form-group">
@@ -21,22 +22,25 @@
       <option value="">全部</option>
       <option value="41">通过</option>
       <option value="40">未通过</option>
+      <option value="0,1,2,3,11,21,31">审核中</option>
     </select>
   </div>
   <div class="form-group">
     <label>运营核对：</label>
-    <select class="form-control"  name="sub_status">
+    <select class="form-control" name="sub_status">
       <option value="">全部</option>
       <option value="11,20,21,30,31,40,41">通过</option>
       <option value="10">未通过</option>
+      <option value="1,3">审核中</option>
     </select>
   </div>
   <div class="form-group">
     <label>特批：</label>
-    <select class="form-control"  name="sub_status">
+    <select class="form-control" name="sub_status">
       <option value="">全部</option>
       <option value="21,30,31,40,41">通过</option>
       <option value="20">未通过</option>
+      <option value="2,3,11">审核中</option>
     </select>
   </div>
   <div class="form-group pull-right">
@@ -75,9 +79,9 @@
         {{/in}}
         {{#equal sub_status 10}}
         {{#if reason}}
-        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">不通过</button>
+        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
-        不通过
+        未通过
         {{/if}}
         {{/equal}}
         {{#in sub_status '11' '20' '21' '30' '31' '40' '41'}}
@@ -93,9 +97,9 @@
         {{/in}}
         {{#equal sub_status 20}}
         {{#if reason}}
-        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">不通过</button>
+        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
-        不通过
+        未通过
         {{/if}}
         {{/equal}}
         {{#in sub_status '21' '30' '31' '40' '41'}}
@@ -111,9 +115,9 @@
         {{/in}}
         {{#equal sub_status 30}}
         {{#if reason}}
-        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">不通过</button>
+        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
-        不通过
+        未通过
         {{/if}}
         {{/equal}}
         {{#in sub_status '31' '40' '41'}}
@@ -129,9 +133,9 @@
         {{/in}}
         {{#equal sub_status 40}}
         {{#if reason}}
-        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">不通过</button>
+        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
-        不通过
+        未通过
         {{/if}}
         {{/equal}}
         {{#in sub_status '41'}}
