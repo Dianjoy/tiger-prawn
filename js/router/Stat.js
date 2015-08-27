@@ -13,7 +13,7 @@
       'invoice/': 'showInvoice',
       'invoice/detail/(:id)':'invoiceDetail',
       'invoice/apply/:start/:end/*ids': 'applyInvoice',
-      'invoice/reapply/:invoice_id': 'reapplyInvoice',
+      'invoice/reapply/:id': 'reapplyInvoice',
       'invoice/view/:id': 'viewInvoice',
 
       'stat/analyse/': 'showAdminADStat',
@@ -77,9 +77,9 @@
         })
         .setFramework('invoice-apply', '发票开具申请单');
     },
-    reapplyInvoice: function (invoice_id) {
+    reapplyInvoice: function (id) {
       var model = new tp.model.InvoiceDetail({
-        invoice_id: invoice_id,
+        id: id,
         isReapply: true,
         init:true
       });

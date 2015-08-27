@@ -4,15 +4,11 @@
     urlRoot: tp.API + 'invoice/',
     initialize: function (options) {
       if(this.isNew()){
-        if(options.isReapply){
-          this.urlRoot += options.invoice_id;
-        } else{
-          var products = options.ids.split(',');
-          this.urlRoot += 'init'
-            + '?start=' + options.start
-            + '&end=' + options.end
-            + '&adids=' + products;
-        }
+        var products = options.ids.split(',');
+        this.urlRoot += 'init'
+          + '?start=' + options.start
+          + '&end=' + options.end
+          + '&adids=' + products;
       }
       if(options.view){
         this.view = options.view;

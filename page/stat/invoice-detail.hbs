@@ -6,7 +6,7 @@
   </div>
 </div>
 
-<table class="table table-bordered table-striped responsive-table" data-url=" " id="ad_table">
+<table class="table table-bordered table-striped responsive-table" id="ad_table">
   <thead>
   <tr>
     <th>推广期间</th>
@@ -69,7 +69,7 @@
       <div class="form-group">
         <label class="control-label col-sm-2">付款方：</label>
         <div class="col-sm-2">
-          <input type="text" name="{{#if company}}company{{else}}full_name{{/if}}" value="{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}" class="readonly" readonly>
+          <p class="form-control-static">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</p>
         </div>
         <div class="col-sm-2">
           <p class="form-control-static">(确认盖章)</p>
@@ -86,7 +86,7 @@
         <div class="col-sm-2">
           <select class="form-control" name="type">
             <option value="0" {{#equal type 0}}selected{{/equal}}>增值税普通发票</option>
-            <option value="1"{{#equal type 1}}selected{{/equal}}>增值税专用发票</option>
+            <option value="1" {{#equal type 1}}selected{{/equal}}>增值税专用发票</option>
           </select>
         </div>
       </div>
@@ -155,25 +155,25 @@
       <div class="form-group">
         <label class="control-label col-sm-2">收款方：</label>
         <div class="col-sm-6">
-          <input readonly="readonly" type="text" value="{{accept_company}}" class="readonly">
+          <p class="form-control-static">{{accept_company}}</p>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2">开户名称：</label>
         <div class="col-sm-6">
-          <input readonly="readonly" type="text" name="accept_company" value="{{accept_company}}" class="readonly">
+          <p class="form-control-static">{{accept_company}}</p>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2">开户银行：</label>
         <div class="col-sm-6">
-          <input readonly="readonly" type="text" name="accept_bank" value="{{accept_bank}}" class="readonly">
+          <p class="form-control-static">{{accept_bank}}</p>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-2">开户账号：</label>
         <div class="col-sm-6">
-          <input readonly="readonly" type="text" name="accept_account" value="{{accept_account}}" class="readonly">
+          <p class="form-control-static">{{accept_account}}</p>
         </div>
       </div>
       <div class="form-group">
@@ -187,7 +187,7 @@
                 {{/each}}
               </select>
             {{else}}
-              <input readonly="readonly" type="text" value={{applicant}} name="applicant" class="readonly">
+              <p class="form-control-static">{{applicant}}</p>
             {{/if}}
           {{else}}
             <p class="form-control-static">{{#if charger}}{{charger}}{{else}}{{applicant}}{{/if}}</p>
