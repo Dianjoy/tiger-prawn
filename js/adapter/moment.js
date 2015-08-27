@@ -5,5 +5,5 @@
 (function (m) {
   m.DATE_FORMAT = 'YYYY-MM-DD';
   m.TIME_FORMAT = 'HH:mm:ss';
-  m.defaultFormat = m.DATE_FORMAT + ' ' + m.TIME_FORMAT;
+  m.DATETIME_FORMAT = m.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
 }(moment));

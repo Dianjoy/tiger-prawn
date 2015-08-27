@@ -88,6 +88,12 @@
           popup = context.createInstance(ns.CheckboxEditor, options);
           break;
 
+        case 'date':
+        case 'time':
+        case 'datetime':
+          popup = context.createInstance(ns.DateTimeEditor, options);
+          break;
+
         default:
           popup = context.createInstance(ns.Editor, options);
           break;

@@ -47,7 +47,7 @@
         this.$('script').empty();
       }
 
-      var dateFields = this.$('[type=datetime]');
+      var dateFields = this.$('.datetimepicker');
       if (dateFields.length) {
         dateFields.each(function () {
           $(this).datetimepicker($(this).data());
@@ -274,6 +274,15 @@
         }
       }
       Editor.prototype.render.call(this, response);
+    }
+  });
+
+  ns.DateTimeEditor = Editor.extend({
+    initialize: function (options) {
+      options.format = moment[this.options.type.toUpperCase() + '_FORMAT'];
+      options.realType = options.type;
+      options.type = 'datetime';
+      Editor.prototype.initialize.call(this, options);
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));

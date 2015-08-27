@@ -180,7 +180,7 @@
 (function (m) {
   m.DATE_FORMAT = 'YYYY-MM-DD';
   m.TIME_FORMAT = 'HH:mm:ss';
-  m.defaultFormat = m.DATE_FORMAT + ' ' + m.TIME_FORMAT;
+  m.DATETIME_FORMAT = m.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
 }(moment));;
 (function () {
   var data = {}
@@ -204,11 +204,21 @@
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard(/)': 'showDashboard'
+      'dashboard(/)': 'showDashboard',
+      'my/profile/': 'showMyProfile'
     },
     showDashboard: function () {
       this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
       this.$body.setFramework('dashboard', '新近数据统计');
+    },
+    showMyProfile: function () {
+      this.$body.load('page/cp/profile.hbs', this.$me, {
+        data: {
+          full: true
+        },
+        refresh: true
+      });
+      this.$body.setFramework('me profile', '我的账户');
     },
     showUserPage: function (page) {
       if (page === 'logout') {
@@ -374,6 +384,12 @@
 
         case 'checkbox':
           popup = context.createInstance(ns.CheckboxEditor, options);
+          break;
+
+        case 'date':
+        case 'time':
+        case 'datetime':
+          popup = context.createInstance(ns.DateTimeEditor, options);
           break;
 
         default:
@@ -558,17 +574,21 @@
       if (id) {
         this.$body.start(true);
         tp.notification.Manager.start();
-        var route;
-        if (!Backbone.History.started) {
-          route = Backbone.history.start({
-            root: tp.BASE
-          });
-        }
-        if (!route || /^#\/user\/\w+$/.test(location.hash)) {
-          var from = localStorage.getItem(tp.PROJECT + '-from');
-          from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
-          location.hash = from || tp.startPage || '#/dashboard';
-        }
+
+        // 延迟10ms，避免事件顺序导致问题
+        setTimeout(function () {
+          var route;
+          if (!Backbone.History.started) {
+            route = Backbone.history.start({
+              root: tp.BASE
+            });
+          }
+          if (!route || /^#\/user\/\w+$/.test(location.hash)) {
+            var from = localStorage.getItem(tp.PROJECT + '-from');
+            from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
+            location.hash = from || tp.startPage || '#/dashboard';
+          }
+        }, 10);
       } else {
         if (this.$body.isStart && location.hash !== '#/user/logout') {
           var login = tp.config.login;
@@ -1037,6 +1057,11 @@
       if (this.model instanceof Backbone.Model) {
         this.model.on('invalid', this.model_invalidHandler, this);
       }
+      // 表单中有{{API}}
+      var action = decodeURIComponent(this.$el.attr('action'));
+      if (action.indexOf('{{API}}') != -1) {
+        this.el.action = action.replace('{{API}}', tp.API);
+      }
       this.initUploader();
     },
     remove: function () {
@@ -1272,7 +1297,8 @@
         });
 
         // 有url就保存，不然就直接记录值
-        if (_.result(this.model, 'urlRoot') || _.result(this.model.collection, 'url')) {
+        try {
+          var url = _.result(this.model, 'url');
           this.model.save(attr, {
             patch: true,
             wait: true,
@@ -1283,7 +1309,7 @@
               self.submit_errorHandler(response);
             }
           });
-        } else {
+        } catch (e) {
           this.model.set(attr);
         }
         return false;
@@ -2011,7 +2037,7 @@
         this.$('script').empty();
       }
 
-      var dateFields = this.$('[type=datetime]');
+      var dateFields = this.$('.datetimepicker');
       if (dateFields.length) {
         dateFields.each(function () {
           $(this).datetimepicker($(this).data());
@@ -2240,6 +2266,15 @@
       Editor.prototype.render.call(this, response);
     }
   });
+
+  ns.DateTimeEditor = Editor.extend({
+    initialize: function (options) {
+      options.format = moment[this.options.type.toUpperCase() + '_FORMAT'];
+      options.realType = options.type;
+      options.type = 'datetime';
+      Editor.prototype.initialize.call(this, options);
+    }
+  });
 }(Nervenet.createNameSpace('tp.popup')));;
 (function (ns) {
   ns.Loader = Backbone.View.extend({
@@ -2252,21 +2287,21 @@
     initialize: function (options) {
       if (this.model instanceof Backbone.Model && !options.hasData) {
         this.model.once('sync', this.model_syncHandler, this);
-        this.model.fetch();
+        this.model.fetch(options);
       } else {
         this.isModelReady = true;
       }
 
       $.get(options.template, _.bind(this.template_getHandler, this), 'html');
 
-      if ('fresh' in options) {
-        this.fresh = options.fresh;
+      if ('refresh' in options) {
+        this.refresh = options.refresh;
       }
     },
     render: function () {
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
-      if (this.fresh) {
-        this.fresh = false;
+      if (this.refresh) {
+        this.refresh = false;
         this.model.on('change', this.model_changeHandler, this);
       }
       var self = this
@@ -2323,7 +2358,6 @@
       this.container = this.$('#page-container');
       this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
-      this.model.on('change:fullname', this.model_nameChangeHandler, this);
       this.$el.popover({
         selector: '[data-toggle=popover]'
       });
@@ -2404,6 +2438,7 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
+        this.$el.toggleClass('cp', this.model.get('cp'));
       }
     },
     addButton_clickHandler: function (event) {
@@ -2419,9 +2454,6 @@
       this.container.html(marked(response));
       this.loading.remove();
       this.trigger('load:complete');
-    },
-    model_nameChangeHandler: function (model, name) {
-      this.$('.username').html(name);
     },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
@@ -2453,6 +2485,44 @@
       }
       this.loading.remove();
       this.trigger('load:complete');
+    }
+  });
+}(Nervenet.createNameSpace('tp.view')));;
+(function (ns) {
+  ns.Me = Backbone.View.extend({
+    events: {
+
+    },
+    initialize: function () {
+      this.model.on('change', this.model_changeHandler, this);
+    },
+    setFullname: function (fullname) {
+      this.$('.username').text(fullname);
+    },
+    setFace: function (face) {
+      this.$('.face').attr('src', face);
+    },
+    setBalance: function (balance) {
+      this.$('.balance').text(balance);
+    },
+    model_changeHandler: function (model) {
+      var key, value;
+      for (key in model.changed) {
+        value = model.changed[key];
+        switch (key) {
+          case 'fullname':
+            this.setFullname(value);
+            break;
+
+          case 'face':
+            this.setFace(value);
+            break;
+
+          case 'balance':
+            this.setBalance(value);
+            break;
+        }
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
