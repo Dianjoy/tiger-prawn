@@ -279,7 +279,7 @@
 
   ns.DateTimeEditor = Editor.extend({
     initialize: function (options) {
-      options.format = moment[this.options.type.toUpperCase() + '_FORMAT'];
+      options.format = moment[options.type.toUpperCase() + '_FORMAT'];
       options.realType = options.type;
       options.type = 'datetime';
       Editor.prototype.initialize.call(this, options);
