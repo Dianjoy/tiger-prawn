@@ -535,7 +535,10 @@
     },
     syncHandler: function () {
       if ('id' in this.changed) {
-        location.hash = '#/ad/' + this.id;
+        var hash = '#/ad/' + this.id;
+        setTimeout(function () {
+          location.hash = hash;
+        }, 3000);
         this.urlRoot = tp.API + 'ad/';
       }
     }
@@ -1213,7 +1216,6 @@
     },
     submit_successHandler: function(response) {
       this.displayResult(true, response.msg, 'smile-o');
-      smart.recordHistory(this.el);
       this.$el.trigger('success', response);
       this.trigger('success', response);
     },
@@ -1668,7 +1670,6 @@
         this.$el.prop('readonly', true);
         this.spinner = this.spinner || $(tp.component.spinner);
         this.spinner.insertAfter(this.$el);
-        tp.component.SmartForm.recordHistory('keyword', event.target.value);
       }
     }
   });
@@ -2438,7 +2439,7 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
-        this.$el.toggleClass('cp', this.model.get('cp'));
+        this.$el.toggleClass('cp', !!this.model.get('cp'));
       }
     },
     addButton_clickHandler: function (event) {

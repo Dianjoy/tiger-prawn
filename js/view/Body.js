@@ -17,7 +17,6 @@
       this.container = this.$('#page-container');
       this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
-      this.model.on('change:fullname', this.model_nameChangeHandler, this);
       this.$el.popover({
         selector: '[data-toggle=popover]'
       });
@@ -98,7 +97,7 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
-        this.$el.toggleClass('cp', this.model.get('cp'));
+        this.$el.toggleClass('cp', !!this.model.get('cp'));
       }
     },
     addButton_clickHandler: function (event) {
@@ -114,9 +113,6 @@
       this.container.html(marked(response));
       this.loading.remove();
       this.trigger('load:complete');
-    },
-    model_nameChangeHandler: function (model, name) {
-      this.$('.username').html(name);
     },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);

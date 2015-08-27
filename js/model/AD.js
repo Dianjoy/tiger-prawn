@@ -56,7 +56,10 @@
     },
     syncHandler: function () {
       if ('id' in this.changed) {
-        location.hash = '#/ad/' + this.id;
+        var hash = '#/ad/' + this.id;
+        setTimeout(function () {
+          location.hash = hash;
+        }, 3000);
         this.urlRoot = tp.API + 'ad/';
       }
     }

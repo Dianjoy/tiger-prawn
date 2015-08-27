@@ -2,6 +2,10 @@ $(function () {
   // start here
   var context = Nervenet.createContext()
     , me = new tp.model.Me()
+    , profile = new tp.view.Me({
+      el: '.me',
+      model: me
+    })
     , body = new tp.view.Body({
       el: 'body',
       model: me

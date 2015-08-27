@@ -197,7 +197,6 @@
     },
     submit_successHandler: function(response) {
       this.displayResult(true, response.msg, 'smile-o');
-      smart.recordHistory(this.el);
       this.$el.trigger('success', response);
       this.trigger('success', response);
     },
