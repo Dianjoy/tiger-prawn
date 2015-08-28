@@ -188,7 +188,11 @@
             self.model.set('products',products);
             self.render();
             if(!self.model.get('init')){
-              self.model.save({products:self.model.get("products")},{patch:true}); //如果是二次编辑，就直接save
+              self.model.save({
+                products:self.model.get("products"),
+                income:self.model.options.income_after_total,
+                income_first:self.model.options.income_before_total
+              },{patch:true}); //如果是二次编辑，就直接save
             }
           }
         });
