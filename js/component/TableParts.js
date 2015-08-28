@@ -199,6 +199,9 @@
 
       // 用options里的值填充select
       var options = this.collection.options;
+      if (!options) {
+        return;
+      }
       this.$('select').each(function () {
         var self = $(this)
           , name = self.data('options');
