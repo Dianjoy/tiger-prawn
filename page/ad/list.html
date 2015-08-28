@@ -41,11 +41,11 @@
       <td data-title="负责人">{{execute_owner}}</td>
       <td data-title="报价">
         {{#if set_quote_rmb}}
-        <span title="申请已提交，等待审核">{{#if previous}}{{previous.quote_rmb}}{{else}}{{./quote_rmb}}{{/if}} / {{set_quote_rmb}}</span>
+        <span title="申请已提交，等待审核">{{#if previous}}{{d100 previous.quote_rmb}}{{else}}{{d100 ./quote_rmb}}{{/if}} / {{d100 set_quote_rmb}}</span>
         {{else if cp}}
-        <span>{{quote_rmb}}</span>
+        <span>{{d100 quote_rmb}}</span>
         {{else}}
-        <a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-comment="message" data-refresh="true">{{quote_rmb}}</a>
+        <a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-comment="message" data-refresh="true">{{d100 quote_rmb}}</a>
         {{/if}}
       </td>
       <td data-title="每日投放">

@@ -33,7 +33,7 @@
       <td data-title="管理名">
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
       </td>
-      <td data-title="报价">{{quote_rmb}}</td>
+      <td data-title="报价">&yen;{{d100 quote_rmb}}</td>
       <td data-title="每日投放">{{job_num}}</td>
       <td data-title="今日尚余">{{num}}</td>
       <td data-title="状态">
@@ -42,19 +42,23 @@
         <span class="label label-default" title="关键词" data-toggle="popover" data-content="{{keywords}}" data-placement="top">ASO</span>
         {{/if}}
       </td>
-      <td data-title="开始时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
-      <td data-title="结束时间"><time datetime="{{status_time}}">{{moment status_time}}</time></td>
+      <td data-title="开始时间"><time datetime="{{start_time}}">{{moment start_time}}</time></td>
+      <td data-title="结束时间"><time datetime="{{end_time}}">{{moment end_time}}</time></td>
       <td data-title="备注">
         {{#if others}}<p>{{others}}</p>{{/if}}
       </td>
       <td data-title="操作">
         <div class="btn-group">
           {{#equal status 1}}
-          <button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>
+          <a href="#status" class="btn btn-success" title="继续投放"><i class="fa fa-play"></i></a>
+          {{else equal status 0}}
+          <a href="#status" class="btn btn-warning" title="停止投放"><i class="fa fa-pause"></i></a>
           {{else}}
-          <button class="btn btn-warning delete-button" title="停止投放"><i class="fa fa-pause"></i></button>
+          <button type="button" class="btn btn-danger delete-button" title="删除广告" data-msg="确定要删除此广告么？之后不能恢复。"><i class="fa fa-times"></i> 删除广告</button>
           {{/equal}}
+          {{#in status 0 1}}
           <a class="btn btn-info" title="统计信息" href="#/stat/{{id}}"><i class="fa fa-line-chart"></i></a>
+          {{/in}}
         </div>
       </td>
     </tr>
