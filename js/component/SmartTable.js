@@ -247,7 +247,7 @@
       var target = $(event.currentTarget)
         , path = target.attr('href').split('/').slice(-2)
         , hasFilter = this.model.has(path[0]);
-      this.model.set(path[0], path[1]);
+      this.model.set(path[0], path[1], {reset: true});
       if (hasFilter) {
         this.$('.filters').find('[href="#/' + path[0] + '"]').replaceWith(target.clone());
       } else {
@@ -258,7 +258,7 @@
     theadFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)
         , path = target.attr('href').split('/').slice(-2);
-      this.model.unset(path[0]);
+      this.model.unset(path[0], {reset: true});
       target.remove();
       event.preventDefault();
     }
