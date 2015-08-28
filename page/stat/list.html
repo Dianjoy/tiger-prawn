@@ -42,7 +42,7 @@
       <td data-title="激活数">{{transfer}}</td>
       <td data-title="费用">&yen; {{d100 cost}}</td>
       <td>
-        <div class="btn-group">
+        <div class="btn-group"  style="position:static">
           <a href="#/stat/{{id}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a>
           {{# if agreement_id}}
             <a class="btn btn-info popup" href="page/stat/choose-ad.hbs" title="发票申请-{{channel_alias}}" data-id="{{id}}" data-collection-id="stat" data-confirm="确定"><i class="fa fa-file-text"></i></a>

@@ -102,7 +102,7 @@
 
         case 'edit-button comment':
           this.model.options.isComment = true;
-          this.model.options.val = '';
+          this.model.options.val = $(target).text() == '编辑' ? '' : $(target).text();
           break;
       }
 
@@ -126,7 +126,7 @@
             break;
 
           case 'edit-button comment':
-            product = _.extend(product,{remark: val});
+            product = _.extend(product,{remark: val.trim()});
             break;
         }
       }
@@ -147,7 +147,7 @@
       var target = event.currentTarget;
       var start = this.model.get('start');
       var end = this.model.get('end');
-      var ad_id = this.$('#ad_table tbody tr').eq(1).attr('id');
+      var ad_id = this.$('#ad_table tbody tr').eq(0).attr('id');
       var options = {
         title: target.title,
         id: ad_id,
