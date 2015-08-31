@@ -109,9 +109,9 @@
     },
     editPopup_confirmHandler: function (popup) {
       var val = popup.$('input').val()
-         ,target = popup.options.target
-         ,ad_id = $(target).closest('tr').attr('id')
-         ,product = _.findWhere(this.model.get('products'),{ad_id: ad_id});
+        , target = popup.options.target
+        , ad_id = $(target).closest('tr').attr('id')
+        , product = _.findWhere(this.model.get('products'),{ad_id: ad_id});
 
       if(val){
         switch ($(target).attr('class')){
