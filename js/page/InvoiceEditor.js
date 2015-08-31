@@ -36,7 +36,7 @@
             income_after: e.quote_rmb_after * e.cpa_after,
             rate: ((1 - e.cpa_after * e.quote_rmb_after / e.income) * 100).toFixed(2),
             money_cut: e.income - e.quote_rmb_after * e.cpa_after
-          })
+          });
         }
 
         cpa_first_total += Number(e.cpa);
@@ -58,14 +58,14 @@
         }
       });
 
-      _.extend(this.model.options,{
+      _.extend(opt,{
         cpa_first_total: cpa_first_total,
         cpa_after_total: cpa_after_total,
         income_after_total: income_after_total,
         income_before_total: income_before_total,
         joy_income: joy_income,
         red_ad_income: red_ad_income,
-        red_ios_income:red_ios_income
+        red_ios_income: red_ios_income
       });
 
       tp.view.Loader.prototype.render.call(this);
@@ -84,28 +84,26 @@
     editButton_clickHandler: function (event) {
       var target = event.currentTarget;
       var options = {
-        model:this.model,
-        title:'编辑',
+        title: '编辑',
         confirm: '确定',
-        content:'page/stat/invoice-detail-edit.hbs',
+        content: 'page/stat/invoice-detail-edit.hbs',
         isRemote: true,
         target: target
       };
       switch ($(target).attr('class')){
         case 'edit-button cpa-after':
-          this.model.options.val = $(target).text();
+          options.val = $(target).text();
           break;
 
         case 'edit-button price-after':
-          this.model.options.val = $(target).text().substr(1);
+          options.val = $(target).text().substr(1);
           break;
 
         case 'edit-button comment':
-          this.model.options.isComment = true;
-          this.model.options.val = $(target).text() == '编辑' ? '' : $(target).text();
+          options.isComment = true;
+          options.val = $(target).text() == '编辑' ? '' : $(target).text();
           break;
       }
-
       var popup = tp.popup.Manager.popup(options);
       popup.on('confirm', this.editPopup_confirmHandler, this);
     },
@@ -118,15 +116,15 @@
       if(val){
         switch ($(target).attr('class')){
           case 'edit-button cpa-after':
-            product = _.extend(product,{cpa_after: val});
+            product.cpa_after = val;
             break;
 
           case 'edit-button price-after':
-            product = _.extend(product,{quote_rmb_after: val});
+            product.quote_rmb_after = val;
             break;
 
           case 'edit-button comment':
-            product = _.extend(product,{remark: val.trim()});
+            product.remark = val.trim();
             break;
         }
       }
@@ -137,7 +135,7 @@
           products: this.model.get('products'),
           income: this.model.options.income_after_total,
           income_first: this.model.options.income_before_total
-        },{patch:true});
+        },{patch: true});
       }
     },
     success_handler: function () {
@@ -178,20 +176,19 @@
           }
         });
         var newModel = new tp.model.InvoiceDetail({
-          start:start,
-          end:end,
+          start: start,
+          end: end,
           ids: ids
         });
         newModel.fetch({
           success: function (model,response) {
-            var products = response.invoice.products;
-            self.model.set('products',products);
+            self.model.set('products',response.invoice.products);
             self.render();
             if(!self.model.get('init')){
               self.model.save({
-                products:self.model.get("products"),
-                income:self.model.options.income_after_total,
-                income_first:self.model.options.income_before_total
+                products: self.model.get("products"),
+                income: self.model.options.income_after_total,
+                income_first: self.model.options.income_before_total
               },{patch:true}); //如果是二次编辑，就直接save
             }
           }
