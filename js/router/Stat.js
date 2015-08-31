@@ -81,7 +81,7 @@
       var model = new tp.model.InvoiceDetail({
         id: id,
         isReapply: true,
-        init:true
+        init: true
       });
       this.$body
         .load('page/stat/invoice-detail.hbs',model, {
