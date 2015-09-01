@@ -1670,6 +1670,7 @@
         this.$el.prop('readonly', true);
         this.spinner = this.spinner || $(tp.component.spinner);
         this.spinner.insertAfter(this.$el);
+        event.preventDefault();
       }
     }
   });
@@ -1725,6 +1726,9 @@
       var target = event.target
         , name = target.name
         , value = target.value;
+      if (!name) {
+        return;
+      }
       if (!value) {
         this.model.unset(name, {reset: true});
       } else {
