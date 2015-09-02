@@ -12,6 +12,7 @@
     render: function () {
       var products = this.model.get('products');
       var opt = this.model.options;
+      var self = this;
       var rmb = '';
       var obj = {
         cpa_first_total: 0,
@@ -62,17 +63,16 @@
       });
       _.extend(opt, obj);
 
+      var callback = function (components) {
+        var smartTable = components[0];
+        products.push({rmb: rmb});
+        smartTable.collection.on('change', self.collection_changeHandler, self);
+        smartTable.collection.options = opt;
+        smartTable.collection.reset(products);
+        products.pop();
+      };
       tp.view.Loader.prototype.render.call(this);
-      //var components = [];
-      //tp.component.Manager.loadMediatorClass(components, 'tp.component.SmartTable', {url: "", autoFetch: false}, this.$('#ad_table'));
-      //var smartTable = components[0];
-      var smartTable = this.$context.createInstance(tp.component.SmartTable, {url: "", autoFetch: false, el: this.$('#ad_table')});
-
-      products.push({rmb: rmb});
-      smartTable.collection.on('change', this.collection_changeHandler, this);
-      smartTable.collection.options = opt;
-      smartTable.collection.reset(products);
-      products.pop();
+      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: "", autoFetch: false}, this.$('#ad_table'), callback);
     },
     collection_changeHandler: function (data) {
       var product = _.findWhere(this.model.get('products'), {id: data.id});
