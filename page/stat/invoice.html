@@ -74,7 +74,7 @@
       <td data-title="付款方">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
       <td data-title="金额">{{income}}</td>
       <td data-title="运营核对">
-        {{#equal sub_status 8}}审核中{{/in}}
+        {{#equal sub_status 8}}审核中{{/equal}}
         {{#equal sub_status 9}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
@@ -115,7 +115,7 @@
         未通过
         {{/if}}
         {{/equal}}
-        {{#greater sub_status 39}}通过{{/in}}
+        {{#greater sub_status 39}}通过{{/greater}}
       </td>
       <td data-title="快递单号">
         {{#if is_beijing}}
