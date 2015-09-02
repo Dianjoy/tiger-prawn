@@ -1,6 +1,7 @@
 <form class="form-horizontal model-editor Android {{pick province_type '' 'show-provinces'}}" method="post" enctype="multipart/form-data" id="ad-editor">
   <input type="hidden" name="id" value="">
   <input type="hidden" name="pack_md5" value="">
+  <input type="hidden" name="salt" value="{{salt}}" >
   <fieldset>
     <a name="pack"></a>
     <legend>请先上传安装包，或填入抓取链接</legend>
@@ -130,7 +131,7 @@
     <div class="form-group iPhone">
       <label class="col-sm-2 control-label" for="url_type">URL scheme</label>
       <div class="col-sm-10">
-        <input name="url_type" id="url_type" value="{{url_type}}" class="form-control">
+        <input name="url_type" id="url_type" value="{{url_type}}" class="form-control" readonly>
       </div>
     </div>
     <div class="form-group iPhone">
@@ -309,12 +310,6 @@
         <p class="help-block">
           绑定IP后将不在校验验证码。多个IP可以用“;”分割，最多可以绑定12个的IP。
         </p>
-      </div>
-    </div>
-    <div class="form-group iPhone">
-      <label class="col-sm-2 control-label" for="salt">加分校验码</label>
-      <div class="col-sm-10">
-        <input type="text" name="salt" id="salt" value="{{salt}}" class="form-control" />
       </div>
     </div>
   </fieldset>
