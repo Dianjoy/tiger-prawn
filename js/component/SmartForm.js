@@ -340,5 +340,17 @@
         , name = button.value
         , prop = button.checked;
       $('[name="' + name + '"]').prop('checked', prop);
+    })
+    .on('click change', '[data-toggle-class]', function (event) {
+      var button = $(event.currentTarget)
+        , data = button.data()
+        , target = data.target
+        , className = data.toggleClass
+        , group = data.group
+        , join = Array.prototype.join
+        , classes = join.call($('[data-toggle-class][data-group="' + group + '"]').map(function () {
+          return this.dataset.toggleClass;
+        }), ' ');
+      $(target).removeClass(classes).addClass(className);
     });
 }(Nervenet.createNameSpace('tp.component')));

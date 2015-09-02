@@ -19,12 +19,14 @@
     },
     create: function () {
       var model = new tp.model.AD()
-        , page = this.$me.get('role') === 'cp' ? '_cp' : '';
-      this.$body
-        .load('page/ad/edit' + page + '.hbs', model, {
+        , im_cp = this.$me.get('role') === 'cp'
+        , page = im_cp ? '_cp' : ''
+        , options = {
           className: 'ad ad-new',
-          loader: tp.page.AdEditor
-        })
+          loader: im_cp ? null : tp.page.AdEditor
+        };
+      this.$body
+        .load('page/ad/edit' + page + '.hbs', model, options)
         .setFramework('ad ad-new', '创建广告');
     },
     edit: function (id) {
@@ -45,7 +47,7 @@
         .load(page)
         .setFramework('ad ad-list', '我的广告');
     },
-    listApplies: function (id) {
+    listApplies: function () {
       this.$body
         .load('page/ad/apply.html')
         .setFramework('apply', '我的申请');
@@ -55,7 +57,7 @@
         .load('page/ad/competitor.html')
         .setFramework('competitor', '竞品广告状态');
     },
-    showHistoryInfo: function (query) {
+    showHistoryInfo: function () {
       this.$body
         .load('page/info.html')
         .setFramework('info', '广告投放情报');

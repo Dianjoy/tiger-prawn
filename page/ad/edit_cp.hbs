@@ -1,7 +1,8 @@
 <div class="row">
-  <form class="form-horizontal model-editor iPhone col-sm-8 col-xs-12" method="post" enctype="multipart/form-data" id="ad-editor">
+  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" enctype="multipart/form-data" id="ad-editor">
     <input type="hidden" name="id" value="">
     <input type="hidden" name="ad_app_type" value="2">
+    <input type="hidden" name="cate" value="1">
     <fieldset class="collapsible">
       <a name="basic-info"></a>
       <legend>基础信息</legend>
@@ -25,9 +26,9 @@
       <div class="form-group iPhone">
         <label class="col-sm-2 control-label">投放类型</label>
         <div class="col-sm-10 select-button">
-          <input type="radio" name="search_flag" value="0" id="search_flag-1" checked>
+          <input type="radio" name="search_flag" value="0" id="search_flag-1" checked data-toggle-class="offer" data-group="search_flag" data-target="#ad-editor">
           <label for="search_flag-1">普通广告</label>
-          <input type="radio" name="search_flag" value="1" id="search_flag-2">
+          <input type="radio" name="search_flag" value="1" id="search_flag-2" data-toggle-class="aso" data-group="search_flag" data-target="#ad-editor">
           <label for="search_flag-2">ASO广告</label>
         </div>
       </div>
@@ -49,16 +50,10 @@
           <label class="control-label">需要</label>
         </div>
       </div>
-      <div class="form-group iPhone aso">
-        <label class="col-sm-2 control-label" for="rank">目标排名</label>
-        <div class="col-sm-6">
-          <input type="range" min="1" max="15" name="rank" id="rank" value="10"><span class="help-inline">10</span>
-        </div>
-      </div>
       <div class="form-group">
         <label class="col-sm-2 control-label" for="quote_rmb">应用类型</label>
         <div class="col-sm-10 select-button">
-          <input type="radio" name="quote_rmb" value="300" id="quote_rmb-1">
+          <input type="radio" name="quote_rmb" value="300" id="quote_rmb-1" checked>
           <label for="quote_rmb-1">免费应用（&yen;3.00）</label>
           <input type="radio" name="quote_rmb" value="600" id="quote_rmb-2">
           <label for="quote_rmb-2">付费应用（&yen;6.00）</label>
@@ -80,13 +75,19 @@
       <div class="form-group">
         <label class="col-sm-2 control-label" for="start_time">开始时间</label>
         <div class="col-sm-6">
-          <input type="datetime" name="start_time" id="start_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
+          <div class="input-group">
+            <input type="datetime" name="start_time" id="start_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
+            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+          </div>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label" for="end_time">结束时间</label>
         <div class="col-sm-6">
-          <input type="datetime" name="end_time" id="end_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
+          <div class="input-group">
+            <input type="datetime" name="end_time" id="end_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
+            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+          </div>
         </div>
       </div>
       <div class="form-group Android">
@@ -168,6 +169,8 @@
         <div class="panel-body">
           <ul>
             <li>如需要做技术对接，请联系点乐技术。</li>
+            <li>ASO广告多个关键词请建立多个计划。</li>
+            <li>如果有特殊需求，可以在“其它投放要求”中描述，我们会尽量满足您。</li>
           </ul>
         </div>
       </div>
