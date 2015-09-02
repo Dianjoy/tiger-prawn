@@ -1,157 +1,176 @@
-<div class="alert alert-info">如需要做技术对接，请联系点乐技术。</div>
-
-<form class="form-horizontal model-editor iPhone {{pick province_type '' 'show-provinces'}}" method="post" enctype="multipart/form-data" id="ad-editor">
-  <input type="hidden" name="id" value="">
-  <input type="hidden" name="ad_app_type" value="2">
-  <fieldset class="collapsible">
-    <a name="basic-info"></a>
-    <legend>基础信息</legend>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="ad_name">广告名</label>
-      <div class="col-sm-6">
-        <input type="text" name="ad_name" id="ad_name" value="{{ad_name}}" class="form-control" required />
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="ad_type">广告类型</label>
-      <div class="col-sm-10">
-        <select name="ad_type" id="ad_type" class="form-control" required>
-          <option value="">无分类</option>
-          {{#each ad_types}}
-          <option value="{{id}}">{{label}}</option>
-          {{/each}}
-        </select>
-      </div>
-    </div>
-  </fieldset>
-
-  <fieldset>
-    <a name="tou"></a>
-    <legend>投放信息</legend>
-    <div class="form-group iPhone">
-      <label class="col-sm-2 control-label">投放类型</label>
-      <div class="col-sm-10 select-button">
-        <input type="radio" name="search_flag" value="0" id="search_flag-1" checked>
-        <label for="search_flag-1">普通广告</label>
-        <input type="radio" name="search_flag" value="1" id="search_flag-2">
-        <label for="search_flag-2">ASO广告</label>
-      </div>
-    </div>
-    <div class="form-group iPhone aso">
-      <label class="col-sm-2 control-label" for="keywords">ASO搜索词</label>
-      <div class="col-sm-10">
-        <input type="text" name="keywords" class="form-control" id="keywords">
-        <p class="help-block">
-          搜索ASO搜索词时，对应的应用排序需要在1-1000名以内。
-        </p>
-      </div>
-    </div>
-    <div class="form-group iPhone aso">
-      <label class="col-sm-2 control-label">是否需要用户手动搜索</label>
-      <div class="col-sm-10">
-        <label class="control-label">不需要</label>
-        <input type="checkbox" class="switch" name="aso_middle_page" value="1" id="aso_middle_page" checked>
-        <label for="aso_middle_page"></label>
-        <label class="control-label">需要</label>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="quote_rmb">单价</label>
-      <div class="col-sm-4">
-        <div class="input-group">
-          <span class="input-group-addon">&yen;</span>
-          <input type="number" name="quote_rmb" id="quote_rmb" value="100" class="form-control" required min="100" />
-          <span class="input-group-addon">分</span>
+<div class="row">
+  <form class="form-horizontal model-editor iPhone col-sm-8 col-xs-12" method="post" enctype="multipart/form-data" id="ad-editor">
+    <input type="hidden" name="id" value="">
+    <input type="hidden" name="ad_app_type" value="2">
+    <fieldset class="collapsible">
+      <a name="basic-info"></a>
+      <legend>基础信息</legend>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="ad_name">广告名</label>
+        <div class="col-sm-6">
+          <input type="text" name="ad_name" id="ad_name" class="form-control" required />
         </div>
       </div>
-      <p class="help-block iPhone">
-        单价最低1元。
-      </p>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label" for="job_num">日投放量</label>
-      <div class="col-sm-4">
-        <input type="number" id="job_num" value="1000" class="form-control" name="job_num" min="1000" max="30000" required/>
-        <p class="help-block">投放量范围1000-30000</p>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="ad_url">iTunes地址</label>
+        <div class="col-sm-10">
+          <input name="ad_url" id="ad_url" class="form-control" required>
+        </div>
       </div>
-    </div>
-    <div class="form-group iPhone">
-      <label class="col-sm-2 control-label" for="rank">目标排名</label>
-      <div class="col-sm-10">
-        <input type="range" min="1" max="15" name="rank" id="rank" value="10"><span class="help-inline">10</span>
-      </div>
-    </div>
-    <div class="form-group Android">
-      <label class="col-sm-2 control-label">完成条件</label>
-      <div class="col-sm-10 select-button">
-        {{#each cates}}
-          <input type="radio" name="cate" value="{{@key}}" id="cate-{{@key}}" />
-          <label for="cate-{{@key}}">{{.}}</label>
-        {{/each}}
-      </div>
-    </div>
-    <div class="form-group pit">
-      <label class="col-sm-2 control-label" for="total_num">总计投放</label>
-      <div class="col-sm-10">
-        <input type="number" name="total_num" id="total_num" value="{{total_num}}" class="form-control">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">投放运营商</label>
-      <div class="col-sm-10 select-button isp">
-        {{#each net_types}}
-        <input type="checkbox" name="net_type[]" value="{{@key}}" id="net-type-{{@key}}" />
-        <label for="net-type-{{@key}}">{{.}}</label>
-        {{/each}}
-      </div>
-    </div>
-    <div class="form-group domestic">
-      <label class="col-sm-2 control-label">投放区域</label>
-      <div class="col-sm-10 select-button">
-        <input type="radio" name="province_type" value="0" data-class="show-provinces" id="province-all" />
-        <label for="province-all">全国</label>
-        <input type="radio" name="province_type" value="1" data-class="show-provinces" id="province-province" />
-        <label for="province-province">分省</label>
-      </div>
-    </div>
-    <div class="form-group provinces">
-      <label class="col-sm-2 control-label">省份选择</label>
-      <div class="col-sm-10 select-button select-button-group">
-        {{#each provinces}}
-        <input type="checkbox" name="provinces[]" value="{{@key}}" id="province-{{@key}}" {{checked}} />
-        <label for="province-{{@key}}">{{.}}</label>
-        {{/each}}
-        <hr />
-      </div>
-    </div>
-    <div class="form-group iPhone">
-      <label class="col-sm-2 control-label">投放目标：iPad/iPhone</label>
-      <div class="col-sm-10 select-button">
-        <input type="radio" name="put_ipad" value="0" id="put-ipad-all" checked />
-        <label for="put-ipad-all">iPad + iPhone</label>
-        <input type="radio" name="put_ipad" value="1" id="put-ipad-ipad" />
-        <label for="put-ipad-ipad">只投iPad</label>
-        <input type="radio" name="put_ipad" value="2" id="put-ipad-iphone" />
-        <label for="put-ipad-iphone">只投iPhone</label>
-      </div>
-    </div>
-  </fieldset>
+    </fieldset>
 
-  <fieldset>
-    <legend>杂项</legend>
+    <fieldset>
+      <a name="tou"></a>
+      <legend>投放信息</legend>
+      <div class="form-group iPhone">
+        <label class="col-sm-2 control-label">投放类型</label>
+        <div class="col-sm-10 select-button">
+          <input type="radio" name="search_flag" value="0" id="search_flag-1" checked>
+          <label for="search_flag-1">普通广告</label>
+          <input type="radio" name="search_flag" value="1" id="search_flag-2">
+          <label for="search_flag-2">ASO广告</label>
+        </div>
+      </div>
+      <div class="form-group iPhone aso">
+        <label class="col-sm-2 control-label" for="keywords">ASO搜索词</label>
+        <div class="col-sm-6">
+          <input type="text" name="keywords" class="form-control" id="keywords">
+          <p class="help-block">
+            搜索ASO搜索词时，对应的应用排序需要在1-1000名以内。
+          </p>
+        </div>
+      </div>
+      <div class="form-group iPhone aso">
+        <label class="col-sm-2 control-label">是否需要用户手动搜索</label>
+        <div class="col-sm-10">
+          <label class="control-label">不需要</label>
+          <input type="checkbox" class="switch" name="aso_middle_page" value="1" id="aso_middle_page" checked>
+          <label for="aso_middle_page"></label>
+          <label class="control-label">需要</label>
+        </div>
+      </div>
+      <div class="form-group iPhone aso">
+        <label class="col-sm-2 control-label" for="rank">目标排名</label>
+        <div class="col-sm-6">
+          <input type="range" min="1" max="15" name="rank" id="rank" value="10"><span class="help-inline">10</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="quote_rmb">应用类型</label>
+        <div class="col-sm-10 select-button">
+          <input type="radio" name="quote_rmb" value="300" id="quote_rmb-1">
+          <label for="quote_rmb-1">免费应用（&yen;3.00）</label>
+          <input type="radio" name="quote_rmb" value="600" id="quote_rmb-2">
+          <label for="quote_rmb-2">付费应用（&yen;6.00）</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="job_num">日投放量</label>
+        <div class="col-sm-6">
+          <input type="number" id="job_num" value="1000" class="form-control" name="job_num" min="1000" max="30000" required/>
+          <p class="help-block">投放量范围1000-30000</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="total_num">总计投放</label>
+        <div class="col-sm-6">
+          <input type="number" name="total_num" id="total_num" value="{{total_num}}" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="start_time">开始时间</label>
+        <div class="col-sm-6">
+          <input type="datetime" name="start_time" id="start_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="end_time">结束时间</label>
+        <div class="col-sm-6">
+          <input type="datetime" name="end_time" id="end_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
+        </div>
+      </div>
+      <div class="form-group Android">
+        <label class="col-sm-2 control-label">完成条件</label>
+        <div class="col-sm-10 select-button">
+          {{#each cates}}
+            <input type="radio" name="cate" value="{{@key}}" id="cate-{{@key}}" {{#equal @key ../cate}}checked{{/equal}} />
+            <label for="cate-{{@key}}">{{.}}</label>
+          {{/each}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">投放运营商</label>
+        <div class="col-sm-10 select-button isp">
+          {{#each net_types}}
+            <input type="checkbox" name="net_type[]" value="{{@key}}" id="net-type-{{@key}}" {{#equal @key ../net_type}}checked{{/equal}} />
+            <label for="net-type-{{@key}}">{{.}}</label>
+          {{/each}}
+        </div>
+      </div>
+      <div class="form-group domestic">
+        <label class="col-sm-2 control-label">投放区域</label>
+        <div class="col-sm-10 select-button">
+          <input type="radio" name="province_type" value="0" data-class="show-provinces" id="province-all" checked />
+          <label for="province-all">全国</label>
+          <input type="radio" name="province_type" value="1" data-class="show-provinces" id="province-province" />
+          <label for="province-province">分省</label>
+        </div>
+      </div>
+      <div class="form-group provinces">
+        <label class="col-sm-2 control-label">省份选择</label>
+        <div class="col-sm-10 select-button select-button-group">
+          {{#each provinces}}
+            <input type="checkbox" name="provinces[]" value="{{@key}}" id="province-{{@key}}" {{checked}} />
+            <label for="province-{{@key}}">{{.}}</label>
+          {{/each}}
+          <hr />
+        </div>
+      </div>
+      <div class="form-group iPhone">
+        <label class="col-sm-2 control-label">目标平台</label>
+        <div class="col-sm-10 select-button">
+          <input type="radio" name="put_ipad" value="0" id="put-ipad-all" checked />
+          <label for="put-ipad-all">iPad + iPhone</label>
+          <input type="radio" name="put_ipad" value="1" id="put-ipad-ipad" />
+          <label for="put-ipad-ipad">只投iPad</label>
+          <input type="radio" name="put_ipad" value="2" id="put-ipad-iphone" />
+          <label for="put-ipad-iphone">只投iPhone</label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>杂项</legend>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="others">其它投放要求</label>
+        <div class="col-sm-10">
+          <textarea name="others" class="form-control" rows="2" id="others">{{others}}</textarea>
+        </div>
+      </div>
+    </fieldset>
+
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="others">其它投放要求</label>
-      <div class="col-sm-10">
-        <textarea name="others" class="form-control" rows="2" id="others">{{others}}</textarea>
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="alert alert-msg" style="display: none;"></div>
+        <div class="alert alert-info hide">
+          将于3秒后跳转到广告列表页。[<a href="#/ad/">立刻跳转</a>]
+        </div>
+        <button class="btn btn-block btn-lg btn-primary"><i class="fa fa-save"></i> 提交</button>
       </div>
     </div>
-  </fieldset>
-
-  <hr />
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <div class="alert alert-msg" style="display: none;"></div>
-      <button class="btn btn-block btn-lg btn-primary"><i class="fa fa-save"></i> 提交</button>
+  </form>
+  <div class="col-sm-4 col-xs-12">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h4 class="panel-title"><a role="button" data-toggle="collapse" href="#notice" aria-expanded="true" aria-controls="notice"><i class="fa fa-info"></i> 创建投放计划须知</a></h4>
+      </div>
+      <div id="notice" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <ul>
+            <li>如需要做技术对接，请联系点乐技术。</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
-</form>
+</div>

@@ -37,7 +37,7 @@
         date: date
       });
       this.$body.load('page/stat/hourly.hbs', model, {
-        fresh: true,
+        refresh: true,
         className: 'stat stat-date'
       });
       this.$body.setFramework('has-date-range', '单个广告一天内统计');

@@ -1,6 +1,6 @@
 'use strict';
 (function (ns) {
-  var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{value}}</a>');
+  var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{#if label}}{{label}}{{else}}{{value}}{{/if}}</a>');
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
@@ -115,16 +115,24 @@
       // 排序
       var order = this.model.get('order')
         , seq = this.model.get('seq')
-        , status = this.model.omit('keyword', 'order', 'seq')
-        , labels = '';
+        , status = this.model.omit('keyword', 'order', 'seq', 'start', 'end')
+        , labels = _.chain(status)
+          .omit(function (value, key) {
+            return key.match(/_label$/);
+          })
+          .map(function (value, key) {
+            var attr = {key: key, value: value};
+            if (status[key + '_label']) {
+              attr['label'] = status[key + '_label'];
+            }
+            return filterLabel(attr);
+          })
+          .value();
       if (order) {
         this.$('.order').removeClass('active inverse');
         this.$('.order[href=#' + order + ']').addClass('active').toggleClass('inverse', seq == 'desc');
       }
-      _.each(status, function (value, key) {
-        labels += filterLabel({key: key, value: value});
-      });
-      this.$('.filters').append(labels);
+      this.$('.filters').append(labels.join());
     },
     saveModel: function (button, id, prop, value, options) {
       button.spinner();
@@ -245,9 +253,15 @@
     },
     tbodyFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)
+        , label = target.text()
         , path = target.attr('href').split('/').slice(-2)
-        , hasFilter = this.model.has(path[0]);
-      this.model.set(path[0], path[1]);
+        , hasFilter = this.model.has(path[0])
+        , attr = {};
+      attr[path[0]] = path[1];
+      if (path[0] != label) {
+        attr[path[0] + '_label'] = label;
+      }
+      this.model.set(attr, {reset: true});
       if (hasFilter) {
         this.$('.filters').find('[href="#/' + path[0] + '"]').replaceWith(target.clone());
       } else {
@@ -258,7 +272,7 @@
     theadFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)
         , path = target.attr('href').split('/').slice(-2);
-      this.model.unset(path[0]);
+      this.model.unset(path[0], {reset: true});
       target.remove();
       event.preventDefault();
     }

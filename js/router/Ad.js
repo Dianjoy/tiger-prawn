@@ -34,14 +34,15 @@
       this.$body
         .load('page/ad/ad.hbs', model, {
           className: 'ad ad-detail',
-          fresh: true
+          refresh: true
         })
         .setFramework('ad', '{{agreement}} {{channel_alias}} {{ad_name}} {{cid}}', '广告详情', model);
       this.$context.mapValue('model', model);
     },
     list: function () {
+      var page = 'page/ad/list' + (this.$me.get('role') === 'cp' ? '_cp' : '') + '.html';
       this.$body
-        .load('page/ad/list.html')
+        .load(page)
         .setFramework('ad ad-list', '我的广告');
     },
     listApplies: function (id) {

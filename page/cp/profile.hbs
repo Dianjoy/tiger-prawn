@@ -1,0 +1,65 @@
+<div class="container">
+  <table class="table table-hover">
+    <caption>基础信息</caption>
+    <tr>
+      <th width="30%">账号</th>
+      <td>{{email}}</td>
+    </tr>
+    <tr>
+      <th>公司名称</th>
+      <td><a href="#corp" class="edit">{{corp}}</a></td>
+    </tr>
+    <tr>
+      <th>联系人</th>
+      <td><a href="#username" class="edit">{{username}}</a></td>
+    </tr>
+    <tr>
+      <th>联系电话</th>
+      <td><a href="#phone" class="edit">{{phone}}</a></td>
+    </tr>
+    <tr>
+      <th>联系QQ</th>
+      <td><a href="#qq" class="edit" data-pattern="\d{6,15}">{{qq}}</a></td>
+    </tr>
+    <tr>
+      <th>点乐接口人</th>
+      <td>{{owner}}</td>
+    </tr>
+    <tr>
+      <th>上级登录时间</th>
+      <td>{{last_login.time}}</td>
+    </tr>
+    <tr>
+      <th>上次登录ip</th>
+      <td>{{last_login.ip}}</td>
+    </tr>
+  </table>
+
+  <hr>
+
+  <table class="table table-striped">
+    <caption>财务状况</caption>
+    <tr>
+      <th width="30%">累计充值</th>
+      <td>{{rmb_in}}</td>
+    </tr>
+    <tr>
+      <th>累积消费</th>
+      <td>{{rmb_out}}</td>
+    </tr>
+    <tr>
+      <th>当前余额</th>
+      <td>{{balance}}</td>
+    </tr>
+    <tr>
+      <th>预扣</th>
+      <td>{{precost}}</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>
+        <a href="#/my/finance/" class="btn btn-info"><i class="fa fa-list"></i> 充值历史</a>
+      </td>
+    </tr>
+  </table>
+</div>

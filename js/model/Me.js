@@ -21,17 +21,21 @@
       if (id) {
         this.$body.start(true);
         tp.notification.Manager.start();
-        var route;
-        if (!Backbone.History.started) {
-          route = Backbone.history.start({
-            root: tp.BASE
-          });
-        }
-        if (!route || /^#\/user\/\w+$/.test(location.hash)) {
-          var from = localStorage.getItem(tp.PROJECT + '-from');
-          from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
-          location.hash = from || tp.startPage || '#/dashboard';
-        }
+
+        // 延迟10ms，避免事件顺序导致问题
+        setTimeout(function () {
+          var route;
+          if (!Backbone.History.started) {
+            route = Backbone.history.start({
+              root: tp.BASE
+            });
+          }
+          if (!route || /^#\/user\/\w+$/.test(location.hash)) {
+            var from = localStorage.getItem(tp.PROJECT + '-from');
+            from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
+            location.hash = from || tp.startPage || '#/dashboard';
+          }
+        }, 10);
       } else {
         if (this.$body.isStart && location.hash !== '#/user/logout') {
           var login = tp.config.login;

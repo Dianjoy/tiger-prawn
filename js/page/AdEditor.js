@@ -26,6 +26,15 @@
       'click .search-agreement-button': 'searchAgreementButton_clickHandler',
       'keydown .agreement-keyword': 'agreementKeyword_keyDownHandler'
     },
+    ad_createdHandler: function (model, id) {
+      if (id) {
+        this.$('.success-info')
+          .html(function (i, html) {
+            return html.replace('{{id}}', id);
+          })
+          .removeClass('hide');
+      }
+    },
     render: function () {
       tp.view.Loader.prototype.render.call(this);
 
@@ -44,6 +53,8 @@
         this.$('.agreement').find('input').prop('disabled', false);
         this.$('.search-agreement-button').spinner(false);
       }, this);
+
+      this.model.on('change:id', this.ad_createdHandler, this);
 
       var init = this.model.pick(_.keys(this.model.defaults))
         , form = this.$('form');

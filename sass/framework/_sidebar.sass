@@ -3,7 +3,7 @@
 @import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 @import "../define"
 
-.navbar-side
+#navbar-side
   background-color: $sidebar-background-color
   color: $white
   width: $sidebar-width
@@ -15,36 +15,6 @@
   z-index: 14
   overflow: auto
 
-.navbar-fixed-top .navbar-collapse
-  max-height: 100%
-
-@media (max-width: $screen-xs-max)
-  .navbar-side
-    height: auto
-    margin-top: 0
-    position: relative
-    top: 0
-    width: 100%
-    overflow: visible
-
-  .side-nav>li>a .caret
-    margin-right: $gap-p
-
-  .navbar-collapse
-    padding: 0
-
-  .container-fluid
-    >.navbar-collapse
-      margin-right: -$gap-p
-      margin-left: 0
-
-.side-nav
-  float: none
-  margin: 0
-  padding: 0
-  border-bottom: 1px solid lighten($sidebar-background-color, 5%)
-  background: $sidebar-background-color
-  
   a
     color: $navbar-color
 
@@ -53,6 +23,19 @@
 
     i
       width: 20px
+
+.navbar-fixed-top .navbar-collapse
+  max-height: 100%
+
+.side-nav
+  float: none
+  margin: 0
+  padding: 0
+  border-bottom: 1px solid lighten($sidebar-background-color, 5%)
+  background: $sidebar-background-color
+
+  .cp &
+    border-top: 1px solid lighten($sidebar-background-color, 5%)
 
   > li
     float: none
@@ -73,31 +56,6 @@
         background: darken($sidebar-background-color, 5%)
         background: rgba(0, 0, 0, 0.075)
         color: $white
-
-  .navbar-user
-    padding: 15px
-
-    span
-      font-size: 12px
-      line-height: 18px
-
-    img
-      background-color: $white
-      float: left
-      width: 40px
-      height: 40px
-      margin-right: $gap
-      margin-bottom: $gap
-
-    h4
-      line-height: 40px
-      margin: 0 0 $gap
-
-    label
-      font-size: 12px
-
-    progress
-      width: 100%
 
   .nav
     background-color: darken($sidebar-background-color, 10%)
@@ -144,7 +102,31 @@
       overflow: hidden
       background: #666
 
+.navbar-user
+  padding: 15px
+  border-bottom: 1px solid darken($sidebar-background-color, 5%)
 
+  span
+    font-size: 12px
+    line-height: 18px
+
+  img
+    background-color: $white
+    float: left
+    width: 40px
+    height: 40px
+    margin-right: $gap
+    margin-bottom: $gap
+
+  h4
+    line-height: 40px
+    margin: 0 0 $gap
+
+  label
+    font-size: 12px
+
+  progress
+    width: 100%
 
 .dropdown-submenu
   position: relative
@@ -183,3 +165,27 @@
 
   .pull-left
     float: none
+
+@media (max-width: $screen-xs-max)
+  .navbar-side
+    height: auto
+    margin-top: 0
+    position: relative
+    top: 0
+    width: 100%
+    overflow: visible
+
+  .side-nav
+    .navbar-user a
+      padding: 0
+
+    &>li>a .caret
+      margin-right: $gap-p
+
+  .navbar-collapse
+    padding: 0
+
+  .container-fluid
+    >.navbar-collapse
+      margin-right: -$gap-p
+      margin-left: 0

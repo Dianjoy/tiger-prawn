@@ -9,11 +9,21 @@
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard(/)': 'showDashboard'
+      'dashboard(/)': 'showDashboard',
+      'my/profile/': 'showMyProfile'
     },
     showDashboard: function () {
       this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
       this.$body.setFramework('dashboard', '新近数据统计');
+    },
+    showMyProfile: function () {
+      this.$body.load('page/cp/profile.hbs', this.$me, {
+        data: {
+          full: true
+        },
+        refresh: true
+      });
+      this.$body.setFramework('me profile', '我的账户');
     },
     showUserPage: function (page) {
       if (page === 'logout') {

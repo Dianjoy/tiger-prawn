@@ -169,7 +169,7 @@
         this.$el.prop('readonly', true);
         this.spinner = this.spinner || $(tp.component.spinner);
         this.spinner.insertAfter(this.$el);
-        tp.component.SmartForm.recordHistory('keyword', event.target.value);
+        event.preventDefault();
       }
     }
   });
@@ -200,20 +200,20 @@
 
       // 用options里的值填充select
       var options = this.collection.options;
+      if (!options) {
+        return;
+      }
       this.$('select').each(function () {
         var self = $(this)
           , name = self.data('options');
-        if (!(name in options)) {
+        if (!(name in options) || self.hasClass('ready')) {
           return true;
         }
-        var template = self.data('template')
+        var template = self.find('script').html()
           , fixed = self.find('.fixed');
-        if (!template) {
-          template = self.find('script').html();
-          template = Handlebars.compile(template);
-          self.data('template', template);
-        }
+        template = Handlebars.compile(template);
         self
+          .addClass('ready')
           .html(template(options))
           .prepend(fixed);
       });
@@ -225,6 +225,9 @@
       var target = event.target
         , name = target.name
         , value = target.value;
+      if (!name) {
+        return;
+      }
       if (!value) {
         this.model.unset(name, {reset: true});
       } else {

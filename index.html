@@ -71,14 +71,16 @@
           </ul>
         </li>
         <li class="pit dropdown-list"><a href="#"><i class="fa fa-envelope"></i></a></li>
-        <li class="dropdown dropdown-list">
+        <li class="dropdown dropdown-list me">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <span class="username"></span> <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
-            <li class="pit"><a data-toggle="tab" href="#/my/profile"><i class="fa fa-user fa-fw"></i> 我的账户</a></li>
-            <li><a href="#/my/settings"><i class="fa fa-cog fa-fw"></i> 设置</a></li>
-            <li class="pit"><a data-toggle="tab" href="#/my/recharge"><i class="fa fa-fw fa-money"></i> 充值</a></li>
+            <li class="cp-hide"><a href="#/my/profile/"><i class="fa fa-user fa-fw"></i> 我的账户</a></li>
+            <li class="cp-hide"><a href="#/my/finance/"><i class="fa fa-yen fa-fw"></i> 财务管理</a></li>
+            <li class="cp-hide"><a href="page/my/changepwd.html" class="popup" title="修改密码" data-confirm="保存" data-cancel="取消"><i class="fa fa-fw fa-lock"></i> 修改密码</a></li>
+            <li class="cp-hide"><a href="page/cp/recharge.md" class="popup" title="充值" data-cancel="关闭"><i class="fa fa-fw fa-money"></i> 充值</a></li>
+            <li class="pit"><a href="#/my/settings"><i class="fa fa-cog fa-fw"></i> 设置</a></li>
             <li class="divider"></li>
             <li><a href="#/user/logout"><i class="fa fa-fw fa-sign-out"></i> 退出</a></li>
           </ul>
@@ -89,14 +91,14 @@
 </nav>
 
 <nav class="collapse navbar-collapse navbar-side" role="navigation" id="navbar-side">
+  <div class="navbar-user me cp-hide">
+    <img src="img/logo.png" class="img-circle face">
+    <h4 class="username">Meathill</h4>
+    <a href="page/cp/recharge.md" class="popup pull-right" title="充值" data-cancel="关闭">[充值]</a>
+    <label>您的余额：65/100</label>
+    <progress value="65" max="100">65%</progress>
+  </div>
   <ul id="navbar-side-inner" class="nav navbar-nav side-nav">
-    <li class="navbar-user pit">
-      <img src="img/logo.png" class="img-circle">
-      <h4>Meathill</h4>
-      <span class="pull-right pit">充值</span>
-      <label class="pit">您的余额：65/100</label>
-      <progress value="65" max="100" class="pit">65%</progress>
-    </li>
     <li><a href="#/dashboard/"><i class="fa fa-dashboard"></i> 首页</a></li>
     <script type="text/x-handlebars-template">
       {{#each list}}
@@ -240,13 +242,13 @@
 <script src="bower_components/morrisjs/morris.min.js"></script>
 <script src="bower_components/handlebars/handlebars.min.js"></script>
 <script src="bower_components/underscore/underscore-min.js"></script>
-<script src="bower_components/backbone/backbone-min.js"></script>
+<script src="bower_components/backbone/backbone.js"></script>
 <script src="bower_components/moment/min/moment-with-locales.min.js"></script>
 <script src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script src="bower_components/nervenet/nervenet.min.js"></script>
 <script src="bower_components/spark-md5/spark-md5.min.js"></script>
 <script src="bower_components/marked/marked.min.js"></script>
-<script src="bower_components/mh-simple-uploader/dist/js/SimpleUploader.min.js"></script>
+<script src="bower_components/mh-simple-uploader/dist/js/SimpleUploader.js"></script>
 <script src="js/define.js"></script>
 <script src="js/config.js"></script>
 <script src="js/adapter/backbone.js"></script>
@@ -257,6 +259,7 @@
 <script src="js/router/Base.js"></script>
 <script src="js/router/AD.js"></script>
 <script src="js/router/Stat.js"></script>
+<script src="js/router/Me.js"></script>
 <script src="js/service/Manager.js"></script>
 <script src="js/popup/Manager.js"></script>
 <script src="js/utils/utils.js"></script>
@@ -286,6 +289,7 @@
 <script src="js/popup/Editor.js"></script>
 <script src="js/view/Loader.js"></script>
 <script src="js/view/Body.js"></script>
+<script src="js/view/Me.js"></script>
 <script src="js/page/AdEditor.js"></script>
 <script src="js/page/DateRange.js"></script>
 <script src="js/page/InvoiceEditor.js"></script>

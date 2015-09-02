@@ -14,16 +14,11 @@
         "title": "我的广告",
         "icon": "list",
         "link": "#/ad/"
-      },
-      {
-        "title": "我的申请",
-        "icon": "file",
-        "link": "#/apply/"
       }
     ]
   },
   {
-    "title": "投统计",
+    "title": "投放统计",
     "icon": "line-chart",
     "link": "#/stat/"
   }
