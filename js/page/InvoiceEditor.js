@@ -24,7 +24,7 @@
         red_ios_income: 0
       };
 
-      products = _.map(products,function (element) {
+      products = _.map(products, function (element) {
         if (!element.quote_rmb_after) {
           _.extend(element, {
             quote_rmb_after: element.quote_rmb,
@@ -105,7 +105,6 @@
         end: end,
         fromInvoice: true
       };
-
       var popup = tp.popup.Manager.popup(options);
       popup.on('confirm', this.invoicePopup_confirmHandler, this);
     },
