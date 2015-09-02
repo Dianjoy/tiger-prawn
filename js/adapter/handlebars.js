@@ -95,6 +95,15 @@
     }
   });
 
+  // 大于
+  h.registerHelper('greater', function (value, target, options) {
+    if (value > target) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
+
   // 包含
   h.registerHelper('in', function (value, array, options) {
     if (!_.isArray(array)) {

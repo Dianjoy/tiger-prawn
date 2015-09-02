@@ -12,130 +12,78 @@
     render: function () {
       var products = this.model.get('products');
       var opt = this.model.options;
-      var cpa_first_total = 0
-        , cpa_after_total =0
-        , income_before_total = 0
-        , income_after_total = 0
-        , rmb = ''
-        , joy_income = 0
-        , red_ad_income = 0
-        , red_ios_income = 0;
+      var rmb = '';
+      var obj = {
+        cpa_first_total: 0,
+        cpa_after_total: 0,
+        income_before_total: 0,
+        income_after_total: 0,
+        joy_income: 0,
+        red_ad_income: 0,
+        red_ios_income: 0
+      };
 
-      _.each(products,function (e) {
-        if(!e.quote_rmb_after){
-          _.extend(e,{
-            quote_rmb_after: e.quote_rmb,
-            cpa_after: e.cpa,
-            income_after: e.income,
-            rate: ((1 - e.cpa * e.quote_rmb / e.income) * 100).toFixed(2),
-            money_cut: e.income - e.income,
+      products = _.map(products,function (element) {
+        if (!element.quote_rmb_after) {
+          _.extend(element, {
+            quote_rmb_after: element.quote_rmb,
+            cpa_after: element.cpa,
+            income_after: element.income,
+            rate: ((1 - element.cpa * element.quote_rmb / element.income) * 100).toFixed(2),
+            money_cut: element.income - element.income,
             remark: ''
           });
         } else{
-          _.extend(e,{
-            income_after: e.quote_rmb_after * e.cpa_after,
-            rate: ((1 - e.cpa_after * e.quote_rmb_after / e.income) * 100).toFixed(2),
-            money_cut: e.income - e.quote_rmb_after * e.cpa_after
+          _.extend(element, {
+            income_after: element.quote_rmb_after * element.cpa_after,
+            rate: ((1 - element.cpa_after * element.quote_rmb_after / element.income) * 100).toFixed(2),
+            money_cut: element.income - element.quote_rmb_after * element.cpa_after
           });
         }
 
-        cpa_first_total += Number(e.cpa);
-        cpa_after_total += Number(e.cpa_after);
-        income_after_total += e.income_after;
-        income_before_total += e.income;
-        rmb = tp.utils.convertCurrency(income_after_total);
+        obj.cpa_first_total += Number(element.cpa);
+        obj.cpa_after_total += Number(element.cpa_after);
+        obj.income_after_total += element.income_after;
+        obj.income_before_total += element.income;
+        rmb = tp.utils.convertCurrency(obj.income_after_total);
 
-        switch (e.sdk_type){
+        switch (element.sdk_type) {
           case "0":
-            joy_income += e.income_after;
+            obj.joy_income += element.income_after;
             break;
           case "1":
-            red_ad_income += e.income_after;
+            obj.red_ad_income += element.income_after;
             break;
           case "2":
-            red_ios_income += e.income_after;
+            obj.red_ios_income += element.income_after;
             break;
         }
+        return element;
       });
-
-      _.extend(opt,{
-        cpa_first_total: cpa_first_total,
-        cpa_after_total: cpa_after_total,
-        income_after_total: income_after_total,
-        income_before_total: income_before_total,
-        joy_income: joy_income,
-        red_ad_income: red_ad_income,
-        red_ios_income: red_ios_income
-      });
+      _.extend(opt, obj);
 
       tp.view.Loader.prototype.render.call(this);
+      //var components = [];
+      //tp.component.Manager.loadMediatorClass(components, 'tp.component.SmartTable', {url: "", autoFetch: false}, this.$('#ad_table'));
+      //var smartTable = components[0];
+      var smartTable = this.$context.createInstance(tp.component.SmartTable, {url: "", autoFetch: false, el: this.$('#ad_table')});
 
-      var smartTable = this.$context.createInstance(tp.component.SmartTable,{el:this.$('#ad_table'),url: " "});
-
-      products.push({rmb:rmb});
+      products.push({rmb: rmb});
+      smartTable.collection.on('change', this.collection_changeHandler, this);
       smartTable.collection.options = opt;
       smartTable.collection.reset(products);
       products.pop();
     },
-    reapplyButton_clickHandler: function () {
-      this.model.id = null;
-      this.model.urlRoot = tp.API + 'invoice/init';
-    },
-    editButton_clickHandler: function (event) {
-      var target = event.currentTarget;
-      var options = {
-        title: '编辑',
-        confirm: '确定',
-        content: 'page/stat/invoice-detail-edit.hbs',
-        isRemote: true,
-        target: target
-      };
-      switch ($(target).attr('class')){
-        case 'edit-button cpa-after':
-          options.val = $(target).text();
-          break;
-
-        case 'edit-button price-after':
-          options.val = $(target).text().substr(1);
-          break;
-
-        case 'edit-button comment':
-          options.isComment = true;
-          options.val = $(target).text() == '编辑' ? '' : $(target).text();
-          break;
-      }
-      var popup = tp.popup.Manager.popup(options);
-      popup.on('confirm', this.editPopup_confirmHandler, this);
-    },
-    editPopup_confirmHandler: function (popup) {
-      var val = popup.$('input').val()
-        , target = popup.options.target
-        , ad_id = $(target).closest('tr').attr('id')
-        , product = _.findWhere(this.model.get('products'),{ad_id: ad_id});
-
-      if(val){
-        switch ($(target).attr('class')){
-          case 'edit-button cpa-after':
-            product.cpa_after = val;
-            break;
-
-          case 'edit-button price-after':
-            product.quote_rmb_after = val;
-            break;
-
-          case 'edit-button comment':
-            product.remark = val.trim();
-            break;
-        }
-      }
+    collection_changeHandler: function (data) {
+      var product = _.findWhere(this.model.get('products'), {id: data.id});
+      _.extend(product, _.omit(data.toJSON(), 'previous'));
       this.render();
-
-      if(!this.model.get('init')){
+      if (!this.model.get('init')) {
         this.model.save({
           products: this.model.get('products'),
           income: this.model.options.income_after_total,
           income_first: this.model.options.income_before_total
-        },{patch: true});
+        }, {patch: true});
       }
     },
     success_handler: function () {
@@ -143,13 +91,14 @@
     },
     invoiceButton_clickHandler: function (event) {
       var target = event.currentTarget;
+      var confirm = $(target).data('confirm');
       var start = this.model.get('start');
       var end = this.model.get('end');
-      var ad_id = this.$('#ad_table tbody tr').eq(0).attr('id');
+      var ad_id = this.$('#ad_table tbody tr').eq(0).data('id');
       var options = {
         title: target.title,
         id: ad_id,
-        confirm: '确定',
+        confirm: confirm,
         content: "page/stat/choose-ad.hbs",
         isRemote: true,
         start: start,
@@ -175,22 +124,10 @@
             ids += $(this).val();
           }
         });
-        var newModel = new tp.model.InvoiceDetail({
-          start: start,
-          end: end,
-          ids: ids
-        });
-        newModel.fetch({
-          success: function (model,response) {
-            self.model.set('products',response.invoice.products);
+        this.model.save({ids:ids},{
+          patch: true,
+          success: function () {
             self.render();
-            if(!self.model.get('init')){
-              self.model.save({
-                products: self.model.get("products"),
-                income: self.model.options.income_after_total,
-                income_first: self.model.options.income_before_total
-              },{patch:true}); //如果是二次编辑，就直接save
-            }
           }
         });
       }

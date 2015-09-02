@@ -8,39 +8,39 @@
     </select>
   </div>
   <div class="form-group">
-    <label for="treasurer-verify">财务审核：</label>
-    <select class="form-control" id="treasurer-verify" name="financy_status">
-      <option value="">全部</option>
-      <option value="31,40,41">通过</option>
-      <option value="30">未通过</option>
-      <option value="0,1,2,3,11,21">审核中</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="director-verify">地区负责人审核：</label>
-    <select class="form-control" id="director-verify" name="charger_status">
-      <option value="">全部</option>
-      <option value="41">通过</option>
-      <option value="40">未通过</option>
-      <option value="0,1,2,3,11,21,31">审核中</option>
-    </select>
-  </div>
-  <div class="form-group">
     <label>运营核对：</label>
-    <select class="form-control" name="operation_status">
-      <option value="">全部</option>
-      <option value="11,20,21,30,31,40,41">通过</option>
-      <option value="10">未通过</option>
-      <option value="1,3">审核中</option>
+    <select class="form-control" name="sub_status">
+      <option value="11">全部</option>
+      <option value="10">通过</option>
+      <option value="9">未通过</option>
+      <option value="8">审核中</option>
     </select>
   </div>
   <div class="form-group">
     <label>特批：</label>
-    <select class="form-control" name="special_status">
-      <option value="">全部</option>
-      <option value="21,30,31,40,41">通过</option>
-      <option value="20">未通过</option>
-      <option value="2,3,11">审核中</option>
+    <select class="form-control" name="sub_status">
+      <option value="21">全部</option>
+      <option value="20">通过</option>
+      <option value="19">未通过</option>
+      <option value="18">审核中</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="treasurer-verify">财务审核：</label>
+    <select class="form-control" id="treasurer-verify" name="sub_status">
+      <option value="31">全部</option>
+      <option value="30">通过</option>
+      <option value="29">未通过</option>
+      <option value="28">审核中</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="director-verify">地区负责人审核：</label>
+    <select class="form-control" id="director-verify" name="sub_status">
+      <option value="41">全部</option>
+      <option value="40">通过</option>
+      <option value="39">未通过</option>
+      <option value="38">审核中</option>
     </select>
   </div>
   <div class="form-group pull-right">
@@ -74,62 +74,54 @@
       <td data-title="付款方">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
       <td data-title="金额">{{income}}</td>
       <td data-title="运营核对">
-        {{#in sub_status '1' '3'}}审核中{{/in}}
-        {{#equal sub_status 10}}
+        {{#equal sub_status 8}}审核中{{/in}}
+        {{#equal sub_status 9}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
         未通过
         {{/if}}
         {{/equal}}
-        {{#in sub_status '11' '20' '21' '30' '31' '40' '41'}}通过{{/in}}
-        {{#in sub_status '0' '2'}}-{{/in}}
+        {{#greater sub_status 9}}通过{{/greater}}
       </td>
       <td data-title="特批">
-        {{#in sub_status '2' '3' '11'}}审核中{{/in}}
-        {{#equal sub_status 20}}
+        {{#in sub_status 18}}审核中{{/in}}
+        {{#equal sub_status 19}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
         未通过
         {{/if}}
         {{/equal}}
-        {{#in sub_status '21' '30' '31' '40' '41'}}通过{{/in}}
-        {{#in sub_status '0' '1' '10'}}-{{/in}}
+        {{#greater sub_status 19}}通过{{/greater}}
       </td>
       <td data-title="财务审核">
-        {{#in sub_status '0' '1' '2' '3' '11' '21'}}审核中{{/in}}
-        {{#equal sub_status 30}}
+        {{#in sub_status 28}}审核中{{/in}}
+        {{#equal sub_status 29}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
         未通过
         {{/if}}
         {{/equal}}
-        {{#in sub_status '31' '40' '41'}}通过{{/in}}
-        {{#in sub_status '10' '20'}}-{{/in}}
+        {{#greater sub_status 29}}通过{{/greater}}
       </td>
       <td data-title="地区负责人审核">
-        {{#in sub_status '0' '1' '2' '3' '11' '21' '31'}}审核中{{/in}}
-        {{#equal sub_status 40}}
+        {{#in sub_status 38}}审核中{{/in}}
+        {{#equal sub_status 39}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
         未通过
         {{/if}}
         {{/equal}}
-        {{#in sub_status '41'}}通过{{/in}}
-        {{#in sub_status '10' '20' '30'}}-{{/in}}
+        {{#greater sub_status 39}}通过{{/in}}
       </td>
       <td data-title="快递单号">
         {{#if is_beijing}}
-          {{#equal sub_status 41}}
-            {{#if express_number}}
-              <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
-            {{else}}
-              <a href="#express_number" class="btn btn-primary edit" title="编辑"><i class="fa fa-edit"></i>填写单号</a>
-            {{/if}}
-          {{/equal}}
+          {{#greater sub_status 39}}
+            <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+          {{/greater}}
         {{else}}
         {{express_number}}
         {{/if}}
@@ -138,14 +130,14 @@
       <td data-title="发票日期">{{handle_time}}</td>
       <td data-title="操作">
         <div class="btn-group">
-          {{#in sub_status '0' '1' '2' '3'}}
+          {{#equal sub_status 8}}
           <a href="#/invoice/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
           <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+          {{/equal}}
+          {{#in sub_status 9 19 29 39}}
+          <a href="#sub_status" data-type="status" data-active="重新申请" data-deactive="" data-open="0" class="btn btn-success edit" data-title="重新申请"><i class="fa fa-edit"></i></a>
           {{/in}}
-          {{#in sub_status '10' '20' '30' '40'}}
-          <a href="#/invoice/reapply/{{id}}" class="btn btn-success" title="重新申请"><i class="fa fa-edit"></i></a>
-          {{/in}}
-          {{#in sub_status '11' '21' '31' '41'}}
+          {{#in sub_status 10 20 30 40}}
           <a href="#/invoice/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
           {{/in}}
         </div>

@@ -56,14 +56,14 @@
         id: id
       });
       this.$body
-        .load('page/stat/invoice-detail.hbs',model, {
+        .load('page/stat/invoice-detail.hbs', model, {
           className: 'invoice-detail',
           loader: tp.page.InvoiceEditor,
           fresh: true
         })
         .setFramework('invoice-detail', '发票开具申请单');
     },
-    applyInvoice: function (start,end,ids) {
+    applyInvoice: function (start, end, ids) {
       var model = new tp.model.InvoiceDetail({
         init: true,
         start: start,
@@ -71,7 +71,7 @@
         ids: ids
       });
       this.$body
-        .load('page/stat/invoice-detail.hbs',model, {
+        .load('page/stat/apply-invoice-detail.hbs', model, {
           className: 'invoice-apply',
           loader: tp.page.InvoiceEditor
         })
@@ -84,7 +84,7 @@
         init: true
       });
       this.$body
-        .load('page/stat/invoice-detail.hbs',model, {
+        .load('page/stat/invoice-detail.hbs', model, {
           className: 'invoice-reapply',
           loader: tp.page.InvoiceEditor
         })
@@ -96,7 +96,7 @@
         view: true
       });
       this.$body
-        .load('page/stat/invoice-detail.hbs',model,{
+        .load('page/stat/invoice-detail.hbs', model, {
           className: 'invoice-view',
           loader: tp.page.InvoiceEditor
         })

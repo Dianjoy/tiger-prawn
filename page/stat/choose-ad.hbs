@@ -17,14 +17,27 @@
     </div>
 {{/unless}}
   <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" {{#if fromInvoice}}data-params="start={{start}}&end={{end}}"{{else}}data-start="{{start}}" data-end="{{end}}" data-auto-fetch="false"{{/if}}>
+    <thead>
+    <tr>
+      <th>
+        <input type="checkbox" value="ids" class="check-all">
+      </th>
+    </tr>
+    </thead>
     <tbody id="chose-ad-table" class="well">
     {{{{raw-helper}}}}
     <script type="text/x-handlebars-template">
       <tr>
         <td>
           <label for="ids">
-            <input type="checkbox" name="ids" value="{{id}}">{{ad_name}}
+            <input type="checkbox" name="ids" value="{{id}}">
           </label>
+        </td>
+        <td>
+         {{ad_name}}
+        </td>
+        <td>
+          渠道号：{{channel_id}}
         </td>
       </tr>
     </script>
