@@ -1872,7 +1872,7 @@
       }
       return 'js/' + arr.join('/') + '.js';
     },
-    loadMediatorClass: function (components, className, init, dom) {
+    loadMediatorClass: function (components, className, init, dom, callback) {
       var self = this
         , script = document.createElement("script");
       script.async = true;
@@ -1887,6 +1887,9 @@
           init.el = this;
           components.push(self.$context.createInstance(component, init));
         });
+        if (callback) {
+          callback(components);
+        }
       };
       document.head.appendChild(script);
     },
