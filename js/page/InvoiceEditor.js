@@ -115,7 +115,7 @@
         , len = popup.$(':checked').length
         , self = this;
 
-      if(len){
+      if (len) {
         popup.$(':checked').each(function (i) {
           if(i + 1 != len){
             ids += $(this).val() + ',';
@@ -123,7 +123,7 @@
             ids += $(this).val();
           }
         });
-        this.model.save({ids:ids},{
+        this.model.save({ids:ids}, {
           patch: true,
           success: function () {
             self.render();
