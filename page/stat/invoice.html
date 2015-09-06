@@ -131,15 +131,19 @@
       <td data-title="操作">
         <div class="btn-group">
           {{#equal sub_status 8}}
+          {{#equal status 0}}
           <a href="#/invoice/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
           <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+          {{/equal}}
           {{/equal}}
           {{#equal status 2}}
           <a href="#status" data-type="status" data-active="重新申请" data-deactive="" data-open="0" class="btn btn-success edit" data-title="重新申请"><i class="fa fa-edit"></i></a>
           <a href="#/invoice/detail/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
           {{/equal}}
           {{#in sub_status 10 18 20 28 30 38 40}}
+          {{#equal status 0}}
           <a href="#/invoice/view/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
+          {{/equal}}
           {{/in}}
         </div>
       </td>

@@ -13,7 +13,6 @@
       'invoice/': 'showInvoice',
       'invoice/detail/(:id)':'invoiceDetail',
       'invoice/apply/:start/:end/*ids': 'applyInvoice',
-      'invoice/reapply/:id': 'reapplyInvoice',
       'invoice/view/:id': 'viewInvoice',
 
       'stat/analyse/': 'showAdminADStat',
@@ -59,7 +58,7 @@
         .load('page/stat/invoice-detail.hbs', model, {
           className: 'invoice-detail',
           loader: tp.page.InvoiceEditor,
-          fresh: true
+          refresh: true
         })
         .setFramework('invoice-detail', '发票开具申请单');
     },
@@ -76,19 +75,6 @@
           loader: tp.page.InvoiceEditor
         })
         .setFramework('invoice-apply', '发票开具申请单');
-    },
-    reapplyInvoice: function (id) {
-      var model = new tp.model.InvoiceDetail({
-        id: id,
-        isReapply: true,
-        init: true
-      });
-      this.$body
-        .load('page/stat/invoice-detail.hbs', model, {
-          className: 'invoice-reapply',
-          loader: tp.page.InvoiceEditor
-        })
-        .setFramework('invoice-reapply', '重新申请');
     },
     viewInvoice: function (id) {
       var model = new tp.model.InvoiceDetail({
