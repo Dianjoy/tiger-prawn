@@ -153,9 +153,8 @@
     float: right
     width: 0
     height: 0
-    border-color: transparent
-    border-style: solid
-    border-width: 5px 0 5px 5px
+    border: 5px solid transparent
+    border-right-width: 0
     border-left-color: #CCC
     margin-top: 5px
     margin-right: -10px
@@ -167,13 +166,12 @@
     float: none
 
 @media (max-width: $screen-xs-max)
-  .navbar-side
-    height: auto
+  #navbar-side
     margin-top: 0
     position: relative
     top: 0
     width: 100%
-    overflow: visible
+    overflow-y: auto
 
   .side-nav
     .navbar-user a
@@ -185,7 +183,6 @@
   .navbar-collapse
     padding: 0
 
-  .container-fluid
-    >.navbar-collapse
-      margin-right: -$gap-p
-      margin-left: 0
+  .container-fluid > .navbar-collapse
+    margin-right: -$gap-p
+    margin-left: 0
