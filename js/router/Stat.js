@@ -11,9 +11,8 @@
       'stat/:id/:date': 'showADStatDate',
 
       'invoice/': 'showInvoice',
-      'invoice/detail/(:id)':'invoiceDetail',
+      'invoice/detail/:id/(:view)':'invoiceDetail',
       'invoice/apply/:start/:end/*ids': 'applyInvoice',
-      'invoice/view/:id': 'viewInvoice',
 
       'stat/analyse/': 'showAdminADStat',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
@@ -50,9 +49,10 @@
       this.$body.load('page/stat/invoice.html');
       this.$body.setFramework('has-date-range', '我的发票');
     },
-    invoiceDetail: function (id) {
+    invoiceDetail: function (id, view) {
       var model = new tp.model.InvoiceDetail({
-        id: id
+        id: id,
+        view: view
       });
       this.$body
         .load('page/stat/invoice-detail.hbs', model, {
@@ -76,19 +76,6 @@
         })
         .setFramework('invoice-apply', '发票开具申请单');
     },
-    viewInvoice: function (id) {
-      var model = new tp.model.InvoiceDetail({
-        id: id,
-        view: true
-      });
-      this.$body
-        .load('page/stat/invoice-detail.hbs', model, {
-          className: 'invoice-view',
-          loader: tp.page.InvoiceEditor
-        })
-        .setFramework('invoice-view', '发票详情');
-    },
-
     showAdminADStat: function () {
       this.$body.load('page/stat/analyse.hbs', {
         start: moment().startOf('month').format(moment.DATE_FORMAT),

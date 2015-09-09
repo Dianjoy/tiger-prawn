@@ -1,52 +1,8 @@
-<h4>选择结算的广告：</h4>
-{{#unless fromInvoice}}
-  <form action="#/invoice/apply/:start/:end/:ids" method="post" id="popup-form">
-    <div class="ad-date-range clearfix">
-      <div class="range">
-        <label class="control-label pull-left" id="settlement-period">结算周期：</label>
-        <div class="date input-group col-sm-2 col-md-2 pull-left">
-          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-          <input type="date"  id="settle-start-date" class="form-control datetimepicker" name="start" data-format="YYYY-MM-DD">
-        </div>
-        <div class="date input-group col-sm-2 col-md-2 pull-left">
-          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-          <input type="date" id="settle-end-date" class="form-control datetimepicker" name="end" data-format="YYYY-MM-DD">
-        </div>
-        <button type="button" class="btn btn-primary" id="choose-ad-button"><i class="fa fa-play"></i> 检索</button>
-      </div>
-    </div>
-{{/unless}}
-  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" {{#if fromInvoice}}data-params="start={{start}}&end={{end}}"{{else}}data-start="{{start}}" data-end="{{end}}" data-auto-fetch="false"{{/if}}>
-    <thead>
-    <tr>
-      <th>
-        <input type="checkbox" value="ids" class="check-all">
-      </th>
-    </tr>
-    </thead>
-    <tbody id="chose-ad-table" class="well">
-    {{{{raw-helper}}}}
-    <script type="text/x-handlebars-template">
-      <tr>
-        <td>
-          <label for="ids">
-            <input type="checkbox" name="ids" value="{{id}}">
-          </label>
-        </td>
-        <td>
-         {{ad_name}}
-        </td>
-        <td>
-          渠道号：{{channel_id}}
-        </td>
-      </tr>
-    </script>
-    {{{{/raw-helper}}}}
-    </tbody>
-  </table>
-{{#unless fromInvoice}}
+<form class="model-editor" action="{{API}}invoice/{{invoiceId}}" method="post" id="prop-editor">
+  <div class="form-group select-button select-button-group col-5">
+    {{#each ads}}
+      <input type="checkbox" name="ids[]" value="{{id}}" id="{{id}}">
+      <label for="{{id}}">{{ad_name}}</label>
+    {{/each}}
+  </div>
 </form>
-{{/unless}}
-
-
-

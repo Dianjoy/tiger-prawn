@@ -11,7 +11,7 @@
     <th>推广期间</th>
     <th>
       广告名称
-      <a class="popup" href="page/stat/choose-ad.hbs" data-id="{{products.[0].ad_id}}" data-collection-id="stat" title="添加广告" data-confirm="确定"><i class="fa fa-plus-circle"></i></a>
+      <a class="popup" href="page/stat/apply-choose-ad.hbs" data-id="{{products.[0].ad_id}}" data-collection-id="stat" title="添加广告" data-confirm="确定"><i class="fa fa-plus-circle"></i></a>
     </th>
     <th>软著名称</th>
     <th>渠道包</th>
@@ -30,7 +30,7 @@
   {{{{raw-helper}}}}
   <script type="text/x-handlebars-template">
     <tr id="{{id}}">
-      {{#if rmb}}
+      {{#if amount}}
         <td>合计人民币（大写）：</td>
         <td colspan="8"  id="rmb">{{rmb}}</td>
         <td id="income-total">&yen; {{income_after_total}}</td>
@@ -53,7 +53,7 @@
         <td data-title="核减比例" class="proportion">{{rate}}%</td>
         <td data-title="核减金额" class="amount">&yen; {{money_cut}}</td>
         <td data-title="备注">
-          <a href="#remark" class="edit" title="备注">{{#if remark}}{{remark}}{{else}}编辑{{/if}}</a>
+          <a href="#remark" class="edit" title="备注">{{remark}}</a>
         </td>
       {{/if}}
     </tr>

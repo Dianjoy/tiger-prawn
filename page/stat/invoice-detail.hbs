@@ -12,7 +12,7 @@
     <th>推广期间</th>
     <th>
       广告名称
-      {{#unless view}}<button class="btn btn-sm invoice-button" title="添加广告" data-confirm="确定"><i class="fa fa-plus-circle"></i></button>{{/unless}}
+      {{#unless view}}<a data-template="stat/choose-ad" class="btn btn-sm edit" title="添加广告" data-confirm="确定"><i class="fa fa-plus-circle"></i></a>{{/unless}}
     </th>
     <th>软著名称</th>
     <th>渠道包</th>
@@ -31,7 +31,7 @@
     {{{{raw-helper}}}}
     <script type="text/x-handlebars-template">
       <tr data-id="{{ad_id}}" id="{{id}}">
-        {{#if rmb}}
+        {{#if amount}}
           <td>合计人民币（大写）：</td>
           <td colspan="8"  id="rmb">{{rmb}}</td>
           <td id="income-total">&yen; {{income_after_total}}</td>

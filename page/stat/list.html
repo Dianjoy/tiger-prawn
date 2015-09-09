@@ -28,8 +28,8 @@
   <script type="text/x-handlebars-template">
     <tr id="{{id}}">
       <td data-title="管理名">
-        {{#if agreement}}<a href="#/agreement_id/{{agreement_id}}" class="filter label label-agreement_id">{{agreement}}</a>{{/if}}
-        {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel_alias}}</a>{{/if}}
+        {{#if agreement}}<a href="#/agreement/{{agreement}}" class="filter label label-agreement">{{agreement}}</a>{{/if}}
+        {{#if channel_alias}}<a href="#/channel_alias/{{channel_alias}}" class="filter label label-channel_alias">{{channel_alias}}</a>{{/if}}
         <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
         {{cid}}
       </td>
@@ -45,7 +45,7 @@
         <div class="btn-group"  style="position:static">
           <a href="#/stat/{{id}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a>
           {{# if agreement_id}}
-            <a class="btn btn-info popup" href="page/stat/choose-ad.hbs" title="发票申请-{{channel_alias}}" data-id="{{id}}" data-collection-id="stat" data-confirm="确定"><i class="fa fa-file-text"></i></a>
+            <a class="btn btn-info popup" href="page/stat/apply-choose-ad.hbs" title="发票申请-{{channel_alias}}" data-id="{{id}}" data-collection-id="stat" data-confirm="确定"><i class="fa fa-file-text"></i></a>
           {{else}}
             <button class="btn btn-info" data-toggle="popover" data-content="合同未录入，无编号，请通过邮件将合同客户全称和客户类型发给邱咏霞申请合同备案，获取合同编号"><i class="fa fa-ban"></i></button>
           {{/if}}
