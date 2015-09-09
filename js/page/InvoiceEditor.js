@@ -3,7 +3,6 @@
   ns.InvoiceEditor = tp.view.Loader.extend({
     $context: null,
     render: function () {
-      var products = this.model.get('products');
       this.callback = _.bind(this.callback, this);
       tp.view.Loader.prototype.render.call(this);
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: "", autoFetch: false}, this.$('#ad_table'), this.callback);
