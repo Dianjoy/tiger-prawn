@@ -6,6 +6,9 @@
   ns.Me = Backbone.Model.extend({
     $body: null,
     url: tp.API + 'user/',
+    defaults: {
+      face: 'img/logo.png'
+    },
     initialize: function () {
       this.on('change:id', this.id_changeHandler, this);
     },
@@ -15,7 +18,12 @@
       }, options));
     },
     parse: function (response) {
-      return response.me;
+      var me = response.me;
+      if (me.role === 'cp') {
+        me.amount = me.balance + me.lock;
+        me.money_percent = Math.round(me.balance / me.amount * 10000) / 100;
+      }
+      return me;
     },
     id_changeHandler: function (model, id) {
       if (id) {

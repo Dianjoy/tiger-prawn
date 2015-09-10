@@ -18,7 +18,7 @@
       'competitor_ad/': 'listCompetitorAds'
     },
     create: function () {
-      var model = new tp.model.AD()
+      var model = this.$context.createInstance(tp.model.AD)
         , im_cp = this.$me.get('role') === 'cp'
         , page = im_cp ? '_cp' : ''
         , options = {

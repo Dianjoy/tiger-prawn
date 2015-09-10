@@ -1,5 +1,5 @@
 <div class="row">
-  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" enctype="multipart/form-data" id="ad-editor">
+  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" id="ad-editor" data-mediator-class="tp.page.CPEditor">
     <input type="hidden" name="id" value="">
     <input type="hidden" name="ad_app_type" value="2">
     <input type="hidden" name="cate" value="1">
@@ -15,7 +15,7 @@
       <div class="form-group">
         <label class="col-sm-2 control-label" for="ad_url">iTunes地址</label>
         <div class="col-sm-10">
-          <input name="ad_url" id="ad_url" class="form-control" required>
+          <input type="url" name="ad_url" id="ad_url" class="form-control" required>
         </div>
       </div>
     </fieldset>
@@ -51,25 +51,25 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="quote_rmb">应用类型</label>
+        <label class="col-sm-2 control-label" for="quote_rmb">投放单价</label>
         <div class="col-sm-10 select-button">
           <input type="radio" name="quote_rmb" value="300" id="quote_rmb-1" checked>
-          <label for="quote_rmb-1">免费应用（&yen;3.00）</label>
+          <label for="quote_rmb-1">免费应用 - <strong>&yen;3.00</strong></label>
           <input type="radio" name="quote_rmb" value="600" id="quote_rmb-2">
-          <label for="quote_rmb-2">付费应用（&yen;6.00）</label>
+          <label for="quote_rmb-2">付费应用 - <strong>&yen;6.00</strong></label>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="job_num">日投放量</label>
+        <label class="col-sm-2 control-label" for="job_num">每日投放</label>
         <div class="col-sm-6">
-          <input type="number" id="job_num" value="1000" class="form-control" name="job_num" min="1000" max="30000" required/>
-          <p class="help-block">投放量范围1000-30000</p>
+          <input type="number" id="job_num" value="100" class="form-control" name="job_num" min="100" max="3000" required/>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label" for="total_num">总计投放</label>
         <div class="col-sm-6">
-          <input type="number" name="total_num" id="total_num" value="{{total_num}}" class="form-control">
+          <input type="number" name="total_num" id="total_num" value="{{total_num}}" class="form-control" readonly>
+          <p class="help-block">投放量范围1000-30000</p>
         </div>
       </div>
       <div class="form-group">
@@ -88,15 +88,6 @@
             <input type="datetime" name="end_time" id="end_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
             <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
           </div>
-        </div>
-      </div>
-      <div class="form-group Android">
-        <label class="col-sm-2 control-label">完成条件</label>
-        <div class="col-sm-10 select-button">
-          {{#each cates}}
-            <input type="radio" name="cate" value="{{@key}}" id="cate-{{@key}}" {{#equal @key ../cate}}checked{{/equal}} />
-            <label for="cate-{{@key}}">{{.}}</label>
-          {{/each}}
         </div>
       </div>
       <div class="form-group">
@@ -156,7 +147,7 @@
         <div class="alert alert-info hide">
           将于3秒后跳转到广告列表页。[<a href="#/ad/">立刻跳转</a>]
         </div>
-        <button class="btn btn-block btn-lg btn-primary"><i class="fa fa-save"></i> 提交</button>
+        <button class="btn btn-block btn-lg btn-primary" disabled><i class="fa fa-save"></i> 提交</button>
       </div>
     </div>
   </form>
@@ -171,6 +162,7 @@
             <li>如需要做技术对接，请联系点乐技术。</li>
             <li>ASO广告多个关键词请建立多个计划。</li>
             <li>如果有特殊需求，可以在“其它投放要求”中描述，我们会尽量满足您。</li>
+            <li>创建广告后，会锁定相应额度。要释放这部分额度，可以选择撤销计划；如果广告已经上线，可以提前下线。</li>
           </ul>
         </div>
       </div>

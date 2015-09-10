@@ -1,4 +1,7 @@
 <div class="form-inline table-header">
+  <div class="form-group mr2e">
+    <a href="#/ad/create/" class="btn btn-primary"><i class="fa fa-plus"></i> </a>
+  </div>
   <div class="form-group">
     <label for="pagesize">每页显示：</label>
     <select class="form-control" id="pagesize">
@@ -17,7 +20,7 @@
   <thead>
   <tr>
     <th class="filters">广告名称</th>
-    <th><a class="order" href="#quote_rmb">报价</a></th>
+    <th><a class="order" href="#quote_rmb">投放单价</a></th>
     <th><a class="order" href="#job_num">每日投放</a></th>
     <th>今日尚余</th>
     <th>状态</th>
@@ -33,7 +36,7 @@
       <td data-title="管理名">
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
       </td>
-      <td data-title="报价">&yen;{{d100 quote_rmb}}</td>
+      <td data-title="付费类型">{{#equal quote_rmb 300}}免费{{else}}付费{{/equal}} &yen;{{d100 quote_rmb}}</td>
       <td data-title="每日投放">{{job_num}}</td>
       <td data-title="今日尚余">{{num}}</td>
       <td data-title="状态">
@@ -52,7 +55,7 @@
           {{#equal status 1}}
           <a href="#status" class="btn btn-success" title="继续投放"><i class="fa fa-play"></i></a>
           {{else equal status 0}}
-          <a href="#status" class="btn btn-warning" title="停止投放"><i class="fa fa-pause"></i></a>
+          <a href="#status" class="btn btn-warning" title="停止投放"><i class="fa fa-stop"></i></a>
           {{else}}
           <button type="button" class="btn btn-danger delete-button" title="删除广告" data-msg="确定要删除此广告么？之后不能恢复。"><i class="fa fa-times"></i> 删除广告</button>
           {{/equal}}

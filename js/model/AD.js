@@ -6,6 +6,7 @@
   var CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
   ns.AD = Backbone.Model.extend({
+    $me: null,
     defaults: {
       ad_app_type: 1,
       ad_type: 0,
@@ -28,11 +29,14 @@
         this.on('sync', this.syncHandler, this);
       }
     },
-    parse: function (response, options) {
+    parse: function (response) {
       if (response.options) {
         this.options = response.options;
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
+      }
+      if (response.me) {
+        this.$me.set(response.me);
       }
       var has_ad = response.ad && _.isObject(response.ad);
       return has_ad ? response.ad : response;
