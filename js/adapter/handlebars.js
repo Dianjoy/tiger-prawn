@@ -77,11 +77,11 @@
 
   //千位分割并保留到小数点后两位
   h.registerHelper('readable_n', function (value) {
-    value = _.isString(value) ? Number(value).toFixed(2).toString() : value.toFixed(2).toString();
+    value = _.isString(value) ? Number(value).toFixed(2) : value.toFixed(2);
     value = value.replace('.', ',');
-    var re = /(\d)(\d{3},)/;
-    while(re.test(value)){
-      value = value.replace(re, '$1, $2');
+    var reg = /(\d)(\d{3},)/;
+    while(reg.test(value)){
+      value = value.replace(reg, '$1,$2');
     }
     value = value.replace(/,(\d\d)$/, '.$1');
     return value.replace(/^\./, '0.');
