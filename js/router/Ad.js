@@ -27,7 +27,7 @@
         };
       this.$body
         .load('page/ad/edit' + page + '.hbs', model, options)
-        .setFramework('ad ad-new', '创建广告');
+        .setFramework('ad ad-new', '创建投放计划');
     },
     edit: function (id) {
       var model = new tp.model.AD({
@@ -45,7 +45,7 @@
       var page = 'page/ad/list' + (this.$me.get('role') === 'cp' ? '_cp' : '') + '.html';
       this.$body
         .load(page)
-        .setFramework('ad ad-list', '我的广告');
+        .setFramework('ad ad-list', '我的投放计划');
     },
     listApplies: function () {
       this.$body

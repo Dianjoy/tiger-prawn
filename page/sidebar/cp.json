@@ -1,24 +1,24 @@
 
 [
   {
-    "title": "广告",
+    "title": "广告投放计划",
     "icon": "flag",
     "sub-id": "sidebar-ad",
     "sub": [
       {
-        "title": "创建广告",
+        "title": "创建投放计划",
         "icon": "plus",
         "link": "#/ad/create"
       },
       {
-        "title": "我的广告",
+        "title": "我的投放计划",
         "icon": "list",
         "link": "#/ad/"
       }
     ]
   },
   {
-    "title": "投放统计",
+    "title": "投放结果统计",
     "icon": "line-chart",
     "link": "#/stat/"
   }

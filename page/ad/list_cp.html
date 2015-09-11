@@ -1,6 +1,6 @@
 <div class="form-inline table-header">
   <div class="form-group mr2e">
-    <a href="#/ad/create/" class="btn btn-primary"><i class="fa fa-plus"></i> </a>
+    <a href="#/ad/create/" class="btn btn-primary"><i class="fa fa-plus"></i> 创建投放计划</a>
   </div>
   <div class="form-group">
     <label for="pagesize">每页显示：</label>
@@ -22,7 +22,8 @@
     <th class="filters">广告名称</th>
     <th><a class="order" href="#quote_rmb">投放单价</a></th>
     <th><a class="order" href="#job_num">每日投放</a></th>
-    <th>今日尚余</th>
+    <th>计划投放</th>
+    <th>实际完成</th>
     <th>状态</th>
     <th><a class="order active inverse" href="#create_time">开始时间</a></th>
     <th><a class="order" href="#status_time">结束时间</a></th>
@@ -38,7 +39,8 @@
       </td>
       <td data-title="付费类型">{{#equal quote_rmb 300}}免费{{else}}付费{{/equal}} &yen;{{d100 quote_rmb}}</td>
       <td data-title="每日投放">{{job_num}}</td>
-      <td data-title="今日尚余">{{num}}</td>
+      <td data-title="计划投放">{{total_num}}</td>
+      <td data-title="实际完成">{{done}}</td>
       <td data-title="状态">
         <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
         {{#if search_flag}}
