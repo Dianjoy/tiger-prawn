@@ -97,7 +97,7 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
-        this.$el.toggleClass('cp', this.model.get('role') === 'cp');
+        this.$el.toggleClass('cp', this.model.isCP());
       }
     },
     addButton_clickHandler: function (event) {

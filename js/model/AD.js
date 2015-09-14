@@ -60,7 +60,7 @@
     },
     syncHandler: function () {
       if ('id' in this.changed) {
-        var hash = '#/ad/' + this.id;
+        var hash = '#/ad/' + (this.$me.isCP() ? '' : this.id);
         setTimeout(function () {
           location.hash = hash;
         }, 3000);

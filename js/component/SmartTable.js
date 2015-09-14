@@ -182,7 +182,6 @@
         error: function (model, xhr) {
           var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
           button.spinner(false);
-          console.log(response.msg);
           alert(response.msg || '删除失败');
         }
       });

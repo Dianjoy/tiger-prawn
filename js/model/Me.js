@@ -19,11 +19,14 @@
     },
     parse: function (response) {
       var me = response.me;
-      if (me.role === 'cp') {
+      if ('balance' in me) {
         me.amount = me.balance + me.lock;
         me.money_percent = Math.round(me.balance / me.amount * 10000) / 100;
       }
       return me;
+    },
+    isCP: function () {
+      return this.get('role') === 'cp';
     },
     id_changeHandler: function (model, id) {
       if (id) {

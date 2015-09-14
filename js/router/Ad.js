@@ -19,11 +19,10 @@
     },
     create: function () {
       var model = this.$context.createInstance(tp.model.AD)
-        , im_cp = this.$me.get('role') === 'cp'
-        , page = im_cp ? '_cp' : ''
+        , page = this.$me.isCP() ? '_cp' : ''
         , options = {
           className: 'ad ad-new',
-          loader: im_cp ? null : tp.page.AdEditor
+          loader: this.$me.isCP() ? null : tp.page.AdEditor
         };
       this.$body
         .load('page/ad/edit' + page + '.hbs', model, options)
@@ -42,7 +41,7 @@
       this.$context.mapValue('model', model);
     },
     list: function () {
-      var page = 'page/ad/list' + (this.$me.get('role') === 'cp' ? '_cp' : '') + '.html';
+      var page = 'page/ad/list' + (this.$me.isCP() ? '_cp' : '') + '.html';
       this.$body
         .load(page)
         .setFramework('ad ad-list', '我的投放计划');
