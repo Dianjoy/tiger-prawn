@@ -28,7 +28,7 @@
 
   var smart = ns.SmartForm = tp.view.DataSyncView.extend({
     $router: null,
-    uploaders: [],
+    uploaders: null,
     events: {
       "blur input,textarea": "input_blurHandler",
       'focus input': 'input_focusHandler',
@@ -129,7 +129,7 @@
     initUploader: function () {
       var id = this.model ? this.model.id : null
         , self = this
-        , collection = this.uploaders;
+        , collection = [];
       this.$('.uploader').each(function () {
         var options = $(this).data();
         if (id) {
@@ -149,6 +149,7 @@
         fetcher.on('data', self.uploader_dataHandler, self);
         collection.push(fetcher);
       });
+      this.uploaders = collection;
     },
     useData: function (data) {
       for (var key in data) {
@@ -237,7 +238,10 @@
           return '/' + getValue(form.elements[key]);
         });
         location.href = action;
+        this.$el.trigger('success');
+        this.trigger('success');
         event.preventDefault();
+        return false;
       }
 
       // 防止多次提交

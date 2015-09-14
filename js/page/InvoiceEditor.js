@@ -3,12 +3,12 @@
   ns.InvoiceEditor = tp.view.Loader.extend({
     $context: null,
     render: function () {
-      this.callback = _.bind(this.callback, this);
+      this.getProductList = _.bind(this.getProductList, this);
       tp.view.Loader.prototype.render.call(this);
-      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: "", autoFetch: false}, this.$('#ad_table'), this.callback);
+      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
     },
-    callback: function (components) {
-      var products = this.model.get('products');
+    getProductList: function (components) {
+      var products =  this.model.get('products');
       var opt = this.model.options;
       this.productList = components[0];
       products.push({amount: true});
@@ -20,14 +20,9 @@
     collection_changeHandler: function (data) {
       var product = _.findWhere(this.model.get('products'), {id: data.id});
       _.extend(product, _.omit(data.toJSON(), 'previous'));
-      if (!this.model.get('init')) {
-        this.model.save({
-          products: this.model.get('products'),
-          income: this.model.options.income_after_total,
-          income_first: this.model.options.income_before_total
-        }, {patch: true});
-      } else {
-        this.render();
+      this.render();
+      if (this.model.isNew()) {
+        $(".modal").modal('hide');
       }
     },
     remove: function () {

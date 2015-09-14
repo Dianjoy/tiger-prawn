@@ -14,9 +14,9 @@
       <button type="button" class="btn btn-primary" id="choose-ad-button"><i class="fa fa-play"></i> 检索</button>
     </div>
   </div>
-  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-auto-fetch="false">
+  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-auto-fetch="false" style="height:225px;">
     <thead>
-      <tr><th><input type="checkbox" value="ids" class="check-all"></th></tr>
+      <tr><th style="border:none"><input type="checkbox" value="ids" class="check-all"></th></tr>
     </thead>
     <tbody id="chose-ad-table" class="well">
     {{{{raw-helper}}}}

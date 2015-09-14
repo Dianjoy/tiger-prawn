@@ -9,7 +9,7 @@
   </div>
   <div class="form-group">
     <label>运营核对：</label>
-    <select class="form-control" name="sub_status">
+    <select class="form-control" name="status">
       <option value="11">全部</option>
       <option value="10">通过</option>
       <option value="9">未通过</option>
@@ -18,7 +18,7 @@
   </div>
   <div class="form-group">
     <label>特批：</label>
-    <select class="form-control" name="sub_status">
+    <select class="form-control" name="status">
       <option value="21">全部</option>
       <option value="20">通过</option>
       <option value="19">未通过</option>
@@ -27,7 +27,7 @@
   </div>
   <div class="form-group">
     <label for="treasurer-verify">财务审核：</label>
-    <select class="form-control" id="treasurer-verify" name="sub_status">
+    <select class="form-control" id="treasurer-verify" name="status">
       <option value="31">全部</option>
       <option value="30">通过</option>
       <option value="29">未通过</option>
@@ -36,7 +36,7 @@
   </div>
   <div class="form-group">
     <label for="director-verify">地区负责人审核：</label>
-    <select class="form-control" id="director-verify" name="sub_status">
+    <select class="form-control" id="director-verify" name="status">
       <option value="41">全部</option>
       <option value="40">通过</option>
       <option value="39">未通过</option>
@@ -74,52 +74,52 @@
       <td data-title="付款方">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
       <td data-title="金额">{{income}}</td>
       <td data-title="运营核对">
-        {{#equal sub_status 8}}审核中{{/equal}}
-        {{#equal sub_status 9}}
+        {{#equal status 8}}审核中{{/equal}}
+        {{#equal status 9}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
         未通过
         {{/if}}
         {{/equal}}
-        {{#greater sub_status 9}}通过{{/greater}}
+        {{#greater status 9}}通过{{/greater}}
       </td>
       <td data-title="特批">
-        {{#in sub_status 18}}审核中{{/in}}
-        {{#equal sub_status 19}}
+        {{#in status 18}}审核中{{/in}}
+        {{#equal status 19}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
         未通过
         {{/if}}
         {{/equal}}
-        {{#greater sub_status 19}}通过{{/greater}}
+        {{#greater status 19}}通过{{/greater}}
       </td>
       <td data-title="财务审核">
-        {{#in sub_status 28}}审核中{{/in}}
-        {{#equal sub_status 29}}
+        {{#in status 28}}审核中{{/in}}
+        {{#equal status 29}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
         未通过
         {{/if}}
         {{/equal}}
-        {{#greater sub_status 29}}通过{{/greater}}
+        {{#greater status 29}}通过{{/greater}}
       </td>
       <td data-title="地区负责人审核">
-        {{#in sub_status 38}}审核中{{/in}}
-        {{#equal sub_status 39}}
+        {{#in status 38}}审核中{{/in}}
+        {{#equal status 39}}
         {{#if reason}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{else}}
         未通过
         {{/if}}
         {{/equal}}
-        {{#greater sub_status 39}}通过{{/greater}}
+        {{#greater status 39}}通过{{/greater}}
       </td>
       <td data-title="快递单号">
         {{#if is_beijing}}
-          {{#greater sub_status 39}}
+          {{#greater status 39}}
             <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
           {{/greater}}
         {{else}}
@@ -130,20 +130,18 @@
       <td data-title="发票日期">{{handle_time}}</td>
       <td data-title="操作">
         <div class="btn-group">
-          {{#equal sub_status 8}}
-          {{#equal status 0}}
+          {{#in status 8 18 28 38}}
           <a href="#/invoice/detail/{{id}}/" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
+          {{#equal status 8}}
           <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
           {{/equal}}
-          {{/equal}}
-          {{#equal status 2}}
-          <a href="#status" data-type="status" data-active="重新申请" data-deactive="" data-open="0" class="btn btn-success edit" data-title="重新申请"><i class="fa fa-edit"></i></a>
+          {{/in}}
+          {{#in status 9 19 29 39}}
+          <a href="#status" data-type="status" data-active="重新申请" data-deactive="" data-open="0" class="btn btn-success edit" data-title="重新申请" title="重新申请"><i class="fa fa-edit"></i></a>
           <a href="#/invoice/detail/{{id}}/" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
-          {{/equal}}
-          {{#in sub_status 10 18 20 28 30 38 40}}
-          {{#equal status 0}}
+          {{/in}}
+          {{#in status 10 20 30 40}}
           <a href="#/invoice/detail/{{id}}/view" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
-          {{/equal}}
           {{/in}}
         </div>
       </td>
