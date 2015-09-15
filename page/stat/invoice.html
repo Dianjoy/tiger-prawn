@@ -45,7 +45,7 @@
   </div>
   <div class="form-group pull-right">
     <label for="search-query">搜索：</label>
-    <input type="search" class="form-control" id="search-query">
+    <input type="search" class="form-control" id="search-query" placeholder="付款方,快递单号">
   </div>
 </div>
 
@@ -121,7 +121,6 @@
           {{/equal}}
           {{/in}}
           {{#in status 9 19 29 39}}
-          <a href="#/invoice/detail/{{id}}/" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
           <a href="#status" data-type="status" data-active="重新申请" data-deactive="" data-open="{{open}}" data-refresh="true" class="edit btn btn-success" data-title="重新申请" title="重新申请"><i class="fa fa-edit"></i></a>
           {{/in}}
           {{#in status 40}}
