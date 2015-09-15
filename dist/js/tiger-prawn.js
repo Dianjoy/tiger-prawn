@@ -7,6 +7,14 @@
   b.sync = function (method, model, options) {
     options = options || {};
 
+    if ('success' in options) {
+      var success = options.success;
+      options.success = function (response) {
+        b.trigger('backbone-sync', response);
+        success(response);
+      };
+    }
+
     if ('xhrField' in options) {
       options.xhrFields.withCredentials = true;
     } else {
@@ -92,6 +100,18 @@
       count++;
     }
     return str;
+  });
+
+  //千位分割并保留到小数点后两位
+  h.registerHelper('readable_n', function (value) {
+    value = _.isString(value) ? Number(value).toFixed(2) : value.toFixed(2);
+    value = value.replace('.', ',');
+    var reg = /(\d)(\d{3},)/;
+    while(reg.test(value)){
+      value = value.replace(reg, '$1,$2');
+    }
+    value = value.replace(/,(\d\d)$/, '.$1');
+    return value.replace(/^\./, '0.');
   });
 
   // 用来生成可读时间
@@ -507,7 +527,7 @@
         this.on('sync', this.syncHandler, this);
       }
     },
-    parse: function (response, options) {
+    parse: function (response) {
       if (response.options) {
         this.options = response.options;
         this.options.API = tp.API;
@@ -535,7 +555,7 @@
     },
     syncHandler: function () {
       if ('id' in this.changed) {
-        var hash = '#/ad/' + this.id;
+        var hash = '#/ad/' + (this.$me.isCP() ? '' : this.id);
         setTimeout(function () {
           location.hash = hash;
         }, 3000);
@@ -562,6 +582,9 @@
   ns.Me = Backbone.Model.extend({
     $body: null,
     url: tp.API + 'user/',
+    defaults: {
+      face: 'img/logo.png'
+    },
     initialize: function () {
       this.on('change:id', this.id_changeHandler, this);
     },
@@ -571,7 +594,15 @@
       }, options));
     },
     parse: function (response) {
-      return response.me;
+      var me = response.me;
+      if ('balance' in me) {
+        me.amount = me.balance + me.lock;
+        me.money_percent = Math.round(me.balance / me.amount * 10000) / 100;
+      }
+      return me;
+    },
+    isCP: function () {
+      return this.get('role') === 'cp';
     },
     id_changeHandler: function (model, id) {
       if (id) {
@@ -2461,7 +2492,7 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
-        this.$el.toggleClass('cp', !!this.model.get('cp'));
+        this.$el.toggleClass('cp', this.model.isCP());
       }
     },
     addButton_clickHandler: function (event) {
@@ -2513,39 +2544,18 @@
 }(Nervenet.createNameSpace('tp.view')));;
 (function (ns) {
   ns.Me = Backbone.View.extend({
-    events: {
-
-    },
     initialize: function () {
+      this.template = Handlebars.compile(this.$('script').html());
       this.model.on('change', this.model_changeHandler, this);
     },
-    setFullname: function (fullname) {
-      this.$('.username').text(fullname);
-    },
-    setFace: function (face) {
-      this.$('.face').attr('src', face);
-    },
-    setBalance: function (balance) {
-      this.$('.balance').text(balance);
-    },
-    model_changeHandler: function (model) {
-      var key, value;
-      for (key in model.changed) {
-        value = model.changed[key];
-        switch (key) {
-          case 'fullname':
-            this.setFullname(value);
-            break;
-
-          case 'face':
-            this.setFace(value);
-            break;
-
-          case 'balance':
-            this.setBalance(value);
-            break;
-        }
+    render: function () {
+      if ('fullname' in this.model.changed) {
+        this.$('.username').text(this.model.get('fullname'));
       }
+      this.$el.filter('.navbar-user').html(this.template(this.model.toJSON()));
+    },
+    model_changeHandler: function () {
+      this.render();
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
@@ -2861,7 +2871,6 @@
         error: function (model, xhr) {
           var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
           button.spinner(false);
-          console.log(response.msg);
           alert(response.msg || '删除失败');
         }
       });
