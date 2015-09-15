@@ -80,7 +80,7 @@
     },
     syncHandler: function () {
       if ('id' in this.changed) {
-        var hash = '#/invoice/detail/' + this.id + '/';
+        var hash = '#/invoice/' + this.id;
         location.hash = hash;
         this.urlRoot = tp.API + 'invoice/';
       }

@@ -10,9 +10,6 @@
     getProductList: function (components) {
       var products =  this.model.get('products');
       var opt = this.model.options;
-      if (this.model.get('view')) {
-        opt.view = true;
-      }
       this.productList = components[0];
       products.push({amount: true});
       this.productList.collection.on('change', this.collection_changeHandler, this);

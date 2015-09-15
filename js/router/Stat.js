@@ -11,7 +11,7 @@
       'stat/:id/:date': 'showADStatDate',
 
       'invoice/': 'showInvoice',
-      'invoice/detail/:id/(:view)':'invoiceDetail',
+      'invoice/:id': 'invoiceDetail',
       'invoice/apply/:start/:end/*ids': 'applyInvoice',
 
       'stat/analyse/': 'showAdminADStat',
@@ -49,10 +49,9 @@
       this.$body.load('page/stat/invoice.html');
       this.$body.setFramework('has-date-range', '我的发票');
     },
-    invoiceDetail: function (id, view) {
+    invoiceDetail: function (id) {
       var model = new tp.model.InvoiceDetail({
-        id: id,
-        view: view
+        id: id
       });
       this.$body
         .load('page/stat/invoice-detail.hbs', model, {
