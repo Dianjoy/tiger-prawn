@@ -247,8 +247,9 @@
       var target = $(event.currentTarget)
         , data = _.extend({active: 1, deactive: 0}, target.data())
         , value = target.prop('checked') ? data.active : data.deactive
-        , id = target.closest('tr').attr('id');
-      this.saveModel(target, id, target.attr('name'), value);
+        , id = target.closest('tr').attr('id')
+        , button = $(target[0].labels).filter('.btn');
+      this.saveModel(button, id, target.attr('name'), value);
     },
     tbodyFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)
