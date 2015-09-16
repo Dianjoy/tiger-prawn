@@ -6,6 +6,7 @@
   var CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
   ns.AD = Backbone.Model.extend({
+    $me: null,
     defaults: {
       ad_app_type: 1,
       ad_type: 0,
