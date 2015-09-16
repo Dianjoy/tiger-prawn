@@ -104,7 +104,7 @@
 
   //千位分割并保留到小数点后两位
   h.registerHelper('readable_n', function (value) {
-    value = _.isString(value) ? Number(value).toFixed(2) : value.toFixed(2);
+    value = _.isNumber(value) ? value.toFixed(2) : Number(value).toFixed(2);
     value = value.replace('.', ',');
     var reg = /(\d)(\d{3},)/;
     while(reg.test(value)){
