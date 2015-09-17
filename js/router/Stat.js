@@ -42,7 +42,7 @@
     },
     showStat: function () {
       this.$body.load('page/stat/list.html');
-      this.$body.setFramework('has-date-range', '广告统计');
+      this.$body.setFramework('has-date-range', '投放结果统计');
     },
 
     showInvoice: function () {

@@ -24,19 +24,19 @@
     "bootstrap": "~3.3.5",
     "font-awesome": "~4.4.0",
     "colors": "~2.2.0",
-    "backbone": "~1.2.2",
+    "backbone": "~1.2.3",
     "nervenet": "~0.1.9",
-    "handlebars": "~3.0.3",
+    "handlebars": "~4.0.2",
     "animate.css": "~3.4.0",
     "moment": "~2.10.6",
-    "eonasdan-bootstrap-datetimepicker": "~4.15.35",
+    "eonasdan-bootstrap-datetimepicker": "~4.17.37",
     "morrisjs": "~0.5.1",
     "jquery": "~2.1.4",
-    "mh-simple-uploader": "~0.6.3",
+    "mh-simple-uploader": "~0.6.4",
     "marked": "~0.3.5"
   },
   "devDependencies": {
     "bootstrap-sass": "twbs/bootstrap-sass#~3.3.5",
-    "qunit": "~1.18.0"
+    "qunit": "~1.19.0"
   }
 }

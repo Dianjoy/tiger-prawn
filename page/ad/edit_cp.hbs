@@ -1,7 +1,6 @@
 <div class="row">
-  <form class="form-horizontal model-editor iPhone col-sm-8 col-xs-12" method="post" enctype="multipart/form-data" id="ad-editor">
+  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" id="ad-editor" data-mediator-class="tp.page.CPEditor">
     <input type="hidden" name="id" value="">
-    <input type="hidden" name="ad_app_type" value="2">
     <fieldset class="collapsible">
       <a name="basic-info"></a>
       <legend>基础信息</legend>
@@ -14,7 +13,7 @@
       <div class="form-group">
         <label class="col-sm-2 control-label" for="ad_url">iTunes地址</label>
         <div class="col-sm-10">
-          <input name="ad_url" id="ad_url" class="form-control" required>
+          <input type="url" name="ad_url" id="ad_url" class="form-control" required>
         </div>
       </div>
     </fieldset>
@@ -25,10 +24,12 @@
       <div class="form-group iPhone">
         <label class="col-sm-2 control-label">投放类型</label>
         <div class="col-sm-10 select-button">
-          <input type="radio" name="search_flag" value="0" id="search_flag-1" checked>
+          <input type="radio" name="search_flag" value="0" id="search_flag-1" checked data-toggle-class="offer" data-group="search_flag" data-target="#ad-editor">
           <label for="search_flag-1">普通广告</label>
-          <input type="radio" name="search_flag" value="1" id="search_flag-2">
-          <label for="search_flag-2">ASO广告</label>
+          <input type="radio" name="search_flag" value="1" id="search_flag-2" data-toggle-class="aso" data-group="search_flag" data-target="#ad-editor">
+          <label for="search_flag-2">ASO广告 - 自动搜索</label>
+          <input type="radio" name="search_flag" value="2" id="search_flag-3" data-toggle-class="aso" data-group="search_flag" data-target="#ad-editor">
+          <label for="search_flag-3">ASO广告 - 手动搜索</label>
         </div>
       </div>
       <div class="form-group iPhone aso">
@@ -40,62 +41,44 @@
           </p>
         </div>
       </div>
-      <div class="form-group iPhone aso">
-        <label class="col-sm-2 control-label">是否需要用户手动搜索</label>
-        <div class="col-sm-10">
-          <label class="control-label">不需要</label>
-          <input type="checkbox" class="switch" name="aso_middle_page" value="1" id="aso_middle_page" checked>
-          <label for="aso_middle_page"></label>
-          <label class="control-label">需要</label>
-        </div>
-      </div>
-      <div class="form-group iPhone aso">
-        <label class="col-sm-2 control-label" for="rank">目标排名</label>
-        <div class="col-sm-6">
-          <input type="range" min="1" max="15" name="rank" id="rank" value="10"><span class="help-inline">10</span>
-        </div>
-      </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="quote_rmb">应用类型</label>
+        <label class="col-sm-2 control-label" for="quote_rmb">投放单价</label>
         <div class="col-sm-10 select-button">
-          <input type="radio" name="quote_rmb" value="300" id="quote_rmb-1">
-          <label for="quote_rmb-1">免费应用（&yen;3.00）</label>
+          <input type="radio" name="quote_rmb" value="300" id="quote_rmb-1" checked>
+          <label for="quote_rmb-1">免费应用 - <strong>&yen;3.00</strong></label>
           <input type="radio" name="quote_rmb" value="600" id="quote_rmb-2">
-          <label for="quote_rmb-2">付费应用（&yen;6.00）</label>
+          <label for="quote_rmb-2">付费应用 - <strong>&yen;6.00</strong></label>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="job_num">日投放量</label>
+        <label class="col-sm-2 control-label" for="job_num">每日投放</label>
         <div class="col-sm-6">
-          <input type="number" id="job_num" value="1000" class="form-control" name="job_num" min="1000" max="30000" required/>
-          <p class="help-block">投放量范围1000-30000</p>
+          <input type="number" id="job_num" value="100" class="form-control" name="job_num" min="100" max="3000" required/>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label" for="total_num">总计投放</label>
         <div class="col-sm-6">
-          <input type="number" name="total_num" id="total_num" value="{{total_num}}" class="form-control">
+          <input type="number" name="total_num" id="total_num" value="{{total_num}}" class="form-control" readonly>
+          <p class="help-block">投放量范围1000-30000</p>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label" for="start_time">开始时间</label>
         <div class="col-sm-6">
-          <input type="datetime" name="start_time" id="start_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
+          <div class="input-group">
+            <input type="datetime" name="start_time" id="start_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true" data-min-date="0" data-default-date="1">
+            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+          </div>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label" for="end_time">结束时间</label>
         <div class="col-sm-6">
-          <input type="datetime" name="end_time" id="end_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true">
-        </div>
-      </div>
-      <div class="form-group Android">
-        <label class="col-sm-2 control-label">完成条件</label>
-        <div class="col-sm-10 select-button">
-          {{#each cates}}
-            <input type="radio" name="cate" value="{{@key}}" id="cate-{{@key}}" {{#equal @key ../cate}}checked{{/equal}} />
-            <label for="cate-{{@key}}">{{.}}</label>
-          {{/each}}
+          <div class="input-group">
+            <input type="datetime" name="end_time" id="end_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true" data-min-date="1" data-default-date="2">
+            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+          </div>
         </div>
       </div>
       <div class="form-group">
@@ -155,7 +138,7 @@
         <div class="alert alert-info hide">
           将于3秒后跳转到广告列表页。[<a href="#/ad/">立刻跳转</a>]
         </div>
-        <button class="btn btn-block btn-lg btn-primary"><i class="fa fa-save"></i> 提交</button>
+        <button class="btn btn-block btn-lg btn-primary" disabled><i class="fa fa-save"></i> 提交</button>
       </div>
     </div>
   </form>
@@ -168,6 +151,11 @@
         <div class="panel-body">
           <ul>
             <li>如需要做技术对接，请联系点乐技术。</li>
+            <li>ASO广告多个关键词请建立多个计划。</li>
+            <li>如果有特殊需求，可以在“其它投放要求”中描述，我们会尽量满足您。</li>
+            <li>创建广告后，会锁定相应额度。要释放这部分额度，可以选择撤销计划；如果广告已经上线，可以提前下线。</li>
+            <li>广告下线后，我们会对其进行结算，大约一小时后，剩余的费用会回到您的账户中。</li>
+            <li>您不需要为结算后的余量支付费用。</li>
           </ul>
         </div>
       </div>

@@ -32,6 +32,13 @@ $(function () {
   context.createInstance(tp.router.Stat);
   context.createInstance(tp.router.Me);
 
+  // 全局处理取得数据后的操作
+  Backbone.on('backbone-sync', function (response) {
+    if ('me' in response) {
+      me.set(response.me);
+    }
+  });
+
   // 验证用户身份
   me.fetch();
 

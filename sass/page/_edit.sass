@@ -3,8 +3,10 @@
 @import "../define"
 
 .Android .iPhone,
-.iPhone .Android
-  display: none
+.iPhone .Android,
+.offer .aso,
+.aso .offer
+  display: none !important
 
 #app-uploader
   .su-tabs + button
@@ -21,6 +23,3 @@
 
   .show-feedback-detail &
     display: block
-
-.aso
-  display: none

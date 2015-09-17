@@ -78,3 +78,23 @@ QUnit.test('path', function (assert) {
   console.log(html);
   assert.ok(html);
 });
+
+QUnit.test('readable_n', function (assert) {
+  var html = '{{readable_n num}}'
+    , template = Handlebars.compile(html)
+    , obj = {
+      num: null
+    }
+    , obj2 = {
+      num: '1234.567'
+    }
+    , obj3 = {
+      num: -1234.567
+    }
+    , result = template(obj)
+    , result2 = template(obj2)
+    , result3 = template(obj3);
+  assert.ok(result === '0.00');
+  assert.ok(result2 === '1,234.57');
+  assert.ok(result3 === '-1,234.57');
+});
