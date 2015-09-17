@@ -9,11 +9,16 @@
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard(/)': 'showDashboard',
+      'dashboard/(:start/:end)': 'showDashboard',
       'my/profile/': 'showMyProfile'
     },
-    showDashboard: function () {
-      this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
+    showDashboard: function (start, end) {
+      var page = this.$me.get('role') === 'cp' ? '_cp' : '';
+      var model = new tp.model.Dashboard({
+        dashboard_start: start || moment().add(-1, 'months').format('YYYY-MM-DD'),
+        dashboard_end: end || moment().format('YYYY-MM-DD')
+      });
+      this.$body.load('page/dashboard' + page + '.hbs', model);
       this.$body.setFramework('dashboard', '新近数据统计');
     },
     showMyProfile: function () {
