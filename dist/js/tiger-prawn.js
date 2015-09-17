@@ -134,6 +134,15 @@
     }
   });
 
+  // 大于
+  h.registerHelper('greater', function (value, target, options) {
+    if (value > target) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
+
   // 包含
   h.registerHelper('in', function (value, array, options) {
     if (!_.isArray(array)) {
@@ -437,6 +446,118 @@
       result[arr[0]] = decodeURIComponent(arr[1]);
     }
     return result;
+  };
+  ns.convertCurrency = function (currencyDigits) {
+    var MAXIMUM_NUMBER = 99999999999.99;
+    var CN_ZERO = '零';
+    var CN_ONE = '壹';
+    var CN_TWO = '贰';
+    var CN_THREE = '叁';
+    var CN_FOUR = '肆';
+    var CN_FIVE = '伍';
+    var CN_SIX = '陆';
+    var CN_SEVEN = '柒';
+    var CN_EIGHT = '捌';
+    var CN_NINE = '玖';
+    var CN_TEN = '拾';
+    var CN_HUNDRED = '佰';
+    var CN_THOUSAND = '仟';
+    var CN_TEN_THOUSAND = '万';
+    var CN_HUNDRED_MILLION = '亿';
+    var CN_DOLLAR = '元';
+    var CN_TEN_CENT = '角';
+    var CN_CENT = '分';
+    var CN_INTEGER = '整';
+
+    var integral;
+    var decimal;
+    var outputCharacters;
+    var parts;
+    var digits, radices, bigRadices, decimals;
+    var zeroCount;
+    var i, p, d;
+    var quotient, modulus;
+
+    currencyDigits = currencyDigits.toString();
+    if (currencyDigits == '') {
+      alert('Empty input!');
+      return '';
+    }
+    if (currencyDigits.match(/[^,.\d]/) != null) {
+      alert('Invalid characters in the input string!');
+      return '';
+    }
+    if ((currencyDigits).match(/^((\d{1,3}(,\d{3})*(.((\d{3},)*\d{1,3}))?)|(\d+(.\d+)?))$/) == null) {
+      alert('Illegal format of digit number!');
+      return '';
+    }
+
+    currencyDigits = currencyDigits.replace(/,/g, "");
+    currencyDigits = currencyDigits.replace(/^0+/, "");
+    if (Number(currencyDigits) > MAXIMUM_NUMBER) {
+      alert('Too large a number to convert!');
+      return '';
+    }
+
+    parts = currencyDigits.split('.');
+    if (parts.length > 1) {
+      integral = parts[0];
+      decimal = parts[1];
+
+      decimal = decimal.substr(0, 2);
+    } else {
+      integral = parts[0];
+      decimal = '';
+    }
+
+    digits = new Array(CN_ZERO, CN_ONE, CN_TWO, CN_THREE, CN_FOUR, CN_FIVE, CN_SIX, CN_SEVEN, CN_EIGHT, CN_NINE);
+    radices = new Array('', CN_TEN, CN_HUNDRED, CN_THOUSAND);
+    bigRadices = new Array('', CN_TEN_THOUSAND, CN_HUNDRED_MILLION);
+    decimals = new Array(CN_TEN_CENT, CN_CENT);
+
+    outputCharacters = '';
+
+    if (Number(integral) > 0) {
+      zeroCount = 0;
+      for (i = 0; i < integral.length; i++) {
+        p = integral.length - i - 1;
+        d = integral.substr(i, 1);
+        quotient = p / 4;
+        modulus = p % 4;
+        if (d == '0') {
+          zeroCount++;
+        } else {
+          if (zeroCount > 0)
+          {
+            outputCharacters += digits[0];
+          }
+          zeroCount = 0;
+          outputCharacters += digits[Number(d)] + radices[modulus];
+        }
+        if (modulus == 0 && zeroCount < 4) {
+          outputCharacters += bigRadices[quotient];
+        }
+      }
+      outputCharacters += CN_DOLLAR;
+    }
+
+    if (decimal != '') {
+      for (i = 0; i < decimal.length; i++) {
+        d = decimal.substr(i, 1);
+        if (d != '0') {
+          outputCharacters += digits[Number(d)] + decimals[i];
+        }
+      }
+    }
+
+    if (outputCharacters == '') {
+      outputCharacters = CN_ZERO + CN_DOLLAR;
+    }
+    if (decimal == '') {
+      outputCharacters += CN_INTEGER;
+    }
+    outputCharacters = outputCharacters;
+    return outputCharacters;
   }
 }(Nervenet.createNameSpace('tp.utils')));;
 (function (ns) {
@@ -501,83 +622,6 @@
     });
   };
 }(Nervenet.createNameSpace('tp.controller')));;
-(function (ns) {
-  var CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
-
-  ns.AD = Backbone.Model.extend({
-    defaults: {
-      ad_app_type: 1,
-      ad_type: 0,
-      cate: 0,
-      cpc_cpa: 'cpa',
-      put_net: 0,
-      province_type: 0,
-      put_jb: 0,
-      put_ipad: 0,
-      net_type: 0,
-      down_type: 0,
-      feedback: 2,
-      cycle: 2
-    },
-    urlRoot: tp.API + 'ad/',
-    initialize: function (attrs, options) {
-      Backbone.Model.prototype.initialize.call(this, attrs, options);
-      if (this.isNew()) {
-        this.urlRoot += 'init';
-        this.on('sync', this.syncHandler, this);
-      }
-    },
-    parse: function (response) {
-      if (response.options) {
-        this.options = response.options;
-        this.options.API = tp.API;
-        this.options.UPLOAD = tp.UPLOAD;
-      }
-      var has_ad = response.ad && _.isObject(response.ad);
-      return has_ad ? response.ad : response;
-    },
-    toJSON: function (options) {
-      var json = Backbone.Model.prototype.toJSON.call(this, options);
-      if (options) { // from sync，因为{patch: true}
-        return json;
-      }
-      var previous = this.previousAttributes();
-      if (!_.isEmpty(previous)) {
-        json.previous = previous;
-      }
-      return _.extend(json, this.options);
-    },
-    validate: function (attrs) {
-      var pack_name = this.get('pack_name');
-      if (pack_name && attrs.pack_name !== pack_name && !confirm(CONFIRM_MSG)) {
-        return '新包名与之前不一致，请检查后重新上传。';
-      }
-    },
-    syncHandler: function () {
-      if ('id' in this.changed) {
-        var hash = '#/ad/' + (this.$me.isCP() ? '' : this.id);
-        setTimeout(function () {
-          location.hash = hash;
-        }, 3000);
-        this.urlRoot = tp.API + 'ad/';
-      }
-    }
-  });
-}(Nervenet.createNameSpace('tp.model')));;
-(function (ns) {
-  ns.Dashboard = Backbone.Model.extend({
-    className: 'dashboard',
-    url: tp.API + 'dashboard/',
-    parse: function (resposne) {
-      if ('record' in resposne.data) {
-        _.each(resposne.data.record, function (item, i) {
-          item.is_checked = item.status < 2;
-        });
-      }
-      return resposne.data;
-    }
-  });
-}(Nervenet.createNameSpace('tp.model')));;
 (function (ns) {
   ns.Me = Backbone.Model.extend({
     $body: null,
@@ -814,30 +858,6 @@
       localStorage.setItem(this.key, JSON.stringify(this.omit('page', 'keyword')));
     }
   });
-}(Nervenet.createNameSpace('tp.model')));;
-(function (ns) {
-  ns.Detail = Backbone.Model.extend({
-      parse: function (response, options) {
-        if (response.options) {
-          this.options = response.options;
-          this.options.API = tp.API;
-          this.options.UPLOAD = tp.UPLOAD;
-        }
-        return response.list;
-      },
-      toJSON: function (options) {
-        var json = Backbone.Model.prototype.toJSON.call(this, options);
-        if (options) { // from sync，因为{patch: true}
-          return json;
-        }
-        var previous = this.previousAttributes();
-        if (!_.isEmpty(previous)) {
-          json.previous = previous;
-        }
-        return _.extend(json, this.options);
-      }
-    }
-  );
 }(Nervenet.createNameSpace('tp.model')));;
 ;(function (ns) {
   ns.DataSyncView = Backbone.View.extend({
@@ -1078,7 +1098,7 @@
 
   var smart = ns.SmartForm = tp.view.DataSyncView.extend({
     $router: null,
-    uploaders: [],
+    uploaders: null,
     events: {
       "blur input,textarea": "input_blurHandler",
       'focus input': 'input_focusHandler',
@@ -1179,7 +1199,7 @@
     initUploader: function () {
       var id = this.model ? this.model.id : null
         , self = this
-        , collection = this.uploaders;
+        , collection = [];
       this.$('.uploader').each(function () {
         var options = $(this).data();
         if (id) {
@@ -1199,6 +1219,7 @@
         fetcher.on('data', self.uploader_dataHandler, self);
         collection.push(fetcher);
       });
+      this.uploaders = collection;
     },
     useData: function (data) {
       for (var key in data) {
@@ -1287,7 +1308,10 @@
           return '/' + getValue(form.elements[key]);
         });
         location.href = action;
+        this.$el.trigger('success');
+        this.trigger('success');
         event.preventDefault();
+        return false;
       }
 
       // 防止多次提交
@@ -1652,6 +1676,7 @@
     },
     remove: function () {
       this.stopListening();
+      this.undelegateEvents();
       this.el = this.$el = this.model = null;
       return this;
     },
@@ -2936,8 +2961,9 @@
       var target = $(event.currentTarget)
         , data = _.extend({active: 1, deactive: 0}, target.data())
         , value = target.prop('checked') ? data.active : data.deactive
-        , id = target.closest('tr').attr('id');
-      this.saveModel(target, id, target.attr('name'), value);
+        , id = target.closest('tr').attr('id')
+        , button = $(target[0].labels).filter('.btn');
+      this.saveModel(button, id, target.attr('name'), value);
     },
     tbodyFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)

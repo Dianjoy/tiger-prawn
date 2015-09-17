@@ -3,17 +3,28 @@
  */
 QUnit.test('pick', function (assert) {
   var html = '{{pick num "meat" "hill" "haha"}}'
+    , html2 = '{{pick num data}}'
     , template = Handlebars.compile(html)
+    , template2 = Handlebars.compile(html2)
     , obj = {
       num: 1
     }
     , obj2 = {
       num: 2
     }
+    , obj3 = {
+      num: 4,
+      data: {
+        4: 'heihei',
+        23: 'jordan'
+      }
+    }
     , result = template(obj)
-    , result2 = template(obj2);
+    , result2 = template(obj2)
+    , result3 = template2(obj3);
   assert.ok(result === 'hill', 'oyeah');
   assert.ok(result2 === 'haha', 'yeah');
+  assert.ok(result3 === 'heihei', 'ok');
 });
 
 QUnit.test('pick in', function (assert) {
