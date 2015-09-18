@@ -92,11 +92,13 @@
 
 <nav class="collapse navbar-collapse navbar-side" role="navigation" id="navbar-side">
   <div class="navbar-user me cp-hide">
-    <img src="img/logo.png" class="img-circle face">
-    <h4 class="username">Meathill</h4>
-    <a href="page/cp/recharge.md" class="popup pull-right" title="充值" data-cancel="关闭">[充值]</a>
-    <label>您的余额：65/100</label>
-    <progress value="65" max="100">65%</progress>
+    <script type="text/x-handlebars-template">
+      <img src="{{face}}" class="img-circle face">
+      <h4 class="username">{{fullname}}</h4>
+      <a href="page/cp/recharge.md" class="popup pull-right invisible" title="充值" data-cancel="关闭">[充值]</a>
+      <label>您的余额：&yen;{{d100 balance}}</label>
+      <progress value="{{balance}}" max="{{amount}}" title="">{{money_percent}}%</progress>
+    </script>
   </div>
   <ul id="navbar-side-inner" class="nav navbar-nav side-nav">
     <li><a href="#/dashboard/"><i class="fa fa-dashboard"></i> 首页</a></li>
@@ -170,7 +172,7 @@
 
 <footer id="footer">
   <a class="pull-right top-button" href="#"><i class="fa fa-arrow-up"></i> 返回顶部</a>
-  <p>点乐广告自助平台（测试版） &copy; 2015 <a href="http://www.dianjoy.com">Dianjoy</a>. 保留一切权利。</p>
+  <p>点乐广告自助平台（测试版） <a href="http://www.dianjoy.com">Dianjoy</a> &copy; 2015  保留一切权利。</p>
 </footer>
 
 <ul id="growl">

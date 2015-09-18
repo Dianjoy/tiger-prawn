@@ -52,6 +52,16 @@ table
     &.weight
       background: #FF9933
 
+    &.label-channel,
+    &.label-channel_alias,
+    &.label-source,
+    &.label-agreement,
+    &.label-agreement_id
+      background: $label-info-bg
+
+    &.label-ad_name
+      background: $label-success-bg
+
     &[data-toggle]
       cursor: pointer
 
@@ -68,6 +78,9 @@ table
 
     &.text-muted
       color: $gray
+
+  input.status-button
+    display: none
 
   tr.show
     display: table-row !important
@@ -88,15 +101,6 @@ table
 
   tfoot.waiting
     text-align: center
-
-.label-channel,
-.label-source,
-.label-agreement,
-.label-agreement_id
-  background: $label-info-bg
-
-.label-ad_name
-  background: $label-success-bg
 
 .table-header
   margin-bottom: 1em

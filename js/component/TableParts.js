@@ -108,6 +108,7 @@
     },
     remove: function () {
       this.stopListening();
+      this.undelegateEvents();
       this.el = this.$el = this.model = null;
       return this;
     },

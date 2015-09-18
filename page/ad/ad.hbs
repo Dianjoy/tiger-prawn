@@ -148,12 +148,12 @@
         {{else}}
         <tr>
           <th>投放类型</th>
-          <th><a class="edit" href="#search_flag" data-type="select" data-list="search_flags">{{pick search_flag '普通' 'ASO'}}</a></th>
+          <th><a class="edit" href="#search_flag" data-type="select" data-list="search_flags">{{pick search_flag '普通' 'ASO - 自动' 'ASO - 手动'}}</a></th>
         </tr>
         {{#if search_flag}}
           <tr>
             <th>ASO搜索词</th>
-            <th><a class="edit" href="#keywords">{{keywords}}</a></th>
+            <td><a class="edit" href="#keywords">{{keywords}}</a></td>
           </tr>
         {{/if}}
         {{/equal}}

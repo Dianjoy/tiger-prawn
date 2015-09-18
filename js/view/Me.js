@@ -4,39 +4,18 @@
 'use strict';
 (function (ns) {
   ns.Me = Backbone.View.extend({
-    events: {
-
-    },
     initialize: function () {
+      this.template = Handlebars.compile(this.$('script').html());
       this.model.on('change', this.model_changeHandler, this);
     },
-    setFullname: function (fullname) {
-      this.$('.username').text(fullname);
-    },
-    setFace: function (face) {
-      this.$('.face').attr('src', face);
-    },
-    setBalance: function (balance) {
-      this.$('.balance').text(balance);
-    },
-    model_changeHandler: function (model) {
-      var key, value;
-      for (key in model.changed) {
-        value = model.changed[key];
-        switch (key) {
-          case 'fullname':
-            this.setFullname(value);
-            break;
-
-          case 'face':
-            this.setFace(value);
-            break;
-
-          case 'balance':
-            this.setBalance(value);
-            break;
-        }
+    render: function () {
+      if ('fullname' in this.model.changed) {
+        this.$('.username').text(this.model.get('fullname'));
       }
+      this.$el.filter('.navbar-user').html(this.template(this.model.toJSON()));
+    },
+    model_changeHandler: function () {
+      this.render();
     }
   });
 }(Nervenet.createNameSpace('tp.view')));

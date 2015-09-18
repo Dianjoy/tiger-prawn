@@ -220,10 +220,9 @@
       this.searchAgreement();
     },
     searchFlag_changeHandler: function (event) {
-      var is_aso = event.target.value === '1';
-      this.$('.aso').toggle(is_aso);
-      $('#keywords').prop('required', is_aso);
-      $('#ad_desc').val(is_aso ? aso_desc : this.model.get('ad_url'));
+      var not_offer = event.target.value !== '0';
+      $('#keywords').prop('required', not_offer);
+      $('#ad_desc').val(not_offer ? aso_desc : this.model.get('ad_url'));
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

@@ -11,6 +11,14 @@
   b.sync = function (method, model, options) {
     options = options || {};
 
+    if ('success' in options) {
+      var success = options.success;
+      options.success = function (response) {
+        b.trigger('backbone-sync', response);
+        success(response);
+      };
+    }
+
     if ('xhrField' in options) {
       options.xhrFields.withCredentials = true;
     } else {

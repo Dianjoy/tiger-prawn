@@ -182,7 +182,6 @@
         error: function (model, xhr) {
           var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
           button.spinner(false);
-          console.log(response.msg);
           alert(response.msg || '删除失败');
         }
       });
@@ -248,8 +247,9 @@
       var target = $(event.currentTarget)
         , data = _.extend({active: 1, deactive: 0}, target.data())
         , value = target.prop('checked') ? data.active : data.deactive
-        , id = target.closest('tr').attr('id');
-      this.saveModel(target, id, target.attr('name'), value);
+        , id = target.closest('tr').attr('id')
+        , button = $(target[0].labels).filter('.btn');
+      this.saveModel(button, id, target.attr('name'), value);
     },
     tbodyFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)
