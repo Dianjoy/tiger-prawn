@@ -1,19 +1,27 @@
 <div class="row">
   <div class="col-md-8 col-sm-12">
-    <h4 class="col-md-4" style="display: inline-block">
-      &nbsp;&nbsp;欢迎你，{{my_name}}。本月业绩
+    <h4 style="display:inline-block;" class="mr2e">
+      欢迎你，{{my_name}}。本月业绩
+      <small>{{start}}至{{end}}</small>
     </h4>
-    <form class="col-md-8 form-inline" action="#/dashboard/:start/:end">
-      <div class="form-group">
-        <label class="control-label">选择日期</label>
-        <input class="datetimepicker form-control" name="start" data-format="YYYY-MM-DD" value="{{start}}">
-        <input class="datetimepicker form-control" name="end" data-format="YYYY-MM-DD" value="{{end}}">
-        <button type="submit" class="btn btn-default"><i class="fa fa-play"></i> 检索</button>
-      </div>
-    </form>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-clock-o"></i>选择时间段 <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        {{#each months}}
+          <li><a href="#/dashboard/{{start}}/{{end}}">{{month}}</a></li>
+        {{/each}}
+        <li class="divider"></li>
+        <li><a href="#/dashboard/{{today}}/{{today}}">今天</a></li>
+        <li><a href="#/dashboard/{{yesterday}}/{{yesterday}}">昨天</a></li>
+        <li><a href="#/dashboard/{{month_start}}/{{today}}">本月</a></li>
+        <li><a href="#/dashboard/{{season_start}}/{{today}}">本季度</a></li>
+      </ul>
+    </div>
   </div>
-  <h4 class="pull-right col-md-4 col-sm-12">
-    <a href="">最近一小时的广告数：安卓{{pack_name_count_android}}个；iOS{{pack_name_count_ios}}个，回调率{{ios_ratio}}%</a>
+  <h4 class="pull-right col-md-4 col-sm-12 text-right">
+    最近一小时的广告数：安卓{{pack_name_count_android}}个；iOS{{pack_name_count_ios}}个，回调率{{ios_ratio}}%
   </h4>
 </div>
 <div class="row dashboard-stats mt2e">
@@ -23,7 +31,7 @@
       <h3 class="title">本月营收</h3>
       <p>&yen; {{income}}</p>
     </div>
-    <a href="" class="more">详情 <i class="fa fa-play-circle"></i></a>
+    <a class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
   <div class="col-md-3 col-sm-6 dashboard-stat stat-secondary">
     <i class="fa fa-sign-out fa-3x circle-title"></i>
@@ -31,7 +39,7 @@
       <h3 class="title">本月成本</h3>
       <p>&yen; {{out}}</p>
     </div>
-    <a href="" class="more">详情 <i class="fa fa-play-circle"></i></a>
+    <a class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
   <div class="col-md-3 col-sm-6 dashboard-stat stat-tertiary">
     <i class="fa fa-smile-o fa-3x circle-title"></i>
@@ -39,7 +47,7 @@
       <h3 class="title">结算率</h3>
       <p>{{ratio}}%</p>
     </div>
-    <a href="" class="more">详情 <i class="fa fa-play-circle"></i></a>
+    <a class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
   <div class="col-md-3 col-sm-6 dashboard-stat stat-quartus">
     <i class="fa fa-trophy fa-3x circle-title"></i>
@@ -47,12 +55,12 @@
       <h3 class="title">利润率</h3>
       <p>{{profit}}%</p>
     </div>
-    <a href="" class="more">详情 <i class="fa fa-play-circle"></i></a>
+    <a class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
 </div>
 <div class="row mt2e">
   <div class="col-md-12 col-sm-12">
-    <div class="portlet portlet-blue">
+    <div class="portlet portlet-green">
       <div class="portlet-leading">
         <h4 class="portlet-title"><i class="fa fa-line-chart"></i> 公司营收</h4>
       </div>
@@ -160,7 +168,7 @@
         <div class="progress-stat">
           <div class="stat-header">
             <div class="stat-label">
-              % 已回款 <a href="">[详情]</a>
+              % 已回款
             </div>
             <div class="stat-value">
               {{payment}}%

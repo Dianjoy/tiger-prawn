@@ -9,7 +9,7 @@
     initialize: function (attrs) {
       var start = attrs.dashboard_start;
       var end = attrs.dashboard_end;
-      this.url  += '?start=' + start + '&end=' + end;
+      this.url = attrs.is_sale ? this.url += '?start=' + start + '&end=' + end : this.url;
     },
     parse: function (resposne) {
       if ('record' in resposne.data) {
