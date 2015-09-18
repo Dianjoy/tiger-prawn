@@ -7,6 +7,7 @@
     $body: null,
     routes: {
       'stat(/)': 'showStat',
+      'stat/ad_type/:ad_type': 'showAdStatType',
       'stat/:id': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
       'stat/analyse/': 'showAdminADStat',
@@ -38,6 +39,14 @@
     showStat: function () {
       this.$body.load('page/stat/list.html');
       this.$body.setFramework('has-date-range', '投放结果统计');
+    },
+    showAdStatType: function (ad_type) {
+      this.$body.load('page/stat/list.hbs', {
+        API: tp.API,
+        ad_type: ad_type,
+        is_android: ad_type == 'android' ? true : false
+      });
+      this.$body.setFramework('has-date-range stat ' + ad_type + '-stat', ad_type + '广告统计');
     },
     showAdminADStat: function () {
       this.$body.load('page/stat/analyse.hbs', {

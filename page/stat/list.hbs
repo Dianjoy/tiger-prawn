@@ -1,0 +1,91 @@
+<div class="form-inline table-header">
+  <div class="form-group">
+    <label for="pagesize">每页显示：</label>
+    <select class="form-control" id="pagesize">
+      <option selected>10</option>
+      <option>20</option>
+      <option>50</option>
+    </select>
+  </div>
+  <div class="form-group pull-right">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query" name="query" placeholder="关键词">
+  </div>
+</div>
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}adStat/{{ad_type}}/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-start="-31" data-end="0" data-search="#search-query" data-collection-id="{{ad_type}}-list">
+  <thead>
+  <tr>
+    <th class="filters">管理名</th>
+    <th>状态</th>
+    <th><a class="order" href="#rmb1">推广费用</a></th>
+    <th><a class="order" href="#click">点击数</a></th>
+    <th><a class="order" href="#install">安装激活数</a></th>
+    <th><a class="order" href="#device1">有效推广数</a></th>
+    {{#if is_android}}
+    <th><a class="order" href="#native">内容流展示数</a></th>
+    <th><a class="order" href="#native_transfer">内容流激活数</a></th>
+    {{else}}
+    <th><a class="order" href="#callback">回调数</a></th>
+    <th><a class="order" href="#cpa">广告主CPA</a></th>
+    <th><a class="order" href="#ratio">点击到激活转化率</a></th>
+    <th><a class="order" href="#click_ratio">点击到通知回调率</a></th>
+    {{/if}}
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <tr id="{{id}}">
+      <td data-title="管理名">
+        <a href="#/agreement/{{agreement}}" class="filter label label-agreement">{{agreement}}</a>
+        <a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>
+        <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
+        {{ctime}} {{channel_id}}
+      </td>
+      <td data-title="状态">
+        {{# if is_amount}}总计
+        {{else}}
+          <a href="page/stat/comments.hbs" class="popup" data-id="{{id}}" data-collection-id="{{#if is_android}}android{{else}}ios{{/if}}-list" data-title="查看 {{ad_name}} {{channel}} 的备注" data-confirm="确定">
+            <i class="platform fa fa-{{#if is_android}}android{{else}}apple{{/if}}"></i>
+            <i class="fa fa-info-circle fa-lg"></i>
+        </a>
+        {{/if}}
+      </td>
+      <td data-title="推广费用">&yen; {{readable_n rmb1}}</td>
+      <td data-title="点击数">{{click}}</td>
+      <td data-title="安装激活数">{{install}}</td>
+      <td data-title="有效推广数">{{device1}}</td>
+      {{#if is_android}}
+      <td data-title="内容流展示数">{{native}}</td>
+      <td data-title="内容流激活数">{{native_transfer}}</td>
+      {{else}}
+      <td data-title="回调数">{{callback}}</td>
+      <td data-title="广告主CPA">{{cpa}}</td>
+      <td data-title="点击到激活转化率">{{ratio}}%</td>
+      <td data-title="点击到通知回调率">{{click_ratio}}%</td>
+      {{/if}}
+    </tr>
+    {{{{/raw-helper}}}}
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="8">
+      <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
+    </td>
+  </tr>
+  </tfoot>
+</table>
+<nav class="pull-right">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+      <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+      {{{{/raw-helper}}}}
+    </script>
+  </ul>
+</nav>

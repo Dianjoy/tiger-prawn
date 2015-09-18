@@ -41,6 +41,14 @@
         "link": "#/stat/"
       },
       {
+        "title": "Android广告统计",
+        "link": "#/stat/ad_type/android"
+      },
+      {
+        "title": "iOS广告统计",
+        "link": "#/stat/ad_type/ios"
+      },
+      {
         "title": "广告数据分析",
         "link": "#/stat/analyse/"
       }
