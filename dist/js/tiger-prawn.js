@@ -14,6 +14,14 @@
         success(response);
       };
     }
+    var error = options.error;
+    options.error = function (response) {
+      b.trigger('backbone-error', response);
+      if (error) {
+        error(response);
+      }
+    };
+
 
     if ('xhrField' in options) {
       options.xhrFields.withCredentials = true;
@@ -39,6 +47,9 @@
     value = parseInt(value);
     var options = arguments[arguments.length - 1];
     options.hash.start = options.hash.start || 0;
+    if (options.hash.key && array === options) {
+      array = options.data.root[options.hash.key];
+    }
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
     return array[value - options.hash.start];
   });
@@ -116,7 +127,8 @@
 
   // 用来生成可读时间
   h.registerHelper('moment', function (value) {
-    return value ? moment(value).calendar() : '';
+    value = value ? moment(value).calendar() : '';
+    return /invalid/i.test(value) ? '' : value;
   });
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
@@ -227,7 +239,7 @@
     };
   }
 }());;
-;(function (ns) {
+(function (ns) {
   ns.Base = Backbone.Router.extend({
     $body: null,
     $me: null,
@@ -237,7 +249,8 @@
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function () {
-      this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
+      var model = tp.model.Dashboard ? new tp.model.Dashboard : null;
+      this.$body.load('page/dashboard.hbs', model);
       this.$body.setFramework('dashboard', '新近数据统计');
     },
     showMyProfile: function () {
@@ -2437,9 +2450,13 @@
       this.container = this.$('#page-container');
       this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
-      this.$el.popover({
-        selector: '[data-toggle=popover]'
-      });
+      this.$el
+        .popover({
+          selector: '[data-toggle=popover]'
+        })
+        .tooltip({
+          selector: '[data-toggle=tooltip]'
+        });
     },
     clear: function () {
       this.$context.removeValue('model');

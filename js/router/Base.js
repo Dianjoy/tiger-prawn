@@ -13,7 +13,8 @@
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function () {
-      this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
+      var model = tp.model.Dashboard ? new tp.model.Dashboard : null;
+      this.$body.load('page/dashboard.hbs', model);
       this.$body.setFramework('dashboard', '新近数据统计');
     },
     showMyProfile: function () {

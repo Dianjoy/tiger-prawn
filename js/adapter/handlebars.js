@@ -12,6 +12,9 @@
     value = parseInt(value);
     var options = arguments[arguments.length - 1];
     options.hash.start = options.hash.start || 0;
+    if (options.hash.key && array === options) {
+      array = options.data.root[options.hash.key];
+    }
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
     return array[value - options.hash.start];
   });
