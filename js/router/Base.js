@@ -13,14 +13,14 @@
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function (start, end) {
-      var page = this.$me.get('role') === 'cp' ? '_cp' : '';
+      var page = this.$me.isCP() ? '_cp' : '';
       var model = new tp.model.Dashboard({
         dashboard_start: start || moment().add(-1, 'months').format('YYYY-MM-DD'),
         dashboard_end: end || moment().format('YYYY-MM-DD'),
-        is_sale: page == '_cp' ? false : true
+        is_sale: !this.$me.isCP()
       });
       this.$body.load('page/dashboard' + page + '.hbs', model);
-      this.$body.setFramework('dashboard', '新近数据统计');
+      this.$body.setFramework('dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
