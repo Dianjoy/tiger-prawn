@@ -3,7 +3,7 @@
  */
 
 'use strict';
-;(function (ns) {
+(function (ns) {
   ns.Base = Backbone.Router.extend({
     $body: null,
     $me: null,

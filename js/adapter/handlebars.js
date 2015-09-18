@@ -89,7 +89,8 @@
 
   // 用来生成可读时间
   h.registerHelper('moment', function (value) {
-    return value ? moment(value).calendar() : '';
+    value = value ? moment(value).calendar() : '';
+    return /invalid/i.test(value) ? '' : value;
   });
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';

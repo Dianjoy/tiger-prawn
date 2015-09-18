@@ -38,6 +38,11 @@ $(function () {
       me.set(response.me);
     }
   });
+  Backbone.on('backbone-error', function (xhr) {
+    if (xhr.statusCode() === '401') {
+      me.unset('id');
+    }
+  });
 
   // 验证用户身份
   me.fetch();
