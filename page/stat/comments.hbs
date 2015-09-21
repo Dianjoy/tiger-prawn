@@ -5,7 +5,8 @@
     <li>
       {{comment}} <small class="text-muted">{{author_name}} <time datetime="{{create_time}}">{{create_time}}</time></small>
       {{#equal status '1'}}
-        <br><span class="text-success fa fa-check">{{reply}} </span> <small class="text-muted">{{handle_name}} <time datetime="{{solve_time}}">{{solve_time}}</time></small>
+        <br><span class="text-success fa fa-check">{{reply}} </span>
+        <small class="text-muted">{{handle_name}} <time datetime="{{solve_time}}">{{solve_time}}</time></small>
       {{/equal}}
     </li>
   {{/each}}

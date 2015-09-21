@@ -44,9 +44,9 @@
       this.$body.load('page/stat/list.hbs', {
         API: tp.API,
         ad_type: ad_type,
-        is_android: ad_type == 'android' ? true : false
+        is_android: ad_type === 'android'
       });
-      this.$body.setFramework('has-date-range stat ' + ad_type + '-stat', ad_type + '广告统计');
+      this.$body.setFramework('has-date-range stat ' + ad_type + '-stat', '广告统计');
     },
     showAdminADStat: function () {
       this.$body.load('page/stat/analyse.hbs', {
