@@ -72,7 +72,7 @@
         {{apply_time}}
       </td>
       <td data-title="付款方">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
-      <td data-title="金额">{{income}}</td>
+      <td data-title="金额">{{d100 income}}</td>
       <td data-title="运营核对">
         {{#equal status 8}}审核中{{/equal}}
         {{#equal status 9}}
