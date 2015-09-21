@@ -3,13 +3,13 @@
  */
 
 'use strict';
-;(function (ns) {
+(function (ns) {
   ns.Base = Backbone.Router.extend({
     $body: null,
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard/(:start/:end)': 'showDashboard',
+      'dashboard(/:start/:end)': 'showDashboard',
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function (start, end) {

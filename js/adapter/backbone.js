@@ -18,6 +18,14 @@
         success(response);
       };
     }
+    var error = options.error;
+    options.error = function (response) {
+      b.trigger('backbone-error', response);
+      if (error) {
+        error(response);
+      }
+    };
+
 
     if ('xhrField' in options) {
       options.xhrFields.withCredentials = true;

@@ -111,7 +111,7 @@ module.exports = function (grunt) {
       return match;
     });
     // 取所有组件
-    grunt.file.recurse('js/component', function (path, root, sub, filename) {
+    grunt.file.recurse('js/component', function (path) {
       if (jsFiles.indexOf(path) === -1) {
         jsFiles.push(path);
       }

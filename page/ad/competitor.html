@@ -1,9 +1,9 @@
 <div class="table-header form-inline">
-  <div class="form-group">
+  <div class="form-group mr2e">
     <label for="search-query">搜索：</label>
     <input type="search" class="form-control" id="search-query">
   </div>
-  <div class="form-group">
+  <div class="form-group mr2e">
     <label for="dj_status">点乐投放状态：</label>
     <select class="form-control" name="dj_status" id="dj_status">
       <option value="-1">未推广</option>
@@ -37,7 +37,6 @@
     <th class="order"  href="#da">日活</th>
     <th class="order"  href="#now_count">估计安装量</th>
     <th class="order"  href="#cc">日增</th>
-    <th><a class="order" href="#owner">跟单负责人</a></th>
     <th><a class="order" href="#communication">初步沟通</a></th>
     <th><a class="order" href="#delivery">是否投放</a></th>
     <th>百度下载数</th>
@@ -61,13 +60,6 @@
       <td data-title="日活">{{da}}</td>
       <td data-title="估计安装量">{{now_count}}</td>
       <td data-title="日增">{{cc}}</td>
-      <td>
-        {{#if is_sales_manager}}
-        <a href="#owner" class="edit" data-type="select" data-options="{{inject 'me' 'id'}}">{{owner}}</a>
-        {{else}}
-        {{pick owner_manager id}}
-        {{/if}}
-      </td>
       <td>
         <span class="fa popup {{#if communication}}fa-check text-success{{else}}fa-times text-danger{{/if}} " title="初步沟通" data-content="商务反馈：{{communication_comment}}" data-cancel="关闭"></span>
       </td>
