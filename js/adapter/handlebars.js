@@ -67,7 +67,7 @@
     if (_.isNaN(value)) {
       return value;
     }
-    var units = ['万', '亿']
+    var units = ['万', '亿', '万亿']
       , str = value
       , count = 0;
     while (value / 10000 >= 1) {
