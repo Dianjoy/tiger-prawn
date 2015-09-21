@@ -1,4 +1,15 @@
-<table class="table table-bordered table-striped responsive-table add-on-list" data-collection-id="admin-list" data-key="sublist">
+<div class="form-inline table-header">
+  <div class="form-group mr2e">
+    <label for="ad_app_type">广告平台：</label>
+    <select class="form-control" name="ad_app_type" id="ad_app_type">
+      <option value="">总和</option>
+      <option value="1">Android</option>
+      <option value="2">IOS</option>
+    </select>
+  </div>
+</div>
+
+<table class="table table-bordered table-striped responsive-table add-on-list" data-filter=".table-header" data-collection-id="admin-list" data-key="amount">
   <thead>
   <tr>
     <th></th>
@@ -18,54 +29,106 @@
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
-    {{#equal bonus_status 0}}
-    <tr>
-      <td>总计</td>
-      <td data-title="总包数">{{count}}</td>
-      <td data-title="总CPA投放数">{{stat}}</td>
-      <td data-title="总渠道CPA数">{{cpa}}</td>
-      <td data-title="结算率"><span>{{ratio}}</span>%</td>
-      <td data-title="推广支出">{{out}}</td>
-      <td data-title="其他支出">-</td>
-      <td data-title="总支出">{{total_cost}}</td>
-      <td data-title="总收入">{{income}}</td>
-      <td data-title="CPA单价">{{average_rmb}}</td>
-      <td data-title="毛利润">{{profit}}</td>
-      <td data-title="毛利润率"><span>{{rate}}</span>%</td>
-    </tr>
-    {{/equal}}
-    {{#equal bonus_status 1}}
-    <tr>
-      <td>总计(不含红包锁屏)</td>
-      <td data-title="总包数">-</td>
-      <td data-title="总CPA投放数">{{stat}}</td>
-      <td data-title="总渠道CPA数">-</td>
-      <td data-title="结算率">-</td>
-      <td data-title="推广支出">{{out}}</td>
-      <td data-title="其他支出">-</td>
-      <td data-title="总支出">-</td>
-      <td data-title="总收入">-</td>
-      <td data-title="CPA单价">-</td>
-      <td data-title="毛利润">-</td>
-      <td data-title="毛利润率">-</td>
-    </tr>
-    {{/equal}}
-    {{#equal bonus_status 2}}
-    <tr>
-      <td>红包锁屏</td>
-      <td data-title="总包数">-</td>
-      <td data-title="总CPA投放数">{{stat}}</td>
-      <td data-title="总渠道CPA数">-</td>
-      <td data-title="结算率">-</td>
-      <td data-title="推广支出">{{out}}</td>
-      <td data-title="其他支出">-</td>
-      <td data-title="总支出">-</td>
-      <td data-title="总收入">-</td>
-      <td data-title="CPA单价">-</td>
-      <td data-title="毛利润">-</td>
-      <td data-title="毛利润率">-</td>
-    </tr>
-    {{/equal}}
+    {{#with show.amount}}
+      <tr>
+        {{#equal owner false}}
+          <td>-</td>
+        {{else}}
+          <td>{{owner}}</td>
+        {{/equal}}
+        <td data-title="总包数">{{count}}</td>
+        <td data-title="总CPA投放数">{{transfer}}</td>
+        <td data-title="总渠道CPA数">{{cpa}}</td>
+        <td data-title="结算率"><span>{{ratio}}</span>%</td>
+        <td data-title="推广支出">{{out}}</td>
+        <td data-title="其他支出">-</td>
+        <td data-title="总支出">{{total_cost}}</td>
+        <td data-title="总收入">{{income}}</td>
+        <td data-title="CPA单价">{{average_rmb}}</td>
+        <td data-title="毛利润">{{profit}}</td>
+        <td data-title="毛利润率"><span>{{profit_ratio}}</span>%</td>
+      </tr>
+    {{/with}}
+    {{#with show.happy_lock}}
+      <tr>
+        <td>红包锁屏</td>
+        <td data-title="总包数">-</td>
+        <td data-title="总CPA投放数">{{transfer}}</td>
+        <td data-title="总渠道CPA数">-</td>
+        <td data-title="结算率"><span>-</span></td>
+        <td data-title="推广支出">{{out}}</td>
+        <td data-title="其他支出">-</td>
+        <td data-title="总支出">-</td>
+        <td data-title="总收入">{{income}}</td>
+        <td data-title="CPA单价">-</td>
+        <td data-title="毛利润">-</td>
+        <td data-title="毛利润率"><span>-</span></td>
+      </tr>
+    {{/with}}
+    {{#with show.without_happy_lock}}
+      <tr>
+        <td>其他媒体</td>
+        <td data-title="总包数">-</td>
+        <td data-title="总CPA投放数">{{transfer}}</td>
+        <td data-title="总渠道CPA数">-</td>
+        <td data-title="结算率">-</td>
+        <td data-title="推广支出">{{out}}</td>
+        <td data-title="其他支出">-</td>
+        <td data-title="总支出">-</td>
+        <td data-title="总收入">{{income}}</td>
+        <td data-title="CPA单价">-</td>
+        <td data-title="毛利润">-</td>
+        <td data-title="毛利润率">-</td>
+      </tr>
+    {{/with}}
+    {{#with all.amount}}
+      <tr>
+        <td>总计</td>
+        <td data-title="总包数">{{count}}</td>
+        <td data-title="总CPA投放数">{{transfer}}</td>
+        <td data-title="总渠道CPA数">{{cpa}}</td>
+        <td data-title="结算率"><span>{{ratio}}</span>%</td>
+        <td data-title="推广支出">{{out}}</td>
+        <td data-title="其他支出">{{operation_cost}}</td>
+        <td data-title="总支出">{{total_cost}}</td>
+        <td data-title="总收入">{{income}}</td>
+        <td data-title="CPA单价">{{average_rmb}}</td>
+        <td data-title="毛利润">{{profit}}</td>
+        <td data-title="毛利润率"><span>{{profit_ratio}}</span>%</td>
+      </tr>
+    {{/with}}
+    {{#with all.without_happy_lock}}
+      <tr>
+        <td>总计(不含红包锁屏)</td>
+        <td data-title="总包数">-</td>
+        <td data-title="总CPA投放数">{{transfer}}</td>
+        <td data-title="总渠道CPA数">-</td>
+        <td data-title="结算率">-</td>
+        <td data-title="推广支出">{{out}}</td>
+        <td data-title="其他支出">{{operation_cost}}</td>
+        <td data-title="总支出">{{total_cost}}</td>
+        <td data-title="总收入">{{income}}</td>
+        <td data-title="CPA单价">{{average_rmb}}</td>
+        <td data-title="毛利润">-</td>
+        <td data-title="毛利润率">-</td>
+      </tr>
+    {{/with}}
+    {{#with all.happy_lock}}
+      <tr>
+        <td>红包锁屏</td>
+        <td data-title="总包数">-</td>
+        <td data-title="总CPA投放数">{{transfer}}</td>
+        <td data-title="总渠道CPA数">-</td>
+        <td data-title="结算率">-</td>
+        <td data-title="推广支出">{{out}}</td>
+        <td data-title="其他支出">{{operation_cost}}</td>
+        <td data-title="总支出">{{total_cost}}</td>
+        <td data-title="总收入">{{income}}</td>
+        <td data-title="CPA单价">{{average_rmb}}</td>
+        <td data-title="毛利润">-</td>
+        <td data-title="毛利润率">-</td>
+      </tr>
+    {{/with}}
     {{{{/raw-helper}}}}
   </script>
   </tbody>
@@ -91,7 +154,6 @@
       <th>实际价格</th>
       <th>毛利润</th>
       <th>毛利润率</th>
-      <th>结算率</th>
       <th>操作</th>
     </tr>
   </thead>
@@ -100,12 +162,11 @@
       {{{{raw-helper}}}}
       <tr id="{{id}}" class="{{pick ad_app_type '' 'Android' 'iPhone'}}">
         <td data-title="管理名">
-          <a href="#/agreement_id/{{agreement_id}}" class="label label-agreement filter">{{agreement}}</a>
-          <a href="#/channel/{{channel}}" class="label label-channel filter">{{channel_alias}}</a>
-          <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
+          {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>{{/if}}
+          <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
           {{cid}}
         </td>
-        <td data-title="上线时间">{{ctime}}</td>
+        <td data-title="上线时间">{{moment create_time}}</td>
         <td data-title="状态">
           <span class="label status-{{status}}">
             {{pick status 'ON' 'OFF'}}
@@ -113,13 +174,12 @@
           <i class="fa fa-{{pick ad_app_type '' 'android' 'apple'}} platform"></i>
         </td>
         <td data-title="收入">{{income}}</td>
-        <td data-title="CPA">{{stat}}</td>
+        <td data-title="CPA">{{transfer}}</td>
         <td data-title="渠道CPA">{{cpa}}</td>
-        <td data-title="单价/元">{{price}}</td>
+        <td data-title="单价/元">{{quote_rmb}}</td>
         <td data-title="实际价格">{{real}}</td>
         <td data-title="毛利润">{{profit}}</td>
-        <td data-title="毛利润率">{{rate}}%</td>
-        <td data-title="结算率">{{ratio}}%</td>
+        <td data-title="毛利润率">{{prfit_ratio}}%</td>
         <td data-title="操作">
           <a href="#/stat/analyse/daily/{{id}}/{{start}}/{{end}}" class="btn btn-default" title="多日详情">
             <i class="fa fa-list"></i>
