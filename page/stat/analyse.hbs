@@ -1,5 +1,9 @@
 <div class="form-inline table-header">
   <div class="form-group mr2e">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query">
+  </div>
+  <div class="form-group mr2e">
     <label for="ad_app_type">广告平台：</label>
     <select class="form-control" name="ad_app_type" id="ad_app_type">
       <option value="">总和</option>
@@ -9,7 +13,7 @@
   </div>
 </div>
 
-<table class="table table-bordered table-striped responsive-table add-on-list" data-filter=".table-header" data-collection-id="admin-list" data-key="amount">
+<table class="table table-bordered table-striped responsive-table add-on-list" data-collection-id="admin-list" data-key="amount">
   <thead>
   <tr>
     <th></th>
@@ -141,19 +145,19 @@
   </tfoot>
 </table>
 
-<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}stat/analyse/" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list">
+<table class="table table-bordered table-hover smart-table responsive-table" data-search="#search-query" data-filter=".table-header" data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list">
   <thead>
     <tr>
       <th class="filters">管理名</th>
       <th>上线时间</th>
       <th>状态</th>
       <th>收入</th>
-      <th>CPA</th>
-      <th>渠道CPA</th>
+      <th><a class="order" href="#transfer">CPA</a></th>
+      <th><a class="order" href="#cpa">渠道CPA</a></th>
       <th>单价/元</th>
-      <th>实际价格</th>
-      <th>毛利润</th>
-      <th>毛利润率</th>
+      <th><a class="order" href="#real">实际价格</a></th>
+      <th><a class="order" href="#profit">毛利润</a></th>
+      <th><a class="order" href="#profit_radio">毛利润率</a></th>
       <th>操作</th>
     </tr>
   </thead>
@@ -179,7 +183,7 @@
         <td data-title="单价/元">{{quote_rmb}}</td>
         <td data-title="实际价格">{{real}}</td>
         <td data-title="毛利润">{{profit}}</td>
-        <td data-title="毛利润率">{{prfit_ratio}}%</td>
+        <td data-title="毛利润率">{{profit_ratio}}%</td>
         <td data-title="操作">
           <a href="#/stat/analyse/daily/{{id}}/{{start}}/{{end}}" class="btn btn-default" title="多日详情">
             <i class="fa fa-list"></i>
@@ -198,3 +202,17 @@
     </tr>
   </tfoot>
 </table>
+
+<nav class="pull-right">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+        <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+      {{{{/raw-helper}}}}
+    </script>
+  </ul>
+</nav>
