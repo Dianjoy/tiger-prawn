@@ -115,14 +115,15 @@
 
   //千位分割并保留到小数点后两位
   h.registerHelper('readable_n', function (value) {
-    value = _.isNumber(value) ? value.toFixed(2) : Number(value).toFixed(2);
+    value = Number(value);
+    value = value % 1 === 0 ? value.toString() : value.toFixed(2);
     value = value.replace('.', ',');
-    var reg = /(\d)(\d{3},)/;
+    var reg = /(\d)(\d{3})(,|$)/;
     while(reg.test(value)){
-      value = value.replace(reg, '$1,$2');
+      value = value.replace(reg, '$1,$2$3');
     }
     value = value.replace(/,(\d\d)$/, '.$1');
-    return value.replace(/^\./, '0.').replace('.00', '');
+    return value.replace(/^\./, '0.');
   });
 
   // 用来生成可读时间
