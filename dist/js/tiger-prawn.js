@@ -122,7 +122,7 @@
       value = value.replace(reg, '$1,$2');
     }
     value = value.replace(/,(\d\d)$/, '.$1');
-    return value.replace(/^\./, '0.');
+    return value.replace(/^\./, '0.').replace('.00', '');
   });
 
   // 用来生成可读时间
