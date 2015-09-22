@@ -51,15 +51,15 @@
       <td data-title="公司名">{{company_name}}</td>
       <td data-title="广告来源">{{source}}</td>
       <td data-title="抓取时间"><time datetime="{{update_time}}">{{moment update_time}}</time></td>
-      <td data-title="点乐投放状态">{{dj_status}}</td>
-      <td data-title="过去一周激活数">{{dj_transfer}}</td>
+      <td data-title="点乐投放状态">{{pick dj_status '未推广' '已下线' '投放中' start=-1}}</td>
+      <td data-title="过去一周激活数">{{short_n dj_transfer}}</td>
       <td data-title="融资金额">{{current_fund_money}}</td>
-      <td data-title="融资状态">{{pick fund_status '有' '无'}}</td>
+      <td data-title="融资状态">{{pick fund_status '无' '有'}}</td>
       <td data-title="竞争对手信息">{{competitor}}</td>
       <td data-title="应用市场信息">{{market}}</td>
-      <td data-title="日活">{{da}}</td>
-      <td data-title="估计安装量">{{now_count}}</td>
-      <td data-title="日增">{{cc}}</td>
+      <td data-title="日活">{{short_n da}}</td>
+      <td data-title="估计安装量">{{short_n now_count}}</td>
+      <td data-title="日增">{{short_n cc}}</td>
       <td data-title="初步沟通">
         <a href="#communication" class="edit" data-type="status" data-comment="communication_comment" data-readonly="false" data-active="已沟通" data-deactive="未沟通">{{#if communication}}<i class="fa fa-check text-success"></i>{{/if}}</a>
       </td>
@@ -68,9 +68,9 @@
           {{#if delivery}}<i class="fa fa-{{pick delivery 'check text-success' 'times text-danger' start=1}}"></i>{{/if}}
         </a>
       </td>
-      <td data-title="百度下载数">{{down_count_baidu}}</td>
-      <td data-title="应用宝下载数">{{down_count_myapp}}</td>
-      <td data-title="360下载数">{{down_count_360}}</td>
+      <td data-title="百度下载数">{{short_n down_count_baidu}}</td>
+      <td data-title="应用宝下载数">{{short_n down_count_myapp}}</td>
+      <td data-title="360下载数">{{short_n down_count_360}}</td>
     </tr>
   </script>
   </tbody>
