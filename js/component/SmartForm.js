@@ -278,9 +278,10 @@
         }, this);
         this.$('.switch').each(function () {
           var isNumber = !isNaN(parseInt(this.value))
-            , value = isNumber ? Number(this.value) : this.value;
-          value = this.checked ? value : !value;
-          attr[this.name] = isNumber ? Number(value) : value;
+            , value = isNumber ? Number(this.value) : this.value
+            , close = $(this).data('close');
+          value = this.checked ? value : close;
+          attr[this.name] = value;
         });
 
         // 有url就保存，不然就直接记录值

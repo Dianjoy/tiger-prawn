@@ -11,7 +11,7 @@
       var success = options.success;
       options.success = function (response) {
         b.trigger('backbone-sync', response);
-        success(response);
+        success.call(options.context, response);
       };
     }
     var error = options.error;
@@ -102,7 +102,7 @@
     if (_.isNaN(value)) {
       return value;
     }
-    var units = ['万', '亿']
+    var units = ['万', '亿', '万亿']
       , str = value
       , count = 0;
     while (value / 10000 >= 1) {
@@ -245,13 +245,18 @@
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard(/)': 'showDashboard',
+      'dashboard(/:start/:end)': 'showDashboard',
       'my/profile/': 'showMyProfile'
     },
-    showDashboard: function () {
-      var model = tp.model.Dashboard ? new tp.model.Dashboard : null;
-      this.$body.load('page/dashboard.hbs', model);
-      this.$body.setFramework('dashboard', '新近数据统计');
+    showDashboard: function (start, end) {
+      var page = this.$me.isCP() ? '_cp' : '';
+      var model = new tp.model.Dashboard({
+        dashboard_start: start || moment().startOf('month').format('YYYY-MM-DD'),
+        dashboard_end: end || moment().format('YYYY-MM-DD'),
+        is_sale: !this.$me.isCP()
+      });
+      this.$body.load('page/dashboard' + page + '.hbs', model);
+      this.$body.setFramework('dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
@@ -1361,9 +1366,10 @@
         }, this);
         this.$('.switch').each(function () {
           var isNumber = !isNaN(parseInt(this.value))
-            , value = isNumber ? Number(this.value) : this.value;
-          value = this.checked ? value : !value;
-          attr[this.name] = isNumber ? Number(value) : value;
+            , value = isNumber ? Number(this.value) : this.value
+            , close = $(this).data('close');
+          value = this.checked ? value : close;
+          attr[this.name] = value;
         });
 
         // 有url就保存，不然就直接记录值
@@ -2341,6 +2347,12 @@
 
   ns.SwitchEditor = Editor.extend({
     initialize: function (options) {
+      var defaults = {
+        open: 1,
+        close: 0,
+        readonly: true
+      };
+      options = _.extend(defaults, options);
       options.value = this.model.get(options.prop) != options.open;
       Editor.prototype.initialize.call(this, options);
     }
