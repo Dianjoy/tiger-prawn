@@ -15,7 +15,7 @@
     showDashboard: function (start, end) {
       var page = this.$me.isCP() ? '_cp' : '';
       var model = new tp.model.Dashboard({
-        dashboard_start: start || moment().add(-1, 'months').format('YYYY-MM-DD'),
+        dashboard_start: start || moment().startOf('month').format('YYYY-MM-DD'),
         dashboard_end: end || moment().format('YYYY-MM-DD'),
         is_sale: !this.$me.isCP()
       });
