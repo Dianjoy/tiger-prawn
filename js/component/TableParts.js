@@ -239,4 +239,52 @@
       $(target).after(tp.component.spinner);
     }
   });
+
+  ns.FixedHeader = Backbone.View.extend({
+    className: 'fixed-table-header',
+    tagName: 'div',
+    visible: false,
+    events: {
+      'click .filter,.order': 'button_clickHandler'
+    },
+    initialize: function (options) {
+      this.target = options.target;
+      this.target.on('table-rendered', this.render, this);
+      this.top = this.target.$el.offset().top;
+      this.scrollHandler = _.bind(this.scrollHandler, this);
+      $(window).scroll(this.scrollHandler);
+      this.$el.appendTo('body');
+    },
+    remove: function () {
+      this.target = null;
+      $(window).off('scroll', this.scrollHandler);
+      Backbone.View.prototype.remove.call(this);
+    },
+    render: function () {
+      var clone = this.target.$el.clone()
+        , ths = clone.find('th');
+      clone.find('tbody, tfoot').remove();
+      this.target.$('th').each(function (i) {
+        ths[i].width = this.offsetWidth;
+      });
+      this.$el.html(clone);
+    },
+    button_clickHandler: function (event) {
+      var type = event.target.className.indexOf('filter') != -1 ? 'filter' : 'order';
+      this.target.$('thead .' + type + '[href="' + event.target.hash + '"]').click();
+      event.preventDefault();
+    },
+    scrollHandler: function () {
+      var scroll = document.body.scrollTop + 70; // 50是topbar高度，20是间隙
+      if (scroll > this.top) {
+        if (!this.visible) {
+          this.visible = true;
+          this.$el.show();
+        }
+      } else {
+        this.$el.hide();
+        this.visible = false;
+      }
+    }
+  });
 }(Nervenet.createNameSpace('tp.component.table')));

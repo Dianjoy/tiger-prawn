@@ -73,6 +73,13 @@
         });
       }
 
+      // 桌面默认都固定表头
+      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0) {
+        this.header = new ns.table.FixedHeader({
+          target: this
+        });
+      }
+
       if (autoFetch) {
         this.refresh(options);
       }
@@ -90,6 +97,9 @@
       if (this.filter) {
         this.filter.remove();
       }
+      if (this.header) {
+        this.header.remove();
+      }
       this.model.off(null, null, this);
       this.collection.off(null, null, this);
       tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
@@ -98,6 +108,7 @@
     render: function () {
       ns.BaseList.prototype.render.call(this);
       this.$context.trigger('table-rendered', this);
+      this.trigger('table-rendered', this);
       // 排序
       if ('order' in this.model.changed || 'seq' in  this.model.changed) {
         var container = this.container;
