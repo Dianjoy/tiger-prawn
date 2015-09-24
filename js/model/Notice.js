@@ -4,7 +4,9 @@
 'use strict';
 (function (ns) {
   var TIMEOUT = 60000
-    , autoNext = false; // 60s取一次
+    , autoNext = false // 60s取一次
+    , key = tp.PROJECT + ' notice'
+    , cache = [];
 
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
@@ -21,15 +23,16 @@
         },
         remove: false
       }, options);
-      var obj = JSON.parse(localStorage.getItem(tp.PROJECT + '#/notice/'));
+      var obj = localStorage.getItem(key);
       if (obj) {
-        if (moment().diff(obj.time) > TIMEOUT) {
-          obj.time = moment().format();
-          localStorage.setItem(tp.PROJECT + '#/notice/', JSON.stringify(obj));
+        var noticeList = JSON.parse(obj);
+        if (Date.now() - noticeList.time > TIMEOUT) {
+          noticeList.time = Date.now();
+          localStorage.setItem(key, JSON.stringify(noticeList));
           Backbone.Collection.prototype.fetch.call(this, options);
         } else {
-          this.trigger('sync');
-          this.reset(obj.notice);
+          setTimeout(this.fetch, TIMEOUT);
+          this.reset(noticeList.notice);
         }
       } else {
         Backbone.Collection.prototype.fetch.call(this, options);
@@ -40,10 +43,7 @@
         response.list[i].create_time = response.list[i].create_time.substr(5, 11);
         this.latest = response.list[i].id > this.latest ? response.list[i].id : this.latest;
       }
-      localStorage.setItem(tp.PROJECT + '#/notice/', JSON.stringify({
-        notice: response.list,
-        time: moment().format()
-      }));
+      cache = response.list;
       return response.list;
     },
     stop: function () {
@@ -54,6 +54,10 @@
       if (autoNext) {
         setTimeout(this.fetch, TIMEOUT);
       }
+      localStorage.setItem(key, JSON.stringify({
+        notice: cache,
+        time: Date.now()
+      }));
     }
   });
 }(Nervenet.createNameSpace('tp.model')));
