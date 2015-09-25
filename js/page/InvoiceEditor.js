@@ -1,11 +1,35 @@
 'use strict';
 (function (ns) {
   ns.InvoiceEditor = tp.view.Loader.extend({
+    events: _.extend({
+      'click .export-button': 'exportButton_clickHandler'
+    }, tp.view.Loader.prototype.events),
     $context: null,
     render: function () {
       this.getProductList = _.bind(this.getProductList, this);
       tp.view.Loader.prototype.render.call(this);
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
+    },
+    exportButton_clickHandler: function (event) {
+      var tables = this.$('table');
+      event.currentTarget.href = this.tableToExcel(tables, '对账单');
+    },
+    tableToExcel: function (tableList, name) {
+      var tables = [],
+        uri = 'data:application/vnd.ms-excel;base64,',
+        template = Handlebars.compile('<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{{worksheet}}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>{{#each tables}}<table>{{{this}}}</table>{{/each}}</body></html>');
+
+      for (var i = 0; i < tableList.length; i++) {
+        tables.push(tableList[i].innerHTML);
+      }
+      var data = {
+        worksheet: name || 'Worksheet',
+        tables: tables
+      };
+      return uri + this.base64(template(data));
+    },
+    base64: function (str) {
+    return window.btoa(unescape(encodeURIComponent(str)));
     },
     getProductList: function (components) {
       var products =  this.model.get('products');
