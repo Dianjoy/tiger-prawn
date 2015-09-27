@@ -5,8 +5,8 @@
 (function (ns) {
   var TIMEOUT = 60000
     , autoNext = false // 60s取一次
-    , key = tp.PROJECT + ' notice'
-    , cache = [];
+    , key = tp.PROJECT + '-notice-cache'
+    , cache = null;
 
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
@@ -17,26 +17,26 @@
     },
     fetch: function (options) {
       autoNext = true;
+      var store = localStorage.getItem(key);
+      if (store) {
+        var noticeList = JSON.parse(store);
+        if (Date.now() - noticeList.time < TIMEOUT) {
+          setTimeout(this.fetch, TIMEOUT);
+          this.set(noticeList.notice);
+          this.trigger('sync');
+          return;
+        }
+
+        noticeList.time = Date.now();
+        localStorage.setItem(key, JSON.stringify(noticeList));
+      }
       options = _.extend({
         data: {
           latest: this.latest
         },
         remove: false
       }, options);
-      var obj = localStorage.getItem(key);
-      if (obj) {
-        var noticeList = JSON.parse(obj);
-        if (Date.now() - noticeList.time > TIMEOUT) {
-          noticeList.time = Date.now();
-          localStorage.setItem(key, JSON.stringify(noticeList));
-          Backbone.Collection.prototype.fetch.call(this, options);
-        } else {
-          setTimeout(this.fetch, TIMEOUT);
-          this.reset(noticeList.notice);
-        }
-      } else {
-        Backbone.Collection.prototype.fetch.call(this, options);
-      }
+      Backbone.Collection.prototype.fetch.call(this, options);
     },
     parse: function (response) {
       for (var i = 0, len = response.list.length; i < len; i++) {
@@ -50,14 +50,16 @@
       autoNext = false;
       clearTimeout(TIMEOUT);
     },
-    syncHandler: function () {
+    syncHandler: function (collection) {
       if (autoNext) {
         setTimeout(this.fetch, TIMEOUT);
       }
-      localStorage.setItem(key, JSON.stringify({
-        notice: cache,
-        time: Date.now()
-      }));
+      if (collection) {
+        localStorage.setItem(key, JSON.stringify({
+          notice: cache,
+          time: Date.now()
+        }));
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.model')));
