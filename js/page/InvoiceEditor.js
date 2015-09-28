@@ -15,21 +15,27 @@
       event.currentTarget.href = this.tableToExcel(tables, '对账单');
     },
     tableToExcel: function (tableList, name) {
-      var tables = [],
-        uri = 'data:application/vnd.ms-excel;base64,',
-        template = Handlebars.compile('<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{{worksheet}}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>{{#each tables}}<table>{{{this}}}</table>{{/each}}</body></html>');
+      var tables = []
+        , uri = 'data:application/vnd.ms-excel;base64,'
+        , template = Handlebars.compile('<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{{worksheet}}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><h3 style="text-align: center;">{{invoice_title}}</h3><h4 style="text-align: center;">{{invoice_time}}</h4><p style="text-align:right;">{{agreement_number}}</p>{{#each tables}}<table style="border:1px solid #000;">{{{this}}}</table>{{/each}}</body></html>');
 
-      for (var i = 0; i < tableList.length; i++) {
+      for (var i = 0; i < tableList.length - 1; i++) {
+        tableList.find('a').replaceWith(function (i) {
+          return this.innerHTML;
+        });
         tables.push(tableList[i].innerHTML);
       }
       var data = {
         worksheet: name || 'Worksheet',
-        tables: tables
+        tables: tables,
+        agreement_number: this.$('#agreement-number').text(),
+        invoice_title: this.$('#invoice-title').text(),
+        invoice_time: this.$('#invoice-time').text()
       };
       return uri + this.base64(template(data));
     },
     base64: function (str) {
-    return window.btoa(unescape(encodeURIComponent(str)));
+      return window.btoa(unescape(encodeURIComponent(str)));
     },
     getProductList: function (components) {
       var products =  this.model.get('products');
