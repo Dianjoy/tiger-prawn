@@ -95,6 +95,7 @@
           <td><a class="edit" href="#ad_size">{{ad_size}}</a></td>
         </tr>
         {{#unless cp}}
+        {{#if ios}}
         <tr>
           <th>广告包名</th>
           <td>{{pack_name}}</td>
@@ -107,13 +108,12 @@
           <th>URL scheme</th>
           <td>{{url_type}}</td>
         </tr>
-        {{/unless}}
-        {{#if ios}}
         <tr>
           <th>iTunes ID</th>
           <td>{{itunes_id}}</td>
         </tr>
         {{/if}}
+        {{/unless}}
         <tr>
           <th>广告LOGO</th>
           <td>

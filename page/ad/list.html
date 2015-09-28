@@ -78,7 +78,7 @@
           <a class="label status-{{status}} edit" href="#status" title="{{pick status '上线' '已下线' '' '' '申请重审'}}" data-type="status" data-deactive="下线" data-active="上线" data-open="0" data-close="1" data-comment="message" data-refresh="true" data-template="ad/status-edit">{{pick status 'ON' 'OFF' '' '' '被拒绝'}}</a>
           {{/if}}
         {{else}}
-        <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
+        <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '替换广告' '被拒'}}</span>
         {{/in}}
 
         {{#if on_off}}

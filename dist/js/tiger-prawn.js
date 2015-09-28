@@ -251,11 +251,11 @@
     },
     showDashboard: function (start, end) {
       var page = this.$me.isCP() ? '_cp' : '';
-      var model = new tp.model.Dashboard({
+      var model = tp.model.Dashboard ? new tp.model.Dashboard({
         dashboard_start: start || moment().startOf('month').format('YYYY-MM-DD'),
         dashboard_end: end || moment().format('YYYY-MM-DD'),
         is_sale: !this.$me.isCP()
-      });
+      }) : null;
       this.$body.load('page/dashboard' + page + '.hbs', model);
       this.$body.setFramework('dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
     },
@@ -1827,6 +1827,54 @@
       $(target).after(tp.component.spinner);
     }
   });
+
+  ns.FixedHeader = Backbone.View.extend({
+    className: 'fixed-table-header',
+    tagName: 'div',
+    visible: false,
+    events: {
+      'click .filter,.order': 'button_clickHandler'
+    },
+    initialize: function (options) {
+      this.target = options.target;
+      this.target.on('table-rendered', this.render, this);
+      this.top = this.target.$el.offset().top;
+      this.scrollHandler = _.bind(this.scrollHandler, this);
+      $(window).scroll(this.scrollHandler);
+      this.$el.appendTo('body');
+    },
+    remove: function () {
+      this.target = null;
+      $(window).off('scroll', this.scrollHandler);
+      Backbone.View.prototype.remove.call(this);
+    },
+    render: function () {
+      var clone = this.target.$el.clone()
+        , ths = clone.find('th');
+      clone.find('tbody, tfoot').remove();
+      this.target.$('th').each(function (i) {
+        ths[i].width = this.offsetWidth;
+      });
+      this.$el.html(clone);
+    },
+    button_clickHandler: function (event) {
+      var type = event.target.className.indexOf('filter') != -1 ? 'filter' : 'order';
+      this.target.$('thead .' + type + '[href="' + event.target.hash + '"]').click();
+      event.preventDefault();
+    },
+    scrollHandler: function () {
+      var scroll = document.body.scrollTop + 70; // 50是topbar高度，20是间隙
+      if (scroll > this.top) {
+        if (!this.visible) {
+          this.visible = true;
+          this.$el.show();
+        }
+      } else {
+        this.$el.hide();
+        this.visible = false;
+      }
+    }
+  });
 }(Nervenet.createNameSpace('tp.component.table')));;
 (function (ns) {
   ns.CollectionSelect = ns.BaseList.extend({
@@ -2817,6 +2865,13 @@
         });
       }
 
+      // 桌面默认都固定表头
+      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0) {
+        this.header = new ns.table.FixedHeader({
+          target: this
+        });
+      }
+
       if (autoFetch) {
         this.refresh(options);
       }
@@ -2834,6 +2889,9 @@
       if (this.filter) {
         this.filter.remove();
       }
+      if (this.header) {
+        this.header.remove();
+      }
       this.model.off(null, null, this);
       this.collection.off(null, null, this);
       tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
@@ -2842,6 +2900,7 @@
     render: function () {
       ns.BaseList.prototype.render.call(this);
       this.$context.trigger('table-rendered', this);
+      this.trigger('table-rendered', this);
       // 排序
       if ('order' in this.model.changed || 'seq' in  this.model.changed) {
         var container = this.container;
