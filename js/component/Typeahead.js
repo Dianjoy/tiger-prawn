@@ -47,9 +47,8 @@
       this.input.prop('disabled', true);
     },
     hide: function (event) {
-      if (!$.contains(this.el, event.target)) {
+      if (!event || !$.contains(this.el, event.target)) {
         this.list.hide();
-        $('body').off('click', this.hide);
       }
     },
     collection_syncHandler: function (collection) {
@@ -57,9 +56,7 @@
         , html = this.list_template({list: data});
       this.list.html(html).show();
       this.spinner.hide();
-      this.input.prop('disabled', false);
-
-      $('body').on('click', this.hide);
+      this.input.prop('disabled', false).focus();
     },
     keyword_blurHandler: function () {
       this.list.hide();
@@ -91,34 +88,51 @@
     },
     inputHandler: function () {
       clearTimeout(this.timeout);
-      var keyword = this.input.val();
-      if (keyword) {
+      if (this.input.val().length > 1) {
         this.timeout = setTimeout(this.fetch, this.delay);
       }
     },
     keydownHandler: function (event) {
       var active = this.list.find('.active').removeClass('active');
-      if (event.keyCode === 13) { // enter
-        var id = this.list.find('.active a').attr('href');
-        if (id) {
-          id = id.substr(1);
-          this.selected.add(this.collection.get(id));
-        } else if (!this.input.prop('disabled') && this.input.val()) {
-          this.fetch();
-        }
-        event.preventDefault();
-      } else if (event.keyCode === 40) { // down
-        if (active.length === 0 || active.is(':last-child')) {
-          this.list.children().eq(0).addClass('active');
-        } else {
-          active.next().addClass('active');
-        }
-      } else if (event.keyCode === 38) { // up
-        if (active.length === 0 || active.is(':first-child')) {
-          this.list.children().last().addClass('active');
-        } else {
-          active.prev().addClass('active');
-        }
+      switch (event.keyCode) {
+        case 13: // enter
+          var id = active.children().attr('href');
+          if (id) {
+            id = id.substr(1);
+            this.selected.add(this.collection.get(id));
+            this.list.hide();
+          } else if (!this.input.prop('disabled') && this.input.val().length > 1) {
+            this.fetch();
+          }
+          event.preventDefault();
+          break;
+
+        case 40: // down
+          this.list.show();
+          if (active.length === 0 || active.is(':last-child')) {
+            this.list.children().eq(0).addClass('active');
+          } else {
+            active.next().addClass('active');
+          }
+          event.preventDefault();
+          break;
+
+        case 38: // up
+          this.list.show();
+          if (active.length === 0 || active.is(':first-child')) {
+            this.list.children().last().addClass('active');
+          } else {
+            active.prev().addClass('active');
+          }
+          event.preventDefault();
+          break;
+
+        case 27: // esc
+          if (this.list.is(':visible')) {
+            this.hide();
+            event.stopPropagation();
+          }
+          break;
       }
     }
   });
