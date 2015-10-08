@@ -5,7 +5,7 @@
 (function (ns) {
   ns.Me = Backbone.Model.extend({
     $body: null,
-    url: tp.API + 'user/',
+    url: tp.API + 'auth/',
     defaults: {
       face: 'img/logo.png'
     },
