@@ -352,7 +352,7 @@
 }(Nervenet.createNameSpace('tp.service')));
 
 ;
-(function (ns) {var popup
+(function (ns) {var popup
     , editor;
 
   var Klass = Backbone.View.extend({
@@ -529,10 +529,10 @@
       decimal = '';
     }
 
-    digits = new Array(CN_ZERO, CN_ONE, CN_TWO, CN_THREE, CN_FOUR, CN_FIVE, CN_SIX, CN_SEVEN, CN_EIGHT, CN_NINE);
-    radices = new Array('', CN_TEN, CN_HUNDRED, CN_THOUSAND);
-    bigRadices = new Array('', CN_TEN_THOUSAND, CN_HUNDRED_MILLION);
-    decimals = new Array(CN_TEN_CENT, CN_CENT);
+    digits = [CN_ZERO, CN_ONE, CN_TWO, CN_THREE, CN_FOUR, CN_FIVE, CN_SIX, CN_SEVEN, CN_EIGHT, CN_NINE];
+    radices = ['', CN_TEN, CN_HUNDRED, CN_THOUSAND];
+    bigRadices = ['', CN_TEN_THOUSAND, CN_HUNDRED_MILLION];
+    decimals = [CN_TEN_CENT, CN_CENT];
 
     outputCharacters = '';
 
@@ -575,7 +575,6 @@
     if (decimal == '') {
       outputCharacters += CN_INTEGER;
     }
-    outputCharacters = outputCharacters;
     return outputCharacters;
   }
 }(Nervenet.createNameSpace('tp.utils')));;
@@ -714,7 +713,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-;(function (ns) {var collections = {}
+;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
       parse: function (response, options) {
         var key = this.key || (this.collection ? this.collection.key : 'data');
@@ -796,7 +795,15 @@
 
     var params = _.extend({}, options);
     if (!params.model || !(params.model instanceof Function)) {
-      var init = _.pick(params, 'idAttribute', 'defaults');
+      var init = _.chain(params)
+        .pick('idAttribute', 'defaults')
+        .map(function (key, value) {
+          if (key === 'defaults') {
+            return tp.utils.decodeURLParam(value);
+          }
+          return value;
+        })
+        .value();
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
     collection = new Collection(null, params);

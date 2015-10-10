@@ -85,7 +85,15 @@
 
     var params = _.extend({}, options);
     if (!params.model || !(params.model instanceof Function)) {
-      var init = _.pick(params, 'idAttribute', 'defaults');
+      var init = _.chain(params)
+        .pick('idAttribute', 'defaults')
+        .map(function (key, value) {
+          if (key === 'defaults') {
+            return tp.utils.decodeURLParam(value);
+          }
+          return value;
+        })
+        .value();
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
     collection = new Collection(null, params);
