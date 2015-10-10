@@ -87,7 +87,7 @@
     if (!params.model || !(params.model instanceof Function)) {
       var init = _.chain(params)
         .pick('idAttribute', 'defaults')
-        .map(function (key, value) {
+        .mapObject(function (value, key) {
           if (key === 'defaults') {
             return tp.utils.decodeURLParam(value);
           }
