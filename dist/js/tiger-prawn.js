@@ -798,7 +798,7 @@
       var init = _.chain(params)
         .pick('idAttribute', 'defaults')
         .mapObject(function (value, key) {
-          if (key === 'defaults') {
+          if (key === 'defaults' && !_.isObject(value)) {
             return tp.utils.decodeURLParam(value);
           }
           return value;
