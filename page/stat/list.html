@@ -1,0 +1,80 @@
+<div class="form-inline table-header">
+  <div class="form-group">
+    <label for="pagesize">每页显示：</label>
+    <select class="form-control" id="pagesize">
+      <option selected>10</option>
+      <option>20</option>
+      <option>50</option>
+    </select>
+  </div>
+  <div class="form-group pull-right">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query" name="query" placeholder="关键词">
+  </div>
+</div>
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-search="#search-query" data-collection-id="stat">
+  <thead>
+  <tr>
+    <th class="filters">广告名</th>
+    <th>创建时间</th>
+    <th>状态</th>
+    <th>点击数</th>
+    <th>激活数</th>
+    <th>费用（预估）</th>
+    <th>详细</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    <tr id="{{id}}">
+      <td data-title="管理名">
+        {{#if agreement}}<a href="#/agreement/{{agreement}}" class="filter label label-agreement">{{agreement}}</a>{{/if}}
+        {{#if channel_alias}}<a href="#/channel_alias/{{channel_alias}}" class="filter label label-channel_alias">{{channel_alias}}</a>{{/if}}
+        <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
+        {{cid}}
+      </td>
+      <td data-title="创建时间">{{moment create_time}}</td>
+      <td data-title="状态">
+        <i class="platform fa fa-{{pick ad_app_type '' 'android' 'apple'}}"></i>
+        <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
+      </td>
+      <td data-title="点击数">{{click}}</td>
+      <td data-title="激活数">{{transfer}}</td>
+      <td data-title="费用">&yen; {{d100 cost}}</td>
+      <td>
+        <div class="btn-group"  style="position:static">
+          <a href="#/stat/{{id}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a>
+          {{#if agreement_id}}
+            <a class="btn btn-info popup" href="page/stat/apply-choose-ad.hbs" title="发票申请-{{channel_alias}}" data-id="{{id}}" data-collection-id="stat" data-confirm="确定"><i class="fa fa-file-text"></i></a>
+          {{else}}
+            <button class="btn btn-info" data-toggle="popover" data-content="合同未录入，无编号，请通过邮件将合同客户全称和客户类型发给邱咏霞申请合同备案，获取合同编号" style="background-color:#999; border-color:#7B7B7B;">
+              <span class="fa-stack" style="width:1em; height:1em; line-height:1em">
+                <i class="fa fa-file-text"></i>
+                <i class="fa fa-ban fa-stack-2x" style="top:-7px; left:-5px; color:#FF4136"></i>
+              </span>
+            </button>
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="8">
+      <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
+    </td>
+  </tr>
+  </tfoot>
+</table>
+<nav class="pull-right">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+      <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+    </script>
+  </ul>
+</nav>

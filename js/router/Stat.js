@@ -42,11 +42,9 @@
       this.$body.setFramework('has-date-range', '单个广告一天内统计');
     },
     showStat: function () {
-      this.$body.load('page/stat/list.hbs', {
-        API: tp.API,
-        isCP: this.$me.isCP()
-      });
-      this.$body.setFramework('has-date-range', '投放结果统计');
+      var page = this.$me.isCP() ? '_cp' : '';
+      this.$body.load('page/stat/list' + page + '.html');
+      this.$body.setFramework('has-date-range stat' + (this.$me.isCP() ? 'stat-cp' : ''), '投放结果统计');
     },
 
     showInvoice: function () {
