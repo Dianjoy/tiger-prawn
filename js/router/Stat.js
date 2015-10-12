@@ -5,6 +5,7 @@
 (function (ns) {
   ns.Stat = Backbone.Router.extend({
     $body: null,
+    $me: null,
     routes: {
       'stat(/)': 'showStat',
       'stat/:id': 'showADStat',
@@ -41,7 +42,10 @@
       this.$body.setFramework('has-date-range', '单个广告一天内统计');
     },
     showStat: function () {
-      this.$body.load('page/stat/list.html');
+      this.$body.load('page/stat/list.hbs', {
+        API: tp.API,
+        isCP: this.$me.isCP()
+      });
       this.$body.setFramework('has-date-range', '投放结果统计');
     },
 
