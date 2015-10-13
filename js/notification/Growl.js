@@ -13,20 +13,17 @@
       this.collection.on('sync', this.collection_syncHandler, this);
     },
     collection_addHandler: function (model) {
-      if (this.count > 2) {
-        this.count++;
-        return;
-      } else {
+      if (this.count < 3) {
         this.fragment.push(this.template(model.toJSON()));
-        this.count++;
       }
+      this.count++;
     },
     collection_syncHandler: function () {
-      if (this.fragment) {
+      if (this.fragment.length) {
         if (this.count > 3) {
           this.fragment[2] = this.template({number: this.count - 2});
         }
-        this.$el.append(this.fragment.join(''));
+        this.$el.html(this.fragment.join(''));
         this.fragment = [];
       }
     }

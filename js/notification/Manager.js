@@ -29,7 +29,7 @@
         try {
           notification.requestPermission();
         } catch (e) {
-
+          console.log('no browser notice');
         }
       }
       this.collection.on('add', this.collection_addHandler, this);
@@ -44,7 +44,9 @@
       }
     },
     start: function () {
-      this.collection.fetch();
+      if (tp.NOTICE_KEY) {
+        this.collection.fetch();
+      }
     },
     stop: function () {
       this.collection.stop();
@@ -60,19 +62,17 @@
     }
   });
 
-  var collection = new tp.model.Notice()
-    , panel = new ns.Panel({
-      el: '.system-notice',
-      collection: collection
-    })
-    , growl = new ns.Growl({
-      el: '#growl',
-      collection: collection
-    });
+  var collection = new tp.model.Notice();
+  new ns.Panel({
+    el: '.system-notice',
+    collection: collection
+  });
+  new ns.Growl({
+    el: '#growl',
+    collection: collection
+  });
 
-  if (tp.NOTICE_KEY) {
-    ns.Manager = new Manager({
-      collection: collection
-    });
-  }
+  ns.Manager = new Manager({
+    collection: collection
+  });
 }(Nervenet.createNameSpace('tp.notification')));

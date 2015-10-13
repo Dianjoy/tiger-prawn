@@ -94,7 +94,7 @@
         this.collection.off(null, null, this);
       }
       clearTimeout(timeout);
-      this.$el.remove();
+      this.remove();
       this.trigger('hidden');
     }
   });
