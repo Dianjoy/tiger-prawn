@@ -21,7 +21,6 @@
       if (store) {
         var noticeList = JSON.parse(store);
         if (Date.now() - noticeList.time < TIMEOUT) {
-          setTimeout(this.fetch, TIMEOUT);
           this.set(noticeList.notice);
           this.trigger('sync');
           return;
@@ -39,10 +38,9 @@
       Backbone.Collection.prototype.fetch.call(this, options);
     },
     parse: function (response) {
-      for (var i = 0, len = response.list.length; i < len; i++) {
-        response.list[i].create_time = response.list[i].create_time.substr(5, 11);
-        this.latest = response.list[i].id > this.latest ? response.list[i].id : this.latest;
-      }
+      this.latest = _.reduce(response.list, function (max, item) {
+        return item.id > max ? item.id : max;
+      }, this.latest);
       cache = response.list;
       return response.list;
     },
