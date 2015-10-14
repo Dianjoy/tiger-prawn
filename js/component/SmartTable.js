@@ -24,7 +24,8 @@
       this.model.on('invalid', this.model_invalidHandler, this);
       this.renderHeader();
 
-      var autoFetch = options.autoFetch || !('autoFetch' in options) && this.autoFetch;
+      var data = this.$el.data()
+        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
         autoFetch: false,
         container: 'tbody',
