@@ -37,10 +37,6 @@
     "sub-id": "sidebar-stat",
     "sub": [
       {
-        "title": "广告统计",
-        "link": "#/stat/"
-      },
-      {
         "title": "Android广告统计",
         "link": "#/stat/android"
       },

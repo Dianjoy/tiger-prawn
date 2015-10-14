@@ -42,14 +42,14 @@
       this.$body.setFramework('has-date-range', '单个广告一天内统计');
     },
     showStat: function (ad_type) {
-      var page = this.$me.isCP() ? '_cp.html' : ad_type ? '.hbs' : '.html';
+      var page = this.$me.isCP() ? '_cp.html' : '.hbs';
       var obj = {
         API: tp.API,
         ad_type: ad_type,
         is_android: ad_type === 'android'
       };
-      this.$body.load('page/stat/list' + page, (this.$me.isCP() || !ad_type) ? null : obj);
-      this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type ? ad_type + '-stat' : ''), '投放结果统计');
+      this.$body.load('page/stat/list' + page, this.$me.isCP() ? null : obj);
+      this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type + '-stat'), '投放结果统计');
     },
     showInvoice: function () {
       this.$body.load('page/stat/invoice.html');
