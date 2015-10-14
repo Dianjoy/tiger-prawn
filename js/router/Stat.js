@@ -7,8 +7,7 @@
     $body: null,
     $me: null,
     routes: {
-      'stat(/)': 'showStat',
-      'stat/ad_type/:ad_type': 'showAdStatType',
+      'stat/(:ad_type)': 'showStat',
       'stat/:id': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
 
@@ -42,12 +41,16 @@
       });
       this.$body.setFramework('has-date-range', '单个广告一天内统计');
     },
-    showStat: function () {
-      var page = this.$me.isCP() ? '_cp' : '';
-      this.$body.load('page/stat/list' + page + '.html');
-      this.$body.setFramework('has-date-range stat' + (this.$me.isCP() ? 'stat-cp' : ''), '投放结果统计');
+    showStat: function (ad_type) {
+      var page = this.$me.isCP() ? '_cp.html' : ad_type ? '.hbs' : '.html';
+      var obj = {
+        API: tp.API,
+        ad_type: ad_type,
+        is_android: ad_type === 'android'
+      };
+      this.$body.load('page/stat/list' + page, (this.$me.isCP() || !ad_type) ? null : obj);
+      this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type ? ad_type + '-stat' : ''), '投放结果统计');
     },
-
     showInvoice: function () {
       this.$body.load('page/stat/invoice.html');
       this.$body.setFramework('has-date-range', '我的发票');
@@ -77,14 +80,6 @@
           loader: tp.page.InvoiceEditor
         })
         .setFramework('invoice-apply', '发票开具申请单');
-    },
-    showAdStatType: function (ad_type) {
-      this.$body.load('page/stat/list.hbs', {
-        API: tp.API,
-        ad_type: ad_type,
-        is_android: ad_type === 'android'
-      });
-      this.$body.setFramework('has-date-range stat ' + ad_type + '-stat', '广告统计');
     },
     showAdminADStat: function () {
       this.$body.load('page/stat/analyse.hbs', {
