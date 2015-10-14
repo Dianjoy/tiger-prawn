@@ -1,11 +1,12 @@
 <div class="table-header form-inline">
-  <div class="form-group">
+  <div class="form-group mr2e">
     <label for="search-query">搜索：</label>
     <input type="search" class="form-control" id="search-query">
   </div>
-  <div class="form-group">
+  <div class="form-group mr2e">
     <label for="dj_status">点乐投放状态：</label>
     <select class="form-control" name="dj_status" id="dj_status">
+      <option value="">全部</option>
       <option value="-1">未推广</option>
       <option value="0">已下线</option>
       <option value="1">正在投</option>
@@ -15,8 +16,8 @@
     <label for="fund_status">融资状态：</label>
     <select class="form-control" name="fund_status" id="fund_status">
       <option value="">全部</option>
-      <option value="0">有</option>
-      <option value="1">无</option>
+      <option value="1">有</option>
+      <option value="0">无</option>
     </select>
   </div>
 </div>
@@ -27,17 +28,16 @@
     <th>应用名</th>
     <th>公司名</th>
     <th>广告来源</th>
-    <th class="order"  href="#update_time">抓取时间</th>
+    <th><a class="order"  href="#update_time">抓取时间</a></th>
     <th>点乐投放状态</th>
-    <th class="order" href="#dj_transfer">过去一周激活数</th>
-    <th class="order" href="#fund_money">融资金额</th>
+    <th><a class="order" href="#dj_transfer">过去一周激活数</a></th>
+    <th><a class="order" href="#fund_money">融资金额</a></th>
     <th>融资状态</th>
     <th>竞争对手信息</th>
     <th>应用市场信息</th>
-    <th class="order"  href="#da">日活</th>
-    <th class="order"  href="#now_count">估计安装量</th>
-    <th class="order"  href="#cc">日增</th>
-    <th><a class="order" href="#owner">跟单负责人</a></th>
+    <th><a class="order"  href="#da">日活</a></th>
+    <th><a class="order"  href="#now_count">估计安装量</a></th>
+    <th><a class="order"  href="#cc">日增</a></th>
     <th><a class="order" href="#communication">初步沟通</a></th>
     <th><a class="order" href="#delivery">是否投放</a></th>
     <th>百度下载数</th>
@@ -52,31 +52,30 @@
       <td data-title="公司名">{{company_name}}</td>
       <td data-title="广告来源">{{source}}</td>
       <td data-title="抓取时间"><time datetime="{{update_time}}">{{moment update_time}}</time></td>
-      <td data-title="点乐投放状态">{{dj_status}}</td>
-      <td data-title="过去一周激活数">{{dj_transfer}}</td>
-      <td data-title="融资金额">{{fund_money}}</td>
-      <td data-title="融资状态">{{fund_status}}</td>
+      <td data-title="点乐投放状态">{{pick dj_status '未推广' '已下线' '投放中' start=-1}}</td>
+      <td data-title="过去一周激活数">{{short_n dj_transfer}}</td>
+      <td data-title="融资金额">{{current_fund_money}}</td>
+      <td data-title="融资状态">{{pick fund_status '无' '有'}}</td>
       <td data-title="竞争对手信息">{{competitor}}</td>
       <td data-title="应用市场信息">{{market}}</td>
-      <td data-title="日活">{{da}}</td>
-      <td data-title="估计安装量">{{now_count}}</td>
-      <td data-title="日增">{{cc}}</td>
-      <td>
-        {{#if is_sales_manager}}
-        <a href="#owner" class="edit" data-type="select" data-options="{{inject 'me' 'id'}}">{{owner}}</a>
-        {{else}}
-        {{pick owner_manager id}}
+      <td data-title="日活">{{short_n da}}</td>
+      <td data-title="估计安装量">{{short_n now_count}}</td>
+      <td data-title="日增">{{short_n cc}}</td>
+      <td data-title="初步沟通">
+        <a href="#communication" class="edit" data-type="status" data-comment="communication_comment" data-readonly="false" data-active="已沟通" data-deactive="未沟通">{{#if communication}}<i class="fa fa-check text-success"></i>{{/if}}</a>
+        {{#if communication}}
+        <i class="fa fa-comment text-info pointer" data-toggle="popover" title="沟通结果" data-content="{{communication_comment}}" data-placement="top"></i>
         {{/if}}
       </td>
-      <td>
-        <span class="fa popup {{#if communication}}fa-check text-success{{else}}fa-times text-danger{{/if}} " title="初步沟通" data-content="商务反馈：{{communication_comment}}" data-cancel="关闭"></span>
+      <td data-title="是否投放">
+        <a href="#delivery" class="edit"  data-type="status" data-comment="delivery_comment" data-readonly="false" data-active="确定投放" data-deactive="不会投放" data-open="1" data-close="2">
+          {{#if delivery}}<i class="fa fa-{{pick delivery 'check text-success' 'times text-danger' start=1}}"></i>{{/if}}
+        </a>
+        {{#if delivery}}<i class="fa fa-comment text-info pointer" data-toggle="popover" title="原因" data-content="{{delivery_comment}}" data-placement="top"></i>{{/if}}
       </td>
-      <td>
-        <span class="fa popup {{#if delivery}}fa-check text-success{{else}}fa-times text-danger{{/if}}" title="是否投放" data-content="商务反馈：{{delivery_comment}}" data-cancel="关闭"></span>
-      </td>
-      <td data-title="百度下载数">{{down_count_baidu}}</td>
-      <td data-title="应用宝下载数">{{down_count_myapp}}</td>
-      <td data-title="360下载数">{{down_count_360}}</td>
+      <td data-title="百度下载数">{{short_n down_count_baidu}}</td>
+      <td data-title="应用宝下载数">{{short_n down_count_myapp}}</td>
+      <td data-title="360下载数">{{short_n down_count_360}}</td>
     </tr>
   </script>
   </tbody>

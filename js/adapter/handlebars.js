@@ -12,6 +12,9 @@
     value = parseInt(value);
     var options = arguments[arguments.length - 1];
     options.hash.start = options.hash.start || 0;
+    if (options.hash.key && array === options) {
+      array = options.data.root[options.hash.key];
+    }
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
     return array[value - options.hash.start];
   });
@@ -64,7 +67,7 @@
     if (_.isNaN(value)) {
       return value;
     }
-    var units = ['万', '亿']
+    var units = ['万', '亿', '万亿']
       , str = value
       , count = 0;
     while (value / 10000 >= 1) {
@@ -77,11 +80,12 @@
 
   //千位分割并保留到小数点后两位
   h.registerHelper('readable_n', function (value) {
-    value = _.isString(value) ? Number(value).toFixed(2) : value.toFixed(2);
+    value = Number(value);
+    value = value % 1 === 0 ? value.toString() : value.toFixed(2);
     value = value.replace('.', ',');
-    var reg = /(\d)(\d{3},)/;
+    var reg = /(\d)(\d{3})(,|$)/;
     while(reg.test(value)){
-      value = value.replace(reg, '$1,$2');
+      value = value.replace(reg, '$1,$2$3');
     }
     value = value.replace(/,(\d\d)$/, '.$1');
     return value.replace(/^\./, '0.');
@@ -89,7 +93,8 @@
 
   // 用来生成可读时间
   h.registerHelper('moment', function (value) {
-    return value ? moment(value).calendar() : '';
+    value = value ? moment(value).calendar() : '';
+    return /invalid/i.test(value) ? '' : value;
   });
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
@@ -101,6 +106,15 @@
   // 等于
   h.registerHelper('equal', function (value, target, options) {
     if (value == target) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
+
+  // 大于
+  h.registerHelper('greater', function (value, target, options) {
+    if (value > target) {
       return options.fn(this);
     } else {
       return options.inverse(this);

@@ -15,9 +15,17 @@
       var success = options.success;
       options.success = function (response) {
         b.trigger('backbone-sync', response);
-        success(response);
+        success.call(options.context, response);
       };
     }
+    var error = options.error;
+    options.error = function (response) {
+      b.trigger('backbone-error', response);
+      if (error) {
+        error(response);
+      }
+    };
+
 
     if ('xhrField' in options) {
       options.xhrFields.withCredentials = true;

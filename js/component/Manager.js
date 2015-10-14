@@ -11,7 +11,7 @@
       '.add-on-list': 'tp.component.AddOnList',
       '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
-      '#login-form': 'tp.component.LoginForm',
+      '.typeahead': 'tp.component.Typeahead',
       'form': 'tp.component.SmartForm'
     },
     check: function ($el, mediator) {

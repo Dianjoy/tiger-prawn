@@ -1,0 +1,8 @@
+<form class="model-editor" action="{{API}}invoice/{{invoiceId}}" method="post" id="prop-editor">
+  <div class="form-group select-button select-button-group col-5">
+    {{#each ads}}
+      <input type="checkbox" name="ids[]" value="{{id}}" id="{{id}}">
+      <label for="{{id}}">{{ad_name}}</label>
+    {{/each}}
+  </div>
+</form>

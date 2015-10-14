@@ -1,0 +1,12 @@
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+@import "../define"
+
+.typeahead
+  .options:empty:before
+    content: '没有搜索结果'
+
+  .fa-spinner
+    position: absolute
+    top: $gap
+    right: $gap
+    z-index: 1060

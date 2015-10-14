@@ -103,11 +103,15 @@ module.exports = function (grunt) {
       if (/^js\/page\//.test(src)) {
         return '';
       }
+      // 只打包model目录里的通用类
+      if (/^js\/model\//.test(src) && !/(Me|Notice|ListCollection|TableMemento)\./.test(src)) {
+        return '';
+      }
       jsFiles.push(src);
       return match;
     });
     // 取所有组件
-    grunt.file.recurse('js/component', function (path, root, sub, filename) {
+    grunt.file.recurse('js/component', function (path) {
       if (jsFiles.indexOf(path) === -1) {
         jsFiles.push(path);
       }

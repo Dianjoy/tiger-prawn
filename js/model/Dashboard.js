@@ -6,6 +6,11 @@
   ns.Dashboard = Backbone.Model.extend({
     className: 'dashboard',
     url: tp.API + 'dashboard/',
+    initialize: function (attrs) {
+      var start = attrs.dashboard_start;
+      var end = attrs.dashboard_end;
+      this.url = attrs.is_sale ? this.url += '?start=' + start + '&end=' + end : this.url;
+    },
     parse: function (resposne) {
       if ('record' in resposne.data) {
         _.each(resposne.data.record, function (item, i) {

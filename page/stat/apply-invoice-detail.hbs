@@ -1,0 +1,256 @@
+<h3 class="tac">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐结算单及开票申请单</h3>
+<h4 class="tac">{{start}} 至 {{end}}</h4>
+<div class="row">
+  <div class="col-sm-2 col-sm-offset-10 col-xs-6">
+    <p><small>点乐合同编号：{{agreement_number}}</small></p>
+  </div>
+</div>
+<table class="table table-bordered table-striped responsive-table" id="ad_table">
+  <thead>
+  <tr>
+    <th>推广期间</th>
+    <th>
+      广告名称
+      <a class="popup" href="page/stat/apply-choose-ad.hbs" data-id="{{products.[0].ad_id}}" data-collection-id="stat" title="添加广告" data-confirm="确定"><i class="fa fa-plus-circle"></i></a>
+    </th>
+    <th>软著名称</th>
+    <th>渠道包</th>
+    <th>单价（元）</th>
+    <th>渠道CPA（核减前）</th>
+    <th>应结算收入（核减前）</th>
+    <th>单价（核减后）</th>
+    <th>渠道CPA（核减后）</th>
+    <th>实际结算收入（核减后）</th>
+    <th>核减比例</th>
+    <th>核减金额</th>
+    <th>备注</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{{{raw-helper}}}}
+  <script type="text/x-handlebars-template">
+    <tr id="{{id}}">
+      {{#if amount}}
+        <td>合计人民币（大写）：</td>
+        <td colspan="8"  id="rmb">{{rmb}}</td>
+        <td id="income-total">&yen; {{income_after_total}}</td>
+        <td colspan="3"></td>
+      {{else}}
+        <td data-title="推广期间">{{quote_start_date}} - {{quote_end_date}}</td>
+        <td data-title="广告名称">{{ad_name}}</td>
+        <td data-title="软著名称">{{pick sdk_type sdk_types}}</td>
+        <td data-title="渠道包">{{cid}}</td>
+        <td data-title="单价（元）" class="price">&yen; {{quote_rmb}}</td>
+        <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
+        <td data-title="应结算收入（核减前）" class="income-before">&yen; {{income}}</td>
+        <td data-title="单价（核减后）">
+          <a href="#quote_rmb_after" data-type="number" data-step="0.01" class="edit" title="单价（核减后）">&yen; {{quote_rmb_after}}</a>
+        </td>
+        <td data-title="渠道CPA（核减后）">
+         <a href="#cpa_after" data-type="number" class="edit" title="渠道CPA（核减后）">{{cpa_after}}</a>
+        </td>
+        <td data-title="实际结算收入（核减后）" class="income-after">&yen; {{income_after}}</td>
+        <td data-title="核减比例" class="proportion">{{rate}}%</td>
+        <td data-title="核减金额" class="amount">&yen; {{money_cut}}</td>
+        <td data-title="备注">
+          <a href="#remark" class="edit" title="备注">{{remark}}</a>
+        </td>
+      {{/if}}
+    </tr>
+  </script>
+  {{{{/raw-helper}}}}
+  </tbody>
+</table>
+
+<form class="form-horizontal clearfix model-editor" method="post" enctype="multipart/form-data">
+  <fieldset>
+    <legend>付款方</legend>
+    <div class="form-group">
+      <label class="control-label col-sm-2">付款方：</label>
+      <div class="col-sm-2">
+        <p class="form-control-static">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</p>
+      </div>
+      <div class="col-sm-2">
+        <p class="form-control-static">(确认盖章)</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">发票抬头：</label>
+      <div class="col-sm-2">
+        <input class="form-control" name="header" type="text" value="{{header}}" required/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">发票类型：</label>
+      <div class="col-sm-2">
+        <select class="form-control" name="type">
+          <option value="0" {{#equal type 0}}selected{{/equal}}>增值税普通发票</option>
+          <option value="1" {{#equal type 1}}selected{{/equal}}>增值税专用发票</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">发票内容：</label>
+      <div class="col-sm-2">
+        <select class="form-control" name="content_type">
+          <option value="0" {{#equal content_type 0}}selected{{/equal}}>信息服务费</option>
+          <option value="1" {{#equal content_type 1}}selected{{/equal}}>信息技术服务费</option>
+          <option value="2" {{#equal content_type 2}}selected{{/equal}}>技术服务费</option>
+          <option value="3" {{#equal content_type 3}}selected{{/equal}}>广告服务费（慎用）</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">软著名称：</label>
+      <div class="col-sm-2">
+        <p class="form-control-static">joyWall V1.0</p>
+      </div>
+      <div class="col-sm-2">
+        <p class="form-control-static">红包锁屏V1.0(安卓)</p>
+      </div>
+      <div class="col-sm-2">
+        <p class="form-control-static">红包锁屏V1.0.0(IOS)</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">开票金额：</label>
+      <div class="col-sm-2">
+        <input readonly="readonly" type="text" name="joy_income" value="{{joy_income}}" class="readonly">
+      </div>
+      <div class="col-sm-2">
+        <input readonly="readonly" type="text" name="red_ad_income" value="{{red_ad_income}}" class="readonly">
+      </div>
+      <div class="col-sm-2">
+        <input readonly="readonly" type="text" name="red_ios_income" value="{{red_ios_income}}" class="readonly">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">业务负责人：</label>
+      <div class="col-sm-2">
+        <input type="text" name="pay_charger" class="form-control" value="{{pay_charger}}" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">手机号码：</label>
+      <div class="col-sm-2">
+        <input type="text" name="pay_telephone" class="form-control" value="{{pay_telephone}}" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">地址：</label>
+      <div class="col-sm-2">
+        <input type="text" name="pay_address" class="form-control" value="{{pay_address}}" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">日期：</label>
+      <div class="col-sm-2">
+        <p class="form-control-static">{{apply_time}}</p>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>收款方</legend>
+    <div class="form-group">
+      <label class="control-label col-sm-2">收款方：</label>
+      <div class="col-sm-6">
+        <p class="form-control-static">{{accept_company}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">开户名称：</label>
+      <div class="col-sm-6">
+        <p class="form-control-static">{{accept_company}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">开户银行：</label>
+      <div class="col-sm-6">
+        <p class="form-control-static">{{accept_bank}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">开户账号：</label>
+      <div class="col-sm-6">
+        <p class="form-control-static">{{accept_account}}</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">业务负责人：</label>
+      <div class="col-sm-2">
+        {{#if init}}
+          {{#if is_assistant}}
+            <select name="{{charger}}" class="form-control">
+              {{#each chargers}}
+                <option value={{this}}>{{this}}</option>
+              {{/each}}
+            </select>
+          {{else}}
+            <p class="form-control-static">{{applicant}}</p>
+          {{/if}}
+        {{else}}
+          <p class="form-control-static">{{#if charger}}{{charger}}{{else}}{{applicant}}{{/if}}</p>
+        {{/if}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">手机号码：</label>
+      <div class="col-sm-2">
+        <input type="text" name="accept_telephone" class="form-control" value="{{accept_telephone}}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">地址：</label>
+      <div class="col-sm-2">
+        <input type="text" name="accept_address" class="form-control" value="{{accept_address}}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">日期：</label>
+      <div class="col-sm-3">
+        <p class="form-control-static">{{apply_time}}</p>
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-group invoice-margin">
+    <div class="uploader fetcher" data-url="{{API}}file/" data-need-validate="true">
+      <label class="control-label col-sm-2">客户对账单：</label>
+      <div class="col-sm-6" id="description">
+        <input type="text" placeholder="可选的描述" class="form-control" name="attachment_desc">
+      </div>
+      <div class="su-placeholder su-removable col-sm-6  col-sm-offset-2" data-initial="请上传文件。" data-progress="上传文件中..">
+        {{#if attachment}}
+          <div class="su-item">
+            <a>
+              <img src="{{UPLOAD}}{{attachment}}">
+            </a>
+          </div>
+        {{/if}}
+      </div>
+      <label class="btn btn-info su-upload-button col-sm-6 col-sm-offset-2">
+        <i class="fa fa-upload"></i> 选择文件
+      </label>
+      <input type="hidden" name="attachment" class="su-url form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="approval" class="control-label col-sm-2">特批：</label>
+    <div class="col-sm-6"  id="approval" >
+      <textarea class="form-control" rows="6" name="comment" maxlength="1024">{{comment}}</textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-6 col-sm-2">
+      <button class="btn btn-primary">
+        <i class="fa fa-save"></i>提交
+      </button>
+    </div>
+  </div>
+  <input type="hidden" name="agreement_number" value="{{agreement_number}}">
+  <input type="hidden" name="income" value="{{income_after_total}}">
+  <input type="hidden" name="income_first" value="{{income_before_total}}">
+  <input type="hidden" name="cpa_first_total" value="{{cpa_first_total}}">
+  <input type="hidden" name="cpa_after_total" value="{{cpa_after_total}}">
+  <input type="hidden" name="start" value= "{{start}}">
+  <input type="hidden" name="end" value= "{{end}}">
+</form>

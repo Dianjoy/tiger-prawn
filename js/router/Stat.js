@@ -5,11 +5,17 @@
 (function (ns) {
   ns.Stat = Backbone.Router.extend({
     $body: null,
+    $me: null,
     routes: {
       'stat(/)': 'showStat',
       'stat/ad_type/:ad_type': 'showAdStatType',
       'stat/:id': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
+
+      'invoice/': 'showInvoice',
+      'invoice/:id': 'invoiceDetail',
+      'invoice/apply/:start/:end/*ids': 'applyInvoice',
+
       'stat/analyse/': 'showAdminADStat',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
@@ -37,8 +43,40 @@
       this.$body.setFramework('has-date-range', '单个广告一天内统计');
     },
     showStat: function () {
-      this.$body.load('page/stat/list.html');
-      this.$body.setFramework('has-date-range', '投放结果统计');
+      var page = this.$me.isCP() ? '_cp' : '';
+      this.$body.load('page/stat/list' + page + '.html');
+      this.$body.setFramework('has-date-range stat' + (this.$me.isCP() ? 'stat-cp' : ''), '投放结果统计');
+    },
+
+    showInvoice: function () {
+      this.$body.load('page/stat/invoice.html');
+      this.$body.setFramework('has-date-range', '我的发票');
+    },
+    invoiceDetail: function (id) {
+      var model = new tp.model.InvoiceDetail({
+        id: id
+      });
+      this.$body
+        .load('page/stat/invoice-detail.hbs', model, {
+          className: 'invoice-detail',
+          loader: tp.page.InvoiceEditor,
+          refresh: true
+        })
+        .setFramework('invoice-detail', '发票开具申请单');
+    },
+    applyInvoice: function (start, end, ids) {
+      var model = new tp.model.InvoiceDetail({
+        init: true,
+        start: start,
+        end: end,
+        ids: ids
+      });
+      this.$body
+        .load('page/stat/apply-invoice-detail.hbs', model, {
+          className: 'invoice-apply',
+          loader: tp.page.InvoiceEditor
+        })
+        .setFramework('invoice-apply', '发票开具申请单');
     },
     showAdStatType: function (ad_type) {
       this.$body.load('page/stat/list.hbs', {

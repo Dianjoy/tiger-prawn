@@ -17,9 +17,13 @@
       this.container = this.$('#page-container');
       this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
-      this.$el.popover({
-        selector: '[data-toggle=popover]'
-      });
+      this.$el
+        .popover({
+          selector: '[data-toggle=popover]'
+        })
+        .tooltip({
+          selector: '[data-toggle=tooltip]'
+        });
     },
     clear: function () {
       this.$context.removeValue('model');

@@ -259,6 +259,12 @@
 
   ns.SwitchEditor = Editor.extend({
     initialize: function (options) {
+      var defaults = {
+        open: 1,
+        close: 0,
+        readonly: true
+      };
+      options = _.extend(defaults, options);
       options.value = this.model.get(options.prop) != options.open;
       Editor.prototype.initialize.call(this, options);
     }

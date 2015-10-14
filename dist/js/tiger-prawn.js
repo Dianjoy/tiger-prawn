@@ -11,9 +11,17 @@
       var success = options.success;
       options.success = function (response) {
         b.trigger('backbone-sync', response);
-        success(response);
+        success.call(options.context, response);
       };
     }
+    var error = options.error;
+    options.error = function (response) {
+      b.trigger('backbone-error', response);
+      if (error) {
+        error(response);
+      }
+    };
+
 
     if ('xhrField' in options) {
       options.xhrFields.withCredentials = true;
@@ -39,6 +47,9 @@
     value = parseInt(value);
     var options = arguments[arguments.length - 1];
     options.hash.start = options.hash.start || 0;
+    if (options.hash.key && array === options) {
+      array = options.data.root[options.hash.key];
+    }
     array = _.isArray(array) || _.isObject(array) ? array : slice.call(arguments, 1, -1);
     return array[value - options.hash.start];
   });
@@ -91,7 +102,7 @@
     if (_.isNaN(value)) {
       return value;
     }
-    var units = ['万', '亿']
+    var units = ['万', '亿', '万亿']
       , str = value
       , count = 0;
     while (value / 10000 >= 1) {
@@ -104,11 +115,12 @@
 
   //千位分割并保留到小数点后两位
   h.registerHelper('readable_n', function (value) {
-    value = _.isString(value) ? Number(value).toFixed(2) : value.toFixed(2);
+    value = Number(value);
+    value = value % 1 === 0 ? value.toString() : value.toFixed(2);
     value = value.replace('.', ',');
-    var reg = /(\d)(\d{3},)/;
+    var reg = /(\d)(\d{3})(,|$)/;
     while(reg.test(value)){
-      value = value.replace(reg, '$1,$2');
+      value = value.replace(reg, '$1,$2$3');
     }
     value = value.replace(/,(\d\d)$/, '.$1');
     return value.replace(/^\./, '0.');
@@ -116,7 +128,8 @@
 
   // 用来生成可读时间
   h.registerHelper('moment', function (value) {
-    return value ? moment(value).calendar() : '';
+    value = value ? moment(value).calendar() : '';
+    return /invalid/i.test(value) ? '' : value;
   });
   h.registerHelper('from-now', function (value) {
     return value ? moment(value).fromNow() : '';
@@ -128,6 +141,15 @@
   // 等于
   h.registerHelper('equal', function (value, target, options) {
     if (value == target) {
+      return options.fn(this);
+    } else {
+      return options.inverse(this);
+    }
+  });
+
+  // 大于
+  h.registerHelper('greater', function (value, target, options) {
+    if (value > target) {
       return options.fn(this);
     } else {
       return options.inverse(this);
@@ -218,18 +240,24 @@
     };
   }
 }());;
-;(function (ns) {
+(function (ns) {
   ns.Base = Backbone.Router.extend({
     $body: null,
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
-      'dashboard(/)': 'showDashboard',
+      'dashboard(/:start/:end)': 'showDashboard',
       'my/profile/': 'showMyProfile'
     },
-    showDashboard: function () {
-      this.$body.load('page/dashboard.hbs', new tp.model.Dashboard());
-      this.$body.setFramework('dashboard', '新近数据统计');
+    showDashboard: function (start, end) {
+      var page = this.$me.isCP() ? '_cp' : '';
+      var model = tp.model.Dashboard ? new tp.model.Dashboard({
+        dashboard_start: start || moment().startOf('month').format('YYYY-MM-DD'),
+        dashboard_end: end || moment().format('YYYY-MM-DD'),
+        is_sale: !this.$me.isCP()
+      }) : null;
+      this.$body.load('page/dashboard' + page + '.hbs', model);
+      this.$body.setFramework('dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
@@ -437,6 +465,117 @@
       result[arr[0]] = decodeURIComponent(arr[1]);
     }
     return result;
+  };
+  ns.convertCurrency = function (currencyDigits) {
+    var MAXIMUM_NUMBER = 99999999999.99;
+    var CN_ZERO = '零';
+    var CN_ONE = '壹';
+    var CN_TWO = '贰';
+    var CN_THREE = '叁';
+    var CN_FOUR = '肆';
+    var CN_FIVE = '伍';
+    var CN_SIX = '陆';
+    var CN_SEVEN = '柒';
+    var CN_EIGHT = '捌';
+    var CN_NINE = '玖';
+    var CN_TEN = '拾';
+    var CN_HUNDRED = '佰';
+    var CN_THOUSAND = '仟';
+    var CN_TEN_THOUSAND = '万';
+    var CN_HUNDRED_MILLION = '亿';
+    var CN_DOLLAR = '元';
+    var CN_TEN_CENT = '角';
+    var CN_CENT = '分';
+    var CN_INTEGER = '整';
+
+    var integral;
+    var decimal;
+    var outputCharacters;
+    var parts;
+    var digits, radices, bigRadices, decimals;
+    var zeroCount;
+    var i, p, d;
+    var quotient, modulus;
+
+    currencyDigits = currencyDigits.toString();
+    if (currencyDigits == '') {
+      alert('Empty input!');
+      return '';
+    }
+    if (currencyDigits.match(/[^,.\d]/) != null) {
+      alert('Invalid characters in the input string!');
+      return '';
+    }
+    if ((currencyDigits).match(/^((\d{1,3}(,\d{3})*(.((\d{3},)*\d{1,3}))?)|(\d+(.\d+)?))$/) == null) {
+      alert('Illegal format of digit number!');
+      return '';
+    }
+
+    currencyDigits = currencyDigits.replace(/,/g, "");
+    currencyDigits = currencyDigits.replace(/^0+/, "");
+    if (Number(currencyDigits) > MAXIMUM_NUMBER) {
+      alert('Too large a number to convert!');
+      return '';
+    }
+
+    parts = currencyDigits.split('.');
+    if (parts.length > 1) {
+      integral = parts[0];
+      decimal = parts[1];
+
+      decimal = decimal.substr(0, 2);
+    } else {
+      integral = parts[0];
+      decimal = '';
+    }
+
+    digits = [CN_ZERO, CN_ONE, CN_TWO, CN_THREE, CN_FOUR, CN_FIVE, CN_SIX, CN_SEVEN, CN_EIGHT, CN_NINE];
+    radices = ['', CN_TEN, CN_HUNDRED, CN_THOUSAND];
+    bigRadices = ['', CN_TEN_THOUSAND, CN_HUNDRED_MILLION];
+    decimals = [CN_TEN_CENT, CN_CENT];
+
+    outputCharacters = '';
+
+    if (Number(integral) > 0) {
+      zeroCount = 0;
+      for (i = 0; i < integral.length; i++) {
+        p = integral.length - i - 1;
+        d = integral.substr(i, 1);
+        quotient = p / 4;
+        modulus = p % 4;
+        if (d == '0') {
+          zeroCount++;
+        } else {
+          if (zeroCount > 0)
+          {
+            outputCharacters += digits[0];
+          }
+          zeroCount = 0;
+          outputCharacters += digits[Number(d)] + radices[modulus];
+        }
+        if (modulus == 0 && zeroCount < 4) {
+          outputCharacters += bigRadices[quotient];
+        }
+      }
+      outputCharacters += CN_DOLLAR;
+    }
+
+    if (decimal != '') {
+      for (i = 0; i < decimal.length; i++) {
+        d = decimal.substr(i, 1);
+        if (d != '0') {
+          outputCharacters += digits[Number(d)] + decimals[i];
+        }
+      }
+    }
+
+    if (outputCharacters == '') {
+      outputCharacters = CN_ZERO + CN_DOLLAR;
+    }
+    if (decimal == '') {
+      outputCharacters += CN_INTEGER;
+    }
+    return outputCharacters;
   }
 }(Nervenet.createNameSpace('tp.utils')));;
 (function (ns) {
@@ -502,86 +641,9 @@
   };
 }(Nervenet.createNameSpace('tp.controller')));;
 (function (ns) {
-  var CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
-
-  ns.AD = Backbone.Model.extend({
-    defaults: {
-      ad_app_type: 1,
-      ad_type: 0,
-      cate: 0,
-      cpc_cpa: 'cpa',
-      put_net: 0,
-      province_type: 0,
-      put_jb: 0,
-      put_ipad: 0,
-      net_type: 0,
-      down_type: 0,
-      feedback: 2,
-      cycle: 2
-    },
-    urlRoot: tp.API + 'ad/',
-    initialize: function (attrs, options) {
-      Backbone.Model.prototype.initialize.call(this, attrs, options);
-      if (this.isNew()) {
-        this.urlRoot += 'init';
-        this.on('sync', this.syncHandler, this);
-      }
-    },
-    parse: function (response) {
-      if (response.options) {
-        this.options = response.options;
-        this.options.API = tp.API;
-        this.options.UPLOAD = tp.UPLOAD;
-      }
-      var has_ad = response.ad && _.isObject(response.ad);
-      return has_ad ? response.ad : response;
-    },
-    toJSON: function (options) {
-      var json = Backbone.Model.prototype.toJSON.call(this, options);
-      if (options) { // from sync，因为{patch: true}
-        return json;
-      }
-      var previous = this.previousAttributes();
-      if (!_.isEmpty(previous)) {
-        json.previous = previous;
-      }
-      return _.extend(json, this.options);
-    },
-    validate: function (attrs) {
-      var pack_name = this.get('pack_name');
-      if (pack_name && attrs.pack_name !== pack_name && !confirm(CONFIRM_MSG)) {
-        return '新包名与之前不一致，请检查后重新上传。';
-      }
-    },
-    syncHandler: function () {
-      if ('id' in this.changed) {
-        var hash = '#/ad/' + (this.$me.isCP() ? '' : this.id);
-        setTimeout(function () {
-          location.hash = hash;
-        }, 3000);
-        this.urlRoot = tp.API + 'ad/';
-      }
-    }
-  });
-}(Nervenet.createNameSpace('tp.model')));;
-(function (ns) {
-  ns.Dashboard = Backbone.Model.extend({
-    className: 'dashboard',
-    url: tp.API + 'dashboard/',
-    parse: function (resposne) {
-      if ('record' in resposne.data) {
-        _.each(resposne.data.record, function (item, i) {
-          item.is_checked = item.status < 2;
-        });
-      }
-      return resposne.data;
-    }
-  });
-}(Nervenet.createNameSpace('tp.model')));;
-(function (ns) {
   ns.Me = Backbone.Model.extend({
     $body: null,
-    url: tp.API + 'user/',
+    url: tp.API + 'auth/',
     defaults: {
       face: 'img/logo.png'
     },
@@ -733,7 +795,15 @@
 
     var params = _.extend({}, options);
     if (!params.model || !(params.model instanceof Function)) {
-      var init = _.pick(params, 'idAttribute', 'defaults');
+      var init = _.chain(params)
+        .pick('idAttribute', 'defaults')
+        .mapObject(function (value, key) {
+          if (key === 'defaults' && !_.isObject(value)) {
+            return tp.utils.decodeURLParam(value);
+          }
+          return value;
+        })
+        .value();
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
     collection = new Collection(null, params);
@@ -750,7 +820,9 @@
 }(Nervenet.createNameSpace('tp.model')));;
 (function (ns) {
   var TIMEOUT = 60000
-    , autoNext = false; // 60s取一次
+    , autoNext = false // 60s取一次
+    , key = tp.PROJECT + '-notice-cache'
+    , cache = null;
 
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
@@ -761,6 +833,19 @@
     },
     fetch: function (options) {
       autoNext = true;
+      var store = localStorage.getItem(key);
+      if (store) {
+        var noticeList = JSON.parse(store);
+        if (Date.now() - noticeList.time < TIMEOUT) {
+          setTimeout(this.fetch, TIMEOUT);
+          this.set(noticeList.notice);
+          this.trigger('sync');
+          return;
+        }
+
+        noticeList.time = Date.now();
+        localStorage.setItem(key, JSON.stringify(noticeList));
+      }
       options = _.extend({
         data: {
           latest: this.latest
@@ -774,15 +859,22 @@
         response.list[i].create_time = response.list[i].create_time.substr(5, 11);
         this.latest = response.list[i].id > this.latest ? response.list[i].id : this.latest;
       }
+      cache = response.list;
       return response.list;
     },
     stop: function () {
       autoNext = false;
       clearTimeout(TIMEOUT);
     },
-    syncHandler: function () {
+    syncHandler: function (collection) {
       if (autoNext) {
         setTimeout(this.fetch, TIMEOUT);
+      }
+      if (collection) {
+        localStorage.setItem(key, JSON.stringify({
+          notice: cache,
+          time: Date.now()
+        }));
       }
     }
   });
@@ -814,30 +906,6 @@
       localStorage.setItem(this.key, JSON.stringify(this.omit('page', 'keyword')));
     }
   });
-}(Nervenet.createNameSpace('tp.model')));;
-(function (ns) {
-  ns.Detail = Backbone.Model.extend({
-      parse: function (response, options) {
-        if (response.options) {
-          this.options = response.options;
-          this.options.API = tp.API;
-          this.options.UPLOAD = tp.UPLOAD;
-        }
-        return response.list;
-      },
-      toJSON: function (options) {
-        var json = Backbone.Model.prototype.toJSON.call(this, options);
-        if (options) { // from sync，因为{patch: true}
-          return json;
-        }
-        var previous = this.previousAttributes();
-        if (!_.isEmpty(previous)) {
-          json.previous = previous;
-        }
-        return _.extend(json, this.options);
-      }
-    }
-  );
 }(Nervenet.createNameSpace('tp.model')));;
 ;(function (ns) {
   ns.DataSyncView = Backbone.View.extend({
@@ -1078,7 +1146,7 @@
 
   var smart = ns.SmartForm = tp.view.DataSyncView.extend({
     $router: null,
-    uploaders: [],
+    uploaders: null,
     events: {
       "blur input,textarea": "input_blurHandler",
       'focus input': 'input_focusHandler',
@@ -1179,7 +1247,7 @@
     initUploader: function () {
       var id = this.model ? this.model.id : null
         , self = this
-        , collection = this.uploaders;
+        , collection = [];
       this.$('.uploader').each(function () {
         var options = $(this).data();
         if (id) {
@@ -1199,6 +1267,7 @@
         fetcher.on('data', self.uploader_dataHandler, self);
         collection.push(fetcher);
       });
+      this.uploaders = collection;
     },
     useData: function (data) {
       for (var key in data) {
@@ -1287,7 +1356,10 @@
           return '/' + getValue(form.elements[key]);
         });
         location.href = action;
+        this.$el.trigger('success');
+        this.trigger('success');
         event.preventDefault();
+        return false;
       }
 
       // 防止多次提交
@@ -1324,9 +1396,10 @@
         }, this);
         this.$('.switch').each(function () {
           var isNumber = !isNaN(parseInt(this.value))
-            , value = isNumber ? Number(this.value) : this.value;
-          value = this.checked ? value : !value;
-          attr[this.name] = isNumber ? Number(value) : value;
+            , value = isNumber ? Number(this.value) : this.value
+            , close = $(this).data('close');
+          value = this.checked ? value : close;
+          attr[this.name] = value;
         });
 
         // 有url就保存，不然就直接记录值
@@ -1652,6 +1725,7 @@
     },
     remove: function () {
       this.stopListening();
+      this.undelegateEvents();
       this.el = this.$el = this.model = null;
       return this;
     },
@@ -1782,6 +1856,54 @@
       $(target).after(tp.component.spinner);
     }
   });
+
+  ns.FixedHeader = Backbone.View.extend({
+    className: 'fixed-table-header',
+    tagName: 'div',
+    visible: false,
+    events: {
+      'click .filter,.order': 'button_clickHandler'
+    },
+    initialize: function (options) {
+      this.target = options.target;
+      this.target.on('table-rendered', this.render, this);
+      this.top = this.target.$el.offset().top;
+      this.scrollHandler = _.bind(this.scrollHandler, this);
+      $(window).scroll(this.scrollHandler);
+      this.$el.appendTo('body');
+    },
+    remove: function () {
+      this.target = null;
+      $(window).off('scroll', this.scrollHandler);
+      Backbone.View.prototype.remove.call(this);
+    },
+    render: function () {
+      var clone = this.target.$el.clone()
+        , ths = clone.find('th');
+      clone.find('tbody, tfoot').remove();
+      this.target.$('th').each(function (i) {
+        ths[i].width = this.offsetWidth;
+      });
+      this.$el.html(clone);
+    },
+    button_clickHandler: function (event) {
+      var type = event.target.className.indexOf('filter') != -1 ? 'filter' : 'order';
+      this.target.$('thead .' + type + '[href="' + event.target.hash + '"]').click();
+      event.preventDefault();
+    },
+    scrollHandler: function () {
+      var scroll = document.body.scrollTop + 70; // 50是topbar高度，20是间隙
+      if (scroll > this.top) {
+        if (!this.visible) {
+          this.visible = true;
+          this.$el.show();
+        }
+      } else {
+        this.$el.hide();
+        this.visible = false;
+      }
+    }
+  });
 }(Nervenet.createNameSpace('tp.component.table')));;
 (function (ns) {
   ns.CollectionSelect = ns.BaseList.extend({
@@ -1815,7 +1937,7 @@
       '.add-on-list': 'tp.component.AddOnList',
       '.collection-select': 'tp.component.CollectionSelect',
       '.morris-chart': 'tp.component.MorrisChart',
-      '#login-form': 'tp.component.LoginForm',
+      '.typeahead': 'tp.component.Typeahead',
       'form': 'tp.component.SmartForm'
     },
     check: function ($el, mediator) {
@@ -2303,6 +2425,12 @@
 
   ns.SwitchEditor = Editor.extend({
     initialize: function (options) {
+      var defaults = {
+        open: 1,
+        close: 0,
+        readonly: true
+      };
+      options = _.extend(defaults, options);
       options.value = this.model.get(options.prop) != options.open;
       Editor.prototype.initialize.call(this, options);
     }
@@ -2412,9 +2540,13 @@
       this.container = this.$('#page-container');
       this.loading = this.$('#page-loading').remove().removeClass('hide');
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
-      this.$el.popover({
-        selector: '[data-toggle=popover]'
-      });
+      this.$el
+        .popover({
+          selector: '[data-toggle=popover]'
+        })
+        .tooltip({
+          selector: '[data-toggle=tooltip]'
+        });
     },
     clear: function () {
       this.$context.removeValue('model');
@@ -2762,6 +2894,13 @@
         });
       }
 
+      // 桌面默认都固定表头
+      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0) {
+        this.header = new ns.table.FixedHeader({
+          target: this
+        });
+      }
+
       if (autoFetch) {
         this.refresh(options);
       }
@@ -2779,6 +2918,9 @@
       if (this.filter) {
         this.filter.remove();
       }
+      if (this.header) {
+        this.header.remove();
+      }
       this.model.off(null, null, this);
       this.collection.off(null, null, this);
       tp.model.ListCollection.destroyInstance(this.$el.data('collection-id'));
@@ -2787,6 +2929,7 @@
     render: function () {
       ns.BaseList.prototype.render.call(this);
       this.$context.trigger('table-rendered', this);
+      this.trigger('table-rendered', this);
       // 排序
       if ('order' in this.model.changed || 'seq' in  this.model.changed) {
         var container = this.container;
@@ -2936,8 +3079,9 @@
       var target = $(event.currentTarget)
         , data = _.extend({active: 1, deactive: 0}, target.data())
         , value = target.prop('checked') ? data.active : data.deactive
-        , id = target.closest('tr').attr('id');
-      this.saveModel(target, id, target.attr('name'), value);
+        , id = target.closest('tr').attr('id')
+        , button = $(target[0].labels).filter('.btn');
+      this.saveModel(button, id, target.attr('name'), value);
     },
     tbodyFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)
@@ -2963,6 +3107,141 @@
       this.model.unset(path[0], {reset: true});
       target.remove();
       event.preventDefault();
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));;
+(function (ns) {
+  ns.Typeahead = Backbone.View.extend({
+    timeout: null,
+    delay: 500,
+    events: {
+      'blur .keyword': 'keyword_blurHandler',
+      'change .result input': 'result_changeHandler',
+      'click .options a': 'options_clickHandler',
+      'keydown': 'keydownHandler',
+      'input': 'inputHandler'
+    },
+    initialize: function (options) {
+      options = _.extend(options, this.$el.data());
+
+      this.result = this.$('.result');
+      this.list = this.$('.options');
+      this.result_template = Handlebars.compile(this.result.find('script').html());
+      this.list_template = Handlebars.compile(this.list.find('script').html());
+      this.spinner = this.$('.fa-spinner');
+      this.input = this.$('.keyword');
+
+      this.collection = tp.model.ListCollection.getInstance(options);
+      this.collection.on('sync', this.collection_syncHandler, this);
+      this.selected = new Backbone.Collection();
+      this.selected.on('add', this.selected_addHandler, this);
+      this.selected.on('remove', this.selected_removeHandler, this);
+      this.fetch = _.bind(this.fetch, this);
+      this.hide = _.bind(this.hide, this);
+      this.multiple = options.multiple;
+    },
+    remove: function () {
+      this.collection.off(null, null, this);
+      this.selected.off();
+      this.selected = null;
+      Backbone.View.remove.call(this);
+    },
+    fetch: function () {
+      this.collection.fetch({
+        data: {keyword: this.input.val()},
+        reset: true
+      });
+      this.spinner.show();
+      this.input.prop('disabled', true);
+    },
+    hide: function (event) {
+      if (!event || !$.contains(this.el, event.target)) {
+        this.list.hide();
+      }
+    },
+    collection_syncHandler: function (collection) {
+      var data = collection.toJSON()
+        , html = this.list_template({list: data});
+      this.list.html(html).show();
+      this.spinner.hide();
+      this.input.prop('disabled', false).focus();
+    },
+    keyword_blurHandler: function () {
+      this.list.hide();
+    },
+    options_clickHandler: function (event) {
+      var id = event.target.hash.substr(1);
+      if (this.multiple) {
+        this.selected.add(this.collection.get(id));
+      } else {
+        this.selected.set([this.collection.get(id)]);
+        this.list.hide();
+      }
+      event.preventDefault();
+    },
+    result_changeHandler: function (event) {
+      var target = event.target;
+      if (!target.checked) {
+        var id = target.id.substr(9);
+        this.selected.remove(id);
+      }
+    },
+    selected_addHandler: function (model) {
+      var html = this.result_template(model.toJSON());
+      this.result.append(html);
+    },
+    selected_removeHandler: function (model) {
+      var id = model.id;
+      this.$('#selected-' + id + ',[for=selected-' + id + ']').remove();
+    },
+    inputHandler: function () {
+      clearTimeout(this.timeout);
+      if (this.input.val().length > 1) {
+        this.timeout = setTimeout(this.fetch, this.delay);
+      }
+    },
+    keydownHandler: function (event) {
+      var active = this.list.find('.active').removeClass('active');
+      switch (event.keyCode) {
+        case 13: // enter
+          var id = active.children().attr('href');
+          if (id) {
+            id = id.substr(1);
+            this.selected.add(this.collection.get(id));
+            this.list.hide();
+          } else if (!this.input.prop('disabled') && this.input.val().length > 1) {
+            this.fetch();
+          }
+          event.preventDefault();
+          break;
+
+        case 40: // down
+          this.list.show();
+          if (active.length === 0 || active.is(':last-child')) {
+            this.list.children().eq(0).addClass('active');
+          } else {
+            active.next().addClass('active');
+          }
+          event.preventDefault();
+          break;
+
+        case 38: // up
+          this.list.show();
+          if (active.length === 0 || active.is(':first-child')) {
+            this.list.children().last().addClass('active');
+          } else {
+            active.prev().addClass('active');
+          }
+          event.preventDefault();
+          break;
+
+        case 27: // esc
+          if (this.list.is(':visible')) {
+            this.hide();
+            event.stopPropagation();
+          }
+          break;
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.component')));}());

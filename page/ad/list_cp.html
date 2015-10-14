@@ -54,15 +54,16 @@
       </td>
       <td data-title="操作">
         <div class="btn-group">
-          {{#equal status 1}}
-          <a href="#status" class="btn btn-success" title="继续投放"><i class="fa fa-play"></i></a>
-          {{else equal status 0}}
-          <a href="#status" class="btn btn-danger" title="停止投放"><i class="fa fa-times"></i></a>
+          {{#in status 0 1}}
+          {{#equal status 0}}
+          <label class="btn btn-danger" title="停止投放">
+            <input type="checkbox" name="status" checked class="status-button" data-active="0" data-deactive="1">
+            <i class="fa fa-times"></i>
+          </label>
+          {{/equal}}
+          <a class="btn btn-info" title="统计信息" href="#/stat/{{id}}"><i class="fa fa-line-chart"></i></a>
           {{else}}
           <button type="button" class="btn btn-danger delete-button" title="删除广告" data-msg="确定要删除此广告么？之后不能恢复。"><i class="fa fa-times"></i> 删除广告</button>
-          {{/equal}}
-          {{#in status 0 1}}
-          <a class="btn btn-info" title="统计信息" href="#/stat/{{id}}"><i class="fa fa-line-chart"></i></a>
           {{/in}}
         </div>
       </td>

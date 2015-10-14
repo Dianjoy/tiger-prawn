@@ -1,4 +1,24 @@
-<table class="table table-bordered table-striped responsive-table add-on-list" data-collection-id="admin-list" data-key="sublist">
+<div class="form-inline table-header">
+  <div class="form-group mr2e">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query">
+  </div>
+  <div class="form-group mr2e">
+    <label for="ad_app_type">广告平台：</label>
+    <select class="form-control" name="ad_app_type" id="ad_app_type">
+      <option value="">总和</option>
+      <option value="1">Android</option>
+      <option value="2">IOS</option>
+    </select>
+  </div>
+  <form class="navbar-form navbar-right hidden-xs hidden-print">
+    <div class="btn-group">
+      <a data-uri="stat/export_payment/" data-mediator-class="tp.view.HandlerView" class="btn btn-primary export-button" target="_blank"><i class="fa fa-download"></i>导出回款信息</a>
+    </div>
+  </form>
+</div>
+
+<table class="table table-bordered table-striped responsive-table add-on-list" data-collection-id="admin-list" data-key="amount">
   <thead>
   <tr>
     <th></th>
@@ -18,54 +38,106 @@
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
-    {{#equal bonus_status 0}}
-    <tr>
-      <td>总计</td>
-      <td data-title="总包数">{{count}}</td>
-      <td data-title="总CPA投放数">{{stat}}</td>
-      <td data-title="总渠道CPA数">{{cpa}}</td>
-      <td data-title="结算率"><span>{{ratio}}</span>%</td>
-      <td data-title="推广支出">{{out}}</td>
-      <td data-title="其他支出">-</td>
-      <td data-title="总支出">{{total_cost}}</td>
-      <td data-title="总收入">{{income}}</td>
-      <td data-title="CPA单价">{{average_rmb}}</td>
-      <td data-title="毛利润">{{profit}}</td>
-      <td data-title="毛利润率"><span>{{rate}}</span>%</td>
-    </tr>
-    {{/equal}}
-    {{#equal bonus_status 1}}
-    <tr>
-      <td>总计(不含红包锁屏)</td>
-      <td data-title="总包数">-</td>
-      <td data-title="总CPA投放数">{{stat}}</td>
-      <td data-title="总渠道CPA数">-</td>
-      <td data-title="结算率">-</td>
-      <td data-title="推广支出">{{out}}</td>
-      <td data-title="其他支出">-</td>
-      <td data-title="总支出">-</td>
-      <td data-title="总收入">-</td>
-      <td data-title="CPA单价">-</td>
-      <td data-title="毛利润">-</td>
-      <td data-title="毛利润率">-</td>
-    </tr>
-    {{/equal}}
-    {{#equal bonus_status 2}}
-    <tr>
-      <td>红包锁屏</td>
-      <td data-title="总包数">-</td>
-      <td data-title="总CPA投放数">{{stat}}</td>
-      <td data-title="总渠道CPA数">-</td>
-      <td data-title="结算率">-</td>
-      <td data-title="推广支出">{{out}}</td>
-      <td data-title="其他支出">-</td>
-      <td data-title="总支出">-</td>
-      <td data-title="总收入">-</td>
-      <td data-title="CPA单价">-</td>
-      <td data-title="毛利润">-</td>
-      <td data-title="毛利润率">-</td>
-    </tr>
-    {{/equal}}
+    {{#with show.amount}}
+      <tr>
+        {{#equal owner false}}
+          <td>-</td>
+        {{else}}
+          <td>{{owner}}</td>
+        {{/equal}}
+        <td data-title="总包数">{{readable_n count}}</td>
+        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
+        <td data-title="总渠道CPA数">{{readable_n cpa}}</td>
+        <td data-title="结算率"><span>{{readable_n ratio}}</span>%</td>
+        <td data-title="推广支出">&yen; {{readable_n out}}</td>
+        <td data-title="其他支出">-</td>
+        <td data-title="总支出">&yen; {{readable_n total_cost}}</td>
+        <td data-title="总收入">&yen; {{readable_n income}}</td>
+        <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
+        <td data-title="毛利润">&yen; {{readable_n profit}}</td>
+        <td data-title="毛利润率"><span>{{readable_n profit_ratio}}</span>%</td>
+      </tr>
+    {{/with}}
+    {{#with show.happy_lock}}
+      <tr>
+        <td>红包锁屏</td>
+        <td data-title="总包数">-</td>
+        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
+        <td data-title="总渠道CPA数">-</td>
+        <td data-title="结算率"><span>-</span></td>
+        <td data-title="推广支出">&yen; {{readable_n out}}</td>
+        <td data-title="其他支出">-</td>
+        <td data-title="总支出">-</td>
+        <td data-title="总收入">&yen; {{readable_n income}}</td>
+        <td data-title="CPA单价">-</td>
+        <td data-title="毛利润">-</td>
+        <td data-title="毛利润率"><span>-</span></td>
+      </tr>
+    {{/with}}
+    {{#with show.without_happy_lock}}
+      <tr>
+        <td>其他媒体</td>
+        <td data-title="总包数">-</td>
+        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
+        <td data-title="总渠道CPA数">-</td>
+        <td data-title="结算率">-</td>
+        <td data-title="推广支出">&yen; {{readable_n out}}</td>
+        <td data-title="其他支出">-</td>
+        <td data-title="总支出">-</td>
+        <td data-title="总收入">&yen; {{readable_n income}}</td>
+        <td data-title="CPA单价">-</td>
+        <td data-title="毛利润">-</td>
+        <td data-title="毛利润率">-</td>
+      </tr>
+    {{/with}}
+    {{#with all.amount}}
+      <tr>
+        <td>总计</td>
+        <td data-title="总包数">{{readable_n count}}</td>
+        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
+        <td data-title="总渠道CPA数">{{readable_n cpa}}</td>
+        <td data-title="结算率"><span>{{readable_n ratio}}</span>%</td>
+        <td data-title="推广支出">&yen; {{readable_n out}}</td>
+        <td data-title="其他支出">&yen; {{readable_n operation_cost}}</td>
+        <td data-title="总支出">&yen; {{readable_n total_cost}}</td>
+        <td data-title="总收入">&yen; {{readable_n income}}</td>
+        <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
+        <td data-title="毛利润">&yen; {{readable_n profit}}</td>
+        <td data-title="毛利润率"><span>{{readable_n profit_ratio}}</span>%</td>
+      </tr>
+    {{/with}}
+    {{#with all.without_happy_lock}}
+      <tr>
+        <td>总计(不含红包锁屏)</td>
+        <td data-title="总包数">-</td>
+        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
+        <td data-title="总渠道CPA数">-</td>
+        <td data-title="结算率">-</td>
+        <td data-title="推广支出">&yen; {{readable_n out}}</td>
+        <td data-title="其他支出">&yen; {{readable_n operation_cost}}</td>
+        <td data-title="总支出">&yen; {{readable_n total_cost}}</td>
+        <td data-title="总收入">&yen; {{readable_n income}}</td>
+        <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
+        <td data-title="毛利润">-</td>
+        <td data-title="毛利润率">-</td>
+      </tr>
+    {{/with}}
+    {{#with all.happy_lock}}
+      <tr>
+        <td>红包锁屏</td>
+        <td data-title="总包数">-</td>
+        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
+        <td data-title="总渠道CPA数">-</td>
+        <td data-title="结算率">-</td>
+        <td data-title="推广支出">&yen; {{readable_n out}}</td>
+        <td data-title="其他支出">&yen; {{readable_n operation_cost}}</td>
+        <td data-title="总支出">&yen; {{readable_n total_cost}}</td>
+        <td data-title="总收入">&yen; {{readable_n income}}</td>
+        <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
+        <td data-title="毛利润">-</td>
+        <td data-title="毛利润率">-</td>
+      </tr>
+    {{/with}}
     {{{{/raw-helper}}}}
   </script>
   </tbody>
@@ -78,20 +150,19 @@
   </tfoot>
 </table>
 
-<table class="table table-bordered table-hover smart-table responsive-table" data-url="{{API}}stat/analyse/" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list">
+<table class="table table-bordered table-hover smart-table responsive-table" data-search="#search-query" data-filter=".table-header" data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list">
   <thead>
     <tr>
       <th class="filters">管理名</th>
       <th>上线时间</th>
       <th>状态</th>
       <th>收入</th>
-      <th>CPA</th>
-      <th>渠道CPA</th>
+      <th><a class="order" href="#transfer">CPA</a></th>
+      <th><a class="order" href="#cpa">渠道CPA</a></th>
       <th>单价/元</th>
-      <th>实际价格</th>
-      <th>毛利润</th>
-      <th>毛利润率</th>
-      <th>结算率</th>
+      <th><a class="order" href="#real">实际价格</a></th>
+      <th><a class="order" href="#profit">毛利润</a></th>
+      <th><a class="order" href="#profit_radio">毛利润率</a></th>
       <th>操作</th>
     </tr>
   </thead>
@@ -100,26 +171,24 @@
       {{{{raw-helper}}}}
       <tr id="{{id}}" class="{{pick ad_app_type '' 'Android' 'iPhone'}}">
         <td data-title="管理名">
-          <a href="#/agreement_id/{{agreement_id}}" class="label label-agreement filter">{{agreement}}</a>
-          <a href="#/channel/{{channel}}" class="label label-channel filter">{{channel_alias}}</a>
-          <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
+          {{#if channel}}<a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>{{/if}}
+          <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
           {{cid}}
         </td>
-        <td data-title="上线时间">{{ctime}}</td>
+        <td data-title="上线时间">{{moment create_time}}</td>
         <td data-title="状态">
           <span class="label status-{{status}}">
             {{pick status 'ON' 'OFF'}}
           </span>
           <i class="fa fa-{{pick ad_app_type '' 'android' 'apple'}} platform"></i>
         </td>
-        <td data-title="收入">{{income}}</td>
-        <td data-title="CPA">{{stat}}</td>
-        <td data-title="渠道CPA">{{cpa}}</td>
-        <td data-title="单价/元">{{price}}</td>
-        <td data-title="实际价格">{{real}}</td>
-        <td data-title="毛利润">{{profit}}</td>
-        <td data-title="毛利润率">{{rate}}%</td>
-        <td data-title="结算率">{{ratio}}%</td>
+        <td data-title="收入">&yen; {{readable_n income}}</td>
+        <td data-title="CPA">{{readable_n transfer}}</td>
+        <td data-title="渠道CPA">{{readable_n cpa}}</td>
+        <td data-title="单价/元">&yen; {{readable_n quote_rmb}}</td>
+        <td data-title="实际价格">&yen; {{readable_n real}}</td>
+        <td data-title="毛利润">&yen; {{readable_n profit}}</td>
+        <td data-title="毛利润率">{{readable_n profit_ratio}}%</td>
         <td data-title="操作">
           <a href="#/stat/analyse/daily/{{id}}/{{start}}/{{end}}" class="btn btn-default" title="多日详情">
             <i class="fa fa-list"></i>
@@ -138,3 +207,17 @@
     </tr>
   </tfoot>
 </table>
+
+<nav class="pull-right">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+        <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+      {{{{/raw-helper}}}}
+    </script>
+  </ul>
+</nav>

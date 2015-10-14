@@ -51,6 +51,10 @@
       {
         "title": "广告数据分析",
         "link": "#/stat/analyse/"
+      },
+      {
+        "title": "我的发票",
+        "link": "#/invoice/"
       }
     ]
   },

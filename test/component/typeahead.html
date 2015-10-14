@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <title>Typeahead测试</title>
+  <link rel="stylesheet" href="../../bower_components/qunit/qunit/qunit.css">
+  <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../css/screen.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<div class="container">
+  <div class="typeahead dropdown" data-url="http://meathill.mac/dianjoy-v5/ad/">
+    <div class="select-button result">
+      <script type="text/x-handlebars-template">
+        <input type="checkbox" name="ad_id[]" value="{{id}}" id="selected-{{id}}" checked>
+        <label for="selected-{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</label>
+      </script>
+    </div>
+    <input id="ads" class="form-control keyword" autofocus autocomplete="off">
+    <i class="fa fa-spin fa-spinner" style="display: none;"></i>
+    <ul class="dropdown-menu options" aria-labelledby="ads">
+      <script type="text/x-handlebars-template">
+        {{#each list}}
+        <li><a href="#{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</a></li>
+        {{/each}}
+      </script>
+    </ul>
+  </div>
+</div>
+
+<script src="../../bower_components/qunit/qunit/qunit.js"></script>
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../../bower_components/underscore/underscore-min.js"></script>
+<script src="../../bower_components/backbone/backbone-min.js"></script>
+<script src="../../bower_components/nervenet/nervenet.min.js"></script>
+<script src="../../bower_components/handlebars/handlebars.min.js"></script>
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../js/adapter/backbone.js"></script>
+<script src="../../js/model/ListCollection.js"></script>
+<script src="../../js/component/Typeahead.js"></script>
+<script src="typeahead.js"></script>
+</body>
+</html>
