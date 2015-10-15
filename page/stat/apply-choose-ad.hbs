@@ -5,7 +5,7 @@
       <label class="control-label pull-left" id="settlement-period">结算周期：</label>
       <div class="date input-group col-sm-2 col-md-2 pull-left">
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        <input type="date"  id="settle-start-date" class="form-control datetimepicker" name="start" data-format="YYYY-MM-DD">
+        <input type="date" id="settle-start-date" class="form-control datetimepicker" name="start" data-format="YYYY-MM-DD">
       </div>
       <div class="date input-group col-sm-2 col-md-2 pull-left">
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
@@ -29,5 +29,10 @@
     </script>
     {{{{/raw-helper}}}}
     </tbody>
+    <tfoot class="waiting">
+    <tr>
+      <td colspan="10"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</td>
+    </tr>
+    </tfoot>
   </table>
 </form>

@@ -78,10 +78,10 @@
       decimal = '';
     }
 
-    digits = new Array(CN_ZERO, CN_ONE, CN_TWO, CN_THREE, CN_FOUR, CN_FIVE, CN_SIX, CN_SEVEN, CN_EIGHT, CN_NINE);
-    radices = new Array('', CN_TEN, CN_HUNDRED, CN_THOUSAND);
-    bigRadices = new Array('', CN_TEN_THOUSAND, CN_HUNDRED_MILLION);
-    decimals = new Array(CN_TEN_CENT, CN_CENT);
+    digits = [CN_ZERO, CN_ONE, CN_TWO, CN_THREE, CN_FOUR, CN_FIVE, CN_SIX, CN_SEVEN, CN_EIGHT, CN_NINE];
+    radices = ['', CN_TEN, CN_HUNDRED, CN_THOUSAND];
+    bigRadices = ['', CN_TEN_THOUSAND, CN_HUNDRED_MILLION];
+    decimals = [CN_TEN_CENT, CN_CENT];
 
     outputCharacters = '';
 
@@ -124,7 +124,6 @@
     if (decimal == '') {
       outputCharacters += CN_INTEGER;
     }
-    outputCharacters = outputCharacters;
     return outputCharacters;
   }
 }(Nervenet.createNameSpace('tp.utils')));

@@ -2,7 +2,8 @@
  * Created by meathill on 14-3-24.
  * 存在数据交互的类，主要显示进度和结果
  */
-;(function (ns) {
+'use strict';
+(function (ns) {
   ns.DataSyncView = Backbone.View.extend({
     initialize: function () {
       this.submit = this.$('button.btn-primary');

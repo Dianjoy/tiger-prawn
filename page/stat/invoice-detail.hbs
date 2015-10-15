@@ -3,7 +3,7 @@
 <a href="#" download="{{start}} 至 {{end}}对账单.xls" class="btn btn-primary export-button" title="导出对账单"><i class="fa fa-download">导出对账单</i></a>
 <div class="row">
   <div class="col-sm-2 col-sm-offset-10 col-xs-6" id="agreement-number">
-    <p><small>点乐合同编号：{{agreement_number}}</small></p>
+    <a title="{{#each agreement_info}}{{@this}}{{/each}}"><small>点乐合同编号：{{agreement_number}}</small></a>
   </div>
 </div>
 
@@ -15,8 +15,7 @@
       广告名称
       {{#unless view}}<a data-template="stat/choose-ad" class="btn btn-sm edit" title="添加广告" data-confirm="确定"><i class="fa fa-plus-circle"></i></a>{{/unless}}
     </th>
-    <th>软著名称</th>
-    <th>渠道包</th>
+    <th>渠道号</th>
     <th>单价（元）</th>
     <th>渠道CPA（核减前）</th>
     <th>应结算收入（核减前）</th>
@@ -40,8 +39,7 @@
         {{else}}
           <td data-title="推广期间">{{quote_start_date}} - {{quote_end_date}}</td>
           <td data-title="广告名称">{{ad_name}}</td>
-          <td data-title="软著名称">{{pick sdk_type sdk_types}}</td>
-          <td data-title="渠道包">{{cid}}</td>
+          <td data-title="渠道号">{{cid}}</td>
           <td data-title="单价（元）" class="price">&yen; {{quote_rmb}}</td>
           <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
           <td data-title="应结算收入（核减前）" class="income-before">&yen; {{income}}</td>
@@ -91,16 +89,13 @@
           </td>
         </tr>
         <tr>
-          <th>软著名称</th>
-          <td colspan="4">joyWall V1.</td>
-          <td colspan="4">红包锁屏V1.0(安卓)</td>
-          <td colspan="4">红包锁屏V1.0.0(IOS)</td>
+          <th>规格型号</th>
+          <td colspan="12">DAP V1.0</td>
         </tr>
         <tr>
           <th>开票金额</th>
-          <td colspan="4">{{joy_income}}</td>
-          <td colspan="4">{{red_ad_income}}</td>
-          <td colspan="4">{{red_ios_income}}</td>
+          <td colspan="6">{{joy_income}}</td>
+          <td colspan="6">{{red_ad_income}}</td>
         </tr>
         <tr>
           <th>业务负责人</th>

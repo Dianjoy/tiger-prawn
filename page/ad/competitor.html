@@ -6,6 +6,7 @@
   <div class="form-group mr2e">
     <label for="dj_status">点乐投放状态：</label>
     <select class="form-control" name="dj_status" id="dj_status">
+      <option value="">全部</option>
       <option value="-1">未推广</option>
       <option value="0">已下线</option>
       <option value="1">正在投</option>
@@ -15,8 +16,8 @@
     <label for="fund_status">融资状态：</label>
     <select class="form-control" name="fund_status" id="fund_status">
       <option value="">全部</option>
-      <option value="0">有</option>
-      <option value="1">无</option>
+      <option value="1">有</option>
+      <option value="0">无</option>
     </select>
   </div>
 </div>
@@ -62,11 +63,15 @@
       <td data-title="日增">{{short_n cc}}</td>
       <td data-title="初步沟通">
         <a href="#communication" class="edit" data-type="status" data-comment="communication_comment" data-readonly="false" data-active="已沟通" data-deactive="未沟通">{{#if communication}}<i class="fa fa-check text-success"></i>{{/if}}</a>
+        {{#if communication}}
+        <i class="fa fa-comment text-info pointer" data-toggle="popover" title="沟通结果" data-content="{{communication_comment}}" data-placement="top"></i>
+        {{/if}}
       </td>
       <td data-title="是否投放">
         <a href="#delivery" class="edit"  data-type="status" data-comment="delivery_comment" data-readonly="false" data-active="确定投放" data-deactive="不会投放" data-open="1" data-close="2">
           {{#if delivery}}<i class="fa fa-{{pick delivery 'check text-success' 'times text-danger' start=1}}"></i>{{/if}}
         </a>
+        {{#if delivery}}<i class="fa fa-comment text-info pointer" data-toggle="popover" title="原因" data-content="{{delivery_comment}}" data-placement="top"></i>{{/if}}
       </td>
       <td data-title="百度下载数">{{short_n down_count_baidu}}</td>
       <td data-title="应用宝下载数">{{short_n down_count_myapp}}</td>

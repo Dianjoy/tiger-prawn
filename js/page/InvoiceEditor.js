@@ -12,12 +12,12 @@
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
     },
     exportButton_clickHandler: function (event) {
-      event.currentTarget.href = this.str;
+      event.currentTarget.href = this.export_href;
     },
     tableToExcel: function (template) {
       var tables = []
         , uri = 'data:application/vnd.ms-excel;base64,'
-        , tableList = this.$('table')
+        , tableList = this.$('table').clone()
         , html = Handlebars.compile(template);
 
       for (var i = 0; i < tableList.length - 1; i++) {
@@ -33,7 +33,7 @@
         invoice_title: this.$('#invoice-title').text(),
         invoice_time: this.$('#invoice-time').text()
       };
-      this.str =   uri + this.base64(html(data));
+      this.export_href = uri + this.base64(html(data));
     },
     base64: function (str) {
       return window.btoa(unescape(encodeURIComponent(str)));

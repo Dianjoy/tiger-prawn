@@ -529,10 +529,10 @@
       decimal = '';
     }
 
-    digits = new Array(CN_ZERO, CN_ONE, CN_TWO, CN_THREE, CN_FOUR, CN_FIVE, CN_SIX, CN_SEVEN, CN_EIGHT, CN_NINE);
-    radices = new Array('', CN_TEN, CN_HUNDRED, CN_THOUSAND);
-    bigRadices = new Array('', CN_TEN_THOUSAND, CN_HUNDRED_MILLION);
-    decimals = new Array(CN_TEN_CENT, CN_CENT);
+    digits = [CN_ZERO, CN_ONE, CN_TWO, CN_THREE, CN_FOUR, CN_FIVE, CN_SIX, CN_SEVEN, CN_EIGHT, CN_NINE];
+    radices = ['', CN_TEN, CN_HUNDRED, CN_THOUSAND];
+    bigRadices = ['', CN_TEN_THOUSAND, CN_HUNDRED_MILLION];
+    decimals = [CN_TEN_CENT, CN_CENT];
 
     outputCharacters = '';
 
@@ -575,7 +575,6 @@
     if (decimal == '') {
       outputCharacters += CN_INTEGER;
     }
-    outputCharacters = outputCharacters;
     return outputCharacters;
   }
 }(Nervenet.createNameSpace('tp.utils')));;
@@ -796,7 +795,15 @@
 
     var params = _.extend({}, options);
     if (!params.model || !(params.model instanceof Function)) {
-      var init = _.pick(params, 'idAttribute', 'defaults');
+      var init = _.chain(params)
+        .pick('idAttribute', 'defaults')
+        .mapObject(function (value, key) {
+          if (key === 'defaults' && !_.isObject(value)) {
+            return tp.utils.decodeURLParam(value);
+          }
+          return value;
+        })
+        .value();
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
     collection = new Collection(null, params);
@@ -830,7 +837,6 @@
       if (store) {
         var noticeList = JSON.parse(store);
         if (Date.now() - noticeList.time < TIMEOUT) {
-          setTimeout(this.fetch, TIMEOUT);
           this.set(noticeList.notice);
           this.trigger('sync');
           return;
@@ -848,10 +854,9 @@
       Backbone.Collection.prototype.fetch.call(this, options);
     },
     parse: function (response) {
-      for (var i = 0, len = response.list.length; i < len; i++) {
-        response.list[i].create_time = response.list[i].create_time.substr(5, 11);
-        this.latest = response.list[i].id > this.latest ? response.list[i].id : this.latest;
-      }
+      this.latest = _.reduce(response.list, function (max, item) {
+        return item.id > max ? item.id : max;
+      }, this.latest);
       cache = response.list;
       return response.list;
     },
@@ -900,7 +905,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-;(function (ns) {
+(function (ns) {
   ns.DataSyncView = Backbone.View.extend({
     initialize: function () {
       this.submit = this.$('button.btn-primary');
@@ -1017,20 +1022,17 @@
       this.collection.on('sync', this.collection_syncHandler, this);
     },
     collection_addHandler: function (model) {
-      if (this.count > 2) {
-        this.count++;
-        return;
-      } else {
+      if (this.count < 3) {
         this.fragment.push(this.template(model.toJSON()));
-        this.count++;
       }
+      this.count++;
     },
     collection_syncHandler: function () {
-      if (this.fragment) {
+      if (this.fragment.length) {
         if (this.count > 3) {
           this.fragment[2] = this.template({number: this.count - 2});
         }
-        this.$el.append(this.fragment.join(''));
+        this.$el.html(this.fragment.join(''));
         this.fragment = [];
       }
     }
@@ -1063,7 +1065,7 @@
         try {
           notification.requestPermission();
         } catch (e) {
-
+          console.log('no browser notice');
         }
       }
       this.collection.on('add', this.collection_addHandler, this);
@@ -1078,7 +1080,9 @@
       }
     },
     start: function () {
-      this.collection.fetch();
+      if (tp.NOTICE_KEY) {
+        this.collection.fetch();
+      }
     },
     stop: function () {
       this.collection.stop();
@@ -1094,21 +1098,19 @@
     }
   });
 
-  var collection = new tp.model.Notice()
-    , panel = new ns.Panel({
-      el: '.system-notice',
-      collection: collection
-    })
-    , growl = new ns.Growl({
-      el: '#growl',
-      collection: collection
-    });
+  var collection = new tp.model.Notice();
+  new ns.Panel({
+    el: '.system-notice',
+    collection: collection
+  });
+  new ns.Growl({
+    el: '#growl',
+    collection: collection
+  });
 
-  if (tp.NOTICE_KEY) {
-    ns.Manager = new Manager({
-      collection: collection
-    });
-  }
+  ns.Manager = new Manager({
+    collection: collection
+  });
 }(Nervenet.createNameSpace('tp.notification')));;
 (function (ns) {
   var history = 'history-recorder';
@@ -2253,7 +2255,7 @@
         this.collection.off(null, null, this);
       }
       clearTimeout(timeout);
-      this.$el.remove();
+      this.remove();
       this.trigger('hidden');
     }
   });
@@ -2838,7 +2840,8 @@
       this.model.on('invalid', this.model_invalidHandler, this);
       this.renderHeader();
 
-      var autoFetch = options.autoFetch || !('autoFetch' in options) && this.autoFetch;
+      var data = this.$el.data()
+        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
         autoFetch: false,
         container: 'tbody',
