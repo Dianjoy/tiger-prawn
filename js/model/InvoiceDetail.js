@@ -29,15 +29,39 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
+      var agreement_info = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
+      json.agreement_info = _.map(agreement_info, function(element, key) {
+        switch (key) {
+          case 'company':
+            element = '客户名称:' + element + '\n';
+            break;
+          case 'company_short':
+            element = '客户简称:' + element + '\n';
+            break;
+          case 'cycle':
+            element = '付款周期:' + element + '\n';
+            break;
+          case 'ad_name':
+            element = '推广产品:' + element + '\n';
+            break;
+          case 'sign_date':
+            element = '签约时间:' + element + '\n';
+            break;
+          case 'rmb':
+            element = '合作单价:' + element + '\n';
+            break;
+          case 'agreement_comment':
+            element = '备注:' + element + '\n';
+            break;
+        }
+        return element;
+      });
       var products = json.products;
       var obj = {
         cpa_first_total: 0,
         cpa_after_total: 0,
         income_before_total: 0,
         income_after_total: 0,
-        joy_income: 0,
-        red_ad_income: 0,
-        red_ios_income: 0,
         rmb: ''
       };
       products = _.map(products, function (element) {
@@ -62,17 +86,6 @@
         obj.income_after_total += element.income_after;
         obj.income_before_total += element.income;
         obj.rmb = tp.utils.convertCurrency(obj.income_after_total);
-        switch (element.sdk_type) {
-          case "0":
-            obj.joy_income += element.income_after;
-            break;
-          case "1":
-            obj.red_ad_income += element.income_after;
-            break;
-          case "2":
-            obj.red_ios_income += element.income_after;
-            break;
-        }
         return element;
       });
       _.extend(this.options, obj);

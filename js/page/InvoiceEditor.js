@@ -9,15 +9,16 @@
       this.getProductList = _.bind(this.getProductList, this);
       tp.view.Loader.prototype.render.call(this);
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
+      $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
     },
     exportButton_clickHandler: function (event) {
-      var tables = this.$('table');
-      event.currentTarget.href = this.tableToExcel(tables, '对账单');
+      event.currentTarget.href = this.export_href;
     },
-    tableToExcel: function (tableList, name) {
+    tableToExcel: function (template) {
       var tables = []
         , uri = 'data:application/vnd.ms-excel;base64,'
-        , template = Handlebars.compile('<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{{worksheet}}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><h3 style="text-align: center;">{{invoice_title}}</h3><h4 style="text-align: center;">{{invoice_time}}</h4><p style="text-align:right;">{{agreement_number}}</p>{{#each tables}}<table style="border:1px solid #000;">{{{this}}}</table>{{/each}}</body></html>');
+        , tableList = this.$('table').clone()
+        , html = Handlebars.compile(template);
 
       for (var i = 0; i < tableList.length - 1; i++) {
         tableList.find('a').replaceWith(function (i) {
@@ -26,13 +27,13 @@
         tables.push(tableList[i].innerHTML);
       }
       var data = {
-        worksheet: name || 'Worksheet',
+        worksheet: '对账单',
         tables: tables,
         agreement_number: this.$('#agreement-number').text(),
         invoice_title: this.$('#invoice-title').text(),
         invoice_time: this.$('#invoice-time').text()
       };
-      return uri + this.base64(template(data));
+      this.export_href = uri + this.base64(html(data));
     },
     base64: function (str) {
       return window.btoa(unescape(encodeURIComponent(str)));

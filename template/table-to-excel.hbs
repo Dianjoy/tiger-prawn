@@ -1,0 +1,20 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <!--[if gte mso 9]>
+  <xml>
+    <x:ExcelWorkbook>
+      <x:ExcelWorksheets><x:ExcelWorksheet>
+        <x:Name>{{worksheet}}</x:Name>
+        <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+      </x:ExcelWorksheet></x:ExcelWorksheets>
+    </x:ExcelWorkbook>
+  </xml>
+  <![endif]-->
+</head>
+<body>
+<h3 style="text-align: center;">{{invoice_title}}</h3>
+<h4 style="text-align: center;">{{invoice_time}}</h4>
+<p style="text-align:right;">{{agreement_number}}</p>
+{{#each tables}}<table style="border:1px solid #000;">{{{this}}}</table>{{/each}}
+</body>
+</html>

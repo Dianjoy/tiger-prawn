@@ -13,7 +13,7 @@
 
       'invoice/': 'showInvoice',
       'invoice/:id': 'invoiceDetail',
-      'invoice/apply/:start/:end/*ids': 'applyInvoice',
+      'invoice/apply/:start/:end/:ids': 'applyInvoice',
 
       'stat/analyse/': 'showAdminADStat',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
@@ -65,7 +65,7 @@
           loader: tp.page.InvoiceEditor,
           refresh: true
         })
-        .setFramework('invoice-detail', '发票开具申请单');
+        .setFramework('invoice invoice-detail', '发票开具申请单');
     },
     applyInvoice: function (start, end, ids) {
       var model = new tp.model.InvoiceDetail({
@@ -79,7 +79,7 @@
           className: 'invoice-apply',
           loader: tp.page.InvoiceEditor
         })
-        .setFramework('invoice-apply', '发票开具申请单');
+        .setFramework('invoice invoice-apply', '发票开具申请单');
     },
     showAdminADStat: function () {
       this.$body.load('page/stat/analyse.hbs', {
