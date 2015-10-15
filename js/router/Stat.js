@@ -8,7 +8,7 @@
     $me: null,
     routes: {
       'stat/(:ad_type)': 'showStat',
-      'stat/:id': 'showADStat',
+      'stat/ad_type/:id': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
 
       'invoice/': 'showInvoice',

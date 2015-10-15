@@ -13,8 +13,7 @@
       广告名称
       <a class="popup" href="page/stat/apply-choose-ad.hbs" data-id="{{products.[0].ad_id}}" data-collection-id="stat" title="添加广告" data-confirm="确定"><i class="fa fa-plus-circle"></i></a>
     </th>
-    <th>软著名称</th>
-    <th>渠道包</th>
+    <th>渠道号</th>
     <th>单价（元）</th>
     <th>渠道CPA（核减前）</th>
     <th>应结算收入（核减前）</th>
@@ -38,8 +37,7 @@
       {{else}}
         <td data-title="推广期间">{{quote_start_date}} - {{quote_end_date}}</td>
         <td data-title="广告名称">{{ad_name}}</td>
-        <td data-title="软著名称">{{pick sdk_type sdk_types}}</td>
-        <td data-title="渠道包">{{cid}}</td>
+        <td data-title="渠道号">{{cid}}</td>
         <td data-title="单价（元）" class="price">&yen; {{quote_rmb}}</td>
         <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
         <td data-title="应结算收入（核减前）" class="income-before">&yen; {{income}}</td>
