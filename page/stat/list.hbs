@@ -30,6 +30,7 @@
     <th><a class="order" href="#ratio">点击到激活转化率</a></th>
     <th><a class="order" href="#click_ratio">点击到通知回调率</a></th>
     {{/if}}
+    <th>详细</th>
   </tr>
   </thead>
   <tbody>
@@ -64,6 +65,7 @@
       <td data-title="点击到激活转化率">{{ratio}}%</td>
       <td data-title="点击到通知回调率">{{click_ratio}}%</td>
       {{/if}}
+      <td><a href="#/stat/ad_type/{{id}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a></td>
     </tr>
     {{{{/raw-helper}}}}
   </script>

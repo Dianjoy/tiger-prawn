@@ -26,6 +26,13 @@ $(function () {
     .mapEvent('add-model', tp.controller.addModelCommand);
   Handlebars.$context = context;
 
+  // invoice
+  var invoiceList = new tp.model.InvoiceList()
+    , invoiceListView = new tp.view.InvoiceListView({
+    el: '.invoice-list',
+    collection: invoiceList
+  });
+
   // routers
   context.createInstance(tp.router.Base);
   context.createInstance(tp.router.AD);
