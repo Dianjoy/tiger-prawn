@@ -37,10 +37,14 @@
     },
     createDesktopNotice: function () {
       if (document[hidden] && notification.permission === 'granted') {
-        new notification('点乐自助平台通知', {
+        var notice = new notification('点乐自助平台通知', {
           icon: 'img/fav.png',
           body: '收到' + this.count + '条通知，请及时处理哟。'
         });
+        notice.onclick = function () {
+          window.focus();
+          this.onclick = null;
+        }
       }
     },
     start: function () {

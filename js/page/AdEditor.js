@@ -8,7 +8,7 @@
   var IOS_PREFIX = 'itms-apps://'
     , option_template = '{{#each list}}<option value="{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
     , aso_desc = 'App Store搜索关键字“XX”，找到“XXX”（约第X位）\n下载并注册帐号后，二次登录体验可得奖励。'
-    , omit = ['ad_url', 'ad_lib', 'ad_size', 'id'];
+    , omit = ['ad_url', 'ad_lib', 'ad_size', 'id', 'pack_name'];
   
   ns.AdEditor = tp.view.Loader.extend({
     events: {
@@ -25,15 +25,6 @@
       'click .search-ad-button': 'searchADButton_clickHandler',
       'click .search-agreement-button': 'searchAgreementButton_clickHandler',
       'keydown .agreement-keyword': 'agreementKeyword_keyDownHandler'
-    },
-    ad_createdHandler: function (model, id) {
-      if (id) {
-        this.$('.success-info')
-          .html(function (i, html) {
-            return html.replace('{{id}}', id);
-          })
-          .removeClass('hide');
-      }
     },
     render: function () {
       tp.view.Loader.prototype.render.call(this);
@@ -88,6 +79,15 @@
         data: {keyword: keyword},
         reset: true
       });
+    },
+    ad_createdHandler: function (model, id) {
+      if (id) {
+        this.$('.success-info')
+          .html(function (i, html) {
+            return html.replace('{{id}}', id);
+          })
+          .removeClass('hide');
+      }
     },
     adName_changeHandler: function (event) {
       this.$('.search-ad-button').prop('disabled', !event.target.value);
