@@ -8,7 +8,7 @@
     $me: null,
     routes: {
       'stat/(:ad_type)': 'showStat',
-      'stat/ad_type/:id': 'showADStat',
+      'stat/ad_type/:id/:start/:end': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
 
       'invoice/': 'showInvoice',
@@ -18,9 +18,11 @@
       'stat/analyse/': 'showAdminADStat',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
-    showADStat: function (id) {
+    showADStat: function (id, start, end) {
       var model = new tp.model.AD({
-        id: id
+        id: id,
+        start: start,
+        end: end
       });
       this.$body.load('page/stat/daily.hbs', model, {
         className: 'stat stat-ad'
@@ -46,6 +48,8 @@
       var obj = {
         API: tp.API,
         ad_type: ad_type,
+        start: moment().startOf('month').format(moment.DATE_FORMAT),
+        end: moment().format(moment.DATE_FORMAT),
         is_android: ad_type === 'android'
       };
       this.$body.load('page/stat/list' + page, this.$me.isCP() ? null : obj);

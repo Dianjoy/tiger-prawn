@@ -96,7 +96,7 @@
         {{/if}}
       </td>
       <td data-title="财务审核">
-        {{if is_show}}
+        {{#if is_show}}
         {{#in status 20 28}}审核中{{/in}}
         {{#equal status 29}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
@@ -105,7 +105,7 @@
         {{/if}}
       </td>
       <td data-title="地区负责人审核">
-        {{if is_show}}
+        {{#if is_show}}
         {{#in status 30 38}}审核中{{/in}}
         {{#equal status 39}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>

@@ -76,9 +76,9 @@
           });
         } else {
           _.extend(element, {
-            income_after: element.quote_rmb_after * element.cpa_after,
+            income_after: (element.quote_rmb_after * element.cpa_after).toFixed(2),
             rate: ((1 - element.cpa_after * element.quote_rmb_after / element.income) * 100).toFixed(2),
-            money_cut: element.income - element.quote_rmb_after * element.cpa_after
+            money_cut: (element.income - element.quote_rmb_after * element.cpa_after).toFixed(2)
           });
         }
         obj.cpa_first_total += Number(element.cpa);
