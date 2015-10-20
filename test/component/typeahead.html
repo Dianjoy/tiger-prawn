@@ -13,7 +13,7 @@
 <div id="qunit-fixture"></div>
 
 <div class="container">
-  <div class="typeahead dropdown" data-url="http://meathill.mac/dianjoy-v5/ad/search/">
+  <div class="typeahead dropdown form-group" data-url="http://meathill.mac/dianjoy-v5/ad/search/">
     <div class="select-button result">
       <script type="text/x-handlebars-template">
         <input type="checkbox" name="ad_id[]" value="{{id}}" id="selected-{{id}}" checked>
@@ -32,6 +32,10 @@
         {{/if}}
       </script>
     </ul>
+  </div>
+  <div class="form-group">
+    <label for="other">放一个没用的input，测下表单中的表现</label>
+    <input class="form-control" placeholder="放一个没用的input，测下表单中的表现" id="other">
   </div>
 </div>
 

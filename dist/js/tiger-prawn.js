@@ -3116,6 +3116,7 @@
     delay: 500,
     events: {
       'blur .keyword': 'keyword_blurHandler',
+      'focus .keyword': 'keyword_focusHandler',
       'change .result input': 'result_changeHandler',
       'click .options a': 'options_clickHandler',
       'keyup': 'keyupHandler',
@@ -3176,7 +3177,16 @@
       this.xhr = null;
     },
     keyword_blurHandler: function () {
-      this.list.hide();
+      var list = this.list;
+      this.hideTimeout = setTimeout(function () {
+        list.hide();
+      }, 50);
+    },
+    keyword_focusHandler: function () {
+      clearTimeout(this.hideTimeout);
+      if (this.collection.length > 0) {
+        this.list.show();
+      }
     },
     options_clickHandler: function (event) {
       var id = event.target.hash.substr(1);
@@ -3186,6 +3196,7 @@
         this.selected.set([this.collection.get(id)]);
         this.list.hide();
       }
+      this.input.focus();
       event.preventDefault();
     },
     result_changeHandler: function (event) {
@@ -3223,8 +3234,12 @@
           var id = active.children().attr('href');
           if (id) {
             id = id.substr(1);
-            this.selected.add(this.collection.get(id));
-            this.list.hide();
+            if (this.multiple) {
+              this.selected.add(this.collection.get(id));
+            } else {
+              this.selected.set([this.collection.get(id)]);
+              this.list.hide();
+            }
           } else if (!this.input.prop('disabled') && this.input.val().length > 1) {
             this.fetch();
           }
