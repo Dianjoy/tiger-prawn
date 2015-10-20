@@ -72,7 +72,7 @@
       var list = this.list;
       this.hideTimeout = setTimeout(function () {
         list.hide();
-      }, 50);
+      }, 250);
     },
     keyword_focusHandler: function () {
       clearTimeout(this.hideTimeout);
@@ -84,11 +84,11 @@
       var id = event.target.hash.substr(1);
       if (this.multiple) {
         this.selected.add(this.collection.get(id));
+        this.input.focus();
       } else {
         this.selected.set([this.collection.get(id)]);
         this.list.hide();
       }
-      this.input.focus();
       event.preventDefault();
     },
     result_changeHandler: function (event) {
