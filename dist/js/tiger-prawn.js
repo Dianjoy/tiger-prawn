@@ -1073,10 +1073,14 @@
     },
     createDesktopNotice: function () {
       if (document[hidden] && notification.permission === 'granted') {
-        new notification('点乐自助平台通知', {
+        var notice = new notification('点乐自助平台通知', {
           icon: 'img/fav.png',
           body: '收到' + this.count + '条通知，请及时处理哟。'
         });
+        notice.onclick = function () {
+          window.focus();
+          this.onclick = null;
+        }
       }
     },
     start: function () {
@@ -3114,7 +3118,7 @@
       'blur .keyword': 'keyword_blurHandler',
       'change .result input': 'result_changeHandler',
       'click .options a': 'options_clickHandler',
-      'keydown': 'keydownHandler',
+      'keyup': 'keyupHandler',
       'input': 'inputHandler'
     },
     initialize: function (options) {
@@ -3123,7 +3127,7 @@
       this.result = this.$('.result');
       this.list = this.$('.options');
       this.result_template = Handlebars.compile(this.result.find('script').html());
-      this.list_template = Handlebars.compile(this.list.find('script').html());
+      this.list_template = Handlebars.compile(this.list.find('script').html().replace(/\s{2,}|\n|\r/g, ''));
       this.spinner = this.$('.fa-spinner');
       this.input = this.$('.keyword');
 
@@ -3133,6 +3137,7 @@
       this.selected.on('add', this.selected_addHandler, this);
       this.selected.on('remove', this.selected_removeHandler, this);
       this.fetch = _.bind(this.fetch, this);
+      this.error = _.bind(this.errorHandler, this);
       this.hide = _.bind(this.hide, this);
       this.multiple = options.multiple;
     },
@@ -3143,12 +3148,15 @@
       Backbone.View.remove.call(this);
     },
     fetch: function () {
-      this.collection.fetch({
+      if (this.xhr) {
+        this.xhr.abort();
+      }
+      this.xhr = this.collection.fetch({
         data: {keyword: this.input.val()},
-        reset: true
+        reset: true,
+        error: this.error
       });
       this.spinner.show();
-      this.input.prop('disabled', true);
     },
     hide: function (event) {
       if (!event || !$.contains(this.el, event.target)) {
@@ -3158,9 +3166,14 @@
     collection_syncHandler: function (collection) {
       var data = collection.toJSON()
         , html = this.list_template({list: data});
+      html = html || this.list_template({
+        error: true,
+        msg: '没有结果，请修改关键词，然后再试。'
+      });
       this.list.html(html).show();
       this.spinner.hide();
-      this.input.prop('disabled', false).focus();
+      this.input.focus();
+      this.xhr = null;
     },
     keyword_blurHandler: function () {
       this.list.hide();
@@ -3190,13 +3203,20 @@
       var id = model.id;
       this.$('#selected-' + id + ',[for=selected-' + id + ']').remove();
     },
+    errorHandler: function () {
+      this.spinner.hide();
+      this.list.append(this.list_template({
+        error: true,
+        msg: '加载错误，大侠请重新来过'
+      }));
+    },
     inputHandler: function () {
       clearTimeout(this.timeout);
       if (this.input.val().length > 1) {
         this.timeout = setTimeout(this.fetch, this.delay);
       }
     },
-    keydownHandler: function (event) {
+    keyupHandler: function (event) {
       var active = this.list.find('.active').removeClass('active');
       switch (event.keyCode) {
         case 13: // enter

@@ -13,11 +13,11 @@
 <div id="qunit-fixture"></div>
 
 <div class="container">
-  <div class="typeahead dropdown" data-url="http://meathill.mac/dianjoy-v5/ad/">
+  <div class="typeahead dropdown" data-url="http://meathill.mac/dianjoy-v5/ad/search/">
     <div class="select-button result">
       <script type="text/x-handlebars-template">
         <input type="checkbox" name="ad_id[]" value="{{id}}" id="selected-{{id}}" checked>
-        <label for="selected-{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</label>
+        <label for="selected-{{id}}">{{company}} {{channel_name}} {{ad_name}} {{cid}}</label>
       </script>
     </div>
     <input id="ads" class="form-control keyword" autofocus autocomplete="off">
@@ -27,6 +27,9 @@
         {{#each list}}
         <li><a href="#{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</a></li>
         {{/each}}
+        {{#if error}}
+        <li class="disabled"><a href="#">{{msg}}</a></li>
+        {{/if}}
       </script>
     </ul>
   </div>
