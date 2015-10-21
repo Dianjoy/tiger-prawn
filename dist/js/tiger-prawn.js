@@ -3119,7 +3119,7 @@
       'focus .keyword': 'keyword_focusHandler',
       'change .result input': 'result_changeHandler',
       'click .options a': 'options_clickHandler',
-      'keyup': 'keyupHandler',
+      'keydown': 'keyDownHandler',
       'input': 'inputHandler'
     },
     initialize: function (options) {
@@ -3227,7 +3227,7 @@
         this.timeout = setTimeout(this.fetch, this.delay);
       }
     },
-    keyupHandler: function (event) {
+    keyDownHandler: function (event) {
       var active = this.list.find('.active').removeClass('active');
       switch (event.keyCode) {
         case 13: // enter
