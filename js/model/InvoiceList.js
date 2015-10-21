@@ -1,14 +1,21 @@
 'use strict';
 (function (ns) {
+  var key = tp.PROJECT + '-invoice-list';
   ns.InvoiceList = Backbone.Collection.extend({
-      url: tp.API + 'stat/',
-      parse: function (response, options) {
-        if (response.options) {
-          this.options = response.options;
-          this.options.API = tp.API;
-          this.options.UPLOAD = tp.UPLOAD;
+      getInvoiceList: function () {
+        var store = localStorage.getItem(key)
+          , self = this;
+        if (store) {
+          var invoiceList = JSON.parse(store);
+          _.map(invoiceList, function (element, index, list) {
+            if (index === 0 || element.channel !== list[index - 1].channel) {
+              element.is_first = true;
+            }
+            self.add(element);
+            return element;
+          });
+          self.trigger('sync');
         }
-        return response.list;
       }
     }
   );

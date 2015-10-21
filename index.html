@@ -73,21 +73,23 @@
         <li class="pit dropdown-list"><a href="#"><i class="fa fa-envelope"></i></a></li>
         <li class="dropdown dropdown-list invoice-list">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            <span>发票{{}}</span> <span class="caret"></span>
+            <span>发票</span> <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
             <form method="post">
               <li class="settle-time-picker">
                 <label>选择日期</label>
-                <input class="form-control datetimepicker" data-format="YYYY-MM-DD" id="settle-time" name="start">
+                <input class="form-control datetimepicker" data-format="YYYY-MM-DD" id="settle-time" name="start" value="2015-07-01">
+                <input class="form-control datetimepicker" data-format="YYYY-MM-DD" name="end" value="2015-07-30">
               </li>
               <script type="text/x-handlebars-template">
-                <li class="channel dropdown-header"><input type="checkbox" class="check-all" value="ids-{{id}}"> 渠道{{owner}}</li>
-                <li class="ids">
-                  <input type="checkbox" name="ids-{{id}}" value="{{id}}"> {{ad_name}} {{create_time}}
+                {{#if is_first}}
+                <li class="channel dropdown-header"><input type="checkbox" class="check-all" value="{{chanel}}"> 渠道{{channel_id}}</li>
+                {{/if}}
+                <li class="ids" id="{{id}}">
+                  <input type="checkbox" name="{{channel}}" value="{{id}}"> {{ad_name}} {{start}}-{{end}}
                   <a class="btn delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></a>
                 </li>
-                <li class="divider"></li>
               </script>
               <li class="tac"><button class="btn btn-primary"><i class="fa fa-check-square-o"></i> 申请发票</button></li>
             </form>
