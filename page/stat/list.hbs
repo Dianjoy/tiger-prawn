@@ -12,7 +12,7 @@
     <input type="search" class="form-control" id="search-query" name="query" placeholder="关键词">
   </div>
 </div>
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}adStat/{{ad_type}}/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-search="#search-query" data-collection-id="{{ad_type}}-list">
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}adStat/{{ad_type}}/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-search="#search-query" data-collection-id="{{ad_type}}-list">
   <thead>
   <tr>
     <th class="filters">管理名</th>
@@ -38,19 +38,19 @@
     {{{{raw-helper}}}}
     <tr id="{{id}}">
       <td data-title="管理名">
+        {{#if is_amount}}总计
+        {{else}}
         <a href="#/agreement/{{agreement}}" class="filter label label-agreement">{{agreement}}</a>
         <a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>
         <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
         {{ctime}} {{channel_id}}
+        {{/if}}
       </td>
       <td data-title="状态">
-        {{# if is_amount}}总计
-        {{else}}
-          <a href="page/stat/comments.hbs" class="popup" data-id="{{id}}" data-collection-id="{{#if is_android}}android{{else}}ios{{/if}}-list" data-title="查看 {{ad_name}} {{channel}} 的备注" data-confirm="确定">
-            <i class="platform fa fa-{{#if is_android}}android{{else}}apple{{/if}}"></i>
-            <i class="fa fa-info-circle fa-lg"></i>
-          </a>
-        {{/if}}
+        <a href="page/stat/comments.hbs" class="popup" data-id="{{id}}" data-collection-id="{{#if is_android}}android{{else}}ios{{/if}}-list" data-title="查看 {{ad_name}} {{channel}} 的备注" data-confirm="确定">
+          <i class="platform fa fa-{{#if is_android}}android{{else}}apple{{/if}}"></i>
+          <i class="fa fa-info-circle fa-lg"></i>
+        </a>
       </td>
       <td data-title="推广费用">&yen; {{readable_n rmb1}}</td>
       <td data-title="点击数">{{click}}</td>
@@ -65,7 +65,9 @@
       <td data-title="点击到激活转化率">{{ratio}}%</td>
       <td data-title="点击到通知回调率">{{click_ratio}}%</td>
       {{/if}}
-      <td><a href="#/stat/ad_type/{{id}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a></td>
+      {{#unless is_amount}}
+        <td><a href="#/stat/ad_type/{{id}}/{{start}}/{{end}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a></td>
+      {{/unless}}
     </tr>
     {{{{/raw-helper}}}}
   </script>
