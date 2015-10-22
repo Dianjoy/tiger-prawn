@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<table class="table table-bordered table-hover responsive-table smart-table title-eight" data-url="{{API}}agreement/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-ranger=".data-range" data-search="#search-query" data-collection-id="list" data-refresh="true">
+<table class="table table-bordered table-hover responsive-table smart-table title-eight" data-url="{{API}}agreement/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query" data-collection-id="list" data-refresh="true">
   <thead>
   <tr>
     <th>客户名称</th>
@@ -26,6 +26,7 @@
     <th>付款周期</th>
     <th>合作单价</th>
     <th>备注</th>
+    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -41,12 +42,19 @@
       <td data-title="付款周期">{{cycle}}</td>
       <td data-title="合作单价">{{rmb}}</td>
       <td data-title="备注">{{comment}}</td>
+      <td>
+        {{#if need_renew}}
+        <a href="page/agreement/popup/renew.hbs" class="btn btn-info popup" title="申请续期" data-confirm="提交"
+           data-collection-id="list" data-id="{{id}}"><i
+          class="fa fa-calendar-plus-o"></i> 续期</a>
+        {{/if}}
+      </td>
     </tr>
   </script>
   </tbody>
   <tfoot class="waiting">
   <tr>
-    <td colspan="10">
+    <td colspan="11">
       <p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p>
     </td>
   </tr>

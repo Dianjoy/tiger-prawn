@@ -20,11 +20,6 @@
         "link": "#/apply/"
       },
       {
-        "title": "我的合同",
-        "icon": "archive",
-        "link": "#/agreement/"
-      },
-      {
         "title": "竞品广告",
         "icon": "bell",
         "link": "#/competitor_ad/"
@@ -53,6 +48,11 @@
         "link": "#/invoice/"
       }
     ]
+  },
+  {
+    "title": "我的合同",
+    "icon": "archive",
+    "link": "#/agreement/"
   },
   {
     "title": "广告投放情报",

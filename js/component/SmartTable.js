@@ -6,7 +6,6 @@
     $context: null,
     autoFetch: true,
     events: {
-      'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
@@ -158,13 +157,6 @@
             this.collection.remove(id, {fadeOut: true});
           }
         }
-      });
-    },
-    addRowButton_clickHandler: function (event) {
-      var prepend = $(event.currentTarget).data('prepend');
-      this.collection.add(null, {
-        immediately: true,
-        prepend: !!prepend
       });
     },
     archiveButton_clickHandler: function (event) {
