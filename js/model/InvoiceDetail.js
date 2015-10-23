@@ -4,11 +4,29 @@
     urlRoot: tp.API + 'invoice/',
     initialize: function (attrs) {
       if (this.isNew()) {
-        var products = attrs.ids.split(',');
+        var range = []
+          , param = attrs.ids.split(',')
+          , products =  _.map(param, function (element) {
+            return tp.utils.decodeURLParam(element);
+        });
+        _.each(products, function (element) {
+         var same_range =  _.find(range, {start: element.start, end: element.end})
+           , obj = {
+             start: element.start,
+             end: element.end,
+             ad_ids: [element.ad_id]
+           };
+          if (_.isUndefined(same_range)) {
+            range.push(obj);
+          } else {
+            if (!_.contains(same_range.ad_ids, element.ad_id)) {
+              same_range.ad_ids.push(element.ad_id);
+            }
+          }
+        });
         this.urlRoot += 'init'
-          + '?start=' + attrs.start
-          + '&end=' + attrs.end
-          + '&adids=' + products;
+          + '?time=' + attrs.time
+          + '&adids=' + JSON.stringify({range: range});
         this.on('sync', this.syncHandler, this);
       }
     },
@@ -29,7 +47,9 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      var agreement_info = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
+      var start = json.start.split('-')
+        , agreement_info = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
+      json.start = start[0] + '年' + start[1] + '月';
       json.agreement_info = _.map(agreement_info, function(element, key) {
         switch (key) {
           case 'company':
@@ -56,14 +76,14 @@
         }
         return element;
       });
-      var products = json.products;
-      var obj = {
-        cpa_first_total: 0,
-        cpa_after_total: 0,
-        income_before_total: 0,
-        income_after_total: 0,
-        rmb: ''
-      };
+      var products = json.products
+        , obj = {
+          cpa_first_total: 0,
+          cpa_after_total: 0,
+          income_before_total: 0,
+          income_after_total: 0,
+          rmb: ''
+        };
       products = _.map(products, function (element) {
         if (!element.quote_rmb_after) {
           _.extend(element, {
@@ -83,8 +103,8 @@
         }
         obj.cpa_first_total += Number(element.cpa);
         obj.cpa_after_total += Number(element.cpa_after);
-        obj.income_after_total += element.income_after;
-        obj.income_before_total += element.income;
+        obj.income_after_total += Number(element.income_after);
+        obj.income_before_total += Number(element.income);
         obj.rmb = tp.utils.convertCurrency(obj.income_after_total);
         return element;
       });

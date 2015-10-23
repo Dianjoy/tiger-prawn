@@ -1,20 +1,14 @@
-<h3 class="tac" id="invoice-title">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐结算单及开票申请单 </h3>
-<h4 class="tac" id="invoice-time">{{start}} 至 {{end}} </h4>
-<a href="#" download="{{start}} 至 {{end}}对账单.xls" class="btn btn-primary export-button" title="导出对账单"><i class="fa fa-download">导出对账单</i></a>
-<div class="row">
-  <div class="col-sm-2 col-sm-offset-10 col-xs-6" id="agreement-number">
-    <a title="{{#each agreement_info}}{{@this}}{{/each}}"><small>点乐合同编号：{{agreement_number}}</small></a>
-  </div>
-</div>
+<h3 class="tac" id="invoice-title">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐{{start}}结算单及开票申请单 </h3>
+<h4 class="tac" id="agreement-number">
+  <a title="{{#each agreement_info}}{{@this}}{{/each}}">点乐合同编号：{{agreement_number}}</a>
+</h4>
+<a href="#" download="{{start}}对账单.xls" class="btn btn-primary export-button" title="导出对账单"><i class="fa fa-download">导出对账单</i></a>
 
 <table class="table table-bordered table-striped responsive-table" id="ad_table">
   <thead>
   <tr>
     <th>推广期间</th>
-    <th>
-      广告名称
-      {{#unless view}}<a data-template="stat/choose-ad" class="btn btn-sm edit" title="添加广告" data-confirm="确定"><i class="fa fa-plus-circle"></i></a>{{/unless}}
-    </th>
+    <th>广告名称</th>
     <th>渠道号</th>
     <th>单价（元）</th>
     <th>渠道CPA（核减前）</th>
@@ -94,8 +88,8 @@
         </tr>
         <tr>
           <th>开票金额</th>
-          <td colspan="6">{{joy_income}}</td>
-          <td colspan="6">{{red_ad_income}}</td>
+          <td colspan="6">红包锁屏收入金额：&yen; {{red_ad_income}}</td>
+          <td colspan="6">其他收入金额：&yen; {{joy_income}}</td>
         </tr>
         <tr>
           <th>业务负责人</th>

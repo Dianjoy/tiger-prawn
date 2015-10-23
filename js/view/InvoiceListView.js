@@ -12,6 +12,7 @@
       this.template = Handlebars.compile(this.$('script').remove().html());
       this.collection.on('add', this.collection_addHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
+      this.collection.on('reset', this.collection_resetHandler, this);
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.getInvoiceList();
     },
@@ -30,14 +31,18 @@
         tp.component.Manager.check(this.$el);
       }
     },
+    collection_resetHandler: function () {
+      this.$('.ids, .channel').remove();
+      this.collection.each(function (model) {
+        this.collection_addHandler(model);
+      }, this);
+    },
     collection_removeHandler: function (model) {
-      var store = localStorage.getItem(key)
-        , invoiceList = JSON.parse(store)
-        , item = this.$('#' + model.id)
+      var invoiceList = JSON.parse(localStorage.getItem(key))
+        , id = model.get('id')
+        , item = this.$('#' + id)
         , channel = model.get('channel');
-      invoiceList = _.filter(invoiceList, function (element) {
-        return element.id !== model.id
-      });
+      invoiceList = _.filter(invoiceList, function (element) {return element.id !== id});
       localStorage.setItem(key, JSON.stringify(invoiceList));
       item.fadeOut(function () {
         if (_.where(invoiceList, {channel: channel}).length === 0) {
@@ -48,20 +53,21 @@
       this.refreshNumber();
     },
     checkAll_clickHandler: function (event) {
-      var siblings = $(event.target).parent().siblings('.channel, .ids');
+      var target = $(event.target)
+        , siblings = target.parent().siblings('.channel, .ids')
+        , action = target.is(':checked') ? '#/invoice/apply/:time/:' + target.val() : '';
       siblings.each(function () {
         var name = $(this).find(':checkbox').attr('name');
-        if (_.isUndefined(name) || name != $(event.target).val()) {
+        if (_.isUndefined(name) || name !== target.val()) {
           $(this).find(':checkbox').attr('checked', false);
         }
       });
-      var action = '#/invoice/apply/:start/:end/:' + $(event.target).val();
       this.$('form').attr('action', action);
     },
     deleteButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
         , msg = button.data('msg') || '确定删除么？'
-        , id = button.siblings().val()
+        , id = button.parent().attr('id')
         , model = this.collection.get(id);
       if (!confirm(msg)) {
         return;
@@ -73,10 +79,8 @@
       var checkAll = this.$('.check-all:checked')
         , channel = checkAll.val().slice(7)
         , models = this.collection.where({channel: channel});
-      if (checkAll.length) {
         this.collection.remove(models);
         this.$('form').attr('action', '');
-      }
     }
   });
 }(Nervenet.createNameSpace('tp.view')));

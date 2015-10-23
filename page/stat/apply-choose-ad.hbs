@@ -1,6 +1,5 @@
 <h4>选择结算的广告：</h4>
-<form id="popup-form" data-mediator-class="tp.page.applyChooseAd">
-  <!--action="#/invoice/apply/:start/:end/:ids"-->
+<form id="popup-form" data-mediator-class="tp.page.applyChooseAd" method="post">
   <div class="ad-date-range clearfix">
     <div class="range">
       <label class="control-label pull-left" id="settlement-period">结算周期：</label>
@@ -23,7 +22,7 @@
     {{{{raw-helper}}}}
     <script type="text/x-handlebars-template">
       <tr>
-        <td><label for="ids"><input type="checkbox" name="ids" value="{{id}}"></label></td>
+        <td><label for="ids"><input type="checkbox" name="ids" value="{{ad_id}}"></label></td>
         <td>{{ad_name}}</td>
         <td>渠道号：{{channel_id}}</td>
       </tr>

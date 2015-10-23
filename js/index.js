@@ -32,6 +32,7 @@ $(function () {
     el: '.invoice-list',
     collection: invoiceList
   });
+  context.mapValue('invoiceList', invoiceList);
 
   // routers
   context.createInstance(tp.router.Base);

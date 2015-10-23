@@ -79,15 +79,14 @@
             <form method="post">
               <li class="settle-time-picker">
                 <label>选择日期</label>
-                <input class="form-control datetimepicker" data-format="YYYY-MM-DD" id="settle-time" name="start" value="2015-07-01">
-                <input class="form-control datetimepicker" data-format="YYYY-MM-DD" name="end" value="2015-07-30">
+                <input class="form-control datetimepicker" data-format="YYYY-MM" name="time" required>
               </li>
               <script type="text/x-handlebars-template">
                 {{#if is_first}}
-                <li class="channel dropdown-header"><input type="checkbox" class="check-all" value="{{chanel}}"> 渠道{{channel_id}}</li>
+                <li class="channel dropdown-header"><input type="checkbox" class="check-all" value="channel{{channel}}"> 渠道{{channel_id}}</li>
                 {{/if}}
                 <li class="ids" id="{{id}}">
-                  <input type="checkbox" name="{{channel}}" value="{{id}}"> {{ad_name}} {{start}}-{{end}}
+                  <input type="checkbox" name="channel{{channel}}" value="ad_id={{ad_id}}&start={{start}}&end={{end}}"> {{ad_name}} {{start}}-{{end}}
                   <a class="btn delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></a>
                 </li>
               </script>

@@ -31,7 +31,6 @@
         tables: tables,
         agreement_number: this.$('#agreement-number').text(),
         invoice_title: this.$('#invoice-title').text(),
-        invoice_time: this.$('#invoice-time').text()
       };
       this.export_href = uri + this.base64(html(data));
     },

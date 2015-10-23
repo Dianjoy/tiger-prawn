@@ -2,30 +2,28 @@
 (function (ns) {
   var key = tp.PROJECT + '-invoice-list';
   ns.applyChooseAd = Backbone.View.extend({
+    $invoiceList: null,
     events: {
       'submit': 'submitHandler'
     },
-    submitHandler: function () {
+    submitHandler: function (event) {
       var id = this.$('table').data('collection-id')
-        , form = this.el
         , store = localStorage.getItem(key)
-        , collection = tp.model.ListCollection.getInstance({
-        collectionId: id
-      });
-      var ids = this.getValue(form.elements['ids']);
-      var checked = _.map(ids, function (element) {
-        return collection.get(element).toJSON();
-      });
-      if (store) {
-        var invoiceList = JSON.parse(store);
-        invoiceList = _.union(invoiceList, checked);
-        invoiceList = _.sortBy(invoiceList, 'channel');
-        localStorage.setItem(key, JSON.stringify(invoiceList));
-      } else {
-        _.sortBy(checked, 'channel');
-        localStorage.setItem(key, JSON.stringify(checked));
-      }
+        , ids = this.getValue(this.el.elements['ids'])
+        , collection = tp.model.ListCollection.getInstance({collectionId: id})
+        , checked = _.map(ids, function (element) {
+          return collection.findWhere({ad_id: element}).toJSON();
+        })
+        , invoiceList = store ? _.union(JSON.parse(store), checked) : checked;
+
+      invoiceList = _.chain(invoiceList)
+        .sortBy('channel')
+        .map(function (value, index) {value.id = index; return value; })
+        .value();
+      localStorage.setItem(key, JSON.stringify(invoiceList));
+      this.$invoiceList.getInvoiceList({reset: true});
       this.$el.trigger('success');
+      event.preventDefault();
     },
     getValue: function (element) {
       if (element.value) {

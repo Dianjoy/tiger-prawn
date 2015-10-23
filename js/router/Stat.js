@@ -12,7 +12,7 @@
       'stat/:id/:date': 'showADStatDate',
       'invoice/': 'showInvoice',
       'invoice/:id': 'invoiceDetail',
-      'invoice/apply/:start/:end/:ids': 'applyInvoice',
+      'invoice/apply/:time/:ids': 'applyInvoice',
       'stat/analyse/': 'showAdminADStat',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
@@ -69,11 +69,10 @@
         })
         .setFramework('invoice invoice-detail', '发票开具申请单');
     },
-    applyInvoice: function (start, end, ids) {
+    applyInvoice: function (time, ids) {
       var model = new tp.model.InvoiceDetail({
         init: true,
-        start: start,
-        end: end,
+        time: time,
         ids: ids
       });
       this.$body
