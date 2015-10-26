@@ -25,7 +25,7 @@
     },
     collection_syncHandler: function () {
       if (this.fragment) {
-        this.$('.settle-time-picker').after(this.fragment);
+        this.$('.apply').before(this.fragment);
         this.refreshNumber();
         this.fragment = '';
         tp.component.Manager.check(this.$el);
@@ -55,7 +55,7 @@
     checkAll_clickHandler: function (event) {
       var target = $(event.target)
         , siblings = target.parent().siblings('.channel, .ids')
-        , action = target.is(':checked') ? '#/invoice/apply/:time/:' + target.val() : '';
+        , action = target.is(':checked') ? '#/invoice/apply/:channel/:' + target.val() : '';
       siblings.each(function () {
         var name = $(this).find(':checkbox').attr('name');
         if (_.isUndefined(name) || name !== target.val()) {
@@ -76,11 +76,7 @@
       this.collection.remove(model);
     },
     form_successHandler: function () {
-      var checkAll = this.$('.check-all:checked')
-        , channel = checkAll.val().slice(7)
-        , models = this.collection.where({channel: channel});
-        this.collection.remove(models);
-        this.$('form').attr('action', '');
+      this.$('form').attr('action', '');
     }
   });
 }(Nervenet.createNameSpace('tp.view')));

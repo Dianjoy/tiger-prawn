@@ -10,22 +10,21 @@
             return tp.utils.decodeURLParam(element);
         });
         _.each(products, function (element) {
-         var same_range =  _.find(range, {start: element.start, end: element.end})
+         var sameRange =  _.find(range, {start: element.start, end: element.end})
            , obj = {
              start: element.start,
              end: element.end,
              ad_ids: [element.ad_id]
            };
-          if (_.isUndefined(same_range)) {
+          if (_.isUndefined(sameRange)) {
             range.push(obj);
           } else {
-            if (!_.contains(same_range.ad_ids, element.ad_id)) {
-              same_range.ad_ids.push(element.ad_id);
+            if (!_.contains(sameRange.ad_ids, element.ad_id)) {
+              sameRange.ad_ids.push(element.ad_id);
             }
           }
         });
         this.urlRoot += 'init'
-          + '?time=' + attrs.time
           + '&adids=' + JSON.stringify({range: range});
         this.on('sync', this.syncHandler, this);
       }
@@ -48,9 +47,9 @@
         json.previous = previous;
       }
       var start = json.start.split('-')
-        , agreement_info = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
+        , agreementInfo = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
       json.start = start[0] + '年' + start[1] + '月';
-      json.agreement_info = _.map(agreement_info, function(element, key) {
+      json.agreement_info = _.map(agreementInfo, function(element, key) {
         switch (key) {
           case 'company':
             element = '客户名称:' + element + '\n';

@@ -1,8 +1,10 @@
 'use strict';
 (function (ns) {
   ns.InvoiceEditor = tp.view.Loader.extend({
+    $invoiceList: null,
     events: _.extend({
-      'click .export-button': 'exportButton_clickHandler'
+      'click .export-button': 'exportButton_clickHandler',
+      'success form': 'form_successHandler'
     }, tp.view.Loader.prototype.events),
     $context: null,
     render: function () {
@@ -12,7 +14,7 @@
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
     },
     exportButton_clickHandler: function (event) {
-      event.currentTarget.href = this.export_href;
+      event.currentTarget.href = this.exportHref;
     },
     tableToExcel: function (template) {
       var tables = []
@@ -30,9 +32,9 @@
         worksheet: '对账单',
         tables: tables,
         agreement_number: this.$('#agreement-number').text(),
-        invoice_title: this.$('#invoice-title').text(),
+        invoice_title: this.$('#invoice-title').text()
       };
-      this.export_href = uri + this.base64(html(data));
+      this.exportHref = uri + this.base64(html(data));
     },
     base64: function (str) {
       return window.btoa(unescape(encodeURIComponent(str)));
@@ -59,6 +61,11 @@
       Backbone.View.prototype.remove.call(this);
       this.productList.collection.off();
       this.productList = null;
+    },
+    form_successHandler: function () {
+      var channel = this.model.get('channel')
+        , models = this.$invoiceList.where({channel: channel});
+      this.$invoiceList.remove(models);
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

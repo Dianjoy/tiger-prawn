@@ -1,7 +1,7 @@
 'use strict';
 (function (ns) {
   var key = tp.PROJECT + '-invoice-list';
-  ns.applyChooseAd = Backbone.View.extend({
+  ns.AdSelector = Backbone.View.extend({
     $invoiceList: null,
     events: {
       'submit': 'submitHandler'

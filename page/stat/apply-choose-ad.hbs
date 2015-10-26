@@ -1,5 +1,5 @@
 <h4>选择结算的广告：</h4>
-<form id="popup-form" data-mediator-class="tp.page.applyChooseAd" method="post">
+<form id="popup-form" data-mediator-class="tp.page.AdSelector" method="post">
   <div class="ad-date-range clearfix">
     <div class="range">
       <label class="control-label pull-left" id="settlement-period">结算周期：</label>
@@ -14,7 +14,7 @@
       <button type="button" class="btn btn-primary" id="choose-ad-button"><i class="fa fa-play"></i> 检索</button>
     </div>
   </div>
-  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="invoice-list" style="height:225px;">
+  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="invoice-list-{{id}}" style="height:225px;">
     <thead>
       <tr><th style="border:none"><label><input type="checkbox" value="ids" class="check-all"> 全选</label></th></tr>
     </thead>
