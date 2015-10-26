@@ -10,18 +10,16 @@
             return tp.utils.decodeURLParam(element);
         });
         _.each(products, function (element) {
-         var sameRange =  _.find(range, {start: element.start, end: element.end})
-           , obj = {
-             start: element.start,
-             end: element.end,
-             ad_ids: [element.ad_id]
-           };
-          if (_.isUndefined(sameRange)) {
+          var sameRange =  _.find(range, {start: element.start, end: element.end})
+            , obj = {
+              start: element.start,
+              end: element.end,
+              ad_ids: [element.ad_id]
+            };
+          if (!sameRange) {
             range.push(obj);
-          } else {
-            if (!_.contains(sameRange.ad_ids, element.ad_id)) {
-              sameRange.ad_ids.push(element.ad_id);
-            }
+          } else if (!_.contains(sameRange.ad_ids, element.ad_id)) {
+            sameRange.ad_ids.push(element.ad_id);
           }
         });
         this.urlRoot += 'init'

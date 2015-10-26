@@ -11,8 +11,8 @@
         , store = localStorage.getItem(key)
         , ids = this.getValue(this.el.elements['ids'])
         , collection = tp.model.ListCollection.getInstance({collectionId: id})
-        , checked = _.map(ids, function (element) {
-          return collection.findWhere({ad_id: element}).toJSON();
+        , checked = _.filter(collection.toJSON(), function (model) {
+          return ids.indexOf(model.ad_id) !== -1;
         })
         , invoiceList = store ? _.union(JSON.parse(store), checked) : checked;
 
@@ -21,13 +21,13 @@
         .map(function (value, index) {value.id = index; return value; })
         .value();
       localStorage.setItem(key, JSON.stringify(invoiceList));
-      this.$invoiceList.getInvoiceList({reset: true});
+      this.$invoiceList.fetch({reset: true});
       this.$el.trigger('success');
       event.preventDefault();
     },
     getValue: function (element) {
       if (element.value) {
-        return [element.value];
+        return $(element).is(':checked') ? [element.value] : [];
       }
       var value = _.chain(element)
         .filter(function (item) { return item.checked; })

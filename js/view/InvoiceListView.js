@@ -1,35 +1,23 @@
 'use strict';
 (function (ns) {
   var key = tp.PROJECT + '-invoice-list';
-  ns.InvoiceListView = Backbone.View.extend({
-    fragment: '',
+  ns.InvoiceListView = tp.component.BaseList.extend({
     events: {
       'click .check-all': 'checkAll_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'success form': 'form_successHandler'
     },
-    initialize: function () {
-      this.template = Handlebars.compile(this.$('script').remove().html());
-      this.collection.on('add', this.collection_addHandler, this);
-      this.collection.on('sync', this.collection_syncHandler, this);
-      this.collection.on('reset', this.collection_resetHandler, this);
-      this.collection.on('remove', this.collection_removeHandler, this);
-      this.collection.getInvoiceList();
-    },
-    refreshNumber: function () {
-      var num = this.collection.length;
-      this.$('.dropdown-toggle span:first-child').text(num ? '发票 ( ' + num + ' )' : '发票');
-    },
-    collection_addHandler: function (model) {
-      this.fragment += this.template(model.toJSON());
-    },
-    collection_syncHandler: function () {
+    render: function () {
       if (this.fragment) {
         this.$('.apply').before(this.fragment);
         this.refreshNumber();
         this.fragment = '';
         tp.component.Manager.check(this.$el);
       }
+    },
+    refreshNumber: function () {
+      var num = this.collection.length;
+      this.$('.dropdown-toggle span:first-child').text(num ? '发票 ( ' + num + ' )' : '发票');
     },
     collection_resetHandler: function () {
       this.$('.ids, .channel').remove();

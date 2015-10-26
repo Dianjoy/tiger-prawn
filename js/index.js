@@ -29,8 +29,8 @@ $(function () {
   // invoice
   var invoiceList = new tp.model.InvoiceList()
     , invoiceListView = new tp.view.InvoiceListView({
-    el: '.invoice-list',
-    collection: invoiceList
+      el: '.invoice-list',
+      collection: invoiceList
   });
   context.mapValue('invoiceList', invoiceList);
 
