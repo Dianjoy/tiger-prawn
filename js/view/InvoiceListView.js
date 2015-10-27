@@ -30,10 +30,10 @@
         , id = model.get('id')
         , item = this.$('#' + id)
         , channel = model.get('channel');
-      invoiceList = _.filter(invoiceList, function (element) {return element.id !== id});
+      invoiceList = _.filter(invoiceList, function (element) { return element.id !== id });
       localStorage.setItem(key, JSON.stringify(invoiceList));
       item.fadeOut(function () {
-        if (_.where(invoiceList, {channel: channel}).length === 0) {
+        if (_.every(invoiceList, function (element) { element.channel !== channel; })) {
           $(this).prev().remove();
         }
         $(this).remove();
@@ -46,7 +46,7 @@
         , action = target.is(':checked') ? '#/invoice/apply/:channel/:' + target.val() : '';
       siblings.each(function () {
         var name = $(this).find(':checkbox').attr('name');
-        if (_.isUndefined(name) || name !== target.val()) {
+        if (!name || name !== target.val()) {
           $(this).find(':checkbox').attr('checked', false);
         }
       });

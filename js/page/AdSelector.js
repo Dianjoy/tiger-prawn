@@ -18,7 +18,7 @@
 
       invoiceList = _.chain(invoiceList)
         .sortBy('channel')
-        .map(function (value, index) {value.id = index; return value; })
+        .map(function (value, index) { value.id = index; return value; })
         .value();
       localStorage.setItem(key, JSON.stringify(invoiceList));
       this.$invoiceList.fetch({reset: true});
