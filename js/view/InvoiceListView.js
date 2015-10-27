@@ -10,14 +10,15 @@
     render: function () {
       if (this.fragment) {
         this.$('.apply').before(this.fragment);
-        this.refreshNumber();
         this.fragment = '';
         tp.component.Manager.check(this.$el);
       }
+      this.refreshNumber();
     },
     refreshNumber: function () {
       var num = this.collection.length;
       this.$('.dropdown-toggle span:first-child').text(num ? '发票 ( ' + num + ' )' : '发票');
+      this.$('.btn').attr('disabled', num === 0);
     },
     collection_resetHandler: function () {
       this.$('.ids, .channel').remove();
@@ -33,7 +34,7 @@
       invoiceList = _.filter(invoiceList, function (element) { return element.id !== id });
       localStorage.setItem(key, JSON.stringify(invoiceList));
       item.fadeOut(function () {
-        if (_.every(invoiceList, function (element) { element.channel !== channel; })) {
+        if (_.every(invoiceList, function (element) { return element.channel !== channel; })) {
           $(this).prev().remove();
         }
         $(this).remove();

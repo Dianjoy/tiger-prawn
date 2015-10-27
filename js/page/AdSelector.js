@@ -21,8 +21,7 @@
         .map(function (value, index) { value.id = index; return value; })
         .value();
       localStorage.setItem(key, JSON.stringify(invoiceList));
-      this.$invoiceList.fetch({reset: true});
-      this.$el.trigger('success');
+      this.flyAnimation();
       event.preventDefault();
     },
     getValue: function (element) {
@@ -35,6 +34,20 @@
         .value();
 
       return value;
+    },
+    flyAnimation: function () {
+      var modal = this.$el.parents('.modal')
+        , self = this;
+      modal.animate({
+        position: 'absolute',
+        top: '-10%',
+        left: '90%',
+        height: '0px',
+        width: '0px'
+      }, 1000, 'swing', function () {
+        self.$invoiceList.fetch({reset: true});
+        self.$el.trigger('success');
+      });
     }
   })
 }(Nervenet.createNameSpace('tp.page')));

@@ -103,6 +103,16 @@
           .find('.login').remove();
         this.$el.toggleClass('cp', this.model.isCP());
       }
+      if (this.model.isCP()) {
+        this.$('.invoice-list').remove();
+      } else {
+        var invoiceList = new tp.model.InvoiceList()
+          , invoiceListView = new tp.view.InvoiceListView({
+            el: '.invoice-list',
+            collection: invoiceList
+          });
+        this.$context.mapValue('invoiceList', invoiceList);
+      }
     },
     addButton_clickHandler: function (event) {
       var options = $(event.currentTarget).data();

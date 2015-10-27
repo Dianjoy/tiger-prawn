@@ -23,7 +23,7 @@
           }
         });
         this.urlRoot += 'init'
-          + '&adids=' + JSON.stringify({range: range});
+          + '?adids=' + JSON.stringify({range: range});
         this.on('sync', this.syncHandler, this);
       }
     },
