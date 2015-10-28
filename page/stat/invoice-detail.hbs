@@ -1,6 +1,6 @@
 <h3 class="tac" id="invoice-title">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐{{start}}结算单及开票申请单 </h3>
-<h4 class="tac" id="agreement-number">
-  <a title="{{#each agreement_info}}{{@this}}{{/each}}">点乐合同编号：{{agreement_number}}</a>
+<h4 class="tac">
+  <a data-toggle="popover" data-content="{{#each agreement_info}}{{@this}}{{/each}}" data-title="合同信息" id="agreement-number">点乐合同编号：{{agreement_number}}</a>
 </h4>
 <a href="#" download="{{start}}对账单.xls" class="btn btn-primary export-button" title="导出对账单"><i class="fa fa-download">导出对账单</i></a>
 
@@ -47,7 +47,7 @@
           <td data-title="核减比例" class="proportion">{{rate}}%</td>
           <td data-title="核减金额" class="amount">&yen; {{money_cut}}</td>
           <td data-title="备注">
-            {{#if view}}{{remark}}{{else}}<a href="#remark" class="edit" title="备注">{{remark}}</a>{{/if}}
+            {{#if view}}{{remark}}{{else}}<a href="#remark" data-type="long-text" class="edit" title="备注">{{remark}}</a>{{/if}}
           </td>
         {{/if}}
       </tr>

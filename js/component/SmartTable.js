@@ -75,7 +75,7 @@
       }
 
       // 桌面默认都固定表头
-      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0) {
+      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0 && 'typeahead' in options) {
         this.header = new ns.table.FixedHeader({
           target: this
         });
