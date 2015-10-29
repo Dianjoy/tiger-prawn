@@ -5,7 +5,6 @@
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
     autoFetch: true,
-    typeahead: true,
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
@@ -27,7 +26,7 @@
 
       var data = this.$el.data()
         , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch
-        , typeahead = 'typeahead' in data ? data.typeahead : this.typeahead;
+        , typeahead = 'typeahead' in data ? data.typeahead : true;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
         autoFetch: false,
         container: 'tbody',

@@ -2625,6 +2625,16 @@
           .find('.login').remove();
         this.$el.toggleClass('cp', this.model.isCP());
       }
+      if (this.model.isCP()) {
+        this.$('.invoice-list').remove();
+      } else {
+        var invoiceList = new tp.model.InvoiceList()
+          , invoiceListView = new tp.view.InvoiceListView({
+            el: '.invoice-list',
+            collection: invoiceList
+          });
+        this.$context.mapValue('invoiceList', invoiceList);
+      }
     },
     addButton_clickHandler: function (event) {
       var options = $(event.currentTarget).data();
@@ -2687,6 +2697,76 @@
     },
     model_changeHandler: function () {
       this.render();
+    }
+  });
+}(Nervenet.createNameSpace('tp.view')));;
+(function (ns) {
+  var key = tp.PROJECT + '-invoice-list';
+  ns.InvoiceListView = tp.component.BaseList.extend({
+    events: {
+      'click .check-all': 'checkAll_clickHandler',
+      'click .delete-button': 'deleteButton_clickHandler',
+      'success form': 'form_successHandler'
+    },
+    render: function () {
+      if (this.fragment) {
+        this.$('.apply').before(this.fragment);
+        this.fragment = '';
+        tp.component.Manager.check(this.$el);
+      }
+      this.refreshNumber();
+    },
+    refreshNumber: function () {
+      var num = this.collection.length;
+      this.$('.dropdown-toggle span:first-child').text(num ? '发票 ( ' + num + ' )' : '发票');
+      this.$('.btn').attr('disabled', num === 0);
+    },
+    collection_resetHandler: function () {
+      this.$('.ids, .channel').remove();
+      this.collection.each(function (model) {
+        this.collection_addHandler(model);
+      }, this);
+    },
+    collection_removeHandler: function (model) {
+      var invoiceList = JSON.parse(localStorage.getItem(key))
+        , id = model.get('id')
+        , item = this.$('#' + id)
+        , channel = model.get('channel');
+      invoiceList = _.filter(invoiceList, function (element) { return element.id !== id });
+      localStorage.setItem(key, JSON.stringify(invoiceList));
+      item.fadeOut(function () {
+        if (_.every(invoiceList, function (element) { return element.channel !== channel; })) {
+          $(this).prev().remove();
+        }
+        $(this).remove();
+      });
+      this.refreshNumber();
+    },
+    checkAll_clickHandler: function (event) {
+      var target = $(event.target)
+        , siblings = target.parent().siblings('.channel, .ids')
+        , action = target.is(':checked') ? '#/invoice/apply/:channel/:' + target.val() : '';
+      siblings.each(function () {
+        var name = $(this).find(':checkbox').attr('name');
+        if (!name || name !== target.val()) {
+          $(this).find(':checkbox').attr('checked', false);
+        }
+      });
+      this.$('form').attr('action', action);
+    },
+    deleteButton_clickHandler: function (event) {
+      var button = $(event.currentTarget)
+        , msg = button.data('msg') || '确定删除么？'
+        , id = button.parent().attr('id')
+        , model = this.collection.get(id);
+      if (!confirm(msg)) {
+        return;
+      }
+      button.spinner();
+      this.collection.remove(model);
+    },
+    form_successHandler: function () {
+      this.$('form').attr('action', '');
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
@@ -2845,7 +2925,8 @@
       this.renderHeader();
 
       var data = this.$el.data()
-        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch;
+        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch
+        , typeahead = 'typeahead' in data ? data.typeahead : true;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
         autoFetch: false,
         container: 'tbody',
@@ -2895,7 +2976,7 @@
       }
 
       // 桌面默认都固定表头
-      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0) {
+      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0 && typeahead) {
         this.header = new ns.table.FixedHeader({
           target: this
         });
