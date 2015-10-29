@@ -26,7 +26,7 @@
     "colors": "~2.2.0",
     "backbone": "~1.2.3",
     "nervenet": "~0.1.9",
-    "handlebars": "~4.0.3",
+    "handlebars": "~4.0.4",
     "animate.css": "~3.4.0",
     "moment": "~2.10.6",
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
