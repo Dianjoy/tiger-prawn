@@ -5,6 +5,7 @@
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
     autoFetch: true,
+    typeahead: true,
     events: {
       'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
@@ -25,7 +26,8 @@
       this.renderHeader();
 
       var data = this.$el.data()
-        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch;
+        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch
+        , typeahead = 'typeahead' in data ? data.typeahead : this.typeahead;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
         autoFetch: false,
         container: 'tbody',
@@ -75,7 +77,7 @@
       }
 
       // 桌面默认都固定表头
-      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0 && 'typeahead' in options) {
+      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0 && typeahead) {
         this.header = new ns.table.FixedHeader({
           target: this
         });
