@@ -50,25 +50,25 @@
       json.agreement_info = _.map(agreementInfo, function(element, key) {
         switch (key) {
           case 'company':
-            element = '客户名称:' + element + '\n';
+            element = '客户名称:' + element;
             break;
           case 'company_short':
-            element = '客户简称:' + element + '\n';
+            element = '客户简称:' + element;
             break;
           case 'cycle':
-            element = '付款周期:' + element + '\n';
+            element = '付款周期:' + element;
             break;
           case 'ad_name':
-            element = '推广产品:' + element + '\n';
+            element = '推广产品:' + element;
             break;
           case 'sign_date':
-            element = '签约时间:' + element + '\n';
+            element = '签约时间:' + element;
             break;
           case 'rmb':
-            element = '合作单价:' + element + '\n';
+            element = '合作单价:' + element;
             break;
           case 'agreement_comment':
-            element = '备注:' + element + '\n';
+            element = '备注:' + element;
             break;
         }
         return element;
@@ -87,15 +87,15 @@
             quote_rmb_after: element.quote_rmb,
             cpa_after: element.cpa,
             income_after: element.income,
-            rate: ((1 - element.cpa * element.quote_rmb / element.income) * 100).toFixed(2),
+            rate: (1 - element.cpa * element.quote_rmb / element.income) * 100,
             money_cut: element.income - element.income,
             remark: ''
           });
         } else {
           _.extend(element, {
-            income_after: (element.quote_rmb_after * element.cpa_after).toFixed(2),
-            rate: ((1 - element.cpa_after * element.quote_rmb_after / element.income) * 100).toFixed(2),
-            money_cut: (element.income - element.quote_rmb_after * element.cpa_after).toFixed(2)
+            income_after: (element.quote_rmb_after * element.cpa_after),
+            rate: (1 - element.cpa_after * element.quote_rmb_after / element.income) * 100,
+            money_cut: (element.income - element.quote_rmb_after * element.cpa_after)
           });
         }
         obj.cpa_first_total += Number(element.cpa);

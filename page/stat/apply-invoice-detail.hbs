@@ -1,6 +1,6 @@
 <h3 class="tac">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐{{start}}结算单及开票申请单</h3>
 <h4 class="tac">
-  <a data-toggle="popover" data-content="{{#each agreement_info}}{{@this}}{{/each}}" data-title="合同信息" id="agreement-number">点乐合同编号：{{agreement_number}}</a>
+  <a data-toggle="popover" data-content="{{#each agreement_info}}{{@this}}<br>{{/each}}" data-html="true" data-title="合同信息" id="agreement-number">点乐合同编号：{{agreement_number}}</a>
 </h4>
 
 <table class="table table-bordered table-striped responsive-table" id="ad_table" data-auto-fetch="false">
@@ -27,24 +27,24 @@
       {{#if amount}}
         <td>合计人民币（大写）：</td>
         <td colspan="7"  id="rmb">{{rmb}}</td>
-        <td id="income-total">&yen; {{income_after_total}}</td>
+        <td id="income-total">&yen; {{readable_n income_after_total}}</td>
         <td colspan="4"></td>
       {{else}}
         <td data-title="推广期间">{{quote_start_date}} - {{quote_end_date}}</td>
         <td data-title="广告名称">{{ad_name}}</td>
         <td data-title="渠道号">{{cid}}</td>
-        <td data-title="单价（元）" class="price">&yen; {{quote_rmb}}</td>
+        <td data-title="单价（元）" class="price">&yen; {{readable_n quote_rmb}}</td>
         <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
-        <td data-title="应结算收入（核减前）" class="income-before">&yen; {{income}}</td>
+        <td data-title="应结算收入（核减前）" class="income-before">&yen; {{readable_n income}}</td>
         <td data-title="单价（核减后）">
-          <a href="#quote_rmb_after" data-type="number" data-step="0.01" class="edit" title="单价（核减后）">&yen; {{quote_rmb_after}}</a>
+          <a href="#quote_rmb_after" data-type="number" data-step="0.01" class="edit" title="单价（核减后）">&yen; {{readable_n quote_rmb_after}}</a>
         </td>
         <td data-title="渠道CPA（核减后）">
           <a href="#cpa_after" data-type="number" class="edit" title="渠道CPA（核减后）">{{cpa_after}}</a>
         </td>
-        <td data-title="实际结算收入（核减后）" class="income-after">&yen; {{income_after}}</td>
-        <td data-title="核减比例" class="proportion">{{rate}}%</td>
-        <td data-title="核减金额" class="amount">&yen; {{money_cut}}</td>
+        <td data-title="实际结算收入（核减后）" class="income-after">&yen; {{readable_n income_after}}</td>
+        <td data-title="核减比例" class="proportion">{{readable_n rate}}%</td>
+        <td data-title="核减金额" class="amount">&yen; {{readable_n money_cut}}</td>
         <td data-title="备注">
           <a href="#remark" data-type="long-text" class="edit" title="备注">{{remark}}</a>
         </td>
@@ -162,17 +162,17 @@
   </div>
   <div class="form-group">
     <label class="col-sm-1 col-sm-offset-1">手机号码：</label>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <input type="text" name="pay_telephone" class="form-control" value="{{pay_telephone}}" required>
     </div>
-    <label class="col-sm-1 col-sm-offset-2">日期：</label>
+    <label class="col-sm-1 col-sm-offset-3">日期：</label>
     <div class="col-sm-3">
       <p>{{apply_time}}</p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-1 col-sm-offset-1">地址：</label>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <input type="text" name="pay_address" class="form-control" value="{{pay_address}}" required>
     </div>
   </div>
