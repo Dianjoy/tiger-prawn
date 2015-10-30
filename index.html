@@ -79,14 +79,20 @@
             <form method="post">
               <script type="text/x-handlebars-template">
                 {{#if is_first}}
-                <li class="channel dropdown-header"><input type="checkbox" class="check-all" name="channel" value="channel_{{channel}}"> 渠道{{channel_id}}</li>
+                <li class="channel dropdown-header">
+                  <label>
+                    <input type="checkbox" class="check-all" name="channel" value="channel_{{channel}}">渠道: {{channel_id}}
+                  </label>
+                </li>
                 {{/if}}
                 <li class="ids" id="{{id}}">
-                  <input type="checkbox" name="channel_{{channel}}" value="ad_id={{ad_id}}&start={{start}}&end={{end}}"> {{ad_name}} {{start}}-{{end}}
+                  <input type="checkbox" name="channel_{{channel}}" value="ad_id={{ad_id}}&start={{start}}&end={{end}}">{{ad_name}}
+                  <span>{{start}} ~ {{end}}</span>
                   <a class="btn delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></a>
                 </li>
               </script>
-              <li class="apply tac"><button class="btn btn-primary"><i class="fa fa-check-square-o"></i> 申请发票</button></li>
+              <li class="divider"></li>
+              <li class="apply"><button class="btn btn-primary"><i class="fa fa-plus"></i> 申请发票</button></li>
             </form>
           </ul>
         </li>

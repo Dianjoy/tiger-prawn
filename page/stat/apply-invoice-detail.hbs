@@ -9,7 +9,7 @@
     <th>推广期间</th>
     <th>广告名称</th>
     <th>渠道号</th>
-    <th>单价（元）</th>
+    <th>单价（核减前）</th>
     <th>渠道CPA（核减前）</th>
     <th>应结算收入（核减前）</th>
     <th>单价（核减后）</th>
@@ -27,13 +27,12 @@
       {{#if amount}}
         <td>合计人民币（大写）：</td>
         <td colspan="7"  id="rmb">{{rmb}}</td>
-        <td id="income-total">&yen; {{readable_n income_after_total}}</td>
-        <td colspan="4"></td>
+        <td id="income-total" colspan="4">&yen; {{readable_n income_after_total}}</td>
       {{else}}
         <td data-title="推广期间">{{quote_start_date}} - {{quote_end_date}}</td>
         <td data-title="广告名称">{{ad_name}}</td>
         <td data-title="渠道号">{{cid}}</td>
-        <td data-title="单价（元）" class="price">&yen; {{readable_n quote_rmb}}</td>
+        <td data-title="单价（核减前）" class="price">&yen; {{readable_n quote_rmb}}</td>
         <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
         <td data-title="应结算收入（核减前）" class="income-before">&yen; {{readable_n income}}</td>
         <td data-title="单价（核减后）">
@@ -89,20 +88,20 @@
   </div>
   <div class="form-group">
     <label class="col-sm-1 col-sm-offset-1">发票类型：</label>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <select class="form-control" name="type">
         <option value="0" {{#equal type 0}}selected{{/equal}}>增值税普通发票</option>
         <option value="1" {{#equal type 1}}selected{{/equal}}>增值税专用发票</option>
       </select>
     </div>
-    <label class="col-sm-1 col-sm-offset-2">开户银行：</label>
+    <label class="col-sm-1 col-sm-offset-3">开户银行：</label>
     <div class="col-sm-4">
       <p class="form-control-static">{{accept_bank}}</p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-1 col-sm-offset-1">发票内容：</label>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <select class="form-control" name="content_type">
         <option value="0" {{#equal content_type 0}}selected{{/equal}}>信息服务费</option>
         <option value="1" {{#equal content_type 1}}selected{{/equal}}>信息技术服务费</option>
@@ -110,7 +109,7 @@
         <option value="3" {{#equal content_type 3}}selected{{/equal}}>广告服务费（慎用）</option>
       </select>
     </div>
-    <label class="col-sm-1 col-sm-offset-2">开户账号：</label>
+    <label class="col-sm-1 col-sm-offset-3">开户账号：</label>
     <div class="col-sm-4">
       <p>{{accept_account}}</p>
     </div>

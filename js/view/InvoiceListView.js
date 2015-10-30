@@ -9,16 +9,17 @@
     },
     render: function () {
       if (this.fragment) {
-        this.$('.apply').before(this.fragment);
+        this.$('.divider').before(this.fragment);
         this.fragment = '';
         tp.component.Manager.check(this.$el);
       }
       this.refreshNumber();
     },
     refreshNumber: function () {
-      var num = this.collection.length;
+      var num = this.collection.length
+        , checked = this.$('.check-all:checked').length;
       this.$('.dropdown-toggle span:first-child').text(num ? '发票 ( ' + num + ' )' : '发票');
-      this.$('.btn').attr('disabled', num === 0);
+      this.$('.apply .btn').attr('disabled', num === 0 || checked === 0);
     },
     collection_resetHandler: function () {
       this.$('.ids, .channel').remove();
@@ -43,7 +44,7 @@
     },
     checkAll_clickHandler: function (event) {
       var target = $(event.target)
-        , siblings = target.parent().siblings('.channel, .ids')
+        , siblings = target.parents('.channel').siblings('.channel, .ids')
         , action = target.is(':checked') ? '#/invoice/apply/:channel/:' + target.val() : '';
       siblings.each(function () {
         var name = $(this).find(':checkbox').attr('name');
@@ -51,6 +52,7 @@
           $(this).find(':checkbox').attr('checked', false);
         }
       });
+      this.refreshNumber();
       this.$('form').attr('action', action);
     },
     deleteButton_clickHandler: function (event) {

@@ -2,15 +2,16 @@
 <h4 class="tac">
   <a data-toggle="popover" data-content="{{#each agreement_info}}{{@this}}<br>{{/each}}" data-html="true" data-title="合同信息" id="agreement-number">点乐合同编号：{{agreement_number}}</a>
 </h4>
-<a href="#" download="{{start}}对账单.xls" class="btn btn-primary export-button" title="导出对账单"><i class="fa fa-download">导出对账单</i></a>
-
+<div class="table-header">
+  <a href="#" download="{{start}}对账单.xls" class="btn btn-primary export-button" title="导出对账单"><i class="fa fa-download">导出对账单</i></a>
+</div>
 <table class="table table-bordered table-striped responsive-table" id="ad_table">
   <thead>
   <tr>
     <th>推广期间</th>
     <th>广告名称</th>
     <th>渠道号</th>
-    <th>单价（元）</th>
+    <th>单价（核减前）</th>
     <th>渠道CPA（核减前）</th>
     <th>应结算收入（核减前）</th>
     <th>单价（核减后）</th>
@@ -28,13 +29,12 @@
         {{#if amount}}
           <td>合计人民币（大写）：</td>
           <td colspan="7"  id="rmb">{{rmb}}</td>
-          <td id="income-total">&yen; {{readable_n income_after_total}}</td>
-          <td colspan="3"></td>
+          <td id="income-total" colspan="4">&yen; {{readable_n income_after_total}}</td>
         {{else}}
           <td data-title="推广期间">{{quote_start_date}} - {{quote_end_date}}</td>
           <td data-title="广告名称">{{ad_name}}</td>
           <td data-title="渠道号">{{cid}}</td>
-          <td data-title="单价（元）" class="price">&yen; {{readable_n quote_rmb}}</td>
+          <td data-title="单价（核减前）" class="price">&yen; {{readable_n quote_rmb}}</td>
           <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
           <td data-title="应结算收入（核减前）" class="income-before">&yen; {{readable_n income}}</td>
           <td data-title="单价（核减后）">

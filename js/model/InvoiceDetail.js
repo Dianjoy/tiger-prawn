@@ -44,31 +44,31 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      var start = json.start.split('-')
+      var start = json.start ? json.start.split('-') : moment().format('YYYY-MM').split('-')
         , agreementInfo = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
       json.start = start[0] + '年' + start[1] + '月';
       json.agreement_info = _.map(agreementInfo, function(element, key) {
         switch (key) {
           case 'company':
-            element = '客户名称:' + element;
+            element = '客户名称: ' + element;
             break;
           case 'company_short':
-            element = '客户简称:' + element;
+            element = '客户简称: ' + element;
             break;
           case 'cycle':
-            element = '付款周期:' + element;
+            element = '付款周期: ' + element;
             break;
           case 'ad_name':
-            element = '推广产品:' + element;
+            element = '推广产品: ' + element;
             break;
           case 'sign_date':
-            element = '签约时间:' + element;
+            element = '签约时间: ' + element;
             break;
           case 'rmb':
-            element = '合作单价:' + element;
+            element = '合作单价: ' + element;
             break;
           case 'agreement_comment':
-            element = '备注:' + element;
+            element = '备注: ' + element;
             break;
         }
         return element;
