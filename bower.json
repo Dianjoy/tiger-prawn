@@ -32,7 +32,7 @@
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
     "morrisjs": "~0.5.1",
     "jquery": "~2.1.4",
-    "mh-simple-uploader": "^0.6.4",
+    "mh-simple-uploader": "^0.6.5",
     "marked": "~0.3.5"
   },
   "devDependencies": {

@@ -77,7 +77,6 @@
     }
     return str;
   });
-
   //千位分割并保留到小数点后两位
   h.registerHelper('readable_n', function (value) {
     value = Number(value);
@@ -89,6 +88,14 @@
     }
     value = value.replace(/,(\d\d)$/, '.$1');
     return value.replace(/^\./, '0.');
+  });
+  // 百分比
+  h.registerHelper('percent', function (value, total) {
+    value = Number(value);
+    if (!isNaN(total)) {
+      value = value / total;
+    }
+    return Math.round(value * 10000) / 100;
   });
 
   // 用来生成可读时间

@@ -10,7 +10,8 @@
     events: {
       'click .add-button': 'addButton_clickHandler',
       'click .print-button': 'printButton_clickHandler',
-      'click .refresh-button': 'refreshButton_clickHandler'
+      'click .refresh-button': 'refreshButton_clickHandler',
+      'click .request-button': 'requestButton_clickHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -120,6 +121,16 @@
     },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
+      event.preventDefault();
+    },
+    requestButton_clickHandler: function (event) {
+      var href = event.target.getAttribute('href');
+      href = /https?:\/\//.test(href) ? href : tp.API + href;
+      $.get(href, function (response) {
+        if (response.code === 0) {
+          alert(response.msg);
+        }
+      }, 'json');
       event.preventDefault();
     },
     page_loadCompleteHandler: function () {
