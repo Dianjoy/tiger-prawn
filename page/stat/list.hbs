@@ -65,16 +65,18 @@
       <td data-title="点击到激活转化率">{{ratio}}%</td>
       <td data-title="点击到通知回调率">{{click_ratio}}%</td>
       {{/if}}
-      {{#unless is_amount}}
-        <td><a href="#/stat/ad_type/{{id}}/{{start}}/{{end}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a></td>
-      {{/unless}}
+      <td>
+        {{#unless is_amount}}
+          <a href="#/stat/ad_type/{{id}}/{{start}}/{{end}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a>
+        {{/unless}}
+      </td>
     </tr>
     {{{{/raw-helper}}}}
   </script>
   </tbody>
   <tfoot class="waiting">
   <tr>
-    <td colspan="8">
+    <td colspan="11">
       <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
     </td>
   </tr>
