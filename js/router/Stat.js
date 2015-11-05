@@ -72,7 +72,7 @@
     applyInvoice: function (channel, ids) {
       var model = new tp.model.InvoiceDetail({
         init: true,
-        channel: channel.slice(7),
+        channel: channel.slice(8),
         ids: ids
       });
       this.$body
