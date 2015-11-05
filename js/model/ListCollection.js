@@ -67,6 +67,21 @@
         }
         return _.isArray(response) ? response : response.list;
       },
+      getAmount: function (omits) {
+        if (_.isString(omits)) {
+          omits = omits.split(' ');
+        }
+        return this.reduce(function (amount, model) {
+          var data = model.omit(omits);
+          for ( var prop in data) {
+            if (isNaN(data[prop])) {
+              continue;
+            }
+            amount[prop] = (amount[prop] ? amount[prop] : 0) + Number(data[prop]);
+          }
+          return amount;
+        }, {amount: true});
+      },
       setPagesize: function (size) {
         this.pagesize = size;
         localStorage.setItem(this.save, size);

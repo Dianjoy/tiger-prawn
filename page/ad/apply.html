@@ -45,7 +45,8 @@
         {{else if is_replace}}
         <a href="#/ad/{{adid}}">新广告</a>
         {{else}}
-        {{#if before}}{{before}} / {{/if}}{{after}}
+        {{#if before}}{{before}} / {{/if}}
+        {{#if handler}}{{after}}{{else}}<a class="edit" data-type="number" href="#after">{{after}}</a>{{/if}}
         {{/if}}
       </td>
       <td data-title="提交时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
