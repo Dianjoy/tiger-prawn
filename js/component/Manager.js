@@ -14,6 +14,7 @@
       '.typeahead': 'tp.component.Typeahead',
       'form': 'tp.component.SmartForm'
     },
+    components: [],
     check: function ($el, mediator) {
       var components = [];
       $el.data('components', components);
@@ -143,6 +144,14 @@
         }
       }
       return true;
+    },
+    createComponents: function () {
+      for (var i = 0, len = this.components.length; i < len; i++) {
+        this.$context.createInstance(this.components[i][0], this.components[i][1]);
+      }
+    },
+    registerComponent: function (klass, params) {
+      this.components.push([klass, params]);
     }
   };
   ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';

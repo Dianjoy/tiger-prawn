@@ -103,6 +103,7 @@
           .find('.login').remove();
         this.$el.toggleClass('cp', this.model.isCP());
       }
+      tp.component.Manager.createComponents();
       if (this.model.isCP()) {
         this.$('.invoice-list').remove();
       } else {

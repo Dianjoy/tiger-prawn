@@ -70,4 +70,8 @@
       this.$('form').attr('action', '');
     }
   });
+
+  tp.component.Manager.registerComponent(ns.InvoiceListView, {
+    el: ''
+  });
 }(Nervenet.createNameSpace('tp.view')));
