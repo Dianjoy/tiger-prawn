@@ -1930,6 +1930,7 @@
 (function (ns) {
   ns.Manager = {
     $context: null,
+    $me: null,
     map: {
       '.base-list': 'tp.component.BaseList',
       '.smart-table': 'tp.component.SmartTable',
@@ -1939,6 +1940,7 @@
       '.typeahead': 'tp.component.Typeahead',
       'form': 'tp.component.SmartForm'
     },
+    components: [],
     check: function ($el, mediator) {
       var components = [];
       $el.data('components', components);
@@ -2068,6 +2070,17 @@
         }
       }
       return true;
+    },
+    createComponents: function () {
+      for (var i = 0, len = this.components.length; i < len; i++) {
+        var func = this.components[i][0]
+          , params = this.components[i][1];
+        func = _.bind(func, this, params);
+        func();
+      }
+    },
+    registerComponent: function (func, params) {
+      this.components.push([func, params]);
     }
   };
   ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';
@@ -2113,11 +2126,12 @@
       this.off();
       Backbone.View.prototype.remove.call(this);
     },
-    hide: function () {
+    hide: function (delay) {
+      delay = delay === undefined ? 3000 : delay;
       var modal = this.$el;
       timeout = setTimeout(function () {
         modal.modal('hide');
-      }, 3000);
+      }, delay);
     },
     onLoadComplete: function (response) {
       if (response) {
@@ -2134,8 +2148,8 @@
       this.$el.modal('hide');
       this.trigger('cancel', this);
     },
-    form_successHandler: function () {
-      this.hide();
+    form_successHandler: function (delay) {
+      this.hide(delay);
       this.trigger('success');
     },
     submitButton_clickHandler: function (event) {
@@ -2625,16 +2639,7 @@
           .find('.login').remove();
         this.$el.toggleClass('cp', this.model.isCP());
       }
-      if (this.model.isCP()) {
-        this.$('.invoice-list').remove();
-      } else {
-        var invoiceList = new tp.model.InvoiceList()
-          , invoiceListView = new tp.view.InvoiceListView({
-            el: '.invoice-list',
-            collection: invoiceList
-          });
-        this.$context.mapValue('invoiceList', invoiceList);
-      }
+      tp.component.Manager.createComponents();
     },
     addButton_clickHandler: function (event) {
       var options = $(event.currentTarget).data();
@@ -2710,16 +2715,17 @@
     },
     render: function () {
       if (this.fragment) {
-        this.$('.apply').before(this.fragment);
+        this.$('.divider').before(this.fragment);
         this.fragment = '';
         tp.component.Manager.check(this.$el);
       }
       this.refreshNumber();
     },
     refreshNumber: function () {
-      var num = this.collection.length;
+      var num = this.collection.length
+        , checked = this.$('.check-all:checked').length;
       this.$('.dropdown-toggle span:first-child').text(num ? '发票 ( ' + num + ' )' : '发票');
-      this.$('.btn').attr('disabled', num === 0);
+      this.$('.apply .btn').attr('disabled', num === 0 || checked === 0);
     },
     collection_resetHandler: function () {
       this.$('.ids, .channel').remove();
@@ -2744,14 +2750,16 @@
     },
     checkAll_clickHandler: function (event) {
       var target = $(event.target)
-        , siblings = target.parent().siblings('.channel, .ids')
-        , action = target.is(':checked') ? '#/invoice/apply/:channel/:' + target.val() : '';
+        , val = target.val()
+        , siblings = target.parents('.channel').siblings('.channel, .ids')
+        , action = target.is(':checked') ? '#/invoice/apply/:c_' + val.slice(8) + '/:' + val : '';
       siblings.each(function () {
         var name = $(this).find(':checkbox').attr('name');
         if (!name || name !== target.val()) {
           $(this).find(':checkbox').attr('checked', false);
         }
       });
+      this.refreshNumber();
       this.$('form').attr('action', action);
     },
     deleteButton_clickHandler: function (event) {
@@ -2766,9 +2774,24 @@
       this.collection.remove(model);
     },
     form_successHandler: function () {
-      this.$('form').attr('action', '');
+      this.$('.check-all').attr('checked', false);
+      this.$('form').removeAttr('action');
+      this.refreshNumber();
     }
   });
+  var invoiceListView = function () {
+    if (this.$me.isCP()) {
+      $('.invoice-list').remove();
+    } else {
+      var invoiceList = new tp.model.InvoiceList();
+      this.$context.createInstance(ns.InvoiceListView, {
+        el: '.invoice-list',
+        collection: invoiceList
+      });
+      this.$context.mapValue('invoiceList', invoiceList);
+    }
+  };
+  tp.component.Manager.registerComponent(invoiceListView);
 }(Nervenet.createNameSpace('tp.view')));;
 (function (ns) {
   ns.AddOnList = ns.BaseList.extend({

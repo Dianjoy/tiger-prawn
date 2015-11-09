@@ -88,8 +88,8 @@
                 </li>
                 {{/if}}
                 <li class="ids invalid-{{channel}}" id="{{id}}">
-                  <input type="checkbox" name="channel_{{channel}}" value="{{ad_id}}|{{start}}|{{end}}">{{ad_name}}
-                  <span>{{start}} ~ {{end}}</span>
+                  <input type="checkbox" name="channel_{{channel}}" value="{{ad_id}}|{{start}}|{{end}}">{{ad_name}} {{channel_id}}
+                  <br><span>{{start}} ~ {{end}}</span>
                   <a class="btn delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></a>
                 </li>
               </script>
