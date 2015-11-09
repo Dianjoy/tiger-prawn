@@ -44,8 +44,9 @@
     },
     checkAll_clickHandler: function (event) {
       var target = $(event.target)
+        , val = target.val()
         , siblings = target.parents('.channel').siblings('.channel, .ids')
-        , action = target.is(':checked') ? '#/invoice/apply/:channel/:' + target.val() : '';
+        , action = target.is(':checked') ? '#/invoice/apply/:c_' + val.slice(8) + '/:' + val : '';
       siblings.each(function () {
         var name = $(this).find(':checkbox').attr('name');
         if (!name || name !== target.val()) {
@@ -67,11 +68,22 @@
       this.collection.remove(model);
     },
     form_successHandler: function () {
-      this.$('form').attr('action', '');
+      this.$('.check-all').attr('checked', false);
+      this.$('form').removeAttr('action');
+      this.refreshNumber();
     }
   });
-
-  tp.component.Manager.registerComponent(ns.InvoiceListView, {
-    el: ''
-  });
+  var invoiceListView = function () {
+    if (this.$me.isCP()) {
+      $('.invoice-list').remove();
+    } else {
+      var invoiceList = new tp.model.InvoiceList();
+      this.$context.createInstance(ns.InvoiceListView, {
+        el: '.invoice-list',
+        collection: invoiceList
+      });
+      this.$context.mapValue('invoiceList', invoiceList);
+    }
+  };
+  tp.component.Manager.registerComponent(invoiceListView);
 }(Nervenet.createNameSpace('tp.view')));

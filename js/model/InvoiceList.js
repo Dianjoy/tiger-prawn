@@ -13,8 +13,8 @@
           }
         });
         options.reset ? this.reset(invoiceList) : this.set(invoiceList);
-        this.trigger('sync');
       }
+      this.trigger('sync');
     }
   });
 }(Nervenet.createNameSpace('tp.model')));

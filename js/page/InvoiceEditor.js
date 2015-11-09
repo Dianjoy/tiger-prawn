@@ -12,6 +12,7 @@
       tp.view.Loader.prototype.render.call(this);
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
+      $('.c-' + this.model.get('channel')).addClass('invalid');
     },
     exportButton_clickHandler: function (event) {
       event.currentTarget.href = this.exportHref;
@@ -40,8 +41,8 @@
       return window.btoa(unescape(encodeURIComponent(str)));
     },
     getProductList: function (components) {
-      var products =  this.model.get('products');
-      var opt = this.model.options;
+      var products =  this.model.get('products')
+        , opt = this.model.options;
       this.productList = components[0];
       products.push({amount: true});
       this.productList.collection.on('change', this.collection_changeHandler, this);
@@ -50,14 +51,19 @@
       products.pop();
     },
     collection_changeHandler: function (data) {
-      var product = _.findWhere(this.model.get('products'), {id: data.id});
+      var products = this.model.get('products')
+        , product = _.findWhere(products, {id: data.id});
       _.extend(product, _.omit(data.toJSON(), 'previous'));
-      this.render();
+      products = this.model.toJSON().products;
+      products.push({amount: true});
+      data.collection.reset(products);
+      products.pop();
       if (this.model.isNew()) {
         $(".modal").modal('hide');
       }
     },
     remove: function () {
+      $('.c-' + this.model.get('channel')).removeClass('invalid');
       Backbone.View.prototype.remove.call(this);
       this.productList.collection.off();
       this.productList = null;

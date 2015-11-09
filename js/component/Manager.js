@@ -5,6 +5,7 @@
 (function (ns) {
   ns.Manager = {
     $context: null,
+    $me: null,
     map: {
       '.base-list': 'tp.component.BaseList',
       '.smart-table': 'tp.component.SmartTable',
@@ -147,11 +148,14 @@
     },
     createComponents: function () {
       for (var i = 0, len = this.components.length; i < len; i++) {
-        this.$context.createInstance(this.components[i][0], this.components[i][1]);
+        var func = this.components[i][0]
+          , params = this.components[i][1];
+        func = _.bind(func, this, params);
+        func();
       }
     },
-    registerComponent: function (klass, params) {
-      this.components.push([klass, params]);
+    registerComponent: function (func, params) {
+      this.components.push([func, params]);
     }
   };
   ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';

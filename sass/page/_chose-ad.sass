@@ -8,14 +8,17 @@
   background: #FFFFFF
   border: none
 
-#chose-ad-table:empty
+#no-ad-table
+  display: none
+
+#chose-ad-table:empty + #no-ad-table
+  display: table-footer-group
   text-align: center
   border: 3px #D3CCCC dotted
   background: #F0F0F0
-  line-height: 137px
 
-#chose-ad-table:empty::after
-  content: "没有搜索结果"
+  td
+    line-height: 137px
 
 #choose-ad-button
   margin-left: 5px

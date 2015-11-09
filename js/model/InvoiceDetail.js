@@ -7,7 +7,13 @@
         var range = []
           , param = attrs.ids.split(',')
           , products =  _.map(param, function (element) {
-            return tp.utils.decodeURLParam(element);
+            var url = element.split('|')
+              , obj = {
+                ad_id: url[0],
+                start: url[1],
+                end: url[2]
+              };
+            return obj;
         });
         _.each(products, function (element) {
           var sameRange =  _.find(range, {start: element.start, end: element.end})

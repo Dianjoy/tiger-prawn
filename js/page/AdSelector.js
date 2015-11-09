@@ -46,7 +46,7 @@
         width: '0px'
       }, 1000, 'swing', function () {
         self.$invoiceList.fetch({reset: true});
-        self.$el.trigger('success');
+        self.$el.trigger('success', 1000);
       });
     }
   })

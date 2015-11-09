@@ -129,6 +129,7 @@
       .delete-button
         padding: 2px 12px
         color: $red
+
     .channel
       margin-top: 15px
       font-size: 14px
@@ -137,7 +138,24 @@
         margin-right: 5px
       label
         margin-bottom: 0
+      .fa-chevron-right
+        display: none
+
     .apply
       padding: 0 20px 5px
+
+    .invalid
+      background-color: #E4DADA
+
+      .fa-chevron-right
+        display: inline-block
+        color: $green
+
+      .fa-trash-o
+        display: none
+
+      .check-all
+        display: none
+
 .accordion-toggle
   background-color: $sidebar-background-color
