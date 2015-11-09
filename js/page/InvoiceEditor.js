@@ -12,7 +12,7 @@
       tp.view.Loader.prototype.render.call(this);
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
-      $('.c-' + this.model.get('channel')).addClass('invalid');
+      $('.invalid-' + this.model.get('channel')).addClass('invalid');
     },
     exportButton_clickHandler: function (event) {
       event.currentTarget.href = this.exportHref;
@@ -63,7 +63,7 @@
       }
     },
     remove: function () {
-      $('.c-' + this.model.get('channel')).removeClass('invalid');
+      $('.invalid-' + this.model.get('channel')).removeClass('invalid');
       Backbone.View.prototype.remove.call(this);
       this.productList.collection.off();
       this.productList = null;
