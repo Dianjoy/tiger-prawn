@@ -65,8 +65,10 @@
     remove: function () {
       $('.invalid-' + this.model.get('channel')).removeClass('invalid');
       Backbone.View.prototype.remove.call(this);
-      this.productList.collection.off();
-      this.productList = null;
+      if (this.productList) {
+        this.productList.collection.off();
+        this.productList = null;
+      }
     },
     form_successHandler: function () {
       var channel = this.model.get('channel')

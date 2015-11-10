@@ -33,6 +33,11 @@
         this.on('sync', this.syncHandler, this);
       }
     },
+    fetch: function (options) {
+      Backbone.Model.prototype.fetch.call(this, _.extend({
+        error: _.bind(this.onError, this)
+      }, options));
+    },
     parse: function (response) {
       if (response.options) {
         this.options = response.options;
@@ -119,6 +124,12 @@
         var hash = '#/invoice/' + this.id;
         location.hash = hash;
         this.urlRoot = tp.API + 'invoice/';
+      }
+    },
+    onError: function (model, response) {
+      var msg = JSON.parse(response.responseText).msg;
+      if (confirm(msg)) {
+        window.location.href = '#/invoice/';
       }
     }
   });
