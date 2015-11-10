@@ -46,6 +46,9 @@
       border-top: none
 
     > a
+      .fa-eye
+        display: none
+
       .caret
         float: right
         margin-top: 10px
@@ -186,3 +189,71 @@
   .container-fluid > .navbar-collapse
     margin-right: -$gap-p
     margin-left: 0
+
+.sidebar-collapsed
+  #navbar-side
+    width: 3%
+
+  .side-nav
+    &>li>a>span
+      display: none
+
+  .sidebar-nav-item
+    .nav
+      display: none
+      position: absolute
+      left: 100%
+      top: 1%
+      width: 130px
+
+    .hover
+      display: block
+
+  #menu-search, #menu-edit
+    display: none
+
+  #menu-collapse
+    .fa:before
+      content: '\f061'
+
+.sidebar-editing
+  .sidebar-nav-item
+    > a
+    .fa-eye
+      display: block
+      float: right
+
+    .slash:before
+      content: '\f070'
+
+    .caret
+      display: none
+
+  #menu-edit
+    .fa-pencil:before
+      content: '\f044'
+
+  #menu-collapse, #menu-search
+    display: none
+
+#menu-search
+  #search-clear-button
+    position: absolute
+    top: 10px
+    right: 10px
+    color: #333
+    cursor: pointer
+
+  form
+    position: relative
+    display: none
+
+.menu-operation
+  text-align: center
+  padding: 15px
+
+  button
+    border-radius: 100%
+    background-color: #337ab7
+    border: 1px solid #2e6da4
+    outline: none
