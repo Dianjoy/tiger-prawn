@@ -5,7 +5,7 @@
   'use strict';
   var collections = {}
     , Model = Backbone.Model.extend({
-      parse: function (response, options) {
+      parse: function (response) {
         var key = this.key || (this.collection ? this.collection.key : 'data');
         if ('code' in response && 'msg' in response && key in response) {
           return response[key];
@@ -86,8 +86,62 @@
         this.pagesize = size;
         localStorage.setItem(this.save, size);
       }
-    });
+    })
+    , MockCollection = function (options) {
+      var klass = options.collectionType
+        , self = this;
+      $.getScript(Nervenet.getPath(klass), function () {
+        klass = Nervenet.parseNamespace(klass);
+        var real = self.real = new klass(this.models, options);
+        self.delegateEvents(real);
+        if (self.fetchOptions) {
+          real.fetch(self.fetchOptions);
+        }
+      });
+    };
+  MockCollection.prototype = {
+    events: {},
+    fetchOptions: null,
+    models: null,
+    real: null,
+    delegateEvents: function (real) {
+      _.each(this.events, function (handler, event) {
+        real.on(event, handler.method, handler.context);
+      }, this);
+      real.on('sync', this.onSync, this);
+    },
+    fetch: function (options) {
+      if (this.real) {
+        this.real.fetch(options);
+      }
+      this.fetchOptions = options;
+    },
+    on: function (type, method, context) {
+      if (this.real) {
+        return this.real.on(type, method, context);
+      }
+      this.events[type] = {
+        method: method,
+        context: context
+      }
+    },
+    onSync: function () {
+      this.length = this.real.length;
+    }
+  };
 
+  _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON'], function (method) {
+    MockCollection.prototype[method] = function () {
+      return Collection.prototype[method].apply(this.real, arguments);
+    };
+  });
+
+
+  /**
+   *
+   * @param {{collectionType: string}} options
+   * @returns Backbone.Collection | MockCollection
+   */
   Collection.getInstance = function (options) {
     var collection;
     if (options && options.collectionId && options.collectionId in collections) {
@@ -111,9 +165,14 @@
         .value();
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
-    collection = new Collection(null, params);
-    if (options && options.collectionId) {
-      collections[options.collectionId] = collection;
+    if (params.collectionType) {
+      var klass = Nervenet.parseNamespace(params.collectionType);
+      return klass ? new klass(null, params) : new MockCollection(params);
+    } else {
+      collection = new Collection(null, params);
+    }
+    if (params.collectionId) {
+      collections[params.collectionId] = collection;
     }
     return collection;
   };
