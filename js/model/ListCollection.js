@@ -113,7 +113,7 @@
         localStorage.setItem(this.save, size);
       }
     })
-    , MockCollection = function (options) {
+    , ProxyCollection = function (options) {
       var klass = options.collectionType
         , self = this;
       $.getScript(tp.component.Manager.getPath(klass), function () {
@@ -125,7 +125,7 @@
         }
       });
     };
-  MockCollection.prototype = {
+  ProxyCollection.prototype = {
     events: {},
     fetchOptions: null,
     models: null,
@@ -151,13 +151,19 @@
         context: context
       }
     },
+    set: function (models, options) {
+      if (this.real) {
+        this.real.set(models, options);
+      }
+      this.models = models;
+    },
     onSync: function () {
       this.length = this.real.length;
     }
   };
 
   _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON'], function (method) {
-    MockCollection.prototype[method] = function () {
+    ProxyCollection.prototype[method] = function () {
       return Collection.prototype[method].apply(this.real, arguments);
     };
   });
@@ -166,7 +172,7 @@
   /**
    *
    * @param {{collectionType: string}} options
-   * @returns Backbone.Collection | MockCollection
+   * @returns Backbone.Collection | ProxyCollection
    */
   Collection.getInstance = function (options) {
     var collection;
@@ -193,7 +199,7 @@
     }
     if (params.collectionType) {
       var klass = Nervenet.parseNamespace(params.collectionType);
-      return klass ? new klass(null, params) : new MockCollection(params);
+      return klass ? new klass(null, params) : new ProxyCollection(params);
     } else {
       collection = new Collection(null, params);
     }
