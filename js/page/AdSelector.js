@@ -22,10 +22,8 @@
         .value();
       _.each(invoiceList, function (element) {
         var adCollection = tp.model.ListCollection.getInstance({collectionId: 'admin-list'})
-          , adModel = adCollection.get(element.ad_id)
-          , start = adModel.get('start')
-          , end = adModel.get('end');
-        if (element.start === start && element.end === end) {
+          , adModel = adCollection.get(element.ad_id);
+        if (adModel && element.start === adModel.get('start') && element.end === adModel.get('end')) {
           adModel.set('is_selected', true);
         }
       });
