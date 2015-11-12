@@ -39,7 +39,7 @@
             this.model = klass;
           } else {
             var self = this;
-            $.getScript(Nervenet.getPath(klass), function () {
+            $.getScript(tp.component.Manager.getPath(klass), function () {
               self.model = Nervenet.parseNamespace(klass);
               if (self.cache.options.reset) {
                 self.reset(self.cache.response, self.cache.options);
@@ -116,7 +116,7 @@
     , MockCollection = function (options) {
       var klass = options.collectionType
         , self = this;
-      $.getScript(Nervenet.getPath(klass), function () {
+      $.getScript(tp.component.Manager.getPath(klass), function () {
         klass = Nervenet.parseNamespace(klass);
         var real = self.real = new klass(this.models, options);
         self.delegateEvents(real);
