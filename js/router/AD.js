@@ -63,7 +63,7 @@
     },
     listAgreements: function () {
       this.$body
-        .load('page/ad/agreement.html')
+        .load('page/agreement/agreement.html')
         .setFramework('agreement', '我的合同');
     }
   });

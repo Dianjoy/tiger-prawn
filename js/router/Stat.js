@@ -14,6 +14,7 @@
       'invoice/:id': 'invoiceDetail',
       'invoice/apply/:channel/:ids': 'applyInvoice',
       'stat/analyse/': 'showAdminADStat',
+      'stat/analyse/:start/:end': 'showAdminADStatTime',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
     showADStat: function (id, start, end) {
@@ -86,6 +87,14 @@
       this.$body.load('page/stat/analyse.hbs', {
         start: moment().startOf('month').format(moment.DATE_FORMAT),
         end: moment().format(moment.DATE_FORMAT),
+        API: tp.API
+      });
+      this.$body.setFramework('has-date-range daily', '广告数据分析');
+    },
+    showAdminADStatTime: function (start, end) {
+      this.$body.load('page/stat/analyse.hbs', {
+        start: start,
+        end: end,
         API: tp.API
       });
       this.$body.setFramework('has-date-range daily', '广告数据分析');

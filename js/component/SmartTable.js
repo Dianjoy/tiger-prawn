@@ -6,7 +6,6 @@
     $context: null,
     autoFetch: true,
     events: {
-      'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
@@ -85,6 +84,7 @@
       if (autoFetch) {
         this.refresh(options);
       }
+      this.options = options;
     },
     remove: function () {
       if (this.pagination) {
@@ -161,13 +161,6 @@
         }
       });
     },
-    addRowButton_clickHandler: function (event) {
-      var prepend = $(event.currentTarget).data('prepend');
-      this.collection.add(null, {
-        immediately: true,
-        prepend: !!prepend
-      });
-    },
     archiveButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
         , msg = button.data('msg') || '确定归档么？';
@@ -180,6 +173,10 @@
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
+      if (this.options.amount) {
+        var data = this.collection.getAmount(this.options.omits);
+        this.collection_addHandler(data, null, {immediately: true});
+      }
     },
     deleteButton_clickHandler: function (event) {
       var button = $(event.currentTarget)

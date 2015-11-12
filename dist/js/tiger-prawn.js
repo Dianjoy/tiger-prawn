@@ -112,7 +112,6 @@
     }
     return str;
   });
-
   //千位分割并保留到小数点后两位
   h.registerHelper('readable_n', function (value) {
     value = Number(value);
@@ -124,6 +123,14 @@
     }
     value = value.replace(/,(\d\d)$/, '.$1');
     return value.replace(/^\./, '0.');
+  });
+  // 百分比
+  h.registerHelper('percent', function (value, total) {
+    value = Number(value);
+    if (!isNaN(total)) {
+      value = value / total;
+    }
+    return Math.round(value * 10000) / 100;
   });
 
   // 用来生成可读时间
@@ -776,6 +783,21 @@
           }
         }
         return _.isArray(response) ? response : response.list;
+      },
+      getAmount: function (omits) {
+        if (_.isString(omits)) {
+          omits = omits.split(' ');
+        }
+        return this.reduce(function (amount, model) {
+          var data = model.omit(omits);
+          for ( var prop in data) {
+            if (isNaN(data[prop])) {
+              continue;
+            }
+            amount[prop] = (amount[prop] ? amount[prop] : 0) + Number(data[prop]);
+          }
+          return amount;
+        }, {amount: true});
       },
       setPagesize: function (size) {
         this.pagesize = size;
@@ -1530,7 +1552,7 @@
       this.collection.fetch(options);
     },
     collection_addHandler: function (model, collection, options) {
-      this.fragment += this.template(model.toJSON());
+      this.fragment += this.template(model instanceof Backbone.Model ? model.toJSON() : model);
       if (options && options.immediately) {
         var item = $(this.fragment);
         item.attr('id', model.id || model.cid);
@@ -1712,9 +1734,10 @@
         end: 0
       }, _.pick(options, 'start', 'end'));
 
-      var reg = /^\d{4}-\d{2}-\d{2}$/;
-      if (!(reg.test(range.start) && reg.test(range.end))) {
+      if (!isNaN(range.start)) {
         range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
+      }
+      if (!isNaN(range.end)) {
         range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
       }
 
@@ -2548,7 +2571,8 @@
     events: {
       'click .add-button': 'addButton_clickHandler',
       'click .print-button': 'printButton_clickHandler',
-      'click .refresh-button': 'refreshButton_clickHandler'
+      'click .refresh-button': 'refreshButton_clickHandler',
+      'click .request-button': 'requestButton_clickHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -2659,6 +2683,16 @@
     },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
+      event.preventDefault();
+    },
+    requestButton_clickHandler: function (event) {
+      var href = event.target.getAttribute('href');
+      href = /https?:\/\//.test(href) ? href : tp.API + href;
+      $.get(href, function (response) {
+        if (response.code === 0) {
+          alert(response.msg);
+        }
+      }, 'json');
       event.preventDefault();
     },
     page_loadCompleteHandler: function () {
@@ -2904,11 +2938,14 @@
           return 'percent' in data ? y + '(' + data.percent + '%)' : y;
         }
       }
-      if (!_.isArray(options.ykeys)) {
+      if (options.ykeys && !_.isArray(options.ykeys)) {
         this.src.ykeys = options.ykeys = options.ykeys.split(',');
       }
-      if (!_.isArray(options.labels)) {
+      if (options.labels && !_.isArray(options.labels)) {
         this.src.labels = options.labels = options.labels.split(',');
+      }
+      if (options.yFormater) {
+        options.yFormater = tp.utils.decodeURLParam(options.yFormater);
       }
       this.options = options;
     },
@@ -2919,6 +2956,7 @@
       if (this.collection.length === 0) {
         this.showEmpty();
       }
+      var json = this.collection.toJSON();
       if (this.collection.options) {
         if (this.collection.options.ykeys) {
           this.options.ykeys = this.src.ykeys.concat(this.collection.options.ykeys);
@@ -2927,7 +2965,17 @@
           this.options.labels = this.src.labels.concat(this.collection.options.labels);
         }
       }
-      this.options.data = this.collection.toJSON();
+      if (this.options.yFormater) {
+        json = json.map(function (item) {
+          return _.mapObject(item, function (value, key) {
+            if (key in this.options.yFormater) {
+              return Handlebars.helpers[this.options.yFormater[key]](value);
+            }
+            return value;
+          }, this);
+        }, this);
+      }
+      this.options.data = json;
       this.render();
     }
   });
@@ -2939,7 +2987,6 @@
     $context: null,
     autoFetch: true,
     events: {
-      'click .add-row-button': 'addRowButton_clickHandler',
       'click .archive-button': 'archiveButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'click .edit': 'edit_clickHandler',
@@ -3018,6 +3065,7 @@
       if (autoFetch) {
         this.refresh(options);
       }
+      this.options = options;
     },
     remove: function () {
       if (this.pagination) {
@@ -3094,13 +3142,6 @@
         }
       });
     },
-    addRowButton_clickHandler: function (event) {
-      var prepend = $(event.currentTarget).data('prepend');
-      this.collection.add(null, {
-        immediately: true,
-        prepend: !!prepend
-      });
-    },
     archiveButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
         , msg = button.data('msg') || '确定归档么？';
@@ -3113,6 +3154,10 @@
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
+      if (this.options.amount) {
+        var data = this.collection.getAmount(this.options.omits);
+        this.collection_addHandler(data, null, {immediately: true});
+      }
     },
     deleteButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
@@ -3233,7 +3278,7 @@
       'focus .keyword': 'keyword_focusHandler',
       'change .result input': 'result_changeHandler',
       'click .options a': 'options_clickHandler',
-      'keyup': 'keyupHandler',
+      'keydown': 'keyDownHandler',
       'input': 'inputHandler'
     },
     initialize: function (options) {
@@ -3341,7 +3386,7 @@
         this.timeout = setTimeout(this.fetch, this.delay);
       }
     },
-    keyupHandler: function (event) {
+    keyDownHandler: function (event) {
       var active = this.list.find('.active').removeClass('active');
       switch (event.keyCode) {
         case 13: // enter

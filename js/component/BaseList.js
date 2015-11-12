@@ -56,7 +56,7 @@
       this.collection.fetch(options);
     },
     collection_addHandler: function (model, collection, options) {
-      this.fragment += this.template(model.toJSON());
+      this.fragment += this.template(model instanceof Backbone.Model ? model.toJSON() : model);
       if (options && options.immediately) {
         var item = $(this.fragment);
         item.attr('id', model.id || model.cid);

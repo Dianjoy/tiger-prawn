@@ -76,7 +76,10 @@
       this.$('.agreement').find('input').prop('disabled', true);
       this.$('.search-agreement-button').spinner();
       this.agreements.fetch({
-        data: {keyword: keyword},
+        data: {
+          today: moment().format(moment.DATE_FORMAT),
+          keyword: keyword
+        },
         reset: true
       });
     },
