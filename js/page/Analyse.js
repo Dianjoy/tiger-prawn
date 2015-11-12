@@ -10,12 +10,10 @@
           , ad_id = ranger === '.date-range' ? model.get('id') : model.get('ad_id')
           , start = ranger === '.date-range' ? $('#stat-range-start-date').val() : $('#settle-start-date').val()
           , end = ranger === '.date-range' ? $('#stat-range-end-date').val() : $('#settle-end-date').val();
-        if (ranger === '.date-range') {
           model.set({
             start: start,
             end: end
           });
-        }
         if (store) {
           var invoiceList = JSON.parse(store)
             , isSelected = _.findWhere(invoiceList, {
