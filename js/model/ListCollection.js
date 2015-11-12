@@ -25,6 +25,7 @@
       }
     })
     , Collection = ns.ListCollection = Backbone.Collection.extend({
+      cache: null,
       total: 0,
       pagesize: 10,
       isLoading: false,
@@ -32,6 +33,24 @@
         this.key = options.key || 'data';
         this.save = tp.PROJECT + location.hash + '-pagesize';
         Backbone.Collection.prototype.initialize.call(this, models, options);
+        if (_.isString(this.model)) { // 需要加载外部model类
+          var klass = Nervenet.parseNamespace(this.model);
+          if (klass) {
+            this.model = klass;
+          } else {
+            var self = this;
+            $.getScript(tp.component.Manager.getPath(klass), function () {
+              self.model = Nervenet.parseNamespace(klass);
+              if (self.cache.options.reset) {
+                self.reset(self.cache.response, self.cache.options);
+              } else {
+                self.set(this.parse(self.cache.response), self.cache.options);
+                self.trigger('sync');
+              }
+              this.cache = null;
+            });
+          }
+        }
         if (!options) {
           return;
         }
@@ -54,8 +73,15 @@
         Backbone.Collection.prototype.fetch.call(this, options);
         this.isLoading = true;
       },
-      parse: function (response) {
+      parse: function (response, options) {
         this.isLoading = false;
+        if (_.isString(this.model)) { // model的类还没加载进来
+          this.cache = {
+            response: response,
+            options: options
+          };
+          return null;
+        }
         this.total = _.isArray(response) ? response.length : response.total;
         if (response.options) {
           this.options = response.options;
@@ -90,7 +116,7 @@
     , MockCollection = function (options) {
       var klass = options.collectionType
         , self = this;
-      $.getScript(Nervenet.getPath(klass), function () {
+      $.getScript(tp.component.Manager.getPath(klass), function () {
         klass = Nervenet.parseNamespace(klass);
         var real = self.real = new klass(this.models, options);
         self.delegateEvents(real);
@@ -153,7 +179,7 @@
     }
 
     var params = _.extend({}, options);
-    if (!params.model || !(params.model instanceof Function)) {
+    if (!params.model) {
       var init = _.chain(params)
         .pick('idAttribute', 'defaults')
         .mapObject(function (value, key) {
