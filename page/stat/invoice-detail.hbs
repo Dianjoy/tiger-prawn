@@ -160,15 +160,15 @@
           <td>
             {{#if view}}
               {{#if attachment}}
-                <a><img src="{{attachment}}"></a>
+                {{attachment}}
               {{/if}}
             {{else}}
               {{#if attachment}}
                 <a class="edit" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true">
-                  <img src="{{attachment}}" class="img-thumbnail">
+                  {{attachment}}
                 </a>
               {{else}}
-                <a class="edit btn btn-primary" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true">上传对账单</a>
+                <a class="edit btn btn-primary" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true" data-accept="*.xls,*xlsx">上传对账单</a>
               {{/if}}
             {{/if}}
           </td>

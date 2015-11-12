@@ -129,7 +129,7 @@
     onError: function (model, response) {
       var msg = JSON.parse(response.responseText).msg;
       if (confirm(msg)) {
-        window.location.href = '#/invoice/';
+        window.location.hash = '#/invoice/';
       }
     }
   });

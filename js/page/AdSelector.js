@@ -20,6 +20,15 @@
         .sortBy('channel')
         .map(function (value, index) { value.id = index; return value; })
         .value();
+      _.each(invoiceList, function (element) {
+        var adCollection = tp.model.ListCollection.getInstance({collectionId: 'admin-list'})
+          , adModel = adCollection.get(element.ad_id)
+          , start = adModel.get('start')
+          , end = adModel.get('end');
+        if (element.start === start && element.end === end) {
+          adModel.set('is_selected', true);
+        }
+      });
       localStorage.setItem(key, JSON.stringify(invoiceList));
       this.flyAnimation();
       event.preventDefault();

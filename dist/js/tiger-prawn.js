@@ -2049,10 +2049,12 @@
         if (!component) {
           throw new Error('cannot find mediator')
         }
-        dom.each(function () {
-          init.el = this;
-          components.push(self.$context.createInstance(component, init));
-        });
+        if (dom) {
+          dom.each(function () {
+            init.el = this;
+            components.push(self.$context.createInstance(component, init));
+          });
+        }
         if (callback) {
           callback(components);
         }
@@ -2736,9 +2738,17 @@
     collection_removeHandler: function (model) {
       var invoiceList = JSON.parse(localStorage.getItem(key))
         , id = model.get('id')
+        , ad_id = model.get('ad_id')
+        , start = model.get('start')
+        , end = model.get('end')
+        , adCollection = tp.model.ListCollection.getInstance({collectionId: 'admin-list'})
+        , adModel = adCollection.get(ad_id)
         , item = this.$('#' + id)
         , channel = model.get('channel');
       invoiceList = _.filter(invoiceList, function (element) { return element.id !== id });
+      if (adModel && adModel.get('start') === start && adModel.get('end') === end) {
+        adModel.set('is_selected', false);
+      }
       localStorage.setItem(key, JSON.stringify(invoiceList));
       item.fadeOut(function () {
         if (_.every(invoiceList, function (element) { return element.channel !== channel; })) {

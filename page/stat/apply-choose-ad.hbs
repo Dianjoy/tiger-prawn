@@ -14,7 +14,7 @@
       <button type="button" class="btn btn-primary" id="choose-ad-button"><i class="fa fa-play"></i> 检索</button>
     </div>
   </div>
-  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="invoice-list-{{id}}" data-typeahead="false" style="height:225px;">
+  <table class="table" data-mediator-class="tp.page.Analyse" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="invoice-list-{{id}}" data-typeahead="false" style="height:225px;">
     <thead>
       <tr>
         <th><label><input type="checkbox" value="ids" class="check-all"> 全选</label></th>
@@ -25,11 +25,13 @@
     <tbody id="chose-ad-table">
     {{{{raw-helper}}}}
     <script type="text/x-handlebars-template">
-      <tr>
-        <td><label for="ids"><input type="checkbox" name="ids" value="{{ad_id}}"></label></td>
-        <td>{{ad_name}}</td>
-        <td>{{channel_id}}</td>
-      </tr>
+      {{#unless is_selected}}
+        <tr>
+          <td><label for="ids"><input type="checkbox" name="ids" value="{{ad_id}}"></label></td>
+          <td>{{ad_name}}</td>
+          <td>{{channel_id}}</td>
+        </tr>
+      {{/unless}}
     </script>
     {{{{/raw-helper}}}}
     </tbody>

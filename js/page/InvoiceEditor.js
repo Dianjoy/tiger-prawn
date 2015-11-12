@@ -54,7 +54,14 @@
       var products = this.model.get('products')
         , product = _.findWhere(products, {id: data.id});
       _.extend(product, _.omit(data.toJSON(), 'previous'));
-      products = this.model.toJSON().products;
+      var json = this.model.toJSON();
+      this.model.set({
+        income: json.income_after_total,
+        income_first: json.income_before_total,
+        cpa_first_total: json.cpa_first_total,
+        cpa_after_total: json.cpa_after_total
+      });
+      products = json.products;
       products.push({amount: true});
       data.collection.reset(products);
       products.pop();

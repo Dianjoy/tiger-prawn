@@ -124,10 +124,12 @@
         if (!component) {
           throw new Error('cannot find mediator')
         }
-        dom.each(function () {
-          init.el = this;
-          components.push(self.$context.createInstance(component, init));
-        });
+        if (dom) {
+          dom.each(function () {
+            init.el = this;
+            components.push(self.$context.createInstance(component, init));
+          });
+        }
         if (callback) {
           callback(components);
         }
