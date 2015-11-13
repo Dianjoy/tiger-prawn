@@ -12,6 +12,8 @@
       tp.view.Loader.prototype.render.call(this);
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
+      $('.invoice-list').removeClass('open');
+      $('.apply button').spinner(false);
       $('.invalid-' + this.model.get('channel')).addClass('invalid');
     },
     exportButton_clickHandler: function (event) {
