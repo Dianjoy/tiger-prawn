@@ -116,6 +116,12 @@
         obj.rmb = tp.utils.convertCurrency(obj.income_after_total);
         return element;
       });
+      this.set({
+        income: obj.income_after_total,
+        income_first: obj.income_before_total,
+        cpa_first_total: obj.cpa_first_total,
+        cpa_after_total: obj.cpa_after_total
+      }, {silent: true});
       _.extend(this.options, obj);
       return _.extend(json, this.options);
     },
