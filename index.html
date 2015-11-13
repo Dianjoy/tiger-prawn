@@ -59,7 +59,7 @@
               <li class="alarm" id="msg-{{id}}">
                 <input type="checkbox" name="check" value="{{id}}" {{#if status}}checked{{/if}} />
                 <a href="{{handler}}" {{#if is_popup}}class="popup"{{/if}} {{#if is_external}}target="_blank"{{/if}}>
-                [{{description}}] <strong>{{name}}</strong> <small class="text-muted">{{substring create_time 5 11}}</small>
+                [{{description}}] <strong>{{channel}}</strong><strong>{{name}}</strong> <small class="text-muted">{{substring create_time 5 11}}</small>
                 </a>
               </li>
             </script>
