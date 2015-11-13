@@ -41,8 +41,6 @@
       options = _.extend(options, init);
 
       this.params = tp.utils.decodeURLParam(options.params);
-      // 可能会从别的地方带来model
-      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
       // 起止日期
       if (options.start || options.end) {
         options.defaults = _.pick(options, 'start', 'end');

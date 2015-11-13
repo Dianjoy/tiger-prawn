@@ -39,8 +39,11 @@
             this.model = klass;
           } else {
             var self = this;
-            $.getScript(tp.component.Manager.getPath(klass), function () {
-              self.model = Nervenet.parseNamespace(klass);
+            $.getScript(tp.component.Manager.getPath(this.model), function () {
+              self.model = Nervenet.parseNamespace(self.model);
+              if (!self.cache) {
+                return;
+              }
               if (self.cache.options.reset) {
                 self.reset(self.cache.response, self.cache.options);
               } else {

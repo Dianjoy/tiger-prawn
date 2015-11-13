@@ -722,7 +722,7 @@
 }(Nervenet.createNameSpace('tp.model')));;
 ;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
-      parse: function (response, options) {
+      parse: function (response) {
         var key = this.key || (this.collection ? this.collection.key : 'data');
         if ('code' in response && 'msg' in response && key in response) {
           return response[key];
@@ -742,6 +742,7 @@
       }
     })
     , Collection = ns.ListCollection = Backbone.Collection.extend({
+      cache: null,
       total: 0,
       pagesize: 10,
       isLoading: false,
@@ -749,6 +750,27 @@
         this.key = options.key || 'data';
         this.save = tp.PROJECT + location.hash + '-pagesize';
         Backbone.Collection.prototype.initialize.call(this, models, options);
+        if (_.isString(this.model)) { // 需要加载外部model类
+          var klass = Nervenet.parseNamespace(this.model);
+          if (klass) {
+            this.model = klass;
+          } else {
+            var self = this;
+            $.getScript(tp.component.Manager.getPath(this.model), function () {
+              self.model = Nervenet.parseNamespace(self.model);
+              if (!self.cache) {
+                return;
+              }
+              if (self.cache.options.reset) {
+                self.reset(self.cache.response, self.cache.options);
+              } else {
+                self.set(this.parse(self.cache.response), self.cache.options);
+                self.trigger('sync');
+              }
+              this.cache = null;
+            });
+          }
+        }
         if (!options) {
           return;
         }
@@ -771,8 +793,15 @@
         Backbone.Collection.prototype.fetch.call(this, options);
         this.isLoading = true;
       },
-      parse: function (response) {
+      parse: function (response, options) {
         this.isLoading = false;
+        if (_.isString(this.model)) { // model的类还没加载进来
+          this.cache = {
+            response: response,
+            options: options
+          };
+          return null;
+        }
         this.total = _.isArray(response) ? response.length : response.total;
         if (response.options) {
           this.options = response.options;
@@ -803,8 +832,68 @@
         this.pagesize = size;
         localStorage.setItem(this.save, size);
       }
-    });
+    })
+    , ProxyCollection = function (options) {
+      var klass = options.collectionType
+        , self = this;
+      $.getScript(tp.component.Manager.getPath(klass), function () {
+        klass = Nervenet.parseNamespace(klass);
+        var real = self.real = new klass(this.models, options);
+        self.delegateEvents(real);
+        if (self.fetchOptions) {
+          real.fetch(self.fetchOptions);
+        }
+      });
+    };
+  ProxyCollection.prototype = {
+    events: {},
+    fetchOptions: null,
+    models: null,
+    real: null,
+    delegateEvents: function (real) {
+      _.each(this.events, function (handler, event) {
+        real.on(event, handler.method, handler.context);
+      }, this);
+      real.on('sync', this.onSync, this);
+    },
+    fetch: function (options) {
+      if (this.real) {
+        this.real.fetch(options);
+      }
+      this.fetchOptions = options;
+    },
+    on: function (type, method, context) {
+      if (this.real) {
+        return this.real.on(type, method, context);
+      }
+      this.events[type] = {
+        method: method,
+        context: context
+      }
+    },
+    set: function (models, options) {
+      if (this.real) {
+        this.real.set(models, options);
+      }
+      this.models = models;
+    },
+    onSync: function () {
+      this.length = this.real.length;
+    }
+  };
 
+  _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON'], function (method) {
+    ProxyCollection.prototype[method] = function () {
+      return Collection.prototype[method].apply(this.real, arguments);
+    };
+  });
+
+
+  /**
+   *
+   * @param {{collectionType: string}} options
+   * @returns Backbone.Collection | ProxyCollection
+   */
   Collection.getInstance = function (options) {
     var collection;
     if (options && options.collectionId && options.collectionId in collections) {
@@ -816,7 +905,7 @@
     }
 
     var params = _.extend({}, options);
-    if (!params.model || !(params.model instanceof Function)) {
+    if (!params.model) {
       var init = _.chain(params)
         .pick('idAttribute', 'defaults')
         .mapObject(function (value, key) {
@@ -828,9 +917,14 @@
         .value();
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
-    collection = new Collection(null, params);
-    if (options && options.collectionId) {
-      collections[options.collectionId] = collection;
+    if (params.collectionType) {
+      var klass = Nervenet.parseNamespace(params.collectionType);
+      return klass ? new klass(null, params) : new ProxyCollection(params);
+    } else {
+      collection = new Collection(null, params);
+    }
+    if (params.collectionId) {
+      collections[params.collectionId] = collection;
     }
     return collection;
   };
@@ -1537,8 +1631,6 @@
       options = _.extend(options, init);
 
       this.params = tp.utils.decodeURLParam(options.params);
-      // 可能会从别的地方带来model
-      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
       // 起止日期
       if (options.start || options.end) {
         options.defaults = _.pick(options, 'start', 'end');
@@ -2780,10 +2872,10 @@
         , item = this.$('#' + id)
         , channel = model.get('channel');
       invoiceList = _.filter(invoiceList, function (element) { return element.id !== id });
-      if (adModel && adModel.get('start') === start && adModel.get('end') === end) {
+      localStorage.setItem(key, JSON.stringify(invoiceList));
+      if (adModel) {
         adModel.set('is_selected', false);
       }
-      localStorage.setItem(key, JSON.stringify(invoiceList));
       item.fadeOut(function () {
         if (_.every(invoiceList, function (element) { return element.channel !== channel; })) {
           $(this).prev().remove();
@@ -2826,7 +2918,7 @@
   var invoiceListView = function () {
     if (this.$me.isCP()) {
       $('.invoice-list').remove();
-    } else {
+    } else if (tp.model.InvoiceList) {
       var invoiceList = new tp.model.InvoiceList();
       this.$context.createInstance(ns.InvoiceListView, {
         el: '.invoice-list',

@@ -38,10 +38,10 @@
         , item = this.$('#' + id)
         , channel = model.get('channel');
       invoiceList = _.filter(invoiceList, function (element) { return element.id !== id });
-      if (adModel && adModel.get('start') === start && adModel.get('end') === end) {
+      localStorage.setItem(key, JSON.stringify(invoiceList));
+      if (adModel) {
         adModel.set('is_selected', false);
       }
-      localStorage.setItem(key, JSON.stringify(invoiceList));
       item.fadeOut(function () {
         if (_.every(invoiceList, function (element) { return element.channel !== channel; })) {
           $(this).prev().remove();
@@ -84,7 +84,7 @@
   var invoiceListView = function () {
     if (this.$me.isCP()) {
       $('.invoice-list').remove();
-    } else {
+    } else if (tp.model.InvoiceList) {
       var invoiceList = new tp.model.InvoiceList();
       this.$context.createInstance(ns.InvoiceListView, {
         el: '.invoice-list',
