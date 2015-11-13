@@ -56,9 +56,13 @@
         .load('page/ad/competitor.html')
         .setFramework('competitor', '竞品广告状态');
     },
-    showHistoryInfo: function () {
+    showHistoryInfo: function (query) {
+      var data = {
+        query: query,
+        API: tp.API
+      };
       this.$body
-        .load('page/info.html')
+        .load('page/info.hbs', data)
         .setFramework('info', '广告投放情报');
     },
     listAgreements: function () {
