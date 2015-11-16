@@ -13,6 +13,7 @@
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
       $('.invalid-' + this.model.get('channel')).addClass('invalid');
+      $('.invoice-list form').removeClass('processing');
       $('.apply .fa-spinner').remove();
     },
     exportButton_clickHandler: function (event) {
