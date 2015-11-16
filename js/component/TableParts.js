@@ -149,10 +149,17 @@
       'keydown': 'keydownHandler'
     },
     initialize: function () {
-      this.$el.val(this.model.get('keyword'));
+      if (this.model.get('keyword')) {
+        this.$el.val(this.model.get('keyword'));
+      }
+      if (this.el.value) {
+        this.model.set('keyword', this.el.value);
+      }
+      this.model.on('change:keyword', this.model_changeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
     },
     remove: function () {
+      this.model.off(null, null, this);
       this.collection.off(null, null, this);
       this.collection = this.model = null;
       Backbone.View.prototype.remove.call(this);
@@ -160,6 +167,9 @@
     collection_syncHandler: function () {
       this.$el.prop('readonly', false);
       this.spinner && this.spinner.remove();
+    },
+    model_changeHandler: function (model, keyword) {
+      this.el.value = keyword;
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {

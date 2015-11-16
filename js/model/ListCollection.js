@@ -47,10 +47,10 @@
               if (self.cache.options.reset) {
                 self.reset(self.cache.response, self.cache.options);
               } else {
-                self.set(this.parse(self.cache.response), self.cache.options);
+                self.set(self.parse(self.cache.response), self.cache.options);
                 self.trigger('sync');
               }
-              this.cache = null;
+              self.cache = null;
             });
           }
         }
@@ -121,7 +121,7 @@
         , self = this;
       $.getScript(tp.component.Manager.getPath(klass), function () {
         klass = Nervenet.parseNamespace(klass);
-        var real = self.real = new klass(this.models, options);
+        var real = self.real = new klass(self.models, options);
         self.delegateEvents(real);
         if (self.fetchOptions) {
           real.fetch(self.fetchOptions);
