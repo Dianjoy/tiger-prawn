@@ -202,12 +202,12 @@
       </div>
     </div>
   </div>
-  <div class="form-group invoice-margin col-sm-12">
+  <div class="form-group col-sm-12">
     <label class="col-sm-2 control-label">客户对账单：</label>
     <div class="col-sm-10">
       <input type="text" placeholder="描述（可不填）" class="form-control" name="attachment_desc">
     </div>
-    <div class="uploader col-sm-10 col-sm-offset-2" data-url="{{API}}file/" data-need-validate="true" data-accept="*.xls,*xlsx">
+    <div class="uploader col-sm-10 col-sm-offset-2 invoice-margin" data-url="{{API}}file/" data-need-validate="true" data-accept="*.xls,*xlsx">
       <div class="su-placeholder su-removable" data-initial="请上传文件。" data-progress="上传文件中..">
         {{#if attachment}}
           <div class="su-item">
