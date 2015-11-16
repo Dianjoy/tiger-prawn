@@ -78,6 +78,7 @@
     form_successHandler: function () {
       this.$('.check-all').attr('checked', false);
       this.$('form').removeAttr('action');
+      this.$el.removeClass('open');
       this.refreshNumber();
     }
   });
