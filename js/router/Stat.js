@@ -6,6 +6,7 @@
   ns.Stat = Backbone.Router.extend({
     $body: null,
     $me: null,
+    $context: null,
     routes: {
       'stat/(:ad_type)': 'showStat',
       'stat/ad_type/:id/:start/:end': 'showADStat',
@@ -76,6 +77,7 @@
         channel: channel,
         ids: ids
       });
+      this.$context.mapValue('invoiceDetail', model, true);
       this.$body
         .load('page/stat/apply-invoice-detail.hbs', model, {
           className: 'invoice-apply',

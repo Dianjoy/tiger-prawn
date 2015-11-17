@@ -5,7 +5,7 @@
 <div class="table-header">
   <a href="#" download="{{start}}对账单.xls" class="btn btn-primary export-button" title="导出对账单"><i class="fa fa-download">导出对账单</i></a>
 </div>
-<table class="table table-bordered table-striped responsive-table" id="ad_table" data-typeahead="false">
+<table class="table table-bordered table-striped responsive-table" id="ad_table" data-typeahead="false" data-url="{{API}}invoice/ad/" data-auto-fetch="false">
   <thead>
   <tr>
     <th>推广期间</th>
@@ -160,15 +160,15 @@
           <td>
             {{#if view}}
               {{#if attachment}}
-                {{attachment}}
+                <a><img src="{{attachment}}"></a>
               {{/if}}
             {{else}}
               {{#if attachment}}
                 <a class="edit" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true">
-                  {{attachment}}
+                  <img src="{{attachment}}" class="img-thumbnail">
                 </a>
               {{else}}
-                <a class="edit btn btn-primary" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true" data-accept="*.xls,*xlsx">上传对账单</a>
+                <a class="edit btn btn-primary" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true" data-accept="*.pdf,*jpg,*png">上传对账单</a>
               {{/if}}
             {{/if}}
           </td>

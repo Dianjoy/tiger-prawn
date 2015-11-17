@@ -54,7 +54,7 @@
   </tbody>
 </table>
 
-<form class="form-horizontal clearfix model-editor" method="post" enctype="multipart/form-data">
+<form class="form-horizontal clearfix model-editor" method="post" enctype="multipart/form-data" data-target="invoiceDetail">
   <div class="row">
     <div class="col-sm-6 col-xs-12">
       <div class="form-group">
@@ -103,10 +103,10 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">开票金额：</label>
         <div class="col-sm-4">
-          <p>红包锁屏收入金额：&yen; {{red_ad_income}}</p>
+          <p class="form-control-static">红包锁屏收入金额：&yen; {{red_ad_income}}</p>
         </div>
         <div class="col-sm-4">
-          <p>其他收入金额：&yen; {{joy_income}}</p>
+          <p class="form-control-static">其他收入金额：&yen; {{joy_income}}</p>
         </div>
       </div>
       <div class="form-group">
@@ -143,7 +143,11 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">收款方：</label>
         <div class="col-sm-8">
-        <p class="form-control-static">{{accept_company}}</p>
+            {{#if accept_company}}
+            <p class="form-control-static">{{accept_company}}</p>
+            {{else}}
+              <p class="form-control-static warnig-info">系统没录入，请找鲍橙橙选择签约公司名称</p>
+            {{/if}}
         </div>
       </div>
       <div class="form-group">
@@ -207,11 +211,11 @@
     <div class="col-sm-10">
       <input type="text" placeholder="描述（可不填）" class="form-control" name="attachment_desc">
     </div>
-    <div class="uploader col-sm-10 col-sm-offset-2 invoice-margin" data-url="{{API}}file/" data-need-validate="true" data-accept="*.xls,*xlsx">
+    <div class="uploader col-sm-10 col-sm-offset-2 invoice-margin" data-url="{{API}}file/" data-need-validate="true" data-accept="*.pdf,*jpg,*png">
       <div class="su-placeholder su-removable" data-initial="请上传文件。" data-progress="上传文件中..">
         {{#if attachment}}
           <div class="su-item">
-            <a href="{{UPLOAD}}{{attachment}}">{{UPLOAD}}{{attachment}}</a>
+            <a><img src="{{UPLOAD}}{{attachment}}"></a>
           </div>
         {{/if}}
       </div>

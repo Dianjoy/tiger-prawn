@@ -103,8 +103,8 @@
         this.$el.removeClass('full-page')
           .find('.login').remove();
         this.$el.toggleClass('cp', this.model.isCP());
+        tp.component.Manager.createComponents();
       }
-      tp.component.Manager.createComponents();
     },
     addButton_clickHandler: function (event) {
       var options = $(event.currentTarget).data();

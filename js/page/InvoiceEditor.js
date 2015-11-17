@@ -10,7 +10,7 @@
     render: function () {
       this.getProductList = _.bind(this.getProductList, this);
       tp.view.Loader.prototype.render.call(this);
-      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
+      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', this.$('#ad_table'), this.getProductList);
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
       $('.invalid-' + this.model.get('channel')).addClass('invalid');
       $('.invoice-list form').removeClass('processing');
