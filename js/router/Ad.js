@@ -24,6 +24,7 @@
           className: 'ad ad-new',
           loader: this.$me.isCP() ? null : tp.page.AdEditor
         };
+      this.$context.mapValue('ad', model);
       this.$body
         .load('page/ad/edit' + page + '.hbs', model, options)
         .setFramework('ad ad-new', '创建投放计划');
