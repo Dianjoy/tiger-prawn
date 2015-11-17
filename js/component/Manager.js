@@ -16,7 +16,7 @@
       'form': 'tp.component.SmartForm'
     },
     components: [],
-    check: function ($el, mediator) {
+    check: function ($el) {
       var components = [];
       $el.data('components', components);
 
@@ -47,32 +47,24 @@
         }
         var dom = $el.find(selector);
         if (dom.length) {
-          var init = {
-            model: mediator
-          };
           var component = Nervenet.parseNamespace(this.map[selector]);
           if (component) {
             dom.each(function () {
-              init.el = this;
-              components.push(self.$context.createInstance(component, init));
+              components.push(self.$context.createInstance(component, {el: this}));
             });
           } else {
-            this.loadMediatorClass(components, this.map[selector], init, dom); // mediator pattern
+            this.loadMediatorClass(components, this.map[selector], dom); // mediator pattern
           }
         }
       }
       // 初始化非本库的自定义组件
       $el.find('[data-mediator-class]').each(function () {
         var className = $(this).data('mediator-class')
-          , component = Nervenet.parseNamespace(className)
-          , init = {
-            model: mediator
-          };
+          , component = Nervenet.parseNamespace(className);
         if (component) {
-          init.el = this;
-          components.push(self.$context.createInstance(component, init));
+          components.push(self.$context.createInstance(component, {el: this}));
         } else {
-          self.loadMediatorClass(components, className, init, $(this));
+          self.loadMediatorClass(components, className, $(this));
         }
       });
     },
@@ -113,7 +105,7 @@
       }
       return 'js/' + arr.join('/') + '.js';
     },
-    loadMediatorClass: function (components, className, init, dom, callback) {
+    loadMediatorClass: function (components, className, dom, callback) {
       var self = this
         , script = document.createElement("script");
       script.async = true;
@@ -126,8 +118,7 @@
         }
         if (dom) {
           dom.each(function () {
-            init.el = this;
-            components.push(self.$context.createInstance(component, init));
+            components.push(self.$context.createInstance(component, {el: this}));
           });
         }
         if (callback) {
