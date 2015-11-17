@@ -5,7 +5,7 @@
  */
 'use strict';
 (function () {
-  var data = {}
+  var data = {};
 
   // 兼容safari
   try {
