@@ -169,8 +169,12 @@
         <ul class="dropdown-menu" role="menu" aria-labelledby="data-range-btn">
           <li class="shortcut" data-start="0" data-end="0"><a href="javascript:void(0);">今天</a></li>
           <li class="shortcut" data-start="-1" data-end="-1"><a href="javascript:void(0);">昨天</a></li>
-          <li class="shortcut" data-start="-7" data-end="0"><a href="javascript:void(0);">一周内</a></li>
-          <li class="shortcut" data-start="-30" data-end="0"><a href="javascript:void(0);">一月内</a></li>
+          <li class="shortcut"><a href="javascript:void(0);" data-start="" data-end="-1" class="this-month">本月</a></li>
+          <li class="shortcut"><a href="javascript:void(0);" data-start="" data-end="-1" class="this-season">本季度</a></li>
+          <li class="divider"></li>
+          <script type="text/x-handlebars-template">
+            <li class="shortcut" data-start="{{start}}" data-end="{{end}}"><a href="javascript:void(0);">{{#if @first}}上个月{{else}}{{month}}月份{{/if}}</a></li>
+          </script>
           <li class="divider"></li>
           <li class="range">
             <label for="stat-range-start-date">开始日期</label>
@@ -314,6 +318,7 @@
 <script src="js/component/FileFetcher.js"></script>
 <script src="js/component/TableParts.js"></script>
 <script src="js/component/CollectionSelect.js"></script>
+<script src="js/component/DateRanger.js"></script>
 <script src="js/component/Manager.js"></script>
 <script src="js/popup/Base.js"></script>
 <script src="js/popup/Editor.js"></script>

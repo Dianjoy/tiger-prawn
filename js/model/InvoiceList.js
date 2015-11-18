@@ -3,8 +3,8 @@
   var key = tp.PROJECT + '-invoice-list';
   ns.InvoiceList = Backbone.Collection.extend({
     fetch: function (options) {
-      var store = localStorage.getItem(key)
-        , options = options ? _.clone(options) : {};
+      var store = localStorage.getItem(key);
+      options = options || {};
       if (store) {
         var invoiceList = JSON.parse(store);
         _.each(invoiceList, function (element, index, list) {
@@ -13,8 +13,8 @@
           }
         });
         options.reset ? this.reset(invoiceList) : this.set(invoiceList);
+        this.trigger('sync');
       }
-      this.trigger('sync');
     }
   });
 }(Nervenet.createNameSpace('tp.model')));

@@ -4,6 +4,7 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
+    $ranger: null,
     autoFetch: true,
     events: {
       'click .archive-button': 'archiveButton_clickHandler',
@@ -59,10 +60,7 @@
 
       // 起止日期
       if ('ranger' in options) {
-        this.ranger = new ns.table.Ranger(_.extend({}, options, {
-          el: options.ranger,
-          model: this.model
-        }));
+        this.$ranger.use(this.model);
       }
 
       // 删选器
