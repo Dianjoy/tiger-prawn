@@ -5,6 +5,7 @@
     events: {
       'click .check-all': 'checkAll_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
+      'click .clear-button': 'clearButton_clickHandler',
       'success form': 'form_successHandler'
     },
     render: function () {
@@ -75,6 +76,22 @@
       button.spinner();
       this.collection.remove(model);
     },
+    clearButton_clickHandler: function (event) {
+      var button = $(event.currentTarget)
+        , msg = button.data('msg') || '确定删除么？'
+        , channel = button.parent().find('.check-all').val()
+        , li = $('[name="' + channel + '"]').parent()
+        , self = this;
+      if (!confirm(msg)) {
+        return;
+      }
+      button.spinner();
+      li.each(function () {
+        var id = $(this).attr('id')
+          , model = self.collection.get(id);
+        self.collection.remove(model);
+      });
+    },
     form_successHandler: function () {
       this.$('.check-all').attr('checked', false);
       this.$('form').removeAttr('action');
@@ -87,11 +104,13 @@
       $('.invoice-list').remove();
     } else if (tp.model.InvoiceList) {
       var invoiceList = new tp.model.InvoiceList();
-      this.$context.createInstance(ns.InvoiceListView, {
-        el: '.invoice-list',
-        collection: invoiceList
-      });
-      this.$context.mapValue('invoiceList', invoiceList);
+      if (!this.$context.hasValue('invoiceList')) {
+        this.$context.createInstance(ns.InvoiceListView, {
+          el: '.invoice-list',
+          collection: invoiceList
+        });
+        this.$context.mapValue('invoiceList', invoiceList);
+      }
     }
   };
   tp.component.Manager.registerComponent(invoiceListView);
