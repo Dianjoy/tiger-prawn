@@ -86,7 +86,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   grunt.registerMultiTask('index', 'find out js', function () {
-    var JS_REG = /<script src="(js\/\S+)"><\/script>/g
+    var JS_REG = /<script src="(js\/\S+?)"><\/script>/g
       , html = grunt.file.read(this.data);
     // 取HTML中引用的文件
     html.replace(JS_REG, function (match, src) {

@@ -232,7 +232,7 @@
   m.DATETIME_FORMAT = m.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
 }(moment));;
 (function () {
-  var data = {}
+  var data = {};
 
   // 兼容safari
   try {
@@ -764,10 +764,10 @@
               if (self.cache.options.reset) {
                 self.reset(self.cache.response, self.cache.options);
               } else {
-                self.set(this.parse(self.cache.response), self.cache.options);
+                self.set(self.parse(self.cache.response), self.cache.options);
                 self.trigger('sync');
               }
-              this.cache = null;
+              self.cache = null;
             });
           }
         }
@@ -838,7 +838,7 @@
         , self = this;
       $.getScript(tp.component.Manager.getPath(klass), function () {
         klass = Nervenet.parseNamespace(klass);
-        var real = self.real = new klass(this.models, options);
+        var real = self.real = new klass(self.models, options);
         self.delegateEvents(real);
         if (self.fetchOptions) {
           real.fetch(self.fetchOptions);
@@ -1260,6 +1260,7 @@
   }
 
   var smart = ns.SmartForm = tp.view.DataSyncView.extend({
+    $context: null,
     $router: null,
     uploaders: null,
     events: {
@@ -1271,6 +1272,9 @@
     },
     initialize: function () {
       this.submit = this.getSubmit();
+      if (!this.model && this.$el.data('target')) {
+        this.model = this.$context.getValue(this.$el.data('target'));
+      }
       if (this.model instanceof Backbone.Model) {
         this.model.on('invalid', this.model_invalidHandler, this);
       }
@@ -1879,10 +1883,17 @@
       'keydown': 'keydownHandler'
     },
     initialize: function () {
-      this.$el.val(this.model.get('keyword'));
+      if (this.model.get('keyword')) {
+        this.$el.val(this.model.get('keyword'));
+      }
+      if (this.el.value) {
+        this.model.set('keyword', this.el.value);
+      }
+      this.model.on('change:keyword', this.model_changeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
     },
     remove: function () {
+      this.model.off(null, null, this);
       this.collection.off(null, null, this);
       this.collection = this.model = null;
       Backbone.View.prototype.remove.call(this);
@@ -1890,6 +1901,9 @@
     collection_syncHandler: function () {
       this.$el.prop('readonly', false);
       this.spinner && this.spinner.remove();
+    },
+    model_changeHandler: function (model, keyword) {
+      this.el.value = keyword;
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {
@@ -2056,7 +2070,7 @@
       'form': 'tp.component.SmartForm'
     },
     components: [],
-    check: function ($el, mediator) {
+    check: function ($el) {
       var components = [];
       $el.data('components', components);
 
@@ -2087,32 +2101,24 @@
         }
         var dom = $el.find(selector);
         if (dom.length) {
-          var init = {
-            model: mediator
-          };
           var component = Nervenet.parseNamespace(this.map[selector]);
           if (component) {
             dom.each(function () {
-              init.el = this;
-              components.push(self.$context.createInstance(component, init));
+              components.push(self.$context.createInstance(component, {el: this}));
             });
           } else {
-            this.loadMediatorClass(components, this.map[selector], init, dom); // mediator pattern
+            this.loadMediatorClass(components, this.map[selector], dom); // mediator pattern
           }
         }
       }
       // 初始化非本库的自定义组件
       $el.find('[data-mediator-class]').each(function () {
         var className = $(this).data('mediator-class')
-          , component = Nervenet.parseNamespace(className)
-          , init = {
-            model: mediator
-          };
+          , component = Nervenet.parseNamespace(className);
         if (component) {
-          init.el = this;
-          components.push(self.$context.createInstance(component, init));
+          components.push(self.$context.createInstance(component, {el: this}));
         } else {
-          self.loadMediatorClass(components, className, init, $(this));
+          self.loadMediatorClass(components, className, $(this));
         }
       });
     },
@@ -2153,7 +2159,7 @@
       }
       return 'js/' + arr.join('/') + '.js';
     },
-    loadMediatorClass: function (components, className, init, dom, callback) {
+    loadMediatorClass: function (components, className, dom, callback) {
       var self = this
         , script = document.createElement("script");
       script.async = true;
@@ -2166,8 +2172,7 @@
         }
         if (dom) {
           dom.each(function () {
-            init.el = this;
-            components.push(self.$context.createInstance(component, init));
+            components.push(self.$context.createInstance(component, {el: this}));
           });
         }
         if (callback) {
@@ -2756,8 +2761,8 @@
         this.$el.removeClass('full-page')
           .find('.login').remove();
         this.$el.toggleClass('cp', this.model.isCP());
+        tp.component.Manager.createComponents();
       }
-      tp.component.Manager.createComponents();
     },
     addButton_clickHandler: function (event) {
       var options = $(event.currentTarget).data();
@@ -2834,102 +2839,6 @@
   });
 }(Nervenet.createNameSpace('tp.view')));;
 (function (ns) {
-  var key = tp.PROJECT + '-invoice-list';
-  ns.InvoiceListView = tp.component.BaseList.extend({
-    events: {
-      'click .check-all': 'checkAll_clickHandler',
-      'click .delete-button': 'deleteButton_clickHandler',
-      'success form': 'form_successHandler'
-    },
-    render: function () {
-      if (this.fragment) {
-        this.$('.divider').before(this.fragment);
-        this.fragment = '';
-        tp.component.Manager.check(this.$el);
-      }
-      this.refreshNumber();
-    },
-    refreshNumber: function () {
-      var num = this.collection.length
-        , checked = this.$('.check-all:checked').length;
-      this.$('.dropdown-toggle span:first-child').text(num ? '发票 ( ' + num + ' )' : '发票');
-      this.$('.apply .btn').attr('disabled', num === 0 || checked === 0);
-    },
-    collection_resetHandler: function () {
-      this.$('.ids, .channel').remove();
-      this.collection.each(function (model) {
-        this.collection_addHandler(model);
-      }, this);
-    },
-    collection_removeHandler: function (model) {
-      var invoiceList = JSON.parse(localStorage.getItem(key))
-        , id = model.get('id')
-        , ad_id = model.get('ad_id')
-        , start = model.get('start')
-        , end = model.get('end')
-        , adCollection = tp.model.ListCollection.getInstance({collectionId: 'admin-list'})
-        , adModel = adCollection.get(ad_id)
-        , item = this.$('#' + id)
-        , channel = model.get('channel');
-      invoiceList = _.filter(invoiceList, function (element) { return element.id !== id });
-      localStorage.setItem(key, JSON.stringify(invoiceList));
-      if (adModel) {
-        adModel.set('is_selected', false);
-      }
-      item.fadeOut(function () {
-        if (_.every(invoiceList, function (element) { return element.channel !== channel; })) {
-          $(this).prev().remove();
-        }
-        $(this).remove();
-      });
-      this.refreshNumber();
-    },
-    checkAll_clickHandler: function (event) {
-      var target = $(event.target)
-        , val = target.val()
-        , siblings = target.parents('.channel').siblings('.channel, .ids')
-        , action = target.is(':checked') ? '#/invoice/apply/:c_' + val.slice(8) + '/:' + val : '';
-      siblings.each(function () {
-        var name = $(this).find(':checkbox').attr('name');
-        if (!name || name !== target.val()) {
-          $(this).find(':checkbox').attr('checked', false);
-        }
-      });
-      this.refreshNumber();
-      this.$('form').attr('action', action);
-    },
-    deleteButton_clickHandler: function (event) {
-      var button = $(event.currentTarget)
-        , msg = button.data('msg') || '确定删除么？'
-        , id = button.parent().attr('id')
-        , model = this.collection.get(id);
-      if (!confirm(msg)) {
-        return;
-      }
-      button.spinner();
-      this.collection.remove(model);
-    },
-    form_successHandler: function () {
-      this.$('.check-all').attr('checked', false);
-      this.$('form').removeAttr('action');
-      this.refreshNumber();
-    }
-  });
-  var invoiceListView = function () {
-    if (this.$me.isCP()) {
-      $('.invoice-list').remove();
-    } else if (tp.model.InvoiceList) {
-      var invoiceList = new tp.model.InvoiceList();
-      this.$context.createInstance(ns.InvoiceListView, {
-        el: '.invoice-list',
-        collection: invoiceList
-      });
-      this.$context.mapValue('invoiceList', invoiceList);
-    }
-  };
-  tp.component.Manager.registerComponent(invoiceListView);
-}(Nervenet.createNameSpace('tp.view')));;
-(function (ns) {
   ns.AddOnList = ns.BaseList.extend({
     autoFetch: false,
     initialize: function (options) {
@@ -2951,6 +2860,70 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
+var Ranger = Backbone.View.extend({
+  events: {
+    'click .shortcut': 'shortcut_clickHandler',
+    'click .range input': 'input_clickHandler',
+    'click .range button': 'range_clickHandler'
+  },
+  initialize: function () {
+    this.$('[type=date]').datetimepicker({format: moment.DATE_FORMAT});
+  },
+  render: function (options) {
+    // 默认显示一个月
+    var range = _.extend({
+      start: -31,
+      end: 0
+    }, _.pick(options, 'start', 'end'));
+
+    if (!isNaN(range.start)) {
+      range.start = moment().add(range.start, 'days').format(moment.DATE_FORMAT);
+    }
+    if (!isNaN(range.end)) {
+      range.end = moment().add(range.end, 'days').format(moment.DATE_FORMAT);
+    }
+
+    this.$('[name=start]').val(range.start);
+    this.$('[name=end]').val(range.end);
+    return range;
+  },
+  trigger: function (range, options) {
+    options = options || {};
+    options.reset = true;
+    this.model.set(range, options);
+  },
+  use: function (model) {
+    this.model = model;
+    var range = this.render(model.pick('start', 'end'));
+    this.trigger(range, {silent: true});
+  },
+  input_clickHandler: function (event) {
+    event.stopPropagation();
+  },
+  range_clickHandler: function () {
+    var start = this.$('[name=start]').val()
+      , end = this.$('[name=end]').val();
+    this.$('.shortcut').removeClass('active');
+    this.$('.label').text(start + ' - ' + end);
+    this.trigger({
+      start: start,
+      end: end
+    });
+  },
+  shortcut_clickHandler: function (event) {
+    var item = $(event.currentTarget)
+      , start = item.data('start')
+      , end = item.data('end');
+    item.addClass('active')
+      .siblings().removeClass('active');
+    this.$('.label').text(item.text());
+    var range = this.render({start: start, end: end});
+    this.trigger(range);
+    event.preventDefault();
+  }
+});
+
+module.exports = Ranger;;
 (function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {
