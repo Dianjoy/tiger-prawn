@@ -79,18 +79,13 @@
     clearButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
         , msg = button.data('msg') || '确定删除么？'
-        , channel = button.parent().find('.check-all').val()
-        , li = $('[name="' + channel + '"]').parent()
-        , self = this;
+        , channel = button.parent().find('.check-all').val().slice(8);
       if (!confirm(msg)) {
         return;
       }
       button.spinner();
-      li.each(function () {
-        var id = $(this).attr('id')
-          , model = self.collection.get(id);
-        self.collection.remove(model);
-      });
+      var models = this.collection.where({channel: channel});
+      this.collection.remove(models);
     },
     form_successHandler: function () {
       this.$('.check-all').attr('checked', false);
