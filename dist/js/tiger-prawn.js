@@ -249,6 +249,7 @@
 }());;
 (function (ns) {
   ns.Base = Backbone.Router.extend({
+    $ranger: null,
     $body: null,
     $me: null,
     routes: {
@@ -257,14 +258,29 @@
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function (start, end) {
-      var page = this.$me.isCP() ? '_cp' : '';
-      var model = tp.model.Dashboard ? new tp.model.Dashboard({
-        dashboard_start: start || moment().startOf('month').format('YYYY-MM-DD'),
-        dashboard_end: end || moment().format('YYYY-MM-DD'),
-        is_sale: !this.$me.isCP()
-      }) : null;
-      this.$body.load('page/dashboard' + page + '.hbs', model);
-      this.$body.setFramework('dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
+      start = start || moment().add(1 - (new Date()).getDate(), 'days').format(moment.DATE_FORMAT);
+      end = end || moment().add(-1, 'days').format(moment.DATE_FORMAT);
+      var page = this.$me.isCP() ? '_cp' : ''
+        , Model = Backbone.Model.extend({
+          url: tp.API + 'dashboard/',
+          parse: function (response) {
+            return response.data;
+          }
+        })
+        , model = new Model({
+          start: start,
+          end: end
+        });
+      this.$body.load('page/dashboard' + page + '.hbs', model, {
+        refresh: true,
+        data: {
+          start: start,
+          end: end
+        },
+        loader: tp.view.Dashboard
+      });
+      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
+      this.$ranger.use(model);
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
@@ -1737,7 +1753,6 @@
   });
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
-  var DATE_FORMAT = 'YYYY-MM-DD';
 
   ns.Pager = Backbone.View.extend({
     events: {
@@ -1808,72 +1823,6 @@
       this.model.set('page', index);
       target.html(tp.component.spinner);
       this.$el.children().addClass('disabled');
-      event.preventDefault();
-    }
-  });
-
-  ns.Ranger = Backbone.View.extend({
-    events: {
-      'click .shortcut': 'shortcut_clickHandler',
-      'click .range input': 'input_clickHandler',
-      'click .range button': 'range_clickHandler'
-    },
-    initialize: function (options) {
-      this.$('[type=date]').datetimepicker({format: DATE_FORMAT});
-      var range = this.render(options);
-      this.trigger(range, {silent: true});
-    },
-    render: function (options) {
-      // 默认显示一个月
-      var range = _.extend({
-        start: -31,
-        end: 0
-      }, _.pick(options, 'start', 'end'));
-
-      if (!isNaN(range.start)) {
-        range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
-      }
-      if (!isNaN(range.end)) {
-        range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
-      }
-
-      this.$('[name=start]').val(range.start);
-      this.$('[name=end]').val(range.end);
-      return range;
-    },
-    remove: function () {
-      this.stopListening();
-      this.undelegateEvents();
-      this.el = this.$el = this.model = null;
-      return this;
-    },
-    trigger: function (range, options) {
-      options = options || {};
-      options.reset = true;
-      this.model.set(range, options);
-    },
-    input_clickHandler: function (event) {
-      event.stopPropagation();
-    },
-    range_clickHandler: function () {
-      var start = this.$('[name=start]').val()
-        , end = this.$('[name=end]').val();
-      this.$('.shortcut').removeClass('active');
-      this.$('.label').text(start + ' - ' + end);
-      this.trigger({
-        start: start,
-        end: end
-      });
-    },
-    shortcut_clickHandler: function (event) {
-      var item = $(event.currentTarget)
-        , start = item.data('start')
-        , end = item.data('end');
-      item.addClass('active')
-        .siblings().removeClass('active');
-      this.$('.label').text(item.text());
-      var range = this.render({start: start, end: end});
-      this.trigger(range);
       event.preventDefault();
     }
   });
@@ -2053,6 +2002,96 @@
     collection_changeHandler: function (model) {
       this.$('[value=' + model.id + ']').prop('selected', true)
         .siblings().prop('selected', false);
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));;
+(function (ns) {
+  ns.DateRanger = Backbone.View.extend({
+    events: {
+      'click .shortcut': 'shortcut_clickHandler',
+      'click .range input': 'input_clickHandler',
+      'click .range button': 'range_clickHandler'
+    },
+    initialize: function () {
+      this.$('[type=date]').datetimepicker({format: moment.DATE_FORMAT});
+      this.template = Handlebars.compile(this.$('script').html());
+      var date = new Date()
+        , month = date.getMonth()
+        , months = _.map(_.range(month, month - 3, -1), function (value) {
+          return {
+            month: value,
+            start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
+            end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
+          }
+        })
+        , self = this;
+      this.$('script').replaceWith(this.template({ months: months }));
+      this.$('.this-month').data('start', moment().startOf('month').format(moment.DATE_FORMAT));
+      this.$('.this-season').data('start', moment().startOf('quarter').format(moment.DATE_FORMAT));
+      this.$('.shortcut').each(function () {
+        var data = $(this).data();
+        data.start = self.formatDate(data.start);
+        data.end = self.formatDate(data.end);
+        $(this).data(data)
+          .attr('data-start', data.start)
+          .attr('data-end', data.end);
+      });
+    },
+    render: function (options) {
+      // 默认显示一个月
+      var range = _.defaults(options, {
+          start: -31,
+          end: 0
+        });
+
+      if (!isNaN(range.start)) {
+        range.start = moment().add(range.start, 'days').format(moment.DATE_FORMAT);
+      }
+      if (!isNaN(range.end)) {
+        range.end = moment().add(range.end, 'days').format(moment.DATE_FORMAT);
+      }
+
+      this.$('[name=start]').val(range.start);
+      this.$('[name=end]').val(range.end);
+      var shortcut = this.$('[data-start="' + range.start + '"][data-end="' + range.end + '"]');
+      this.$('.label').text(shortcut.length ? shortcut.text() : range.start + ' ~ ' + range.end);
+      return range;
+    },
+    trigger: function (range, options) {
+      options = options || {};
+      options.reset = true;
+      this.model.set(range, options);
+    },
+    formatDate: function (date) {
+      return isNaN(date) ? date : moment().add(date, 'days').format(moment.DATE_FORMAT);
+    },
+    use: function (model) {
+      this.model = model;
+      this.render(model.pick('start', 'end'));
+    },
+    input_clickHandler: function (event) {
+      event.stopPropagation();
+    },
+    range_clickHandler: function () {
+      var start = this.$('[name=start]').val()
+        , end = this.$('[name=end]').val();
+      this.$('.shortcut').removeClass('active');
+      this.$('.label').text(start + ' - ' + end);
+      this.trigger({
+        start: start,
+        end: end
+      });
+    },
+    shortcut_clickHandler: function (event) {
+      var item = $(event.currentTarget)
+        , start = item.data('start')
+        , end = item.data('end');
+      item.addClass('active')
+        .siblings().removeClass('active');
+      this.$('.label').text(item.text());
+      var range = this.render({start: start, end: end});
+      this.trigger(range);
+      event.preventDefault();
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
@@ -2839,6 +2878,28 @@
   });
 }(Nervenet.createNameSpace('tp.view')));;
 (function (ns) {
+  ns.Dashboard = ns.Loader.extend({
+    className: 'dashboard',
+    render: function () {
+      ns.Loader.prototype.render.call(this);
+      this.$el.removeClass('loading');
+      this.$('.fa').remove('fa-spin fa-spinner');
+    },
+    model_changeHandler: function (model) {
+      var range = _.pick(model.changed, 'start', 'end');
+      if (_.isEmpty(range)) {
+        this.render();
+      } else {
+        model.fetch({
+          data: model.pick('start', 'end')
+        });
+        this.$el.addClass('loading');
+        this.$('.fa').addClass('fa-spin fa-spinner');
+      }
+    }
+  });
+}(Nervenet.createNameSpace('tp.view')));;
+(function (ns) {
   ns.AddOnList = ns.BaseList.extend({
     autoFetch: false,
     initialize: function (options) {
@@ -2986,6 +3047,7 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
+    $ranger: null,
     autoFetch: true,
     events: {
       'click .archive-button': 'archiveButton_clickHandler',
@@ -3041,10 +3103,8 @@
 
       // 起止日期
       if ('ranger' in options) {
-        this.ranger = new ns.table.Ranger(_.extend({}, options, {
-          el: options.ranger,
-          model: this.model
-        }));
+        this.model.set(_.pick(options, 'start', 'end'), {silent: true});
+        this.$ranger.use(this.model);
       }
 
       // 删选器

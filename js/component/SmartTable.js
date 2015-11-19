@@ -60,6 +60,7 @@
 
       // 起止日期
       if ('ranger' in options) {
+        this.model.set(_.pick(options, 'start', 'end'), {silent: true});
         this.$ranger.use(this.model);
       }
 

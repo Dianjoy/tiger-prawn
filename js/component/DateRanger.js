@@ -11,14 +11,35 @@
     },
     initialize: function () {
       this.$('[type=date]').datetimepicker({format: moment.DATE_FORMAT});
-      this.template = this.$('script').html();
+      this.template = Handlebars.compile(this.$('script').html());
+      var date = new Date()
+        , month = date.getMonth()
+        , months = _.map(_.range(month, month - 3, -1), function (value) {
+          return {
+            month: value,
+            start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
+            end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
+          }
+        })
+        , self = this;
+      this.$('script').replaceWith(this.template({ months: months }));
+      this.$('.this-month').data('start', moment().startOf('month').format(moment.DATE_FORMAT));
+      this.$('.this-season').data('start', moment().startOf('quarter').format(moment.DATE_FORMAT));
+      this.$('.shortcut').each(function () {
+        var data = $(this).data();
+        data.start = self.formatDate(data.start);
+        data.end = self.formatDate(data.end);
+        $(this).data(data)
+          .attr('data-start', data.start)
+          .attr('data-end', data.end);
+      });
     },
     render: function (options) {
       // 默认显示一个月
-      var range = _.extend({
-        start: -31,
-        end: 0
-      }, _.pick(options, 'start', 'end'));
+      var range = _.defaults(options, {
+          start: -31,
+          end: 0
+        });
 
       if (!isNaN(range.start)) {
         range.start = moment().add(range.start, 'days').format(moment.DATE_FORMAT);
@@ -29,6 +50,8 @@
 
       this.$('[name=start]').val(range.start);
       this.$('[name=end]').val(range.end);
+      var shortcut = this.$('[data-start="' + range.start + '"][data-end="' + range.end + '"]');
+      this.$('.label').text(shortcut.length ? shortcut.text() : range.start + ' ~ ' + range.end);
       return range;
     },
     trigger: function (range, options) {
@@ -36,10 +59,12 @@
       options.reset = true;
       this.model.set(range, options);
     },
+    formatDate: function (date) {
+      return isNaN(date) ? date : moment().add(date, 'days').format(moment.DATE_FORMAT);
+    },
     use: function (model) {
       this.model = model;
-      var range = this.render(model.pick('start', 'end'));
-      this.trigger(range, {silent: true});
+      this.render(model.pick('start', 'end'));
     },
     input_clickHandler: function (event) {
       event.stopPropagation();

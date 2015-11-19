@@ -163,17 +163,19 @@
       <div class="dropdown">
         <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="data-range-btn">
           <i class="fa fa-calendar"></i>
-          日期选择：<span class="label">一月内</span>
+          日期选择：<span class="label"></span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="data-range-btn">
           <li class="shortcut" data-start="0" data-end="0"><a href="javascript:void(0);">今天</a></li>
           <li class="shortcut" data-start="-1" data-end="-1"><a href="javascript:void(0);">昨天</a></li>
-          <li class="shortcut"><a href="javascript:void(0);" data-start="" data-end="-1" class="this-month">本月</a></li>
-          <li class="shortcut"><a href="javascript:void(0);" data-start="" data-end="-1" class="this-season">本季度</a></li>
+          <li class="shortcut this-month" data-end="-1"><a href="javascript:void(0);">本月</a></li>
+          <li class="shortcut this-season" data-end="-1"><a href="javascript:void(0);">本季度</a></li>
           <li class="divider"></li>
           <script type="text/x-handlebars-template">
+            {{#each months}}
             <li class="shortcut" data-start="{{start}}" data-end="{{end}}"><a href="javascript:void(0);">{{#if @first}}上个月{{else}}{{month}}月份{{/if}}</a></li>
+            {{/each}}
           </script>
           <li class="divider"></li>
           <li class="range">
@@ -301,7 +303,6 @@
 <script src="js/controller/editModelCommand.js"></script>
 <script src="js/controller/addModelCommand.js"></script>
 <script src="js/model/AD.js"></script>
-<script src="js/model/Dashboard.js"></script>
 <script src="js/model/Me.js"></script>
 <script src="js/model/ListCollection.js"></script>
 <script src="js/model/Notice.js"></script>
@@ -326,9 +327,10 @@
 <script src="js/view/Body.js"></script>
 <script src="js/view/Me.js"></script>
 <script src="js/view/InvoiceListView.js" data-build="no"></script>
+<script src="js/view/Dashboard.js"></script>
 <script src="js/page/AdEditor.js"></script>
 <script src="js/page/DateRange.js"></script>
-<script src="js/page/InvoiceEditor.js" data-build="no"></script>
+<script src="js/page/InvoiceEditor.js"></script>
 <script src="js/index.js"></script>
 </body>
 </html>

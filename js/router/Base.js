@@ -5,6 +5,7 @@
 'use strict';
 (function (ns) {
   ns.Base = Backbone.Router.extend({
+    $ranger: null,
     $body: null,
     $me: null,
     routes: {
@@ -13,14 +14,29 @@
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function (start, end) {
-      var page = this.$me.isCP() ? '_cp' : '';
-      var model = tp.model.Dashboard ? new tp.model.Dashboard({
-        dashboard_start: start || moment().startOf('month').format('YYYY-MM-DD'),
-        dashboard_end: end || moment().format('YYYY-MM-DD'),
-        is_sale: !this.$me.isCP()
-      }) : null;
-      this.$body.load('page/dashboard' + page + '.hbs', model);
-      this.$body.setFramework('dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
+      start = start || moment().add(1 - (new Date()).getDate(), 'days').format(moment.DATE_FORMAT);
+      end = end || moment().add(-1, 'days').format(moment.DATE_FORMAT);
+      var page = this.$me.isCP() ? '_cp' : ''
+        , Model = Backbone.Model.extend({
+          url: tp.API + 'dashboard/',
+          parse: function (response) {
+            return response.data;
+          }
+        })
+        , model = new Model({
+          start: start,
+          end: end
+        });
+      this.$body.load('page/dashboard' + page + '.hbs', model, {
+        refresh: true,
+        data: {
+          start: start,
+          end: end
+        },
+        loader: tp.view.Dashboard
+      });
+      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
+      this.$ranger.use(model);
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
