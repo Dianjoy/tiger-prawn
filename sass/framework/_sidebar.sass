@@ -45,7 +45,7 @@
     &:first-child
       border-top: none
 
-    > a
+    & a
       .fa-eye
         display: none
 
@@ -190,6 +190,10 @@
     margin-right: -$gap-p
     margin-left: 0
 
+.sidebar-btn-group
+  width: 100%
+  margin: 80% 0 0 0
+
 .sidebar-collapsed
   #navbar-side
     width: 3%
@@ -209,16 +213,12 @@
     .hover
       display: block
 
-  #menu-search, #menu-edit
-    display: none
-
   #menu-collapse
     .fa:before
       content: '\f061'
 
 .sidebar-editing
-  .sidebar-nav-item
-    > a
+  .sidebar-nav-item a
     .fa-eye
       display: block
       float: right
@@ -233,9 +233,6 @@
     .fa-pencil:before
       content: '\f044'
 
-  #menu-collapse, #menu-search
-    display: none
-
 #menu-search
   #search-clear-button
     position: absolute
@@ -248,12 +245,17 @@
     position: relative
     display: none
 
-.menu-operation
-  text-align: center
-  padding: 15px
+#edit-confirm, #edit-cancel
+  display: none
 
-  button
-    border-radius: 100%
-    background-color: #337ab7
-    border: 1px solid #2e6da4
-    outline: none
+.menu-operation button
+  width: 34px
+  height: 34px
+  border-radius: 50%
+  background-color: #337ab7
+  border: 1px solid #2e6da4
+  outline: none
+
+  & i
+    width: 20px
+    height: 20px
