@@ -192,11 +192,15 @@
 
 .sidebar-btn-group
   width: 100%
-  margin: 80% 0 0 0
+  margin: 0
+  border-top: 1px solid #1A9FE3
+  padding-top: 15px
+  position: absolute
+  bottom: 15px
 
 .sidebar-collapsed
   #navbar-side
-    width: 60px
+    width: $collapsed-sidebar-width
 
   .side-nav
     &>li>a>span
@@ -229,10 +233,6 @@
     .caret
       display: none
 
-  #menu-edit
-    .fa-pencil:before
-      content: '\f044'
-
 #menu-search
   #search-clear-button
     position: absolute
@@ -247,11 +247,17 @@
 
 #edit-confirm, #edit-cancel
   display: none
+  position: relative
+
+#edit-confirm
+  right: 33%
+
+#edit-cancel
+  left: 33%
 
 .menu-operation button
   width: 34px
   height: 34px
-  border-radius: 50%
   background-color: #337ab7
   border: 1px solid #2e6da4
   outline: none
@@ -259,3 +265,4 @@
   & i
     width: 20px
     height: 20px
+    line-height: 20px

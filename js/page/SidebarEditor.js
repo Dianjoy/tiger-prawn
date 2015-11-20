@@ -26,17 +26,17 @@
     menuEditButton_clickHandler: function () {
       $('body').addClass('sidebar-editing');
       $(eyesSelector).removeClass('hidden').find('.collapse').collapse('show');
-      $('#menu-collapse, #menu-search').fadeOut(function () {
-        $('#edit-confirm, #edit-cancel').fadeIn();
-      });
+      $('#menu-collapse, #menu-search').css('display', 'none');
+      $('#edit-confirm, #edit-cancel').css('display', 'block');
+      $('#edit-confirm').animate({right: '0'});
+      $('#edit-cancel').animate({left: '0'});
+      $('#menu-edit').css('visibility', 'hidden');
     },
     editConfirmButton_clickHandler: function () {
       var store = localStorage.getItem(key)
         , menuList = JSON.parse(store);
       $('body').removeClass('sidebar-editing');
-      $('#edit-confirm, #edit-cancel').fadeOut(function () {
-        $('#menu-collapse, #menu-search').fadeIn();
-      });
+      this.editingAnimation();
       $(eyesSelector).each(function () {
         var eye = $(this).find('#eye-edit-button')
           , item = $(this).attr('id');
@@ -53,24 +53,27 @@
     },
     editCancelButton_clickHandler: function () {
       $('body').removeClass('sidebar-editing');
-      $('#edit-confirm, #edit-cancel').fadeOut(function () {
-        $('#menu-collapse, #menu-search').fadeIn();
-      });
+      $(eyesSelector).find('.collapse').collapse('hide');
+      this.editingAnimation();
       this.manageSidebar();
     },
     menuSearchButton_clickHandler: function () {
-      $(buttonSelector).fadeOut(function () {
-        $('#menu-search form').fadeIn(function () {
-          $('#menu-search').css('width', '100%').find('input').focus();
-        });
+      $(buttonSelector).css('display', 'none');
+      $('#menu-search form').css('display', 'block');
+      $('#menu-search').animate({
+        width: '100%'
+      }, 'fast', 'linear', function () {
+        $(this).find('input').focus();
       });
     },
     menuSearchInput_blurHandler: function (event) {
       var val = $(event.currentTarget).val();
       if (!val) {
-        $('#menu-search form').fadeOut(function () {
-          $('#menu-search').css('width', '30%');
-          $(buttonSelector).fadeIn();
+        $('#menu-search').animate({
+          width: '33%'
+        }, 'fast', 'linear', function () {
+          $('#menu-search form').css('display', 'none');
+          $(buttonSelector).css('display', 'block');
         });
       }
     },
@@ -118,6 +121,14 @@
           isExist === -1 ? eye.removeClass('slash') : $(this).addClass('hidden').find('#eye-edit-button').addClass('slash');
         });
       } else { localStorage.setItem(key, JSON.stringify([])); }
+    },
+    editingAnimation: function () {
+      $('#menu-edit').css('visibility', 'visible');
+      $('#edit-confirm').animate({right: '33%'});
+      $('#edit-cancel').animate({left: '33%'}, 'fast', 'linear', function () {
+        $('#menu-collapse, #menu-search').fadeIn('fast');
+        $('#edit-confirm, #edit-cancel').css('display', 'none');
+      });
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

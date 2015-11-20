@@ -131,8 +131,12 @@
       </script>
     </ul>
     <div class="sidebar-btn-group row">
-    <span id="menu-collapse" class="menu-operation col-sm-4">
-      <button id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>
+    <span id="menu-search" class="menu-operation col-sm-4">
+      <form>
+        <input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">
+        <i class="fa fa-close" id="search-clear-button"></i>
+      </form>
+      <button id="menu-search-button"><i class="fa fa-search"></i></button>
     </span>
     <span id="edit-cancel" class="menu-operation col-sm-4">
       <button id="edit-cancel-button"><i class="fa fa-remove"></i></button>
@@ -140,15 +144,11 @@
     <span id="menu-edit" class="menu-operation col-sm-4">
       <button id="menu-edit-button"><i class="fa fa-pencil"></i></button>
     </span>
-    <span id="menu-search" class="menu-operation col-sm-4">
-      <button id="menu-search-button"><i class="fa fa-search"></i></button>
-        <form>
-          <input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">
-          <i class="fa fa-close" id="search-clear-button"></i>
-        </form>
-    </span>
     <span id="edit-confirm" class="menu-operation col-sm-4">
       <button id="edit-confirm-button"><i class="fa fa-check"></i></button>
+    </span>
+    <span id="menu-collapse" class="menu-operation col-sm-4">
+      <button id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>
     </span>
     </div>
   </div>
