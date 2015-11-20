@@ -100,56 +100,79 @@
       <progress value="{{balance}}" max="{{amount}}" title="">{{money_percent}}%</progress>
     </script>
   </div>
-  <div data-mediator-class="tp.page.SidebarEditor">
-    <ul id="navbar-side-inner" class="nav navbar-nav side-nav">
-      <li><a href="#/dashboard"><i class="fa fa-dashboard"></i><span>首页</span></a></li>
-      <script type="text/x-handlebars-template">
-        {{#each list}}
-        <li class="sidebar-nav-item" id="first-{{@key}}">
-          {{#if sub}}
-          <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#{{sub-id}}">
-            {{else}}
-            <a href="{{link}}">
-              {{/if}}
-              {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}
-              <span class="title">{{title}}</span>
-              <i class="fa fa-eye" id="eye-edit-button"></i>
-              {{#if sub}}<span class="caret"></span>{{/if}}
-            </a>
-            {{#if sub}}
-            <ul class="nav collapse" id="{{sub-id}}">
-              {{#each sub}}
-              <li id="{{../sub-id}}-{{@key}}">
-                <a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}<span class="title">{{title}}</span><i class="fa fa-eye" id="eye-edit-button"></i>
-                </a>
-              </li>
-              {{/each}}
-            </ul>
+  <ul id="navbar-side-inner" class="nav navbar-nav side-nav">
+    <li><a href="#/dashboard"><i class="fa fa-dashboard"></i><span>首页</span></a></li>
+    <script type="text/x-handlebars-template">
+      {{#each list}}
+      <li class="sidebar-nav-item" id="first-{{@key}}">
+        {{#if sub}}
+        <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#{{sub-id}}">
+        {{else}}
+          <a href="{{link}}">
             {{/if}}
-        </li>
-        {{/each}}
-      </script>
-    </ul>
-    <div class="sidebar-btn-group row">
-    <span id="menu-search" class="menu-operation col-sm-4">
-      <form>
-        <input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">
-        <i class="fa fa-close" id="search-clear-button"></i>
-      </form>
-      <button id="menu-search-button"><i class="fa fa-search"></i></button>
-    </span>
-    <span id="edit-cancel" class="menu-operation col-sm-6">
-      <button id="edit-cancel-button"><i class="fa fa-remove"></i></button>
-    </span>
-    <span id="menu-edit" class="menu-operation col-sm-4">
-      <button id="menu-edit-button"><i class="fa fa-pencil"></i></button>
-    </span>
-    <span id="edit-confirm" class="menu-operation col-sm-6">
-      <button id="edit-confirm-button"><i class="fa fa-check"></i></button>
-    </span>
-    <span id="menu-collapse" class="menu-operation col-sm-4">
-      <button id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>
-    </span>
+            {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}
+            <span class="title">{{title}}</span>
+            <i class="fa fa-eye" class="eye-edit-button first-level"></i>
+            {{#if sub}}<span class="caret"></span>{{/if}}
+          </a>
+          {{#if sub}}
+          <ul class="nav collapse" id="{{sub-id}}">
+            {{#each sub}}
+            <li id="{{../sub-id}}-{{@key}}">
+              <a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}<span class="title">{{title}}</span><i class="fa fa-eye" class="eye-edit-button second-level"></i>
+              </a>
+            </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </li>
+      {{/each}}
+    </script>
+  </ul>
+  <div class="sidebar-btn-group row">
+    <!--<div id="menu-search" class="menu-operation col-sm-4">-->
+      <!--<form>-->
+        <!--<input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">-->
+        <!--<i class="fa fa-close" id="search-clear-button"></i>-->
+      <!--</form>-->
+      <!--<button id="menu-search-button"><i class="fa fa-search"></i></button>-->
+    <!--</div>-->
+    <!--<div id="edit-cancel" class="menu-operation col-sm-6">-->
+      <!--<button id="edit-cancel-button"><i class="fa fa-remove"></i></button>-->
+    <!--</div>-->
+    <!--<div id="menu-edit" class="menu-operation col-sm-4">-->
+      <!--<button id="menu-edit-button"><i class="fa fa-pencil"></i></button>-->
+    <!--</div>-->
+    <!--<div id="edit-confirm" class="menu-operation col-sm-6">-->
+      <!--<button id="edit-confirm-button"><i class="fa fa-check"></i></button>-->
+    <!--</div>-->
+    <!--<div id="menu-collapse" class="menu-operation col-sm-4">-->
+      <!--<button id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>-->
+    <!--</div>-->
+    <!--<div class="col-sm-12">-->
+      <!--<form>-->
+        <!--<input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">-->
+        <!--<i class="fa fa-close" id="search-clear-button"></i>-->
+      <!--</form>-->
+    <!--</div>-->
+    <div class="col-sm-12">
+      <div id="menu-collapse" class="menu-operation col-sm-4">
+        <button id="menu-search-button"><i class="fa fa-search"></i></button>
+      </div>
+      <div id="menu-edit" class="menu-operation col-sm-4">
+        <button id="menu-edit-button"><i class="fa fa-pencil"></i></button>
+      </div>
+      <div id="menu-collapse" class="menu-operation col-sm-4">
+        <button id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <div id="edit-cancel" class="menu-operation col-sm-6">
+        <button id="edit-cancel-button"><i class="fa fa-remove"></i></button>
+      </div>
+      <div id="edit-confirm" class="menu-operation col-sm-6">
+        <button id="edit-confirm-button"><i class="fa fa-check"></i></button>
+      </div>
     </div>
   </div>
 </nav>
@@ -320,6 +343,7 @@
 <script src="js/view/Loader.js"></script>
 <script src="js/view/Body.js"></script>
 <script src="js/view/Me.js"></script>
+<script src="js/view/SidebarEditor.js"></script>
 <script src="js/page/AdEditor.js"></script>
 <script src="js/page/DateRange.js"></script>
 <script src="js/page/InvoiceEditor.js"></script>

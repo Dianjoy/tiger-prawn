@@ -41,7 +41,6 @@
       $.getJSON('page/sidebar/' + role + '.json', function (response) {
         var html = template({list: response});
         $('#navbar-side-inner').append(html);
-        tp.component.Manager.check($('#navbar-side'));
       });
     },
     load: function (url, data, options) {
