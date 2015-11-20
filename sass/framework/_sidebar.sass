@@ -14,6 +14,7 @@
   padding: 0
   z-index: 14
   overflow: auto
+  transition: width 0.5s
 
   a
     color: $navbar-color
@@ -194,9 +195,8 @@
   width: 100%
   margin: 0
   border-top: 1px solid #1A9FE3
-  padding-top: 15px
   position: absolute
-  bottom: 15px
+  bottom: 0
 
 .sidebar-collapsed
   #navbar-side
@@ -218,6 +218,7 @@
       display: block
 
   #menu-collapse
+    width: 100%
     .fa:before
       content: '\f061'
 
@@ -234,9 +235,12 @@
       display: none
 
 #menu-search
+  #menu-search-input
+    height: 40px
+    border-radius: 0
   #search-clear-button
     position: absolute
-    top: 10px
+    top: 13px
     right: 10px
     color: #333
     cursor: pointer
@@ -247,22 +251,18 @@
 
 #edit-confirm, #edit-cancel
   display: none
-  position: relative
 
-#edit-confirm
-  right: 33%
+.menu-operation
+  padding: 0
 
-#edit-cancel
-  left: 33%
+  button
+    width: 100%
+    height: 40px
+    background-color: #178FCC
+    border: 0
+    outline: none
 
-.menu-operation button
-  width: 34px
-  height: 34px
-  background-color: #337ab7
-  border: 1px solid #2e6da4
-  outline: none
-
-  & i
-    width: 20px
-    height: 20px
-    line-height: 20px
+    & i
+      width: 20px
+      height: 20px
+      line-height: 20px

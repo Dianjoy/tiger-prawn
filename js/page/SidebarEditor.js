@@ -26,17 +26,15 @@
     menuEditButton_clickHandler: function () {
       $('body').addClass('sidebar-editing');
       $(eyesSelector).removeClass('hidden').find('.collapse').collapse('show');
-      $('#menu-collapse, #menu-search').css('display', 'none');
+      $('#menu-collapse, #menu-search, #menu-edit').css('display', 'none');
       $('#edit-confirm, #edit-cancel').css('display', 'block');
-      $('#edit-confirm').animate({right: '0'});
-      $('#edit-cancel').animate({left: '0'});
-      $('#menu-edit').css('visibility', 'hidden');
     },
     editConfirmButton_clickHandler: function () {
       var store = localStorage.getItem(key)
         , menuList = JSON.parse(store);
       $('body').removeClass('sidebar-editing');
-      this.editingAnimation();
+      $('#edit-confirm, #edit-cancel').css('display', 'none');
+      $('#menu-collapse, #menu-search, #menu-edit').css('display', 'block');
       $(eyesSelector).each(function () {
         var eye = $(this).find('#eye-edit-button')
           , item = $(this).attr('id');
@@ -54,7 +52,8 @@
     editCancelButton_clickHandler: function () {
       $('body').removeClass('sidebar-editing');
       $(eyesSelector).find('.collapse').collapse('hide');
-      this.editingAnimation();
+      $('#edit-confirm, #edit-cancel').css('display', 'none');
+      $('#menu-collapse, #menu-search, #menu-edit').css('display', 'block');
       this.manageSidebar();
     },
     menuSearchButton_clickHandler: function () {
@@ -121,14 +120,6 @@
           isExist === -1 ? eye.removeClass('slash') : $(this).addClass('hidden').find('#eye-edit-button').addClass('slash');
         });
       } else { localStorage.setItem(key, JSON.stringify([])); }
-    },
-    editingAnimation: function () {
-      $('#menu-edit').css('visibility', 'visible');
-      $('#edit-confirm').animate({right: '33%'});
-      $('#edit-cancel').animate({left: '33%'}, 'fast', 'linear', function () {
-        $('#menu-collapse, #menu-search').fadeIn('fast');
-        $('#edit-confirm, #edit-cancel').css('display', 'none');
-      });
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

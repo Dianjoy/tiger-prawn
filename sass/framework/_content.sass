@@ -9,6 +9,7 @@
   margin-left: $sidebar-width
   margin-bottom: $footer-height
   padding: $gap-l
+  transition: margin-left 0.5s
 
 
   > .page-header
@@ -33,7 +34,7 @@
   #content
     margin-left: $collapsed-sidebar-width
 
-  #footer, #page-loading
+  #page-loading
     left: $collapsed-sidebar-width
 
 #page-loading
@@ -43,6 +44,7 @@
   right: 0
   bottom: $footer-height
   background-color: rgba(0, 0, 0, .6)
+  transition: left 0.5s
 
   .loading
     background-color: $white
