@@ -104,7 +104,7 @@
     <li><a href="#/dashboard"><i class="fa fa-dashboard"></i><span>首页</span></a></li>
     <script type="text/x-handlebars-template">
       {{#each list}}
-      <li class="sidebar-nav-item" id="first-{{@key}}">
+      <li class="sidebar-nav-item" id="first-{{link}}{{sub-id}}">
         {{#if sub}}
         <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#{{sub-id}}">
         {{else}}
@@ -112,14 +112,14 @@
             {{/if}}
             {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}
             <span class="title">{{title}}</span>
-            <i class="fa fa-eye" class="eye-edit-button first-level"></i>
+            <i class="fa fa-eye eye-edit-button first-level"></i>
             {{#if sub}}<span class="caret"></span>{{/if}}
           </a>
           {{#if sub}}
           <ul class="nav collapse" id="{{sub-id}}">
             {{#each sub}}
-            <li id="{{../sub-id}}-{{@key}}">
-              <a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}<span class="title">{{title}}</span><i class="fa fa-eye" class="eye-edit-button second-level"></i>
+            <li id="{{../sub-id}}-{{link}}" class="second-level">
+              <a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}<span class="title">{{title}}</span><i class="fa fa-eye eye-edit-button"></i>
               </a>
             </li>
             {{/each}}
@@ -130,47 +130,28 @@
     </script>
   </ul>
   <div class="sidebar-btn-group row">
-    <!--<div id="menu-search" class="menu-operation col-sm-4">-->
-      <!--<form>-->
-        <!--<input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">-->
-        <!--<i class="fa fa-close" id="search-clear-button"></i>-->
-      <!--</form>-->
-      <!--<button id="menu-search-button"><i class="fa fa-search"></i></button>-->
-    <!--</div>-->
-    <!--<div id="edit-cancel" class="menu-operation col-sm-6">-->
-      <!--<button id="edit-cancel-button"><i class="fa fa-remove"></i></button>-->
-    <!--</div>-->
-    <!--<div id="menu-edit" class="menu-operation col-sm-4">-->
-      <!--<button id="menu-edit-button"><i class="fa fa-pencil"></i></button>-->
-    <!--</div>-->
-    <!--<div id="edit-confirm" class="menu-operation col-sm-6">-->
-      <!--<button id="edit-confirm-button"><i class="fa fa-check"></i></button>-->
-    <!--</div>-->
-    <!--<div id="menu-collapse" class="menu-operation col-sm-4">-->
-      <!--<button id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>-->
-    <!--</div>-->
-    <!--<div class="col-sm-12">-->
-      <!--<form>-->
-        <!--<input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">-->
-        <!--<i class="fa fa-close" id="search-clear-button"></i>-->
-      <!--</form>-->
-    <!--</div>-->
-    <div class="col-sm-12">
-      <div id="menu-collapse" class="menu-operation col-sm-4">
+    <div id="menu-search-form">
+      <form>
+        <input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">
+        <i class="fa fa-close" id="search-clear-button"></i>
+      </form>
+    </div>
+    <div class="col-sm-12 menu-operation">
+      <div id="menu-search" class="col-sm-4">
         <button id="menu-search-button"><i class="fa fa-search"></i></button>
       </div>
-      <div id="menu-edit" class="menu-operation col-sm-4">
+      <div id="menu-edit" class="col-sm-4">
         <button id="menu-edit-button"><i class="fa fa-pencil"></i></button>
       </div>
-      <div id="menu-collapse" class="menu-operation col-sm-4">
+      <div id="menu-collapse" class="col-sm-4">
         <button id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>
       </div>
     </div>
-    <div class="col-sm-12">
-      <div id="edit-cancel" class="menu-operation col-sm-6">
+    <div class="col-sm-12 edit-btn-group">
+      <div id="edit-cancel" class="col-sm-6">
         <button id="edit-cancel-button"><i class="fa fa-remove"></i></button>
       </div>
-      <div id="edit-confirm" class="menu-operation col-sm-6">
+      <div id="edit-confirm" class="col-sm-6">
         <button id="edit-confirm-button"><i class="fa fa-check"></i></button>
       </div>
     </div>

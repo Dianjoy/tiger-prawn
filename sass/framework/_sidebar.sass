@@ -106,6 +106,9 @@
       overflow: hidden
       background: #666
 
+  .slash
+    display: none
+
 .navbar-user
   padding: 15px
   border-bottom: 1px solid darken($sidebar-background-color, 5%)
@@ -198,6 +201,14 @@
   position: absolute
   bottom: 0
 
+.sidebar-search
+  #menu-collapse, #menu-edit, #menu-search-button
+    display: none
+
+  #menu-search-form
+    display: block
+    width: 100%
+
 .sidebar-collapsed
   #navbar-side
     width: $collapsed-sidebar-width
@@ -214,7 +225,7 @@
       top: 1%
       width: 130px
 
-    .hover
+    .visible
       display: block
 
   #menu-collapse
@@ -228,16 +239,21 @@
       display: block
       float: right
 
-    .slash:before
-      content: '\f070'
-
     .caret
       display: none
 
-#menu-search
-  #menu-search-input
-    height: 40px
-    border-radius: 0
+  .slash
+    display: block
+
+    a .fa-eye:before
+      content: '\f070'
+
+#menu-search-form
+  position: relative
+  display: none
+  padding: 0
+  width: 0
+
   #search-clear-button
     position: absolute
     top: 13px
@@ -245,14 +261,14 @@
     color: #333
     cursor: pointer
 
-  form
-    position: relative
-    display: none
+  #menu-search-input
+    height: 40px
+    border-radius: 0
 
-#edit-confirm, #edit-cancel
+.edit-btn-group
   display: none
 
-.menu-operation
+.menu-operation, .edit-btn-group
   padding: 0
 
   button

@@ -1,8 +1,7 @@
 'use strict';
 (function (ns) {
   var key = tp.PROJECT + '-menu-list'
-    , eyesSelector = '.sidebar-nav-item, .sidebar-nav-item ul li'
-    , buttonSelector = '#menu-collapse, #menu-edit, #menu-search-button';
+    , eyesSelector = '.sidebar-nav-item, .sidebar-nav-item ul li';
   ns.SidebarEditor = Backbone.View.extend({
     events: {
       'click .eye-edit-button': 'eyeEditButton_clickHandler',
@@ -16,77 +15,60 @@
       'keyup #menu-search-input': 'menuSearchInput_keyupHandler'
     },
     initialize: function () {
-      this.manageSidebar();      //初始化就可以get local
       this.store = localStorage.getItem(key);
     },
     manageSidebar: function () {
       if (this.store) {
-        var menuList = JSON.parse(store);
-        $(eyesSelector).each(function () {
-          var eye = $(this).find('#eye-edit-button')
-            , item = $(this).attr('id')
-            , isExist = menuList.indexOf(item);
-          isExist === -1 ? eye.removeClass('slash') : $(this).addClass('hidden').find('#eye-edit-button').addClass('slash');
+        var menuList = JSON.parse(this.store);
+        this.$(eyesSelector).each(function () {
+          var item = $(this).attr('id');
+          if (menuList.indexOf(item) === -1) {
+            $(this).removeClass('slash');
+          } else {
+            $(this).addClass('slash');
+          }
         });
       } else { localStorage.setItem(key, JSON.stringify([])); }
     },
+    changeButton: function (show, hide) {
+      this.$(hide).hide();
+      this.$(show).show();
+    },
     eyeEditButton_clickHandler: function (event) {
-      $(event.currentTarget).toggleClass('slash');
+      var target = $(event.currentTarget)
+        , parents = target.hasClass('first-level') ? '.sidebar-nav-item' : '.second-level';
+      target.parents(parents).toggleClass('slash');
       event.preventDefault();
       event.stopPropagation();
     },
     menuEditButton_clickHandler: function () {
-      $('body').addClass('sidebar-editing');   //$尽量不要用全局的
-      $(eyesSelector).removeClass('hidden').find('.collapse').collapse('show');//mark
-      $('#menu-collapse, #menu-search, #menu-edit').hide();
-      $('#edit-confirm, #edit-cancel').show();
+      this.$el.addClass('sidebar-editing');
+      $(eyesSelector).find('.collapse').collapse('show');
+      this.changeButton('.edit-btn-group', '.menu-operation');
     },
     editConfirmButton_clickHandler: function () {
-      if (this.store) {
-        var menuList = JSON.parse(this.store);   //mark
-        $('body').removeClass('sidebar-editing');
-        $('#edit-confirm, #edit-cancel').hide();
-        $('#menu-collapse, #menu-search, #menu-edit').show();
-        $(eyesSelector).each(function () {                  //mark
-          var eye = $(this).find('#eye-edit-button')
-            , item = $(this).attr('id');
-          if (eye.hasClass('slash')) {
-            if (menuList.indexOf(item) === -1) {
-              menuList.push(item);
-            }
-          } else if (menuList.indexOf(item) !== -1) {
-            menuList.splice(menuList.indexOf(item), 1);
-          }
-        });
-        localStorage.setItem(key, JSON.stringify(menuList));
-        this.manageSidebar();
-      }
+      var menuList = [];
+      this.$el.removeClass('sidebar-editing');
+      this.changeButton('.menu-operation', '.edit-btn-group');
+      this.$('.slash').each(function () {
+        menuList.push($(this).attr('id'));
+      });
+      localStorage.setItem(key, JSON.stringify(menuList));
     },
     editCancelButton_clickHandler: function () {
-      $('body').removeClass('sidebar-editing');
-      $(eyesSelector).find('.collapse').collapse('hide');
-      $('#edit-confirm, #edit-cancel').css('display', 'none');
-      $('#menu-collapse, #menu-search, #menu-edit').css('display', 'block');
+      this.$el.removeClass('sidebar-editing');
+      this.$(eyesSelector).find('.collapse').collapse('hide');
+      this.changeButton('.menu-operation', '.edit-btn-group');
       this.manageSidebar();
     },
     menuSearchButton_clickHandler: function () {
-      $(buttonSelector).hide();
-      $('#menu-search form').show();
-      $('#menu-search').animate({        //no animate just toggleclass then css
-        width: '100%'
-      }, 'fast', 'linear', function () {
-        $(this).find('input').focus();
-      });
+      this.$el.addClass('sidebar-search');
+      this.$('#menu-search-input').focus();
     },
     menuSearchInput_blurHandler: function (event) {
       var val = $(event.currentTarget).val();
       if (!val) {
-        $('#menu-search').animate({
-          width: '33%'
-        }, 'fast', 'linear', function () {
-          $('#menu-search form').css('display', 'none');
-          $(buttonSelector).css('display', 'block');
-        });
+        this.$el.removeClass('sidebar-search');
       }
     },
     searchClearButton_clickHandler: function () {
@@ -94,38 +76,32 @@
       this.menuSearchInput_keyupHandler();
     },
     menuSearchInput_keyupHandler: function (event) {
-      var val = $(event.currentTarget).val()//打断，然后.*连接
-        , reg = new RegExp(val + '+');
+      var val = $(event.currentTarget).val().trim()
+        , isSlash = $(this).hasClass('slash');
       if (val) {
-        var arr =
-        $('.sidebar-nav-item ul').collapse('show');
-        $(eyesSelector).each(function () {
-          var title = $(this).find('.title').text()
-            , isSlash = $(this).find('#eye-edit-button').hasClass('slash');
-          if (!isSlash) {
-            reg.test(title) ? $(this).removeClass('hidden') : $(this).addClass('hidden');
-          }
+        var str = '.*' + val.split('').join('.*') + '.*'
+          , reg = new RegExp(str);
+        this.$('.sidebar-nav-item ul').collapse('show');
+        this.$(eyesSelector).each(function () {
+          if (!isSlash) { reg.test($(this).find('.title').text()) ? $(this).show() : $(this).hide(); }
         });
       } else {
-        //展示全部
+        this.$(eyesSelector).each(function () {
+          if (!isSlash) { $(this).show(); }
+        });
       }
     },
     menuCollapseButton_clickHandler: function () {
       $('body').toggleClass('sidebar-collapsed');
-      $('#menu-search, #menu-edit').toggleClass('hidden');
+      this.$('#menu-search, #menu-edit').toggleClass('hidden');
       $('.sidebar-nav-item > a').each(function () {
         $(this).attr('data-toggle') ? $(this).removeAttr('data-toggle') : $(this).attr('data-toggle', 'collapse');
         $(this).siblings('.nav').removeAttr('style');
       });
-      if ($('body').hasClass('sidebar-collapsed')) {   // no hover
-        $('.sidebar-nav-item').hover(
-          function () {
-            $(this).find('.nav').addClass('hover');
-          },
-          function () {
-            $(this).find('.nav').removeClass('hover');
-          }
-        );
+      if ($('body').hasClass('sidebar-collapsed')) {
+        this.$('.sidebar-nav-item').unbind('click').click(function (event) {
+            $(event.currentTarget).find('.nav').toggleClass('visible');
+          });
       }
     }
   });
