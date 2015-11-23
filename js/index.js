@@ -14,6 +14,7 @@ $(function () {
   var sidebarEditor = new tp.view.SidebarEditor({
     el: '#navbar-side'
   });
+
   // map values
   context
     .mapValue('me', me)
