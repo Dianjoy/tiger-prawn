@@ -9,15 +9,16 @@ $(function () {
     , body = new tp.view.Body({
       el: 'body',
       model: me
+    })
+    , sidebarEditor = new tp.view.SidebarEditor({
+      el: '#navbar-side',
+      model: me
     });
-
-  var sidebarEditor = new tp.view.SidebarEditor({
-    el: '#navbar-side'
-  });
 
   // map values
   context
     .mapValue('me', me)
+    .mapValue('sidebarEditor', sidebarEditor)
     .mapValue('body', body)
     .mapValue('colors', ['#e5412d', '#f0ad4e', '#444', '#888', '#16A085', '#27AE60', '#2980B9', '#8E44AD', '#2C3E50', '#F39C12', '#D35400', '#C0392B', '#BDC3C7', '#ASBESTOS']);
   context

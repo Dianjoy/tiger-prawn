@@ -1,6 +1,7 @@
 @charset "UTF-8"
 @import "../../bower_components/colors/sass/variables"
 @import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+@import "../../bower_components/font-awesome/scss/variables"
 @import "../define"
 
 #navbar-side
@@ -14,7 +15,6 @@
   padding: 0
   z-index: 14
   overflow: auto
-  transition: width 0.1s
 
   a
     color: $navbar-color
@@ -47,7 +47,7 @@
       border-top: none
 
     & a
-      .fa-eye
+      .eye-edit-button
         display: none
 
       .caret
@@ -106,7 +106,7 @@
       overflow: hidden
       background: #666
 
-  .slash
+  .invisible
     display: none
 
 .navbar-user
@@ -200,6 +200,7 @@
   border-top: 1px solid #1A9FE3
   position: absolute
   bottom: 0
+  display: flex
 
 .sidebar-search
   #menu-collapse, #menu-edit, #menu-search-button
@@ -208,6 +209,12 @@
   #menu-search-form
     display: block
     width: 100%
+
+  .invisible
+    display: block
+
+  .menu-operation
+    flex: 0
 
 .sidebar-collapsed
   #navbar-side
@@ -224,61 +231,83 @@
       left: 100%
       top: 1%
       width: 130px
+      height: auto
 
-    .visible
+    .view
       display: block
 
   #menu-collapse
     width: 100%
     .fa:before
-      content: '\f061'
+      content: $fa-var-arrow-right
 
 .sidebar-editing
+  .edit-btn-group
+    display: flex
+    flex: 1
+
+  .menu-operation
+    display: none
+
   .sidebar-nav-item a
-    .fa-eye
+    .eye-edit-button
       display: block
       float: right
+      border: none
+      background: transparent
+      outline: none
 
     .caret
       display: none
 
-  .slash
+  .invisible
     display: block
 
-    a .fa-eye:before
-      content: '\f070'
+    & .eye-edit-button .fa:before
+      content: $fa-var-eye-slash
 
 #menu-search-form
   position: relative
   display: none
   padding: 0
   width: 0
+  flex: 1
 
   #search-clear-button
     position: absolute
     top: 13px
-    right: 10px
+    right: $gap
     color: #333
     cursor: pointer
 
   #menu-search-input
-    height: 40px
+    height: $footer-height
     border-radius: 0
 
 .edit-btn-group
   display: none
-
-.menu-operation, .edit-btn-group
   padding: 0
 
+  & div
+    flex: 1
+
+.menu-operation
+  display: flex
+  flex: 1
+  padding: 0
+
+  & div
+    flex: 1
+
+.menu-operation, .edit-btn-group
   button
     width: 100%
-    height: 40px
+    height: $footer-height
     background-color: #178FCC
     border: 0
     outline: none
 
     & i
-      width: 20px
-      height: 20px
-      line-height: 20px
+      width: $gap-l
+      height: $gap-l
+      line-height: $gap-l

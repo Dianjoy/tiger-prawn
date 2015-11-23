@@ -7,6 +7,7 @@
 
   ns.Body = Backbone.View.extend({
     $context: null,
+    $sidebarEditor: null,
     events: {
       'click .add-button': 'addButton_clickHandler',
       'click .print-button': 'printButton_clickHandler',
@@ -34,14 +35,7 @@
       }
     },
     createSidebar: function () {
-      this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
-      this.$('.sidebar-nav-item').remove();
-      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default'
-        , template = this.template;
-      $.getJSON('page/sidebar/' + role + '.json', function (response) {
-        var html = template({list: response});
-        $('#navbar-side-inner').append(html);
-      });
+      this.$sidebarEditor.createSidebar();
     },
     load: function (url, data, options) {
       options = options || {};
