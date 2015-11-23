@@ -64,7 +64,8 @@
     },
     use: function (model) {
       this.model = model;
-      this.render(model.pick('start', 'end'));
+      var range = this.render(model.pick('start', 'end'));
+      this.model.set(range, {silent: true});
     },
     input_clickHandler: function (event) {
       event.stopPropagation();
