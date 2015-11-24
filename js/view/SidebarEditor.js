@@ -1,6 +1,6 @@
 'use strict';
 (function (ns) {
-  var key = tp.PROJECT + '-menu-list'
+  var key = tp.PROJECT + '-hidden-items'
     , eyesSelector = '.sidebar-nav-item, .sidebar-nav-item ul li';
   ns.SidebarEditor = Backbone.View.extend({
     events: {
