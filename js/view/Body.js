@@ -35,7 +35,7 @@
       }
     },
     createSidebar: function () {
-      this.$sidebarEditor.createSidebar();
+      this.$sidebarEditor.render();
     },
     load: function (url, data, options) {
       options = options || {};

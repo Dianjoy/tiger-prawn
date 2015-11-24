@@ -1,7 +1,6 @@
 'use strict';
 (function (ns) {
-  var key = tp.PROJECT + '-hidden-items'
-    , eyesSelector = '.sidebar-nav-item, .sidebar-nav-item ul li';
+  var key = tp.PROJECT + '-hidden-items';
   ns.SidebarEditor = Backbone.View.extend({
     events: {
       'click .eye-edit-button': 'eyeEditButton_clickHandler',
@@ -16,43 +15,38 @@
       'keyup #menu-search-input': 'menuSearchInput_keyupHandler'
     },
     initialize: function () {
-      this.hiddenItems = JSON.parse(localStorage.getItem(key));
-      this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+      this.hiddenItems = JSON.parse(localStorage.getItem(key)) || [];
+      this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
     },
-    createSidebar: function () {
+    render: function () {
       this.$('.sidebar-nav-item').remove();
-      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default'
-        , template = this.template
-        , hiddenItems = this.hiddenItems;
-      $.getJSON('page/sidebar/' + role + '.json', function (response) {
-        if (hiddenItems) {
-          _.each(response, function (parent) {
-            var item = parent['link'] || parent['sub-id'];
-              parent.invisibility = hiddenItems.indexOf('parent-' + item) !== -1;
-            if (parent.sub)  {
-              _.each(parent.sub, function (child) {
-                child.invisibility = hiddenItems.indexOf(child.link) !== -1;
-              });
-            }
-          });
-        }
-        var html = template({list: response});
-        $('#navbar-side-inner').append(html);
-      });
+      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default';
+      $.getJSON('page/sidebar/' + role + '.json', _.bind(function (response) {
+        _.each(response, function (parent) {
+          var item = parent['link'] || parent['sub-id'];
+          parent.visibility = this.hiddenItems.indexOf('parent-' + item) !== -1;
+          if (parent.sub)  {
+            _.each(parent.sub, function (child) {
+              child.visibility = this.hiddenItems.indexOf(child.link) !== -1;
+            }, this);
+          }
+        }, this);
+        var html = this.template({list: response});
+        this.$('#navbar-side-inner').append(html);
+      }, this));
     },
     eyeEditButton_clickHandler: function (event) {
-      var target = $(event.currentTarget)
-        , li = target.closest('li');
+      var li = $(event.currentTarget).closest('li');
       li.toggleClass('hidden');
       event.preventDefault();
       event.stopPropagation();
     },
     menuEditButton_clickHandler: function () {
       this.$el.addClass('sidebar-editing');
-      this.$(eyesSelector).find('.collapse').collapse('show');
+      this.$('.collapse').collapse('show');
     },
     editConfirmButton_clickHandler: function () {
-      var hiddenItems = _.map(this.$('#navbar-side-inner .hidden'), function (node) {
+      var hiddenItems = _.map(this.$('.hidden'), function (node) {
         return node.id;
       });
       this.$el.removeClass('sidebar-editing');
@@ -61,44 +55,47 @@
     },
     editCancelButton_clickHandler: function () {
       this.$el.removeClass('sidebar-editing');
-      this.$(eyesSelector).find('.collapse').collapse('hide');
-      this.createSidebar();
+      this.$('.collapse').collapse('hide');
+      this.render();
     },
     menuSearchButton_clickHandler: function () {
       this.$el.addClass('sidebar-search');
-      this.$('.sidebar-nav-item ul').collapse('show');
+      this.$('.collapse').collapse('show');
       this.$('#menu-search-input').focus();
     },
     menuSearchInput_blurHandler: function (event) {
-      var val = $(event.currentTarget).val();
-      if (!val) {
+      if (!event.target.value) {
         this.$el.removeClass('sidebar-search');
-        this.createSidebar();
+        this.$('#navbar-side-inner').removeClass('search-typing');
       }
     },
     searchClearButton_clickHandler: function () {
       this.$('#menu-search-input').val('').focus();
     },
     menuSearchInput_keyupHandler: function (event) {
-      setTimeout(function () {
-        var val = $(event.currentTarget).val().trim();
-        if (val) {
+      var self = this
+        , val = event.target.value.trim();
+      this.$('#navbar-side-inner').addClass('search-typing');
+      clearTimeout(this.searchTimeout);
+      if (val) {
+        this.searchTimeout = setTimeout(function () {
           var str = '.*' + val.split('').join('.*') + '.*'
             , reg = new RegExp(str);
-          this.$(eyesSelector).each(function () {
-            reg.test($(this).find('.title').text()) ? $(this).show() : $(this).hide();
-          });
-        }
-      }, 500);
+          self.$('a[href*="#/"]').each(function () {
+            var isMatch = reg.test(this.innerText);
+            $(this).closest('li').toggleClass('mismatch', !isMatch);
+          })
+        }, 500);
+      }
     },
     menuCollapseButton_clickHandler: function () {
       $('body').toggleClass('sidebar-collapsed');
-      this.$('#menu-search-button, #menu-edit-button').toggleClass('hidden');
     },
     accordionToggle_clickHandler: function (event) {
       if ($('body').hasClass('sidebar-collapsed')) {
-        $(event.currentTarget).siblings('ul').toggleClass('view');
-        return false;
+        $(event.currentTarget).siblings('ul').toggleClass('view').height('auto');
+        event.preventDefault();
+        event.stopPropagation();
       }
     }
   });

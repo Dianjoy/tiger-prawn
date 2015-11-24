@@ -207,6 +207,13 @@
   .hidden
     display: block !important
 
+  .search-typing
+    li .mismatch
+      display: none
+
+    .mismatch
+      display: none
+
 .sidebar-collapsed
   #navbar-side
     width: $collapsed-sidebar-width
@@ -221,10 +228,12 @@
       left: 100%
       top: 1%
       width: 130px
-      height: auto
 
     .view
       display: block
+
+  #menu-search-button, #menu-edit-button
+    display: none
 
   #menu-collapse-button .fa:before
     content: $fa-var-arrow-right
