@@ -104,7 +104,7 @@
     <li><a href="#/dashboard"><i class="fa fa-dashboard"></i><span>首页</span></a></li>
     <script type="text/x-handlebars-template">
       {{#each list}}
-      <li class="sidebar-nav-item {{invisible}}" id="parent-{{link}}{{sub-id}}">
+      <li class="sidebar-nav-item {{#if invisibility}}hidden{{/if}}" id="parent-{{link}}{{sub-id}}">
         {{#if sub}}
         <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#{{sub-id}}">
         {{else}}
@@ -112,16 +112,17 @@
         {{/if}}
           {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}
           <span class="title">{{title}}</span>
-          <button class="eye-edit-button"><i class="fa fa-eye"></i></button>
+          <button type="button" class="eye-edit-button"><i class="fa fa-eye"></i></button>
           {{#if sub}}<span class="caret"></span>{{/if}}
         </a>
         {{#if sub}}
         <ul class="nav collapse" id="{{sub-id}}">
           {{#each sub}}
-          <li id="{{link}}" class="{{invisible}}">
-            <a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>
-              {{/if}}<span class="title">{{title}}</span>
-              <button class="eye-edit-button"><i class="fa fa-eye"></i></button>
+          <li id="{{link}}" class="{{#if invisibility}}hidden{{/if}}">
+            <a href="{{link}}">
+              {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}
+              <span class="title">{{title}}</span>
+              <button type="button" class="eye-edit-button"><i class="fa fa-eye"></i></button>
             </a>
           </li>
           {{/each}}
@@ -134,26 +135,16 @@
   <div class="sidebar-btn-group">
     <form id="menu-search-form">
       <input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">
-      <i class="fa fa-close" id="search-clear-button"></i>
+      <button type="button" id="search-clear-button"><i class="fa fa-close"></i></button>
     </form>
     <div class="menu-operation">
-      <div id="menu-search">
-        <button id="menu-search-button"><i class="fa fa-search"></i></button>
-      </div>
-      <div id="menu-edit">
-        <button id="menu-edit-button"><i class="fa fa-pencil"></i></button>
-      </div>
-      <div id="menu-collapse">
-        <button id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>
-      </div>
+      <button type="button" id="menu-search-button"><i class="fa fa-search"></i></button>
+      <button type="button" id="menu-edit-button"><i class="fa fa-pencil"></i></button>
+      <button type="button" id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>
     </div>
-    <div class="col-sm-12 edit-btn-group">
-      <div id="edit-cancel">
-        <button id="edit-cancel-button"><i class="fa fa-remove"></i></button>
-      </div>
-      <div id="edit-confirm">
-        <button id="edit-confirm-button"><i class="fa fa-check"></i></button>
-      </div>
+    <div class="edit-btn-group">
+      <button type="button" id="edit-cancel-button"><i class="fa fa-remove"></i></button>
+      <button type="button" id="edit-confirm-button"><i class="fa fa-check"></i></button>
     </div>
   </div>
 </nav>

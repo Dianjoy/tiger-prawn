@@ -106,9 +106,6 @@
       overflow: hidden
       background: #666
 
-  .invisible
-    display: none
-
 .navbar-user
   padding: 15px
   border-bottom: 1px solid darken($sidebar-background-color, 5%)
@@ -200,29 +197,23 @@
   border-top: 1px solid #1A9FE3
   position: absolute
   bottom: 0
-  display: flex
 
 .sidebar-search
-  #menu-collapse, #menu-edit, #menu-search-button
+  .menu-operation
     display: none
 
   #menu-search-form
-    display: block
-    width: 100%
+    display: flex
 
-  .invisible
-    display: block
-
-  .menu-operation
-    flex: 0
+  .hidden
+    display: block !important
 
 .sidebar-collapsed
   #navbar-side
     width: $collapsed-sidebar-width
 
-  .side-nav
-    &>li>a>span
-      display: none
+  .side-nav > li > a > span
+    display: none
 
   .sidebar-nav-item
     .nav
@@ -236,15 +227,12 @@
     .view
       display: block
 
-  #menu-collapse
-    width: 100%
-    .fa:before
-      content: $fa-var-arrow-right
+  #menu-collapse-button .fa:before
+    content: $fa-var-arrow-right
 
 .sidebar-editing
   .edit-btn-group
     display: flex
-    flex: 1
 
   .menu-operation
     display: none
@@ -260,8 +248,8 @@
     .caret
       display: none
 
-  .invisible
-    display: block
+  .hidden
+    display: block !important
 
     & .eye-edit-button .fa:before
       content: $fa-var-eye-slash
@@ -269,45 +257,32 @@
 #menu-search-form
   position: relative
   display: none
-  padding: 0
-  width: 0
-  flex: 1
 
   #search-clear-button
+    border: none
+    background: transparent
+    outline: none
     position: absolute
-    top: 13px
+    top: $gap
     right: $gap
-    color: #333
+    color: $black
     cursor: pointer
 
   #menu-search-input
     height: $footer-height
+    line-height: $footer-height
     border-radius: 0
 
 .edit-btn-group
   display: none
-  padding: 0
-
-  & div
-    flex: 1
 
 .menu-operation
   display: flex
-  flex: 1
-  padding: 0
-
-  & div
-    flex: 1
 
 .menu-operation, .edit-btn-group
   button
-    width: 100%
     height: $footer-height
-    background-color: #178FCC
+    background-color: $sidebar-background-color
     border: 0
     outline: none
-
-    & i
-      width: $gap-l
-      height: $gap-l
-      line-height: $gap-l
+    flex: 1
