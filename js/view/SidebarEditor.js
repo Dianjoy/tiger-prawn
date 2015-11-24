@@ -76,8 +76,8 @@
       var self = this
         , val = event.target.value.trim();
       this.$('#navbar-side-inner').addClass('search-typing');
-      clearTimeout(this.searchTimeout);
       if (val) {
+        clearTimeout(this.searchTimeout);
         this.searchTimeout = setTimeout(function () {
           var str = '.*' + val.split('').join('.*') + '.*'
             , reg = new RegExp(str);
