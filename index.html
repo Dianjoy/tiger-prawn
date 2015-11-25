@@ -104,7 +104,7 @@
     <li><a href="#/dashboard"><i class="fa fa-dashboard"></i><span>首页</span></a></li>
     <script type="text/x-handlebars-template">
       {{#each list}}
-      <li class="sidebar-nav-item {{#if visibility}}hidden{{/if}}" id="parent-{{link}}{{sub-id}}">
+      <li class="sidebar-nav-item {{#if invisible}}hidden{{/if}}" id="parent-{{link}}{{sub-id}}">
         {{#if sub}}
         <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#{{sub-id}}">
         {{else}}
@@ -118,7 +118,7 @@
         {{#if sub}}
         <ul class="nav collapse" id="{{sub-id}}">
           {{#each sub}}
-          <li id="{{link}}" class="{{#if visibility}}hidden{{/if}}">
+          <li id="{{link}}" class="{{#if invisible}}hidden{{/if}}">
             <a href="{{link}}">
               {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}
               <span>{{title}}</span>
