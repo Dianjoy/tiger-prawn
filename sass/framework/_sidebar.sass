@@ -214,8 +214,11 @@
   #navbar-side
     width: $collapsed-sidebar-width
 
-  .side-nav > li > a > span
-    display: none
+  .side-nav > li > a
+    text-align: center
+
+    & > span
+      display: none
 
   .sidebar-nav-item
     .nav
@@ -255,7 +258,7 @@
   .hidden
     display: block !important
 
-    & .eye-edit-button .fa:before
+    & > a .eye-edit-button .fa:before
       content: $fa-var-eye-slash
 
 #menu-search-form

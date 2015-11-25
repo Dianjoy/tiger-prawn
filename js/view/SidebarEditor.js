@@ -82,7 +82,7 @@
           var str = '.*' + val.split('').join('.*') + '.*'
             , reg = new RegExp(str);
           self.$('a[href^="#/"]').each(function () {
-            var isMatch = reg.test(this.innerText);
+            var isMatch = reg.test(this.innerText.toLowerCase());
             $(this).closest('li').toggleClass('mismatch', !isMatch);
           })
         }, 500);
