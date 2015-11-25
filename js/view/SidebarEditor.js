@@ -93,7 +93,10 @@
     },
     accordionToggle_clickHandler: function (event) {
       if ($('body').hasClass('sidebar-collapsed')) {
-        $(event.currentTarget).siblings('ul').toggleClass('view').height('auto');
+        this.$('.accordion-toggle').each(function () {
+          var ul = $(this).siblings('ul');
+          this === event.currentTarget ? ul.toggleClass('view').height('auto') : ul.removeClass('view');
+        });
         event.preventDefault();
         event.stopPropagation();
       }
