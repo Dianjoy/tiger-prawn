@@ -24,10 +24,10 @@
       $.getJSON('page/sidebar/' + role + '.json', _.bind(function (response) {
         _.each(response, function (parent) {
           var item = parent['link'] || parent['sub-id'];
-          parent.visibility = this.hiddenItems.indexOf('parent-' + item) !== -1;
+          parent.invisible = this.hiddenItems.indexOf('parent-' + item) !== -1;
           if (parent.sub)  {
             _.each(parent.sub, function (child) {
-              child.visibility = this.hiddenItems.indexOf(child.link) !== -1;
+              child.invisible = this.hiddenItems.indexOf(child.link) !== -1;
             }, this);
           }
         }, this);
@@ -64,7 +64,7 @@
       this.$('#menu-search-input').focus();
     },
     menuSearchInput_blurHandler: function (event) {
-      if (!event.target.value) {
+      if (!event.target.value.trim()) {
         this.$el.removeClass('sidebar-search');
         this.$('#navbar-side-inner').removeClass('search-typing');
       }
@@ -81,7 +81,7 @@
         this.searchTimeout = setTimeout(function () {
           var str = '.*' + val.split('').join('.*') + '.*'
             , reg = new RegExp(str);
-          self.$('a[href*="#/"]').each(function () {
+          self.$('a[href^="#/"]').each(function () {
             var isMatch = reg.test(this.innerText);
             $(this).closest('li').toggleClass('mismatch', !isMatch);
           })
