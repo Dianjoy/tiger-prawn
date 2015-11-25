@@ -1,7 +1,7 @@
 <div class="form-inline table-header">
   <div class="form-group">
     <label for="search-query">搜索：</label>
-    <input type="search" class="form-control" id="search-query" autofocus>
+    <input type="search" class="form-control" id="search-query" value="{{query}}" autofocus>
   </div>
 </div>
 
@@ -16,6 +16,7 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
     <tr id="{{pack_name}}">
       <td>{{ad_name}}</td>
       <td>{{pack_name}}</td>
@@ -25,11 +26,12 @@
         {{/each}}
       </td>
     </tr>
+    {{{{/raw-helper}}}}
   </script>
   </tbody>
 </table>
 
-<table class="table table-bordered table-striped responsive-table smart-table" data-url="{{API}}info/" data-search="#search-query" data-auto-fetch="false" data-collection-id="info">
+<table class="table table-bordered table-striped responsive-table smart-table" data-url="{{API}}info/" data-search="#search-query" data-collection-id="info"  data-auto-fetch="false">
   <caption>搜索结果</caption>
   <thead>
   <tr>
@@ -44,6 +46,7 @@
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
     <tr id="{{id}}">
       <td>
         {{ad_name}}
@@ -69,6 +72,7 @@
         {{/if}}
       </td>
     </tr>
+    {{{{/raw-helper}}}}
   </script>
   </tbody>
 </table>

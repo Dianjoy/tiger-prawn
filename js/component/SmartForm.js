@@ -27,6 +27,7 @@
   }
 
   var smart = ns.SmartForm = tp.view.DataSyncView.extend({
+    $context: null,
     $router: null,
     uploaders: null,
     events: {
@@ -38,6 +39,9 @@
     },
     initialize: function () {
       this.submit = this.getSubmit();
+      if (!this.model && this.$el.data('target')) {
+        this.model = this.$context.getValue(this.$el.data('target'));
+      }
       if (this.model instanceof Backbone.Model) {
         this.model.on('invalid', this.model_invalidHandler, this);
       }
@@ -123,18 +127,15 @@
       var value = _.chain(element)
         .filter(function (item) { return item.checked; })
         .map(function (item) { return item.value; })
+        .value();
 
       return value.join(',');
     },
     initUploader: function () {
-      var id = this.model ? this.model.id : null
-        , self = this
+      var self = this
         , collection = [];
       this.$('.uploader').each(function () {
         var options = $(this).data();
-        if (id) {
-          options.data = {id: id};
-        }
         var uploader = new meathill.SimpleUploader(this, options);
         uploader.on('start', self.uploader_startHandler, self);
         uploader.on('data', self.uploader_dataHandler, self);
@@ -155,6 +156,15 @@
       for (var key in data) {
         if (!data.hasOwnProperty(key)) {
           return;
+        }
+        if ('id' in data) {
+          _.each(this.uploaders, function (uploader) {
+            if (!(uploader instanceof meathill.SimpleUploader)) {
+              return;
+            }
+            uploader.options.data = uploader.options.data || {};
+            uploader.options.data.id = uploader.options.data.id || data.id;
+          });
         }
         var value = data[key];
         if (_.isArray(value)) {

@@ -24,6 +24,7 @@
           className: 'ad ad-new',
           loader: this.$me.isCP() ? null : tp.page.AdEditor
         };
+      this.$context.mapValue('ad', model, true);
       this.$body
         .load('page/ad/edit' + page + '.hbs', model, options)
         .setFramework('ad ad-new', '创建投放计划');
@@ -56,9 +57,13 @@
         .load('page/ad/competitor.html')
         .setFramework('competitor', '竞品广告状态');
     },
-    showHistoryInfo: function () {
+    showHistoryInfo: function (query) {
+      var data = {
+        query: query,
+        API: tp.API
+      };
       this.$body
-        .load('page/info.html')
+        .load('page/info.hbs', data)
         .setFramework('info', '广告投放情报');
     },
     listAgreements: function () {

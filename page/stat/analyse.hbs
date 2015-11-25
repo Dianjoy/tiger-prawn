@@ -11,7 +11,7 @@
       <option value="2">IOS</option>
     </select>
   </div>
-  <form class="navbar-form navbar-right hidden-xs hidden-print">
+  <form class="pull-right hidden-xs hidden-print">
     <div class="btn-group">
       <a data-uri="stat/export_payment/" data-mediator-class="tp.view.HandlerView" class="btn btn-primary export-button" target="_blank"><i class="fa fa-download"></i>导出回款信息</a>
     </div>
@@ -150,7 +150,7 @@
   </tfoot>
 </table>
 
-<table class="table table-bordered table-hover smart-table responsive-table" data-search="#search-query" data-filter=".table-header" data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list">
+<table class="smart-table table table-bordered table-hover responsive-table" data-search="#search-query" data-filter=".table-header"  data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list" data-model="tp.model.AnalyseModel">
   <thead>
     <tr>
       <th class="filters">管理名</th>
@@ -194,16 +194,20 @@
             <a href="#/stat/analyse/daily/{{id}}/{{start}}/{{end}}" class="btn btn-default" title="多日详情">
               <i class="fa fa-list"></i>
             </a>
-            {{#if agreement_id}}
-            <a class="btn btn-info popup" href="page/stat/apply-choose-ad.hbs" title="发票申请-{{company}}" data-id="{{id}}" data-collection-id="admin-list" data-confirm="确定"><i class="fa fa-file-text"></i></a>
-            {{else}}
-            <button class="btn btn-info" data-toggle="popover" data-content="合同未录入，无编号，请通过邮件将合同客户全称和客户类型发给邱咏霞申请合同备案，获取合同编号" style="background-color:#999; border-color:#7B7B7B;">
+            {{#unless is_invoice}}
+              {{#unless is_selected}}
+              {{#if agreement_id}}
+                <a class="btn btn-info popup" href="page/stat/apply-choose-ad.hbs" title="发票申请-{{company}}" data-id="{{id}}" data-collection-id="admin-list" data-confirm="确定"><i class="fa fa-file-text"></i></a>
+              {{else}}
+                <button class="btn btn-info" data-toggle="popover" data-content="合同未录入，无编号，请通过邮件将合同客户全称和客户类型发给邱咏霞申请合同备案，获取合同编号" style="background-color:#999; border-color:#7B7B7B;">
               <span class="fa-stack" style="width:1em; height:1em; line-height:1em">
                 <i class="fa fa-file-text"></i>
                 <i class="fa fa-ban fa-stack-2x" style="top:-7px; left:-5px; color:#FF4136"></i>
               </span>
-            </button>
-            {{/if}}
+                </button>
+              {{/if}}
+              {{/unless}}
+            {{/unless}}
           </div>
         </td>
       </tr>

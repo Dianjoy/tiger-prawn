@@ -67,11 +67,14 @@
           return 'percent' in data ? y + '(' + data.percent + '%)' : y;
         }
       }
-      if (!_.isArray(options.ykeys)) {
+      if (options.ykeys && !_.isArray(options.ykeys)) {
         this.src.ykeys = options.ykeys = options.ykeys.split(',');
       }
-      if (!_.isArray(options.labels)) {
+      if (options.labels && !_.isArray(options.labels)) {
         this.src.labels = options.labels = options.labels.split(',');
+      }
+      if (options.yFormater) {
+        options.yFormater = tp.utils.decodeURLParam(options.yFormater);
       }
       this.options = options;
     },
@@ -82,6 +85,7 @@
       if (this.collection.length === 0) {
         this.showEmpty();
       }
+      var json = this.collection.toJSON();
       if (this.collection.options) {
         if (this.collection.options.ykeys) {
           this.options.ykeys = this.src.ykeys.concat(this.collection.options.ykeys);
@@ -90,7 +94,17 @@
           this.options.labels = this.src.labels.concat(this.collection.options.labels);
         }
       }
-      this.options.data = this.collection.toJSON();
+      if (this.options.yFormater) {
+        json = json.map(function (item) {
+          return _.mapObject(item, function (value, key) {
+            if (key in this.options.yFormater) {
+              return Handlebars.helpers[this.options.yFormater[key]](value);
+            }
+            return value;
+          }, this);
+        }, this);
+      }
+      this.options.data = json;
       this.render();
     }
   });

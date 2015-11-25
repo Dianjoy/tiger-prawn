@@ -1,4 +1,5 @@
-$(function () {
+'use strict';
+(function () {
   // start here
   var context = Nervenet.createContext()
     , me = new tp.model.Me()
@@ -13,6 +14,9 @@ $(function () {
     , sidebarEditor = new tp.view.SidebarEditor({
       el: '#navbar-side',
       model: me
+    })
+    , ranger = new tp.component.DateRanger({
+      el: '.date-range'
     });
 
   // map values
@@ -20,6 +24,7 @@ $(function () {
     .mapValue('me', me)
     .mapValue('sidebarEditor', sidebarEditor)
     .mapValue('body', body)
+    .mapValue('ranger', ranger)
     .mapValue('colors', ['#e5412d', '#f0ad4e', '#444', '#888', '#16A085', '#27AE60', '#2980B9', '#8E44AD', '#2C3E50', '#F39C12', '#D35400', '#C0392B', '#BDC3C7', '#ASBESTOS']);
   context
     .inject(me)
@@ -64,4 +69,4 @@ $(function () {
 
   ga('create', 'UA-35957679-15', 'auto');
   ga('send', 'pageview');
-});
+}());

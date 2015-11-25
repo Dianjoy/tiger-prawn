@@ -1,7 +1,11 @@
 @charset "UTF-8"
 
-@import "../define"
+@import "compass/css3/opacity"
 @import "../../bower_components/colors/sass/variables"
+@import "../define"
+
+.dashboard.loading
+  @include opacity(.5)
 
 .dashboard-stats
 

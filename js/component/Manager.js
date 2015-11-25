@@ -5,6 +5,7 @@
 (function (ns) {
   ns.Manager = {
     $context: null,
+    $me: null,
     map: {
       '.base-list': 'tp.component.BaseList',
       '.smart-table': 'tp.component.SmartTable',
@@ -14,7 +15,8 @@
       '.typeahead': 'tp.component.Typeahead',
       'form': 'tp.component.SmartForm'
     },
-    check: function ($el, mediator) {
+    components: [],
+    check: function ($el) {
       var components = [];
       $el.data('components', components);
 
@@ -45,32 +47,24 @@
         }
         var dom = $el.find(selector);
         if (dom.length) {
-          var init = {
-            model: mediator
-          };
           var component = Nervenet.parseNamespace(this.map[selector]);
           if (component) {
             dom.each(function () {
-              init.el = this;
-              components.push(self.$context.createInstance(component, init));
+              components.push(self.$context.createInstance(component, {el: this}));
             });
           } else {
-            this.loadMediatorClass(components, this.map[selector], init, dom); // mediator pattern
+            this.loadMediatorClass(components, this.map[selector], dom); // mediator pattern
           }
         }
       }
       // 初始化非本库的自定义组件
       $el.find('[data-mediator-class]').each(function () {
         var className = $(this).data('mediator-class')
-          , component = Nervenet.parseNamespace(className)
-          , init = {
-            model: mediator
-          };
+          , component = Nervenet.parseNamespace(className);
         if (component) {
-          init.el = this;
-          components.push(self.$context.createInstance(component, init));
+          components.push(self.$context.createInstance(component, {el: this}));
         } else {
-          self.loadMediatorClass(components, className, init, $(this));
+          self.loadMediatorClass(components, className, $(this));
         }
       });
     },
@@ -111,7 +105,7 @@
       }
       return 'js/' + arr.join('/') + '.js';
     },
-    loadMediatorClass: function (components, className, init, dom, callback) {
+    loadMediatorClass: function (components, className, dom, callback) {
       var self = this
         , script = document.createElement("script");
       script.async = true;
@@ -122,10 +116,11 @@
         if (!component) {
           throw new Error('cannot find mediator')
         }
-        dom.each(function () {
-          init.el = this;
-          components.push(self.$context.createInstance(component, init));
-        });
+        if (dom) {
+          dom.each(function () {
+            components.push(self.$context.createInstance(component, {el: this}));
+          });
+        }
         if (callback) {
           callback(components);
         }
@@ -143,6 +138,17 @@
         }
       }
       return true;
+    },
+    createComponents: function () {
+      for (var i = 0, len = this.components.length; i < len; i++) {
+        var func = this.components[i][0]
+          , params = this.components[i][1];
+        func = _.bind(func, this, params);
+        func();
+      }
+    },
+    registerComponent: function (func, params) {
+      this.components.push([func, params]);
     }
   };
   ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';

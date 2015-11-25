@@ -1,18 +1,23 @@
 'use strict';
 (function (ns) {
   ns.InvoiceEditor = tp.view.Loader.extend({
+    $invoiceList: null,
     events: _.extend({
-      'click .export-button': 'exportButton_clickHandler'
+      'click .export-button': 'exportButton_clickHandler',
+      'success form': 'form_successHandler'
     }, tp.view.Loader.prototype.events),
     $context: null,
     render: function () {
       this.getProductList = _.bind(this.getProductList, this);
       tp.view.Loader.prototype.render.call(this);
-      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', {url: this.model.isNew() ? "" : tp.API + 'invoice/ad/', autoFetch: false}, this.$('#ad_table'), this.getProductList);
+      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', this.$('#ad_table'), this.getProductList);
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
+      $('.invalid-' + this.model.get('channel')).addClass('invalid');
+      $('.invoice-list form').removeClass('processing');
+      $('.apply .fa-spinner').remove();
     },
     exportButton_clickHandler: function (event) {
-      event.currentTarget.href = this.export_href;
+      event.currentTarget.href = this.exportHref;
     },
     tableToExcel: function (template) {
       var tables = []
@@ -30,17 +35,16 @@
         worksheet: '对账单',
         tables: tables,
         agreement_number: this.$('#agreement-number').text(),
-        invoice_title: this.$('#invoice-title').text(),
-        invoice_time: this.$('#invoice-time').text()
+        invoice_title: this.$('#invoice-title').text()
       };
-      this.export_href = uri + this.base64(html(data));
+      this.exportHref = uri + this.base64(html(data));
     },
     base64: function (str) {
       return window.btoa(unescape(encodeURIComponent(str)));
     },
     getProductList: function (components) {
-      var products =  this.model.get('products');
-      var opt = this.model.options;
+      var products =  this.model.get('products')
+        , opt = this.model.options;
       this.productList = components[0];
       products.push({amount: true});
       this.productList.collection.on('change', this.collection_changeHandler, this);
@@ -49,17 +53,30 @@
       products.pop();
     },
     collection_changeHandler: function (data) {
-      var product = _.findWhere(this.model.get('products'), {id: data.id});
+      var products = this.model.get('products')
+        , product = _.findWhere(products, {id: data.id});
       _.extend(product, _.omit(data.toJSON(), 'previous'));
-      this.render();
+      var json = this.model.toJSON();
+      products = json.products;
+      products.push({amount: true});
+      data.collection.reset(products);
+      products.pop();
       if (this.model.isNew()) {
         $(".modal").modal('hide');
       }
     },
     remove: function () {
+      $('.invalid-' + this.model.get('channel')).removeClass('invalid');
       Backbone.View.prototype.remove.call(this);
-      this.productList.collection.off();
-      this.productList = null;
+      if (this.productList) {
+        this.productList.collection.off();
+        this.productList = null;
+      }
+    },
+    form_successHandler: function () {
+      var channel = this.model.get('channel')
+        , models = this.$invoiceList.where({channel: channel});
+      this.$invoiceList.remove(models);
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

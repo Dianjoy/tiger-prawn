@@ -1,5 +1,5 @@
 <h4>选择结算的广告：</h4>
-<form action="#/invoice/apply/:start/:end/:ids" method="post" id="popup-form">
+<form id="popup-form" data-mediator-class="tp.page.AdSelector" method="post">
   <div class="ad-date-range clearfix">
     <div class="range">
       <label class="control-label pull-left" id="settlement-period">结算周期：</label>
@@ -14,24 +14,33 @@
       <button type="button" class="btn btn-primary" id="choose-ad-button"><i class="fa fa-play"></i> 检索</button>
     </div>
   </div>
-  <table class="table smart-table" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" style="height:225px;">
+  <table class="smart-table table" data-model="tp.model.AdSelectorModel" data-url="{{API}}invoice/settle/{{id}}" data-ranger=".ad-date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="invoice-list-{{id}}" data-typeahead="false">
     <thead>
-      <tr><th style="border:none"><label><input type="checkbox" value="ids" class="check-all"> 全选</label></th></tr>
+      <tr>
+        <th><label><input type="checkbox" value="ids" class="check-all"> 全选</label></th>
+        <th>广告名称</th>
+        <th>渠道号</th>
+      </tr>
     </thead>
-    <tbody id="chose-ad-table" class="well">
+    <tbody id="chose-ad-table">
     {{{{raw-helper}}}}
     <script type="text/x-handlebars-template">
-      <tr>
-        <td><label for="ids"><input type="checkbox" name="ids" value="{{id}}"></label></td>
-        <td>{{ad_name}}</td>
-        <td>渠道号：{{channel_id}}</td>
-      </tr>
+      {{#unless is_selected}}
+        <tr>
+          <td><label for="ids"><input type="checkbox" name="ids" value="{{ad_id}}"></label></td>
+          <td>{{ad_name}}</td>
+          <td>{{channel_id}}</td>
+        </tr>
+      {{/unless}}
     </script>
     {{{{/raw-helper}}}}
     </tbody>
+    <tfoot id="no-ad-table" class="well">
+      <tr><td colspan="3">没有搜索结果</td></tr>
+    </tfoot>
     <tfoot class="waiting">
     <tr>
-      <td colspan="10"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</td>
+      <td colspan="3"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</td>
     </tr>
     </tfoot>
   </table>

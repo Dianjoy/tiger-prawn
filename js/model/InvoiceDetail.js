@@ -4,13 +4,39 @@
     urlRoot: tp.API + 'invoice/',
     initialize: function (attrs) {
       if (this.isNew()) {
-        var products = attrs.ids.split(',');
+        var range = []
+          , param = attrs.ids.split(',')
+          , products =  _.map(param, function (element) {
+            var url = element.split('|')
+              , obj = {
+                ad_id: url[0],
+                start: url[1],
+                end: url[2]
+              };
+            return obj;
+        });
+        _.each(products, function (element) {
+          var sameRange =  _.find(range, {start: element.start, end: element.end})
+            , obj = {
+              start: element.start,
+              end: element.end,
+              ad_ids: [element.ad_id]
+            };
+          if (!sameRange) {
+            range.push(obj);
+          } else if (!_.contains(sameRange.ad_ids, element.ad_id)) {
+            sameRange.ad_ids.push(element.ad_id);
+          }
+        });
         this.urlRoot += 'init'
-          + '?start=' + attrs.start
-          + '&end=' + attrs.end
-          + '&adids=' + products;
+          + '?adids=' + JSON.stringify({range: range});
         this.on('sync', this.syncHandler, this);
       }
+    },
+    fetch: function (options) {
+      Backbone.Model.prototype.fetch.call(this, _.extend({
+        error: _.bind(this.onError, this)
+      }, options));
     },
     parse: function (response) {
       if (response.options) {
@@ -29,65 +55,73 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      var agreement_info = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
-      json.agreement_info = _.map(agreement_info, function(element, key) {
+      var start = json.start ? json.start.split('-') : moment().format('YYYY-MM').split('-')
+        , agreementInfo = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
+      json.start = start[0] + '年' + start[1] + '月';
+      json.agreement_info = _.map(agreementInfo, function(element, key) {
         switch (key) {
           case 'company':
-            element = '客户名称:' + element + '\n';
+            element = '客户名称: ' + element;
             break;
           case 'company_short':
-            element = '客户简称:' + element + '\n';
+            element = '客户简称: ' + element;
             break;
           case 'cycle':
-            element = '付款周期:' + element + '\n';
+            element = '付款周期: ' + element;
             break;
           case 'ad_name':
-            element = '推广产品:' + element + '\n';
+            element = '推广产品: ' + element;
             break;
           case 'sign_date':
-            element = '签约时间:' + element + '\n';
+            element = '签约时间: ' + element;
             break;
           case 'rmb':
-            element = '合作单价:' + element + '\n';
+            element = '合作单价: ' + element;
             break;
           case 'agreement_comment':
-            element = '备注:' + element + '\n';
+            element = '备注: ' + element;
             break;
         }
         return element;
       });
-      var products = json.products;
-      var obj = {
-        cpa_first_total: 0,
-        cpa_after_total: 0,
-        income_before_total: 0,
-        income_after_total: 0,
-        rmb: ''
-      };
+      var products = json.products
+        , obj = {
+          cpa_first_total: 0,
+          cpa_after_total: 0,
+          income_before_total: 0,
+          income_after_total: 0,
+          rmb: ''
+        };
       products = _.map(products, function (element) {
         if (!element.quote_rmb_after) {
           _.extend(element, {
             quote_rmb_after: element.quote_rmb,
             cpa_after: element.cpa,
             income_after: element.income,
-            rate: ((1 - element.cpa * element.quote_rmb / element.income) * 100).toFixed(2),
+            rate: (1 - element.cpa * element.quote_rmb / element.income) * 100,
             money_cut: element.income - element.income,
             remark: ''
           });
         } else {
           _.extend(element, {
-            income_after: (element.quote_rmb_after * element.cpa_after).toFixed(2),
-            rate: ((1 - element.cpa_after * element.quote_rmb_after / element.income) * 100).toFixed(2),
-            money_cut: (element.income - element.quote_rmb_after * element.cpa_after).toFixed(2)
+            income_after: (element.quote_rmb_after * element.cpa_after),
+            rate: (1 - element.cpa_after * element.quote_rmb_after / element.income) * 100,
+            money_cut: (element.income - element.quote_rmb_after * element.cpa_after)
           });
         }
         obj.cpa_first_total += Number(element.cpa);
         obj.cpa_after_total += Number(element.cpa_after);
-        obj.income_after_total += element.income_after;
-        obj.income_before_total += element.income;
+        obj.income_after_total += Number(element.income_after);
+        obj.income_before_total += Number(element.income);
         obj.rmb = tp.utils.convertCurrency(obj.income_after_total);
         return element;
       });
+      this.set({
+        income: obj.income_after_total,
+        income_first: obj.income_before_total,
+        cpa_first_total: obj.cpa_first_total,
+        cpa_after_total: obj.cpa_after_total
+      }, {silent: true});
       _.extend(this.options, obj);
       return _.extend(json, this.options);
     },
@@ -96,6 +130,12 @@
         var hash = '#/invoice/' + this.id;
         location.hash = hash;
         this.urlRoot = tp.API + 'invoice/';
+      }
+    },
+    onError: function (model, response) {
+      var msg = JSON.parse(response.responseText).msg;
+      if (confirm(msg)) {
+        window.location.hash = '#/invoice/';
       }
     }
   });

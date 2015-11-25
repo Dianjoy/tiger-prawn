@@ -112,7 +112,6 @@
     }
     return str;
   });
-
   //千位分割并保留到小数点后两位
   h.registerHelper('readable_n', function (value) {
     value = Number(value);
@@ -124,6 +123,14 @@
     }
     value = value.replace(/,(\d\d)$/, '.$1');
     return value.replace(/^\./, '0.');
+  });
+  // 百分比
+  h.registerHelper('percent', function (value, total) {
+    value = Number(value);
+    if (!isNaN(total)) {
+      value = value / total;
+    }
+    return Math.round(value * 10000) / 100;
   });
 
   // 用来生成可读时间
@@ -225,7 +232,7 @@
   m.DATETIME_FORMAT = m.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
 }(moment));;
 (function () {
-  var data = {}
+  var data = {};
 
   // 兼容safari
   try {
@@ -242,6 +249,7 @@
 }());;
 (function (ns) {
   ns.Base = Backbone.Router.extend({
+    $ranger: null,
     $body: null,
     $me: null,
     routes: {
@@ -250,14 +258,29 @@
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function (start, end) {
-      var page = this.$me.isCP() ? '_cp' : '';
-      var model = tp.model.Dashboard ? new tp.model.Dashboard({
-        dashboard_start: start || moment().startOf('month').format('YYYY-MM-DD'),
-        dashboard_end: end || moment().format('YYYY-MM-DD'),
-        is_sale: !this.$me.isCP()
-      }) : null;
-      this.$body.load('page/dashboard' + page + '.hbs', model);
-      this.$body.setFramework('dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
+      start = start || moment().add(1 - (new Date()).getDate(), 'days').format(moment.DATE_FORMAT);
+      end = end || moment().add(-1, 'days').format(moment.DATE_FORMAT);
+      var page = this.$me.isCP() ? '_cp' : ''
+        , Model = Backbone.Model.extend({
+          url: tp.API + 'dashboard/',
+          parse: function (response) {
+            return response.data;
+          }
+        })
+        , model = new Model({
+          start: start,
+          end: end
+        });
+      this.$body.load('page/dashboard' + page + '.hbs', model, {
+        refresh: true,
+        data: {
+          start: start,
+          end: end
+        },
+        loader: tp.view.Dashboard
+      });
+      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
+      this.$ranger.use(model);
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
@@ -715,7 +738,7 @@
 }(Nervenet.createNameSpace('tp.model')));;
 ;(function (ns) {var collections = {}
     , Model = Backbone.Model.extend({
-      parse: function (response, options) {
+      parse: function (response) {
         var key = this.key || (this.collection ? this.collection.key : 'data');
         if ('code' in response && 'msg' in response && key in response) {
           return response[key];
@@ -735,6 +758,7 @@
       }
     })
     , Collection = ns.ListCollection = Backbone.Collection.extend({
+      cache: null,
       total: 0,
       pagesize: 10,
       isLoading: false,
@@ -742,6 +766,27 @@
         this.key = options.key || 'data';
         this.save = tp.PROJECT + location.hash + '-pagesize';
         Backbone.Collection.prototype.initialize.call(this, models, options);
+        if (_.isString(this.model)) { // 需要加载外部model类
+          var klass = Nervenet.parseNamespace(this.model);
+          if (klass) {
+            this.model = klass;
+          } else {
+            var self = this;
+            $.getScript(tp.component.Manager.getPath(this.model), function () {
+              self.model = Nervenet.parseNamespace(self.model);
+              if (!self.cache) {
+                return;
+              }
+              if (self.cache.options.reset) {
+                self.reset(self.cache.response, self.cache.options);
+              } else {
+                self.set(self.parse(self.cache.response), self.cache.options);
+                self.trigger('sync');
+              }
+              self.cache = null;
+            });
+          }
+        }
         if (!options) {
           return;
         }
@@ -764,8 +809,15 @@
         Backbone.Collection.prototype.fetch.call(this, options);
         this.isLoading = true;
       },
-      parse: function (response) {
+      parse: function (response, options) {
         this.isLoading = false;
+        if (_.isString(this.model)) { // model的类还没加载进来
+          this.cache = {
+            response: response,
+            options: options
+          };
+          return null;
+        }
         this.total = _.isArray(response) ? response.length : response.total;
         if (response.options) {
           this.options = response.options;
@@ -777,12 +829,87 @@
         }
         return _.isArray(response) ? response : response.list;
       },
+      getAmount: function (omits) {
+        if (_.isString(omits)) {
+          omits = omits.split(' ');
+        }
+        return this.reduce(function (amount, model) {
+          var data = model.omit(omits);
+          for ( var prop in data) {
+            if (isNaN(data[prop])) {
+              continue;
+            }
+            amount[prop] = (amount[prop] ? amount[prop] : 0) + Number(data[prop]);
+          }
+          return amount;
+        }, {amount: true});
+      },
       setPagesize: function (size) {
         this.pagesize = size;
         localStorage.setItem(this.save, size);
       }
-    });
+    })
+    , ProxyCollection = function (options) {
+      var klass = options.collectionType
+        , self = this;
+      $.getScript(tp.component.Manager.getPath(klass), function () {
+        klass = Nervenet.parseNamespace(klass);
+        var real = self.real = new klass(self.models, options);
+        self.delegateEvents(real);
+        if (self.fetchOptions) {
+          real.fetch(self.fetchOptions);
+        }
+      });
+    };
+  ProxyCollection.prototype = {
+    events: {},
+    fetchOptions: null,
+    models: null,
+    real: null,
+    delegateEvents: function (real) {
+      _.each(this.events, function (handler, event) {
+        real.on(event, handler.method, handler.context);
+      }, this);
+      real.on('sync', this.onSync, this);
+    },
+    fetch: function (options) {
+      if (this.real) {
+        this.real.fetch(options);
+      }
+      this.fetchOptions = options;
+    },
+    on: function (type, method, context) {
+      if (this.real) {
+        return this.real.on(type, method, context);
+      }
+      this.events[type] = {
+        method: method,
+        context: context
+      }
+    },
+    set: function (models, options) {
+      if (this.real) {
+        this.real.set(models, options);
+      }
+      this.models = models;
+    },
+    onSync: function () {
+      this.length = this.real.length;
+    }
+  };
 
+  _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON'], function (method) {
+    ProxyCollection.prototype[method] = function () {
+      return Collection.prototype[method].apply(this.real, arguments);
+    };
+  });
+
+
+  /**
+   *
+   * @param {{collectionType: string}} options
+   * @returns Backbone.Collection | ProxyCollection
+   */
   Collection.getInstance = function (options) {
     var collection;
     if (options && options.collectionId && options.collectionId in collections) {
@@ -794,7 +921,7 @@
     }
 
     var params = _.extend({}, options);
-    if (!params.model || !(params.model instanceof Function)) {
+    if (!params.model) {
       var init = _.chain(params)
         .pick('idAttribute', 'defaults')
         .mapObject(function (value, key) {
@@ -806,9 +933,14 @@
         .value();
       params.model = _.isEmpty(init) ? Model : Model.extend(init);
     }
-    collection = new Collection(null, params);
-    if (options && options.collectionId) {
-      collections[options.collectionId] = collection;
+    if (params.collectionType) {
+      var klass = Nervenet.parseNamespace(params.collectionType);
+      return klass ? new klass(null, params) : new ProxyCollection(params);
+    } else {
+      collection = new Collection(null, params);
+    }
+    if (params.collectionId) {
+      collections[params.collectionId] = collection;
     }
     return collection;
   };
@@ -1144,6 +1276,7 @@
   }
 
   var smart = ns.SmartForm = tp.view.DataSyncView.extend({
+    $context: null,
     $router: null,
     uploaders: null,
     events: {
@@ -1155,6 +1288,9 @@
     },
     initialize: function () {
       this.submit = this.getSubmit();
+      if (!this.model && this.$el.data('target')) {
+        this.model = this.$context.getValue(this.$el.data('target'));
+      }
       if (this.model instanceof Backbone.Model) {
         this.model.on('invalid', this.model_invalidHandler, this);
       }
@@ -1240,18 +1376,15 @@
       var value = _.chain(element)
         .filter(function (item) { return item.checked; })
         .map(function (item) { return item.value; })
+        .value();
 
       return value.join(',');
     },
     initUploader: function () {
-      var id = this.model ? this.model.id : null
-        , self = this
+      var self = this
         , collection = [];
       this.$('.uploader').each(function () {
         var options = $(this).data();
-        if (id) {
-          options.data = {id: id};
-        }
         var uploader = new meathill.SimpleUploader(this, options);
         uploader.on('start', self.uploader_startHandler, self);
         uploader.on('data', self.uploader_dataHandler, self);
@@ -1272,6 +1405,15 @@
       for (var key in data) {
         if (!data.hasOwnProperty(key)) {
           return;
+        }
+        if ('id' in data) {
+          _.each(this.uploaders, function (uploader) {
+            if (!(uploader instanceof meathill.SimpleUploader)) {
+              return;
+            }
+            uploader.options.data = uploader.options.data || {};
+            uploader.options.data.id = uploader.options.data.id || data.id;
+          });
         }
         var value = data[key];
         if (_.isArray(value)) {
@@ -1515,8 +1657,6 @@
       options = _.extend(options, init);
 
       this.params = tp.utils.decodeURLParam(options.params);
-      // 可能会从别的地方带来model
-      options.model = init.model ? Nervenet.parseNamespace(init.model) : null;
       // 起止日期
       if (options.start || options.end) {
         options.defaults = _.pick(options, 'start', 'end');
@@ -1530,7 +1670,7 @@
       this.collection.fetch(options);
     },
     collection_addHandler: function (model, collection, options) {
-      this.fragment += this.template(model.toJSON());
+      this.fragment += this.template(model instanceof Backbone.Model ? model.toJSON() : model);
       if (options && options.immediately) {
         var item = $(this.fragment);
         item.attr('id', model.id || model.cid);
@@ -1619,7 +1759,6 @@
   });
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
-  var DATE_FORMAT = 'YYYY-MM-DD';
 
   ns.Pager = Backbone.View.extend({
     events: {
@@ -1694,81 +1833,22 @@
     }
   });
 
-  ns.Ranger = Backbone.View.extend({
-    events: {
-      'click .shortcut': 'shortcut_clickHandler',
-      'click .range input': 'input_clickHandler',
-      'click .range button': 'range_clickHandler'
-    },
-    initialize: function (options) {
-      this.$('[type=date]').datetimepicker({format: DATE_FORMAT});
-      var range = this.render(options);
-      this.trigger(range, {silent: true});
-    },
-    render: function (options) {
-      // 默认显示一个月
-      var range = _.extend({
-        start: -31,
-        end: 0
-      }, _.pick(options, 'start', 'end'));
-
-      if (!isNaN(range.start)) {
-        range.start = moment().add(range.start, 'days').format(DATE_FORMAT);
-      }
-      if (!isNaN(range.end)) {
-        range.end = moment().add(range.end, 'days').format(DATE_FORMAT);
-      }
-
-      this.$('[name=start]').val(range.start);
-      this.$('[name=end]').val(range.end);
-      return range;
-    },
-    remove: function () {
-      this.stopListening();
-      this.undelegateEvents();
-      this.el = this.$el = this.model = null;
-      return this;
-    },
-    trigger: function (range, options) {
-      options = options || {};
-      options.reset = true;
-      this.model.set(range, options);
-    },
-    input_clickHandler: function (event) {
-      event.stopPropagation();
-    },
-    range_clickHandler: function () {
-      var start = this.$('[name=start]').val()
-        , end = this.$('[name=end]').val();
-      this.$('.shortcut').removeClass('active');
-      this.$('.label').text(start + ' - ' + end);
-      this.trigger({
-        start: start,
-        end: end
-      });
-    },
-    shortcut_clickHandler: function (event) {
-      var item = $(event.currentTarget)
-        , start = item.data('start')
-        , end = item.data('end');
-      item.addClass('active')
-        .siblings().removeClass('active');
-      this.$('.label').text(item.text());
-      var range = this.render({start: start, end: end});
-      this.trigger(range);
-      event.preventDefault();
-    }
-  });
-
   ns.Search = Backbone.View.extend({
     events: {
       'keydown': 'keydownHandler'
     },
     initialize: function () {
-      this.$el.val(this.model.get('keyword'));
+      if (this.model.get('keyword')) {
+        this.$el.val(this.model.get('keyword'));
+      }
+      if (this.el.value) {
+        this.model.set('keyword', this.el.value);
+      }
+      this.model.on('change:keyword', this.model_changeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
     },
     remove: function () {
+      this.model.off(null, null, this);
       this.collection.off(null, null, this);
       this.collection = this.model = null;
       Backbone.View.prototype.remove.call(this);
@@ -1776,6 +1856,9 @@
     collection_syncHandler: function () {
       this.$el.prop('readonly', false);
       this.spinner && this.spinner.remove();
+    },
+    model_changeHandler: function (model, keyword) {
+      this.el.value = keyword;
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {
@@ -1929,8 +2012,100 @@
   });
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
+  ns.DateRanger = Backbone.View.extend({
+    events: {
+      'click .shortcut': 'shortcut_clickHandler',
+      'click .range input': 'input_clickHandler',
+      'click .range button': 'range_clickHandler'
+    },
+    initialize: function () {
+      this.$('[type=date]').datetimepicker({format: moment.DATE_FORMAT});
+      this.template = Handlebars.compile(this.$('script').html());
+      var date = new Date()
+        , month = date.getMonth()
+        , months = _.map(_.range(month, month - 3, -1), function (value) {
+          return {
+            month: value,
+            start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
+            end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
+          }
+        })
+        , self = this;
+      this.$('script').replaceWith(this.template({ months: months }));
+      this.$('.this-month').data('start', moment().startOf('month').format(moment.DATE_FORMAT));
+      this.$('.this-season').data('start', moment().startOf('quarter').format(moment.DATE_FORMAT));
+      this.$('.shortcut').each(function () {
+        var data = $(this).data();
+        data.start = self.formatDate(data.start);
+        data.end = self.formatDate(data.end);
+        $(this).data(data)
+          .attr('data-start', data.start)
+          .attr('data-end', data.end);
+      });
+    },
+    render: function (options) {
+      // 默认显示一个月
+      var range = _.defaults(options, {
+          start: -31,
+          end: 0
+        });
+
+      if (!isNaN(range.start)) {
+        range.start = moment().add(range.start, 'days').format(moment.DATE_FORMAT);
+      }
+      if (!isNaN(range.end)) {
+        range.end = moment().add(range.end, 'days').format(moment.DATE_FORMAT);
+      }
+
+      this.$('[name=start]').val(range.start);
+      this.$('[name=end]').val(range.end);
+      var shortcut = this.$('[data-start="' + range.start + '"][data-end="' + range.end + '"]');
+      this.$('.label').text(shortcut.length ? shortcut.text() : range.start + ' ~ ' + range.end);
+      return range;
+    },
+    trigger: function (range, options) {
+      options = options || {};
+      options.reset = true;
+      this.model.set(range, options);
+    },
+    formatDate: function (date) {
+      return isNaN(date) ? date : moment().add(date, 'days').format(moment.DATE_FORMAT);
+    },
+    use: function (model) {
+      this.model = model;
+      var range = this.render(model.pick('start', 'end'));
+      this.model.set(range, {silent: true});
+    },
+    input_clickHandler: function (event) {
+      event.stopPropagation();
+    },
+    range_clickHandler: function () {
+      var start = this.$('[name=start]').val()
+        , end = this.$('[name=end]').val();
+      this.$('.shortcut').removeClass('active');
+      this.$('.label').text(start + ' - ' + end);
+      this.trigger({
+        start: start,
+        end: end
+      });
+    },
+    shortcut_clickHandler: function (event) {
+      var item = $(event.currentTarget)
+        , start = item.data('start')
+        , end = item.data('end');
+      item.addClass('active')
+        .siblings().removeClass('active');
+      this.$('.label').text(item.text());
+      var range = this.render({start: start, end: end});
+      this.trigger(range);
+      event.preventDefault();
+    }
+  });
+}(Nervenet.createNameSpace('tp.component')));;
+(function (ns) {
   ns.Manager = {
     $context: null,
+    $me: null,
     map: {
       '.base-list': 'tp.component.BaseList',
       '.smart-table': 'tp.component.SmartTable',
@@ -1940,7 +2115,8 @@
       '.typeahead': 'tp.component.Typeahead',
       'form': 'tp.component.SmartForm'
     },
-    check: function ($el, mediator) {
+    components: [],
+    check: function ($el) {
       var components = [];
       $el.data('components', components);
 
@@ -1971,32 +2147,24 @@
         }
         var dom = $el.find(selector);
         if (dom.length) {
-          var init = {
-            model: mediator
-          };
           var component = Nervenet.parseNamespace(this.map[selector]);
           if (component) {
             dom.each(function () {
-              init.el = this;
-              components.push(self.$context.createInstance(component, init));
+              components.push(self.$context.createInstance(component, {el: this}));
             });
           } else {
-            this.loadMediatorClass(components, this.map[selector], init, dom); // mediator pattern
+            this.loadMediatorClass(components, this.map[selector], dom); // mediator pattern
           }
         }
       }
       // 初始化非本库的自定义组件
       $el.find('[data-mediator-class]').each(function () {
         var className = $(this).data('mediator-class')
-          , component = Nervenet.parseNamespace(className)
-          , init = {
-            model: mediator
-          };
+          , component = Nervenet.parseNamespace(className);
         if (component) {
-          init.el = this;
-          components.push(self.$context.createInstance(component, init));
+          components.push(self.$context.createInstance(component, {el: this}));
         } else {
-          self.loadMediatorClass(components, className, init, $(this));
+          self.loadMediatorClass(components, className, $(this));
         }
       });
     },
@@ -2037,7 +2205,7 @@
       }
       return 'js/' + arr.join('/') + '.js';
     },
-    loadMediatorClass: function (components, className, init, dom, callback) {
+    loadMediatorClass: function (components, className, dom, callback) {
       var self = this
         , script = document.createElement("script");
       script.async = true;
@@ -2048,10 +2216,11 @@
         if (!component) {
           throw new Error('cannot find mediator')
         }
-        dom.each(function () {
-          init.el = this;
-          components.push(self.$context.createInstance(component, init));
-        });
+        if (dom) {
+          dom.each(function () {
+            components.push(self.$context.createInstance(component, {el: this}));
+          });
+        }
         if (callback) {
           callback(components);
         }
@@ -2069,6 +2238,17 @@
         }
       }
       return true;
+    },
+    createComponents: function () {
+      for (var i = 0, len = this.components.length; i < len; i++) {
+        var func = this.components[i][0]
+          , params = this.components[i][1];
+        func = _.bind(func, this, params);
+        func();
+      }
+    },
+    registerComponent: function (func, params) {
+      this.components.push([func, params]);
     }
   };
   ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';
@@ -2114,11 +2294,12 @@
       this.off();
       Backbone.View.prototype.remove.call(this);
     },
-    hide: function () {
+    hide: function (delay) {
+      delay = delay === undefined ? 3000 : delay;
       var modal = this.$el;
       timeout = setTimeout(function () {
         modal.modal('hide');
-      }, 3000);
+      }, delay);
     },
     onLoadComplete: function (response) {
       if (response) {
@@ -2135,8 +2316,8 @@
       this.$el.modal('hide');
       this.trigger('cancel', this);
     },
-    form_successHandler: function () {
-      this.hide();
+    form_successHandler: function (delay) {
+      this.hide(delay);
       this.trigger('success');
     },
     submitButton_clickHandler: function (event) {
@@ -2530,10 +2711,12 @@
 
   ns.Body = Backbone.View.extend({
     $context: null,
+    $sidebarEditor: null,
     events: {
       'click .add-button': 'addButton_clickHandler',
       'click .print-button': 'printButton_clickHandler',
-      'click .refresh-button': 'refreshButton_clickHandler'
+      'click .refresh-button': 'refreshButton_clickHandler',
+      'click .request-button': 'requestButton_clickHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -2557,14 +2740,7 @@
       }
     },
     createSidebar: function () {
-      this.template = this.template || Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
-      this.$('.sidebar-nav-item').remove();
-      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default'
-        , template = this.template;
-      $.getJSON('page/sidebar/' + role + '.json', function (response) {
-        var html = template({list: response});
-        $('#navbar-side-inner').append(html);
-      });
+      this.$sidebarEditor.render();
     },
     load: function (url, data, options) {
       options = options || {};
@@ -2625,6 +2801,7 @@
         this.$el.removeClass('full-page')
           .find('.login').remove();
         this.$el.toggleClass('cp', this.model.isCP());
+        tp.component.Manager.createComponents();
       }
     },
     addButton_clickHandler: function (event) {
@@ -2643,6 +2820,16 @@
     },
     refreshButton_clickHandler: function (event) {
       Backbone.history.loadUrl(Backbone.history.fragment);
+      event.preventDefault();
+    },
+    requestButton_clickHandler: function (event) {
+      var href = event.target.getAttribute('href');
+      href = /https?:\/\//.test(href) ? href : tp.API + href;
+      $.get(href, function (response) {
+        if (response.code === 0) {
+          alert(response.msg);
+        }
+      }, 'json');
       event.preventDefault();
     },
     page_loadCompleteHandler: function () {
@@ -2688,6 +2875,129 @@
     },
     model_changeHandler: function () {
       this.render();
+    }
+  });
+}(Nervenet.createNameSpace('tp.view')));;
+(function (ns) {
+  var key = tp.PROJECT + '-hidden-items';
+  ns.SidebarEditor = Backbone.View.extend({
+    events: {
+      'click .eye-edit-button': 'eyeEditButton_clickHandler',
+      'click .accordion-toggle': 'accordionToggle_clickHandler',
+      'click #menu-edit-button': 'menuEditButton_clickHandler',
+      'click #edit-confirm-button': 'editConfirmButton_clickHandler',
+      'click #edit-cancel-button': 'editCancelButton_clickHandler',
+      'click #menu-search-button': 'menuSearchButton_clickHandler',
+      'click #search-clear-button': 'searchClearButton_clickHandler',
+      'click #menu-collapse-button': 'menuCollapseButton_clickHandler',
+      'blur #menu-search-input': 'menuSearchInput_blurHandler',
+      'keyup #menu-search-input': 'menuSearchInput_keyupHandler'
+    },
+    initialize: function () {
+      this.hiddenItems = JSON.parse(localStorage.getItem(key)) || [];
+      this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+    },
+    render: function () {
+      this.$('.sidebar-nav-item').remove();
+      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default';
+      $.getJSON('page/sidebar/' + role + '.json', _.bind(function (response) {
+        _.each(response, function (parent) {
+          var item = parent['link'] || parent['sub-id'];
+          parent.invisible = this.hiddenItems.indexOf('parent-' + item) !== -1;
+          if (parent.sub)  {
+            _.each(parent.sub, function (child) {
+              child.invisible = this.hiddenItems.indexOf(child.link) !== -1;
+            }, this);
+          }
+        }, this);
+        var html = this.template({list: response});
+        this.$('#navbar-side-inner').append(html);
+      }, this));
+    },
+    eyeEditButton_clickHandler: function (event) {
+      var li = $(event.currentTarget).closest('li');
+      li.toggleClass('hidden');
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    menuEditButton_clickHandler: function () {
+      this.$el.addClass('sidebar-editing');
+      this.$('.collapse').collapse('show');
+    },
+    editConfirmButton_clickHandler: function () {
+      var hiddenItems = _.map(this.$('.hidden'), function (node) {
+        return node.id;
+      });
+      this.$el.removeClass('sidebar-editing');
+      this.hiddenItems = hiddenItems;
+      localStorage.setItem(key, JSON.stringify(hiddenItems));
+    },
+    editCancelButton_clickHandler: function () {
+      this.$el.removeClass('sidebar-editing');
+      this.$('.collapse').collapse('hide');
+      this.render();
+    },
+    menuSearchButton_clickHandler: function () {
+      this.$el.addClass('sidebar-search');
+      this.$('.collapse').collapse('show');
+      this.$('#menu-search-input').focus();
+    },
+    menuSearchInput_blurHandler: function (event) {
+      if (!event.target.value.trim()) {
+        this.$el.removeClass('sidebar-search');
+        this.$('#navbar-side-inner').removeClass('search-typing');
+      }
+    },
+    searchClearButton_clickHandler: function () {
+      this.$('#menu-search-input').val('').focus();
+    },
+    menuSearchInput_keyupHandler: function (event) {
+      var self = this
+        , val = event.target.value.trim();
+      this.$('#navbar-side-inner').addClass('search-typing');
+      if (val) {
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(function () {
+          var str = '.*' + val.split('').join('.*') + '.*'
+            , reg = new RegExp(str);
+          self.$('a[href^="#/"]').each(function () {
+            var isMatch = reg.test(this.innerText.toLowerCase());
+            $(this).closest('li').toggleClass('mismatch', !isMatch);
+          })
+        }, 500);
+      }
+    },
+    menuCollapseButton_clickHandler: function () {
+      $('body').toggleClass('sidebar-collapsed');
+    },
+    accordionToggle_clickHandler: function (event) {
+      if ($('body').hasClass('sidebar-collapsed')) {
+        $(event.currentTarget).siblings('ul').toggleClass('view').height('auto');
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }
+  });
+}(Nervenet.createNameSpace('tp.view')));;
+(function (ns) {
+  ns.Dashboard = ns.Loader.extend({
+    className: 'dashboard',
+    render: function () {
+      ns.Loader.prototype.render.call(this);
+      this.$el.removeClass('loading');
+      this.$('.fa').remove('fa-spin fa-spinner');
+    },
+    model_changeHandler: function (model) {
+      var range = _.pick(model.changed, 'start', 'end');
+      if (_.isEmpty(range)) {
+        this.render();
+      } else {
+        model.fetch({
+          data: model.pick('start', 'end')
+        });
+        this.$el.addClass('loading');
+        this.$('.fa').addClass('fa-spin fa-spinner');
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
@@ -2792,11 +3102,14 @@
           return 'percent' in data ? y + '(' + data.percent + '%)' : y;
         }
       }
-      if (!_.isArray(options.ykeys)) {
+      if (options.ykeys && !_.isArray(options.ykeys)) {
         this.src.ykeys = options.ykeys = options.ykeys.split(',');
       }
-      if (!_.isArray(options.labels)) {
+      if (options.labels && !_.isArray(options.labels)) {
         this.src.labels = options.labels = options.labels.split(',');
+      }
+      if (options.yFormater) {
+        options.yFormater = tp.utils.decodeURLParam(options.yFormater);
       }
       this.options = options;
     },
@@ -2807,6 +3120,7 @@
       if (this.collection.length === 0) {
         this.showEmpty();
       }
+      var json = this.collection.toJSON();
       if (this.collection.options) {
         if (this.collection.options.ykeys) {
           this.options.ykeys = this.src.ykeys.concat(this.collection.options.ykeys);
@@ -2815,7 +3129,17 @@
           this.options.labels = this.src.labels.concat(this.collection.options.labels);
         }
       }
-      this.options.data = this.collection.toJSON();
+      if (this.options.yFormater) {
+        json = json.map(function (item) {
+          return _.mapObject(item, function (value, key) {
+            if (key in this.options.yFormater) {
+              return Handlebars.helpers[this.options.yFormater[key]](value);
+            }
+            return value;
+          }, this);
+        }, this);
+      }
+      this.options.data = json;
       this.render();
     }
   });
@@ -2825,6 +3149,7 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
+    $ranger: null,
     autoFetch: true,
     events: {
       'click .archive-button': 'archiveButton_clickHandler',
@@ -2845,7 +3170,8 @@
       this.renderHeader();
 
       var data = this.$el.data()
-        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch;
+        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch
+        , typeahead = 'typeahead' in data ? data.typeahead : true;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
         autoFetch: false,
         container: 'tbody',
@@ -2879,10 +3205,8 @@
 
       // 起止日期
       if ('ranger' in options) {
-        this.ranger = new ns.table.Ranger(_.extend({}, options, {
-          el: options.ranger,
-          model: this.model
-        }));
+        this.model.set(_.pick(options, 'start', 'end'), {silent: true});
+        this.$ranger.use(this.model);
       }
 
       // 删选器
@@ -2895,7 +3219,7 @@
       }
 
       // 桌面默认都固定表头
-      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0) {
+      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0 && typeahead) {
         this.header = new ns.table.FixedHeader({
           target: this
         });
@@ -2904,6 +3228,7 @@
       if (autoFetch) {
         this.refresh(options);
       }
+      this.options = options;
     },
     remove: function () {
       if (this.pagination) {
@@ -2992,6 +3317,10 @@
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
+      if (this.options.amount) {
+        var data = this.collection.getAmount(this.options.omits);
+        this.collection_addHandler(data, null, {immediately: true});
+      }
     },
     deleteButton_clickHandler: function (event) {
       var button = $(event.currentTarget)

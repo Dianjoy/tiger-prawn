@@ -6,16 +6,16 @@
   ns.Stat = Backbone.Router.extend({
     $body: null,
     $me: null,
+    $context: null,
     routes: {
       'stat/(:ad_type)': 'showStat',
       'stat/ad_type/:id/:start/:end': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
-
       'invoice/': 'showInvoice',
       'invoice/:id': 'invoiceDetail',
-      'invoice/apply/:start/:end/:ids': 'applyInvoice',
-
+      'invoice/apply/:channel/:ids': 'applyInvoice',
       'stat/analyse/': 'showAdminADStat',
+      'stat/analyse/:start/:end': 'showAdminADStatTime',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
     showADStat: function (id, start, end) {
@@ -71,13 +71,13 @@
         })
         .setFramework('invoice invoice-detail', '发票开具申请单');
     },
-    applyInvoice: function (start, end, ids) {
+    applyInvoice: function (channel, ids) {
       var model = new tp.model.InvoiceDetail({
         init: true,
-        start: start,
-        end: end,
+        channel: channel,
         ids: ids
       });
+      this.$context.mapValue('invoiceDetail', model, true);
       this.$body
         .load('page/stat/apply-invoice-detail.hbs', model, {
           className: 'invoice-apply',
@@ -89,6 +89,14 @@
       this.$body.load('page/stat/analyse.hbs', {
         start: moment().startOf('month').format(moment.DATE_FORMAT),
         end: moment().format(moment.DATE_FORMAT),
+        API: tp.API
+      });
+      this.$body.setFramework('has-date-range daily', '广告数据分析');
+    },
+    showAdminADStatTime: function (start, end) {
+      this.$body.load('page/stat/analyse.hbs', {
+        start: start,
+        end: end,
         API: tp.API
       });
       this.$body.setFramework('has-date-range daily', '广告数据分析');

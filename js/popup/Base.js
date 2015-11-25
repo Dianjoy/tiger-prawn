@@ -44,11 +44,12 @@
       this.off();
       Backbone.View.prototype.remove.call(this);
     },
-    hide: function () {
+    hide: function (delay) {
+      delay = delay === undefined ? 3000 : delay;
       var modal = this.$el;
       timeout = setTimeout(function () {
         modal.modal('hide');
-      }, 3000);
+      }, delay);
     },
     onLoadComplete: function (response) {
       if (response) {
@@ -65,8 +66,8 @@
       this.$el.modal('hide');
       this.trigger('cancel', this);
     },
-    form_successHandler: function () {
-      this.hide();
+    form_successHandler: function (delay) {
+      this.hide(delay);
       this.trigger('success');
     },
     submitButton_clickHandler: function (event) {

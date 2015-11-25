@@ -82,8 +82,6 @@
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{/equal}}
         {{#greater status 9}}通过{{/greater}}
-        {{else}}
-        审核中
         {{/if}}
       </td>
       <td data-title="特批">
@@ -126,6 +124,7 @@
       <td data-title="发票日期">{{handle_time}}</td>
       <td data-title="操作">
         <div class="btn-group">
+          {{#if is_show}}
           {{#in status 8 10 18 20 28 30 38}}
           <a href="#/invoice/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
           {{#equal status 8}}
@@ -138,6 +137,10 @@
           {{#in status 40}}
           <a href="#/invoice/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
           {{/in}}
+          {{else}}
+          <a href="#/invoice/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
+          <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+          {{/if}}
         </div>
       </td>
     </tr>
@@ -145,7 +148,7 @@
   </tbody>
   <tfoot class="waiting">
   <tr>
-    <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
+    <td colspan="12"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
   </tr>
   </tfoot>
 </table>

@@ -59,7 +59,7 @@
               <li class="alarm" id="msg-{{id}}">
                 <input type="checkbox" name="check" value="{{id}}" {{#if status}}checked{{/if}} />
                 <a href="{{handler}}" {{#if is_popup}}class="popup"{{/if}} {{#if is_external}}target="_blank"{{/if}}>
-                [{{description}}] <strong>{{name}}</strong> <small class="text-muted">{{substring create_time 5 11}}</small>
+                [{{description}}] <strong>{{channel}}</strong><strong>{{name}}</strong> <small class="text-muted">{{substring create_time 5 11}}</small>
                 </a>
               </li>
             </script>
@@ -71,6 +71,34 @@
           </ul>
         </li>
         <li class="pit dropdown-list"><a href="#"><i class="fa fa-envelope"></i></a></li>
+        <li class="dropdown dropdown-list invoice-list">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <span>发票</span> <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <form method="post">
+              <script type="text/x-handlebars-template">
+                {{#if is_first}}
+                <li class="channel dropdown-header invalid-{{channel}}">
+                  <label>
+                    <i class="fa fa-chevron-right"></i>
+                    <input type="checkbox" class="check-all" value="channel_{{channel}}">渠道: {{alias}}
+                    <input name="c_{{channel}}" value="{{channel}}" class="hidden">
+                  </label>
+                  <a class="btn clear-button" title="删除" data-msg="确定删除整个渠道的广告吗？"><i class="fa fa-trash-o fa-fw"></i></a>
+                </li>
+                {{/if}}
+                <li class="ids invalid-{{channel}}" id="{{id}}">
+                  <input type="checkbox" name="channel_{{channel}}" value="{{ad_id}}|{{start}}|{{end}}">{{ad_name}} {{channel_id}}
+                  <br><span>{{start}} ~ {{end}}</span>
+                  <a class="btn delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></a>
+                </li>
+              </script>
+              <li class="divider"></li>
+              <li class="apply"><button class="btn btn-primary"><i class="fa fa-plus"></i> 申请发票</button></li>
+            </form>
+          </ul>
+        </li>
         <li class="dropdown dropdown-list me">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <span class="username"></span> <span class="caret"></span>
@@ -159,14 +187,20 @@
       <div class="dropdown">
         <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="data-range-btn">
           <i class="fa fa-calendar"></i>
-          日期选择：<span class="label">一月内</span>
+          日期选择：<span class="label"></span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="data-range-btn">
           <li class="shortcut" data-start="0" data-end="0"><a href="javascript:void(0);">今天</a></li>
           <li class="shortcut" data-start="-1" data-end="-1"><a href="javascript:void(0);">昨天</a></li>
-          <li class="shortcut" data-start="-7" data-end="0"><a href="javascript:void(0);">一周内</a></li>
-          <li class="shortcut" data-start="-30" data-end="0"><a href="javascript:void(0);">一月内</a></li>
+          <li class="shortcut this-month" data-end="-1"><a href="javascript:void(0);">本月</a></li>
+          <li class="shortcut this-season" data-end="-1"><a href="javascript:void(0);">本季度</a></li>
+          <li class="divider"></li>
+          <script type="text/x-handlebars-template">
+            {{#each months}}
+            <li class="shortcut" data-start="{{start}}" data-end="{{end}}"><a href="javascript:void(0);">{{#if @first}}上个月{{else}}{{month}}月份{{/if}}</a></li>
+            {{/each}}
+          </script>
           <li class="divider"></li>
           <li class="range">
             <label for="stat-range-start-date">开始日期</label>
@@ -268,13 +302,13 @@
 <script src="bower_components/morrisjs/morris.min.js"></script>
 <script src="bower_components/handlebars/handlebars.min.js"></script>
 <script src="bower_components/underscore/underscore-min.js"></script>
-<script src="bower_components/backbone/backbone.js"></script>
+<script src="bower_components/backbone/backbone-min.js"></script>
 <script src="bower_components/moment/min/moment-with-locales.min.js"></script>
 <script src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script src="bower_components/nervenet/nervenet.min.js"></script>
 <script src="bower_components/spark-md5/spark-md5.min.js"></script>
 <script src="bower_components/marked/marked.min.js"></script>
-<script src="bower_components/mh-simple-uploader/dist/js/SimpleUploader.js"></script>
+<script src="bower_components/mh-simple-uploader/dist/js/SimpleUploader.min.js"></script>
 <script src="js/define.js"></script>
 <script src="js/config.js"></script>
 <script src="js/adapter/backbone.js"></script>
@@ -293,13 +327,13 @@
 <script src="js/controller/editModelCommand.js"></script>
 <script src="js/controller/addModelCommand.js"></script>
 <script src="js/model/AD.js"></script>
-<script src="js/model/Dashboard.js"></script>
 <script src="js/model/Me.js"></script>
 <script src="js/model/ListCollection.js"></script>
 <script src="js/model/Notice.js"></script>
 <script src="js/model/TableMemento.js"></script>
 <script src="js/model/Detail.js"></script>
-<script src="js/model/InvoiceDetail.js"></script>
+<script src="js/model/InvoiceDetail.js" data-build="no"></script>
+<script src="js/model/InvoiceList.js" data-build="no"></script>
 <script src="js/view/DataSyncView.js"></script>
 <script src="js/notification/Panel.js"></script>
 <script src="js/notification/Growl.js"></script>
@@ -309,6 +343,7 @@
 <script src="js/component/FileFetcher.js"></script>
 <script src="js/component/TableParts.js"></script>
 <script src="js/component/CollectionSelect.js"></script>
+<script src="js/component/DateRanger.js"></script>
 <script src="js/component/Manager.js"></script>
 <script src="js/popup/Base.js"></script>
 <script src="js/popup/Editor.js"></script>
@@ -316,6 +351,8 @@
 <script src="js/view/Body.js"></script>
 <script src="js/view/Me.js"></script>
 <script src="js/view/SidebarEditor.js"></script>
+<script src="js/view/InvoiceListView.js" data-build="no"></script>
+<script src="js/view/Dashboard.js"></script>
 <script src="js/page/AdEditor.js"></script>
 <script src="js/page/DateRange.js"></script>
 <script src="js/page/InvoiceEditor.js"></script>

@@ -4,6 +4,7 @@
 
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
+    $ranger: null,
     autoFetch: true,
     events: {
       'click .archive-button': 'archiveButton_clickHandler',
@@ -24,7 +25,8 @@
       this.renderHeader();
 
       var data = this.$el.data()
-        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch;
+        , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch
+        , typeahead = 'typeahead' in data ? data.typeahead : true;
       ns.BaseList.prototype.initialize.call(this, _.extend(options, {
         autoFetch: false,
         container: 'tbody',
@@ -58,10 +60,8 @@
 
       // 起止日期
       if ('ranger' in options) {
-        this.ranger = new ns.table.Ranger(_.extend({}, options, {
-          el: options.ranger,
-          model: this.model
-        }));
+        this.model.set(_.pick(options, 'start', 'end'), {silent: true});
+        this.$ranger.use(this.model);
       }
 
       // 删选器
@@ -74,7 +74,7 @@
       }
 
       // 桌面默认都固定表头
-      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0) {
+      if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0 && typeahead) {
         this.header = new ns.table.FixedHeader({
           target: this
         });
@@ -83,6 +83,7 @@
       if (autoFetch) {
         this.refresh(options);
       }
+      this.options = options;
     },
     remove: function () {
       if (this.pagination) {
@@ -171,6 +172,10 @@
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
+      if (this.options.amount) {
+        var data = this.collection.getAmount(this.options.omits);
+        this.collection_addHandler(data, null, {immediately: true});
+      }
     },
     deleteButton_clickHandler: function (event) {
       var button = $(event.currentTarget)

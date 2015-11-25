@@ -2,23 +2,8 @@
   <div class="col-md-8 col-sm-12">
     <h4 style="display:inline-block;" class="mr2e">
       欢迎你，{{my_name}}。本月业绩
-      <small>{{dashboard_start}}至{{dashboard_end}}</small>
+      <small>{{start}}至{{end}}</small>
     </h4>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-        <i class="fa fa-clock-o"></i>选择时间段 <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu">
-        {{#each months}}
-          <li><a href="#/dashboard/{{start}}/{{end}}">{{month}}</a></li>
-        {{/each}}
-        <li class="divider"></li>
-        <li><a href="#/dashboard/{{today}}/{{today}}">今天</a></li>
-        <li><a href="#/dashboard/{{yesterday}}/{{yesterday}}">昨天</a></li>
-        <li><a href="#/dashboard/{{month_start}}/{{today}}">本月</a></li>
-        <li><a href="#/dashboard/{{season_start}}/{{today}}">本季度</a></li>
-      </ul>
-    </div>
   </div>
   <h4 class="pull-right col-md-4 col-sm-12 text-right">
     最近一小时的广告数：安卓{{pack_name_count_android}}个；iOS{{pack_name_count_ios}}个，回调率{{ios_ratio}}%
