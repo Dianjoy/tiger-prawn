@@ -1,4 +1,4 @@
 <div class="input-group">
-  <input type="{{realType}}" name="{{prop}}" class="form-control datetimepicker" id="editor-popup-input" value="{{value}}" data-format="{{format}}">
+  <input type="{{realType}}" name="{{prop}}" class="form-control datetimepicker" id="editor-popup-input" value="{{value}}" data-format="{{format}}" data-widget-parent=".modal-dialog" {{#equal realType 'time'}}data-side-by-side="true"{{/equal}}>
   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 </div>
