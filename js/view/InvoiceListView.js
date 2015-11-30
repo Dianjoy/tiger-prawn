@@ -79,12 +79,12 @@
     clearButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
         , msg = button.data('msg') || '确定删除么？'
-        , channel = button.parent().find('.check-all').val().slice(8);
+        , channel = button.parent().find('.check-all').val().slice(8)
+        , models = this.collection.where({channel: channel});
       if (!confirm(msg)) {
         return;
       }
       button.spinner();
-      var models = this.collection.where({channel: channel});
       this.collection.remove(models);
     },
     form_successHandler: function () {

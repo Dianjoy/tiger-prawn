@@ -11,28 +11,30 @@
     },
     initialize: function () {
       this.$('[type=date]').datetimepicker({format: moment.DATE_FORMAT});
-      this.template = Handlebars.compile(this.$('script').html());
-      var date = new Date()
-        , month = date.getMonth()
-        , months = _.map(_.range(month, month - 3, -1), function (value) {
-          return {
-            month: value,
-            start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
-            end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
-          }
-        })
-        , self = this;
-      this.$('script').replaceWith(this.template({ months: months }));
-      this.$('.this-month').data('start', moment().startOf('month').format(moment.DATE_FORMAT));
-      this.$('.this-season').data('start', moment().startOf('quarter').format(moment.DATE_FORMAT));
-      this.$('.shortcut').each(function () {
-        var data = $(this).data();
-        data.start = self.formatDate(data.start);
-        data.end = self.formatDate(data.end);
-        $(this).data(data)
-          .attr('data-start', data.start)
-          .attr('data-end', data.end);
-      });
+      if (this.$('script').html()) {
+        this.template = Handlebars.compile(this.$('script').html());
+        var date = new Date()
+          , month = date.getMonth()
+          , months = _.map(_.range(month, month - 3, -1), function (value) {
+            return {
+              month: value,
+              start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
+              end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
+            }
+          })
+          , self = this;
+        this.$('script').replaceWith(this.template({ months: months }));
+        this.$('.this-month').data('start', moment().startOf('month').format(moment.DATE_FORMAT));
+        this.$('.this-season').data('start', moment().startOf('quarter').format(moment.DATE_FORMAT));
+        this.$('.shortcut').each(function () {
+          var data = $(this).data();
+          data.start = self.formatDate(data.start);
+          data.end = self.formatDate(data.end);
+          $(this).data(data)
+            .attr('data-start', data.start)
+            .attr('data-end', data.end);
+        });
+      }
     },
     render: function (options) {
       // 默认显示一个月
