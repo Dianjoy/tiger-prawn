@@ -21,8 +21,8 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "~3.3.5",
-    "font-awesome": "~4.4.0",
+    "bootstrap": "~3.3.6",
+    "font-awesome": "~4.5.0",
     "colors": "~2.2.0",
     "backbone": "~1.2.3",
     "nervenet": "~0.1.9",
@@ -32,11 +32,11 @@
     "eonasdan-bootstrap-datetimepicker": "meathill/bootstrap-datetimepicker#master",
     "morrisjs": "~0.5.1",
     "jquery": "~2.1.4",
-    "mh-simple-uploader": "^0.6.6",
+    "mh-simple-uploader": "^0.6.7",
     "marked": "~0.3.5"
   },
   "devDependencies": {
-    "bootstrap-sass": "twbs/bootstrap-sass#~3.3.5",
+    "bootstrap-sass": "twbs/bootstrap-sass#~3.3.6",
     "qunit": "~1.19.0"
   }
 }

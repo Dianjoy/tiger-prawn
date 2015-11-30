@@ -12,7 +12,7 @@
     model.urlRoot = collection.url;
     model.key = collection.key;
     if (options.name) {
-      context.mapValue(options.name, model);
+      context.mapValue(options.name, model, true);
     }
     options.model = model;
     var popup = tp.popup.Manager.popup(options);
