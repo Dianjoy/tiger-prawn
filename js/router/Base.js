@@ -14,25 +14,18 @@
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function (start, end) {
-      start = start || moment().add(1 - (new Date()).getDate(), 'days').format(moment.DATE_FORMAT);
-      end = end || moment().add(-1, 'days').format(moment.DATE_FORMAT);
-      var page = this.$me.isCP() ? '_cp' : ''
+      var range = moment.createRange(start, end)
+        , page = this.$me.isCP() ? '_cp' : ''
         , Model = Backbone.Model.extend({
           url: tp.API + 'dashboard/',
           parse: function (response) {
             return response.data;
           }
         })
-        , model = new Model({
-          start: start,
-          end: end
-        });
+        , model = new Model(range);
       this.$body.load('page/dashboard' + page + '.hbs', model, {
         refresh: true,
-        data: {
-          start: start,
-          end: end
-        },
+        data: range,
         loader: tp.view.Dashboard
       });
       this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');

@@ -44,14 +44,13 @@
       this.$body.setFramework('has-date-range', '单个广告一天内统计');
     },
     showStat: function (ad_type) {
-      var page = this.$me.isCP() ? '_cp.html' : '.hbs';
-      var obj = {
-        API: tp.API,
-        ad_type: ad_type,
-        start: moment().startOf('month').format(moment.DATE_FORMAT),
-        end: moment().format(moment.DATE_FORMAT),
-        is_android: ad_type === 'android'
-      };
+      var page = this.$me.isCP() ? '_cp.html' : '.hbs'
+        , range = moment.createRange(null, null, true)
+        , obj = _.extend(range, {
+          API: tp.API,
+          ad_type: ad_type,
+          is_android: ad_type === 'android'
+        });
       this.$body.load('page/stat/list' + page, this.$me.isCP() ? null : obj);
       this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type + '-stat'), '投放结果统计');
     },
@@ -86,11 +85,9 @@
         .setFramework('invoice invoice-apply', '发票开具申请单');
     },
     showAdminADStat: function () {
-      this.$body.load('page/stat/analyse.hbs', {
-        start: moment().startOf('month').format(moment.DATE_FORMAT),
-        end: moment().format(moment.DATE_FORMAT),
-        API: tp.API
-      });
+      var range = moment.createRange(null, null, true);
+      range.API = tp.API;
+      this.$body.load('page/stat/analyse.hbs', range);
       this.$body.setFramework('has-date-range daily', '广告数据分析');
     },
     showAdminADStatTime: function (start, end) {
@@ -102,9 +99,12 @@
       this.$body.setFramework('has-date-range daily', '广告数据分析');
     },
     showDailyADStat: function (id, start, end) {
-      end = end || moment().format(moment.DATE_FORMAT);
-      start = start || moment().startOf('month').format(moment.DATE_FORMAT);
-      this.$body.load('page/stat/analyse-daily.hbs', {id: id, start: start, end: end, API: tp.API});
+      var range = moment.createRange(start, end);
+      range = _.extend(range, {
+        id: id,
+        API: tp.API
+      });
+      this.$body.load('page/stat/analyse-daily.hbs', range);
       this.$body.setFramework('has-date-range daily-ad', '广告统计/广告数据分析');
     }
   });

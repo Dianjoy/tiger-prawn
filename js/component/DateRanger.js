@@ -29,7 +29,7 @@
         this.$('.shortcut').each(function () {
           var data = $(this).data();
           data.start = self.formatDate(data.start);
-          data.end = self.formatDate(data.end);
+          data.end = self.formatDate(data.end, date.getDate());
           $(this).data(data)
             .attr('data-start', data.start)
             .attr('data-end', data.end);
@@ -52,7 +52,7 @@
 
       this.$('[name=start]').val(range.start);
       this.$('[name=end]').val(range.end);
-      var shortcut = this.$('[data-start="' + range.start + '"][data-end="' + range.end + '"]');
+      var shortcut = this.$('[data-start="' + range.start + '"][data-end="' + range.end + '"]').eq(0);
       this.$('.label').text(shortcut.length ? shortcut.text() : range.start + ' ~ ' + range.end);
       return range;
     },
@@ -61,8 +61,14 @@
       options.reset = true;
       this.model.set(range, options);
     },
-    formatDate: function (date) {
-      return isNaN(date) ? date : moment().add(date, 'days').format(moment.DATE_FORMAT);
+    formatDate: function (date, today) {
+      if (isNaN(date)) {
+        return date;
+      }
+      if (today && today === 1 && date === -1) {
+        date = 0;
+      }
+      return moment().add(date, 'days').format(moment.DATE_FORMAT);
     },
     use: function (model) {
       this.model = model;

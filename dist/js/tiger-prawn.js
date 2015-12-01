@@ -227,9 +227,21 @@
   };
 }(jQuery));;
 (function (m) {
-  m.DATE_FORMAT = 'YYYY-MM-DD';
+  var date = m.DATE_FORMAT = 'YYYY-MM-DD';
   m.TIME_FORMAT = 'HH:mm:ss';
   m.DATETIME_FORMAT = m.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
+  m.createRange = function (start, end, withToday) {
+    var today = (new Date()).getDate();
+    start = start || moment().add(1 - today, 'days').format(date);
+    if (!end) {
+      end = withToday || today === 1 ? 0 : -1;
+      end = moment().add(end, 'days').format(date);
+    }
+    return {
+      start: start,
+      end: end
+    }
+  }
 }(moment));;
 (function () {
   var data = {};
@@ -258,25 +270,18 @@
       'my/profile/': 'showMyProfile'
     },
     showDashboard: function (start, end) {
-      start = start || moment().add(1 - (new Date()).getDate(), 'days').format(moment.DATE_FORMAT);
-      end = end || moment().add(-1, 'days').format(moment.DATE_FORMAT);
-      var page = this.$me.isCP() ? '_cp' : ''
+      var range = moment.createRange(start, end)
+        , page = this.$me.isCP() ? '_cp' : ''
         , Model = Backbone.Model.extend({
           url: tp.API + 'dashboard/',
           parse: function (response) {
             return response.data;
           }
         })
-        , model = new Model({
-          start: start,
-          end: end
-        });
+        , model = new Model(range);
       this.$body.load('page/dashboard' + page + '.hbs', model, {
         refresh: true,
-        data: {
-          start: start,
-          end: end
-        },
+        data: range,
         loader: tp.view.Dashboard
       });
       this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
@@ -2026,28 +2031,30 @@
     },
     initialize: function () {
       this.$('[type=date]').datetimepicker({format: moment.DATE_FORMAT});
-      this.template = Handlebars.compile(this.$('script').html());
-      var date = new Date()
-        , month = date.getMonth()
-        , months = _.map(_.range(month, month - 3, -1), function (value) {
-          return {
-            month: value,
-            start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
-            end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
-          }
-        })
-        , self = this;
-      this.$('script').replaceWith(this.template({ months: months }));
-      this.$('.this-month').data('start', moment().startOf('month').format(moment.DATE_FORMAT));
-      this.$('.this-season').data('start', moment().startOf('quarter').format(moment.DATE_FORMAT));
-      this.$('.shortcut').each(function () {
-        var data = $(this).data();
-        data.start = self.formatDate(data.start);
-        data.end = self.formatDate(data.end);
-        $(this).data(data)
-          .attr('data-start', data.start)
-          .attr('data-end', data.end);
-      });
+      if (this.$('script').html()) {
+        this.template = Handlebars.compile(this.$('script').html());
+        var date = new Date()
+          , month = date.getMonth()
+          , months = _.map(_.range(month, month - 3, -1), function (value) {
+            return {
+              month: value,
+              start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
+              end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
+            }
+          })
+          , self = this;
+        this.$('script').replaceWith(this.template({ months: months }));
+        this.$('.this-month').data('start', moment().startOf('month').format(moment.DATE_FORMAT));
+        this.$('.this-season').data('start', moment().startOf('quarter').format(moment.DATE_FORMAT));
+        this.$('.shortcut').each(function () {
+          var data = $(this).data();
+          data.start = self.formatDate(data.start);
+          data.end = self.formatDate(data.end, date.getDate());
+          $(this).data(data)
+            .attr('data-start', data.start)
+            .attr('data-end', data.end);
+        });
+      }
     },
     render: function (options) {
       // 默认显示一个月
@@ -2065,7 +2072,7 @@
 
       this.$('[name=start]').val(range.start);
       this.$('[name=end]').val(range.end);
-      var shortcut = this.$('[data-start="' + range.start + '"][data-end="' + range.end + '"]');
+      var shortcut = this.$('[data-start="' + range.start + '"][data-end="' + range.end + '"]').eq(0);
       this.$('.label').text(shortcut.length ? shortcut.text() : range.start + ' ~ ' + range.end);
       return range;
     },
@@ -2074,8 +2081,14 @@
       options.reset = true;
       this.model.set(range, options);
     },
-    formatDate: function (date) {
-      return isNaN(date) ? date : moment().add(date, 'days').format(moment.DATE_FORMAT);
+    formatDate: function (date, today) {
+      if (isNaN(date)) {
+        return date;
+      }
+      if (today && today === 1 && date === -1) {
+        date = 0;
+      }
+      return moment().add(date, 'days').format(moment.DATE_FORMAT);
     },
     use: function (model) {
       this.model = model;
