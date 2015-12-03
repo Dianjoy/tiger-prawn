@@ -2370,6 +2370,10 @@
 }(Nervenet.createNameSpace('tp.popup')));;
 (function (ns) {
   var timeout;
+  /**
+   * @property {object} options
+   * @property {boolean} options.hasComponents 是否有组件需要初始化
+   */
   var Editor = ns.Editor = tp.view.DataSyncView.extend({
     $context: null,
     form: null,
@@ -2470,8 +2474,14 @@
     events: _.extend(Editor.prototype.events, {
       'click .search-button': 'searchButton_clickHandler'
     }),
+    /**
+     * @param {object} options
+     * @param {string} options.itemLabel 选项label的模板
+     * @param {string} options.url 搜索接口
+     */
     initialize: function (options) {
       Editor.prototype.initialize.call(this, options);
+      Handlebars.registerPartial('item', options.itemLabel);
       this.collection = tp.model.ListCollection.getInstance();
       this.collection.url = tp.API + options.url;
       this.collection.on('add', this.collection_addHandler, this);
@@ -2479,6 +2489,7 @@
     },
     remove: function () {
       this.collection.off();
+      Handlebars.unregisterPartial('item');
       Backbone.View.prototype.remove.call(this);
     },
     render: function (response) {
@@ -2559,6 +2570,10 @@
     }
   });
 
+  /**
+   * @property {object} options
+   * @property {boolean} options.addNew
+   */
   ns.SelectEditor = Editor.extend({
     render: function (response) {
       if (this.options.options) {

@@ -10,7 +10,7 @@
   <div class="form-group search-result select-button">
     <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
-    <input type="radio" id="prop-{{@index}}" name="{{prop}}" value="{{id}}"><label for="prop-{{@index}}">{{#if icon_path}}<img src="{{icon_path}}" class="icon-mh-25"> {{/if}}{{topic}}{{label}}</label>
+    <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="prop-{{id}}" name="{{prop}}" value="{{id}}"><label for="prop-{{id}}">{{> item}}</label>
     {{{{/raw-helper}}}}
     </script>
   </div>
