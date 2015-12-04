@@ -53,6 +53,24 @@
   {{{{/raw-helper}}}}
   </tbody>
 </table>
+{{#if ad_notice}}
+  <table class="table table-bordered table-striped responsive-table">
+    <thead>
+    <tr>
+      <th>广告名称</th>
+      <th>提醒信息</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each ad_notice}}
+      <tr>
+        <td data-title="广告名称">{{ad_name}} {{cid}}</td>
+        <td data-title="提醒信息">{{#each notice}}{{#if @last}}{{date}}的渠道cpa为0，请留意!{{else}}{{date}}、{{/if}}{{/each}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{/if}}
 
 <form class="form-horizontal clearfix model-editor" method="post" enctype="multipart/form-data" data-target="invoiceDetail">
   <div class="row">
@@ -65,7 +83,7 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">付款方：</label>
         <div class="col-sm-8">
-          <p class="form-control-static">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}(确认盖章)</p>
+          <p class="form-control-static">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</p>
         </div>
       </div>
       <div class="form-group">

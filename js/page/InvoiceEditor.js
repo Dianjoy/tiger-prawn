@@ -22,13 +22,17 @@
     tableToExcel: function (template) {
       var tables = []
         , uri = 'data:application/vnd.ms-excel;base64,'
-        , tableList = this.$('table').clone()
-        , html = Handlebars.compile(template);
+        , tableList = this.$('.print-table').clone()
+        , html = Handlebars.compile(template)
+        , acceptAccount = '~' + this.$('#accept-account').text();
 
-      for (var i = 0; i < tableList.length - 1; i++) {
+      for (var i = 0; i < tableList.length; i++) {
         tableList.find('a').replaceWith(function (i) {
           return this.innerHTML;
         });
+        if (i === 2) {
+          tableList.find('#accept-account').text(acceptAccount);
+        }
         tables.push(tableList[i].innerHTML);
       }
       var data = {

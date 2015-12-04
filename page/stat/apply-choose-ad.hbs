@@ -20,6 +20,7 @@
         <th><label><input type="checkbox" value="ids" class="check-all"> 全选</label></th>
         <th>广告名称</th>
         <th>渠道号</th>
+        <th>提醒</th>
       </tr>
     </thead>
     <tbody id="chose-ad-table">
@@ -30,17 +31,18 @@
           <td><label for="ids"><input type="checkbox" name="ids" value="{{ad_id}}"></label></td>
           <td>{{ad_name}}</td>
           <td>{{channel_id}}</td>
+          <td>{{#each ad_notice}}{{#if @last}}{{date}}的渠道cpa为0{{else}}{{date}}、{{/if}}{{/each}}</td>
         </tr>
       {{/unless}}
     </script>
     {{{{/raw-helper}}}}
     </tbody>
     <tfoot id="no-ad-table" class="well">
-      <tr><td colspan="3">没有搜索结果</td></tr>
+      <tr><td colspan="4">没有搜索结果</td></tr>
     </tfoot>
     <tfoot class="waiting">
     <tr>
-      <td colspan="3"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</td>
+      <td colspan="4"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</td>
     </tr>
     </tfoot>
   </table>
