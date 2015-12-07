@@ -105,6 +105,7 @@
 
   ns.SearchEditor = Editor.extend({
     fragment: '',
+    item: '{{label}}',
     events: _.extend(Editor.prototype.events, {
       'click .search-button': 'searchButton_clickHandler'
     }),
@@ -115,7 +116,9 @@
      */
     initialize: function (options) {
       Editor.prototype.initialize.call(this, options);
-      Handlebars.registerPartial('item', options.itemLabel);
+      if (!options.template) {
+        Handlebars.registerPartial('item', options.itemLabel || this.item);
+      }
       this.collection = tp.model.ListCollection.getInstance();
       this.collection.url = tp.API + options.url;
       this.collection.on('add', this.collection_addHandler, this);

@@ -184,7 +184,7 @@
         {{/if}}
         <tr>
           <th width="10%">关联合同</th>
-          <td><a href="#agreement_id" class="edit" data-type="search" data-template="ad/popup/agreement-select" data-url="agreement/">{{agreement}}</a></td>
+          <td><a href="#agreement_id" class="edit" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{agreement_id}}{{{{/raw-helper}}}}）">{{agreement}}</a></td>
         </tr>
         {{#if channel}}
         <tr>
