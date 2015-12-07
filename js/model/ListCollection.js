@@ -91,7 +91,7 @@
         }
         for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
           if (response.hasOwnProperty(key) && (_.isArray(response[key]) || _.isObject(response[key]))) {
-            this.trigger('data:' + key, response[key]);
+            this.trigger('data:' + key, response[key], this);
           }
         }
         return _.isArray(response) ? response : response.list;

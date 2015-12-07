@@ -19,7 +19,12 @@
         });
       collection.on('data:' + key, this.collection_dataHandler, this);
     },
-    collection_dataHandler: function (list) {
+    collection_dataHandler: function (list, collection) {
+      if (collection.options) {
+        this.collection.model = Backbone.Model.extend({
+          defaults: collection.options
+        });
+      }
       this.collection.reset(list);
     }
   });

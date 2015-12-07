@@ -835,7 +835,7 @@
         }
         for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
           if (response.hasOwnProperty(key) && (_.isArray(response[key]) || _.isObject(response[key]))) {
-            this.trigger('data:' + key, response[key]);
+            this.trigger('data:' + key, response[key], this);
           }
         }
         return _.isArray(response) ? response : response.list;
@@ -3055,7 +3055,12 @@
         });
       collection.on('data:' + key, this.collection_dataHandler, this);
     },
-    collection_dataHandler: function (list) {
+    collection_dataHandler: function (list, collection) {
+      if (collection.options) {
+        this.collection.model = Backbone.Model.extend({
+          defaults: collection.options
+        });
+      }
       this.collection.reset(list);
     }
   });
