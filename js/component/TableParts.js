@@ -124,17 +124,9 @@
       'change': 'changeHandler'
     },
     initialize: function () {
-      var filter = {};
       this.model.on('change', this.model_changeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.render();
-      this.$('select').each(function () {
-        if (!($(this).attr('id') === 'pagesize') && !_.isUndefined($(this).attr('name'))) {
-          var selected = $(this).children('.selected');
-          filter[$(this).attr('name')] = selected.val();
-        }
-      });
-      this.model.set(filter, {reset: true});
     },
     render: function () {
       var data = this.model.toJSON();
