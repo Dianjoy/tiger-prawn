@@ -67,7 +67,10 @@
     {{#each ad_notice}}
       <tr>
         <td data-title="广告名称">{{ad_name}} {{cid}}</td>
-        <td data-title="提醒信息">{{#each notice}}{{#if @last}}{{date}}的渠道cpa为0，请留意!{{else}}{{date}}、{{/if}}{{/each}}</td>
+        <td data-title="提醒信息">
+          {{#each notice}}{{#if @last}}{{date}}的渠道cpa为0。{{else}}{{date}}、{{/if}}{{/each}}
+          {{#each left_transfer_notice}}{{#if @last}}{{date}}有余量未确认。{{else}}{{date}}、{{/if}}{{/each}}
+        </td>
       </tr>
     {{/each}}
     </tbody>
