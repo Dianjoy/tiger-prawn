@@ -31,7 +31,10 @@
           <td><label for="ids"><input type="checkbox" name="ids" value="{{ad_id}}"></label></td>
           <td>{{ad_name}}</td>
           <td>{{channel_id}}</td>
-          <td id="notice">{{#each ad_notice}}{{#if @last}}{{date}}的渠道cpa为0{{else}}{{date}}、{{/if}}{{/each}}</td>
+          <td id="notice">
+            {{#each ad_notice}}{{#if @last}}{{date}}的渠道cpa为0。{{else}}{{date}}、{{/if}}{{/each}}
+            {{#each left_transfer_notice}}{{#if @last}}{{date}}有余量未确认。{{else}}{{date}}、{{/if}}{{/each}}
+          </td>
         </tr>
       {{/unless}}
     </script>
