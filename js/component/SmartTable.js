@@ -18,12 +18,6 @@
       'change .status-button': 'statusButton_changeHandler'
     },
     initialize: function (options) {
-      // 通过页面中介来实现翻页等功能
-      this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento();
-      this.model.on('change', this.model_changeHandler, this);
-      this.model.on('invalid', this.model_invalidHandler, this);
-      this.renderHeader();
-
       var data = this.$el.data()
         , autoFetch = 'autoFetch' in data ? data.autoFetch : this.autoFetch
         , typeahead = 'typeahead' in data ? data.typeahead : true;
@@ -32,6 +26,12 @@
         container: 'tbody',
         reset: true
       }));
+
+      // 通过页面中介来实现翻页等功能
+      this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento(this.params);
+      this.model.on('change', this.model_changeHandler, this);
+      this.model.on('invalid', this.model_invalidHandler, this);
+      this.renderHeader();
 
       // 启用搜索
       if ('search' in options) {
@@ -120,7 +120,7 @@
     },
     refresh: function (options) {
       options = options || {};
-      options.data = _.extend(this.model.toJSON(), this.params, options.data);
+      options.data = _.extend(this.model.toJSON(), options.data);
       this.collection.fetch(options);
     },
     renderHeader: function () {
