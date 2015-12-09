@@ -47,7 +47,7 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      return _.extend(json, this.options);
+      return _.extend(json, this.options, this.collection ? this.collection.options : null);
     },
     validate: function (attrs) {
       var pack_name = this.get('pack_name');

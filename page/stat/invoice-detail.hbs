@@ -58,7 +58,7 @@
 {{#if ad_notice}}
   <table class="table table-bordered table-striped responsive-table">
     <thead>
-    <tr>
+    <tr class="warning-info">
       <th>广告名称</th>
       <th>提醒信息</th>
     </tr>
@@ -67,7 +67,10 @@
     {{#each ad_notice}}
       <tr>
         <td data-title="广告名称">{{ad_name}} {{cid}}</td>
-        <td data-title="提醒信息">{{#each notice}}{{#if @last}}{{date}}的渠道cpa为0，请留意!{{else}}{{date}}、{{/if}}{{/each}}</td>
+        <td data-title="提醒信息">
+          {{#each notice}}{{#if @last}}{{date}}的渠道cpa为0。{{else}}{{date}}、{{/if}}{{/each}}
+          {{#each left_transfer_notice}}{{#if @last}}{{date}}有余量未确认。{{else}}{{date}}、{{/if}}{{/each}}
+        </td>
       </tr>
     {{/each}}
     </tbody>
@@ -131,7 +134,9 @@
       <table class="table table-bordered table-striped print-table" style="display: inline-table;">
         <tr>
           <th width="10%">收款方</th>
-          <td colspan="11">{{accept_company}}</td>
+          <td colspan="11">
+            {{#if accept_company}}{{accept_company}}{{else}}<p class="warning-info">系统没录入，请找鲍橙橙选择签约公司名称</p>{{/if}}
+          </td>
         </tr>
         <tr>
           <th>开户名称</th>
