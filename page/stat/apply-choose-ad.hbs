@@ -17,7 +17,7 @@
   <table class="table" data-model="tp.model.AdSelectorModel" data-url="{{API}}invoice/settle/{{id}}" data-start="{{start}}" data-end="{{end}}" data-collection-id="invoice-list-{{id}}" data-typeahead="false">
     <thead>
       <tr>
-        <th><label><input type="checkbox" value="ids" class="check-all"> 全选</label></th>
+        <th><input type="checkbox" value="ids" class="check-all"></th>
         <th>广告名称</th>
         <th>渠道号</th>
         <th>提醒</th>
@@ -31,7 +31,7 @@
           <td><label for="ids"><input type="checkbox" name="ids" value="{{ad_id}}"></label></td>
           <td>{{ad_name}}</td>
           <td>{{channel_id}}</td>
-          <td>{{#each ad_notice}}{{#if @last}}{{date}}的渠道cpa为0{{else}}{{date}}、{{/if}}{{/each}}</td>
+          <td id="notice">{{#each ad_notice}}{{#if @last}}{{date}}的渠道cpa为0{{else}}{{date}}、{{/if}}{{/each}}</td>
         </tr>
       {{/unless}}
     </script>

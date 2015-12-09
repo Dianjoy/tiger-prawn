@@ -131,7 +131,9 @@
       <table class="table table-bordered table-striped print-table" style="display: inline-table;">
         <tr>
           <th width="10%">收款方</th>
-          <td colspan="11">{{accept_company}}</td>
+          <td colspan="11">
+            {{#if accept_company}}{{accept_company}}{{else}}<p class="warning-info">系统没录入，请找鲍橙橙选择签约公司名称</p>{{/if}}
+          </td>
         </tr>
         <tr>
           <th>开户名称</th>

@@ -56,7 +56,7 @@
     },
     showInvoice: function () {
       this.$body.load('page/stat/invoice.html');
-      this.$body.setFramework('has-date-range', '我的发票');
+      this.$body.setFramework('invoice', '我的发票');
     },
     invoiceDetail: function (id) {
       var model = new tp.model.InvoiceDetail({
