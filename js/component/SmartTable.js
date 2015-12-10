@@ -174,6 +174,7 @@
       this.model.waiting = false;
       if (this.options.amount) {
         var data = this.collection.getAmount(this.options.omits);
+        this.$('.amount').remove();
         this.collection_addHandler(data, null, {immediately: true});
       }
     },
