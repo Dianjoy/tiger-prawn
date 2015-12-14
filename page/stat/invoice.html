@@ -94,7 +94,9 @@
         {{#equal status 9}}
         <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
         {{/equal}}
-        {{#greater status 9}}通过{{/greater}}
+        {{#greater status 9}}
+        <a data-toggle="popover" data-content="{{reason}}" data-title="通过原因">通过</a>
+        {{/greater}}
         {{/if}}
       </td>
       <td data-title="运营核对">
