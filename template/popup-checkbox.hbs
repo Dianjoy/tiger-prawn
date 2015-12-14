@@ -1,10 +1,10 @@
 <div class="form-group select-button select-button-group col-5">
   {{#each options}}
     {{#if key}}
-      <input type="checkbox" name="{{../../prop}}[]" value="{{key}}" id="{{../../prop}}-{{key}}" {{#in key ../../value}}checked{{/in}}>
+      <input type="checkbox" name="{{../prop}}[]" value="{{key}}" id="{{../../prop}}-{{key}}" {{#in key ../../value}}checked{{/in}}>
       <label for="{{../../prop}}-{{key}}">{{value}}</label>
     {{else}}
-      <input type="checkbox" name="{{../../prop}}[]" value="{{@key}}" id="{{../../prop}}-{{@key}}" {{#in @key ../../value}}checked{{/in}}>
+      <input type="checkbox" name="{{../prop}}[]" value="{{@key}}" id="{{../../prop}}-{{@key}}" {{#in @key ../../value}}checked{{/in}}>
       <label for="{{../../prop}}-{{@key}}">{{.}}</label>
     {{/if}}
   {{/each}}
