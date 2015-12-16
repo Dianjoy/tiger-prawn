@@ -47,6 +47,21 @@
     </div>
 
     <div class="navbar-top-inner clearfix">
+      <form class="navbar-form global-search navbar-left" role="search">
+        <input type="search" class="form-control keyword" placeholder="搜索广告" title="搜索广告" pattern="\w{2,}" required>
+        <button type="button" class="clear-button"><i class="fa fa-times"></i></button>
+        <ul class="dropdown-menu">
+          <script type="text/x-handlebars-template">
+            {{#each ads}}
+            <li><a href="#/ad/{{id}}">{{channel_name}} {{ad_name}} {{cid}}</a></li>
+            {{/each}}
+            {{#if single}}
+            <li class="divider"></li>
+            <li><a href="#/info/{{keyword}}">{{keyword}}投放情报</a></li>
+            {{/if}}
+          </script>
+        </ul>
+      </form>
       <ul class="nav navbar-nav navbar-right">
         <li class="pit dropdown-list"><a href="#"><i class="fa fa-tasks"></i></a></li>
         <li class="dropdown system-notice dropdown-list">

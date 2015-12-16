@@ -1,8 +1,8 @@
 @charset "UTF-8"
 
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 @import "../../bower_components/colors/sass/variables"
 @import "../define"
-@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 
 @media (max-width: $screen-xs-max)
   .navbar-brand
@@ -50,19 +50,37 @@
 
   .navbar-brand
     color: $white
-    background: url(../img/logo.png) no-repeat 7px center
+    background: url(//cc-cdn.dianjoy.com/static/img/logo.png) no-repeat 7px center
     background-size: 36px auto
     text-indent: 36px
     position: relative
 
-    &:after
-      content: 'beta'
-      display: block
+  .global-search
+    position: relative
+
+    input
+      background-color: $background-color
+      border: none
+
+      &:focus
+        background-color: $white
+
+      &:valid + .clear-button
+        display: block
+
+    .clear-button
+      background: transparent
+      border: none
+      color: $black
+      display: none
       position: absolute
-      top: $gap-s
-      right: -$gap-p
-      color: $aqua
-      font-size: 8px
+      width: $gap-l
+      height: $gap-l
+      line-height: $gap-l
+      margin: 0
+      padding: 0
+      top: $gap-s + 2px
+      right: $navbar-padding-horizontal + $gap-s
 
   .nav > li > a
     color: $navbar-color
@@ -114,6 +132,7 @@
       .label
         display: inline-block
         margin-bottom: 0
+
   .invoice-list
     .dropdown-menu
       height: auto

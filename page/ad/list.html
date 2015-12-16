@@ -115,7 +115,7 @@
         <div class="btn-group">
           <a href="#/ad/{{id}}" class="btn btn-primary" title="{{channel}} {{ad_name}} 广告属性"><i class="fa fa-edit"></i></a>
           {{#in status 0 1}}
-          <a href="page/ad/data-load.hbs" class="btn btn-primary popup" title="导出数据" data-id="{{id}}" data-confirm="导出CSV" data-popup="tp.page.DateRange" data-collection-id="ad"><i class="fa fa-download"></i></a>
+          <a href="page/ad/export-idfa.hbs" class="btn btn-primary popup" title="导出数据" data-id="{{id}}" data-confirm="导出CSV" data-popup="tp.page.DateRange" data-collection-id="ad"><i class="fa fa-download"></i></a>
           {{else}}
           <button class="btn btn-danger delete-button" title="撤回"><i class="fa fa-trash-o fa-fw"></i></button>
           {{/in}}
