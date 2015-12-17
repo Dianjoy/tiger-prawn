@@ -183,12 +183,18 @@
           <td>
             {{#if view}}
               {{#if attachment}}
-                <a><img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail"></a>
+                <div class="su-item">
+                  <a href="{{attachment}}" download="{{attachment}}">
+                    {{attachment}}
+                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                  </a>
+                </div>
+                <a><img src="{{attachment}}" class="img-thumbnail"></a>
               {{/if}}
             {{else}}
               {{#if attachment}}
                 <a class="edit" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true">
-                  <img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail">
+                  <img src="{{attachment}}" class="img-thumbnail">
                 </a>
               {{else}}
                 <a class="edit btn btn-primary" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true" data-accept="*.pdf,*jpg,*png">上传对账单</a>
