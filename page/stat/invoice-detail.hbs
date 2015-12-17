@@ -183,6 +183,12 @@
           <td>
             {{#if view}}
               {{#if attachment}}
+                <div class="su-item">
+                  <a href="{{attachment}}" download="{{attachment}}">
+                    {{attachment}}
+                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                  </a>
+                </div>
                 <a><img src="{{attachment}}" class="img-thumbnail"></a>
               {{/if}}
             {{else}}
