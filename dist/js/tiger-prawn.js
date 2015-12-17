@@ -203,6 +203,13 @@
     counter[key] = 1;
     return '';
   });
+
+  h.registerHelper('sub', function (value, options) {
+    return options.data.root[value];
+  });
+  h.registerHelper('outer', function (value) {
+    return value;
+  });
 }(Handlebars));
 ;
 (function ($) {
@@ -349,12 +356,16 @@
       options.error = function (xhr, status, err) {
         error.call(options.context, xhr, status, err);
       };
-      $.ajax(options);
+      return $.ajax(options);
     },
     fetch: function (url, handler, context) {
-      $.get(url, function (response) {
+      return $.get(url, function (response) {
         handler.call(context, response);
       });
+    },
+    get: function (url, data, options) {
+      options.method = 'get';
+      this.call(url, data, options);
     },
     postHandle: function (response) {
       // 以后可以扩展成循环，现在先逐个添加好了
@@ -3040,6 +3051,156 @@
         this.$el.addClass('loading');
         this.$('.fa').addClass('fa-spin fa-spinner');
       }
+    }
+  });
+}(Nervenet.createNameSpace('tp.view')));;
+(function (ns) {
+  ns.Search = Backbone.View.extend({
+    timeout: null,
+    delay: 500,
+    events: {
+      'blur .keyword': 'keyword_blurHandler',
+      'focus .keyword': 'keyword_focusHandler',
+      'click .clear-button': 'clearButton_clickHandler',
+      'keydown': 'keyDownHandler',
+      'input': 'inputHandler',
+      'submit': 'submitHandler'
+    },
+    initialize: function () {
+      this.result = this.$('.result');
+      this.template = Handlebars.compile(this.$('script').html());
+      this.spinner = this.$('.fa-spinner');
+      this.clearButton = this.$('.clear-button');
+      this.input = this.$('.keyword');
+
+      this.fetch = _.bind(this.fetch, this);
+      this.hide = _.bind(this.hide, this);
+    },
+    remove: function () {
+      this.model.off();
+      this.model = null;
+      Backbone.View.remove.call(this);
+    },
+    /**
+     * 渲染搜索结果列表
+     *
+     * @param {Object} response
+     * @param {Array} response.ads 搜索结果
+     * @param {String} response.keyword 搜索关键词
+     * @param {Boolean} response.has_info 是否要显示广告投放情报链接
+     */
+    render: function (response) {
+      response.ads = response.ads && response.ads.length > 0 ? response.ads : false;
+      this.hasResult = !!response.ads;
+      if (this.hasResult) {
+        response.keyword = this.input.val();
+        response.has_info = response.keyword.split(' ').length === 1;
+      }
+      this.result.html(this.template(response)).show();
+      this.spinner.hide();
+      this.input.focus();
+      this.xhr = null;
+    },
+    fetch: function () {
+      if (this.xhr) {
+        this.xhr.abort();
+      }
+      this.xhr = tp.service.Manager.get(tp.API + 'search/', {
+        keyword: this.input.val()
+      }, {
+        success: this.render,
+        error: this.error,
+        context: this
+      });
+      this.clearButton.hide();
+      this.spinner.show();
+    },
+    hide: function (event) {
+      if (!event || !$.contains(this.el, event.target)) {
+        this.result.hide();
+      }
+    },
+    clearButton_clickHandler: function () {
+      if (this.xhr) {
+        this.xhr.abort();
+      }
+      this.input.val('');
+      this.clearButton.hide();
+      this.spinner.hide();
+    },
+    keyword_blurHandler: function () {
+      this.hideTimeout = setTimeout(this.hide, 250);
+    },
+    keyword_focusHandler: function () {
+      clearTimeout(this.hideTimeout);
+      if (this.hasResult > 0) {
+        this.result.show();
+      }
+    },
+    errorHandler: function () {
+      this.spinner.hide();
+      this.result.append(this.template({
+        error: true,
+        msg: '加载错误，大侠请重新来过'
+      }));
+    },
+    inputHandler: function () {
+      clearTimeout(this.timeout);
+      if (this.input.val().length > 1) {
+        this.clearButton.show();
+        this.timeout = setTimeout(this.fetch, this.delay);
+      }
+    },
+    keyDownHandler: function (event) {
+      var active = this.result.find('.active').removeClass('active');
+      switch (event.keyCode) {
+        case 13: // enter
+          var id = active.children().attr('href');
+          if (id) {
+            id = id.substr(1);
+            if (this.multiple) {
+              this.selected.add(this.collection.get(id));
+            } else {
+              this.selected.set([this.collection.get(id)]);
+              this.result.hide();
+            }
+          } else if (!this.input.prop('disabled') && this.input.val().length > 1) {
+            this.fetch();
+          }
+          event.preventDefault();
+          break;
+
+        case 40: // down
+          this.result.show();
+          if (active.length === 0 || active.is(':last-child')) {
+            this.result.children().first().addClass('active');
+          } else {
+            active.nextAll(':not(.divider,.disabled)').first().addClass('active');
+          }
+          event.preventDefault();
+          break;
+
+        case 38: // up
+          this.result.show();
+          if (active.length === 0 || active.is(':first-child')) {
+            this.result.children().last().addClass('active');
+          } else {
+            active.prevAll(':not(.divider,.disabled)').first().addClass('active');
+          }
+          event.preventDefault();
+          break;
+
+        case 27: // esc
+          if (this.result.is(':visible')) {
+            this.hide();
+            event.stopPropagation();
+          }
+          break;
+      }
+    },
+    submitHandler: function (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
