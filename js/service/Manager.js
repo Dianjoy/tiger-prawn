@@ -34,12 +34,16 @@
       options.error = function (xhr, status, err) {
         error.call(options.context, xhr, status, err);
       };
-      $.ajax(options);
+      return $.ajax(options);
     },
     fetch: function (url, handler, context) {
-      $.get(url, function (response) {
+      return $.get(url, function (response) {
         handler.call(context, response);
       });
+    },
+    get: function (url, data, options) {
+      options.method = 'get';
+      this.call(url, data, options);
     },
     postHandle: function (response) {
       // 以后可以扩展成循环，现在先逐个添加好了

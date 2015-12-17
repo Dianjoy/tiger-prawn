@@ -169,28 +169,6 @@
   .pull-left
     float: none
 
-@media (max-width: $screen-xs-max)
-  #navbar-side
-    margin-top: 0
-    position: relative
-    top: 0
-    width: 100%
-    overflow-y: auto
-
-  .side-nav
-    .navbar-user a
-      padding: 0
-
-    &>li>a .caret
-      margin-right: $gap-p
-
-  .navbar-collapse
-    padding: 0
-
-  .container-fluid > .navbar-collapse
-    margin-right: -$gap-p
-    margin-left: 0
-
 .sidebar-btn-group
   width: 100%
   border-top: 1px solid #1A9FE3
@@ -293,3 +271,30 @@
     border: 0
     outline: none
     flex: 1
+
+@media (max-width: $screen-xs-max)
+  #navbar-side
+    margin-top: 0
+    position: relative
+    top: 0
+    width: 100%
+    overflow-y: auto
+
+  .side-nav
+    border-bottom: none
+
+    .navbar-user a
+      padding: 0
+
+    &>li>a .caret
+      margin-right: $gap-p
+
+  .navbar-collapse
+    padding: 0
+
+  .container-fluid > .navbar-collapse
+    margin-right: -$gap-p
+    margin-left: 0
+
+  .sidebar-btn-group
+    display: none

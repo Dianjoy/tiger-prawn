@@ -9,20 +9,19 @@
     events: {
       'blur .keyword': 'keyword_blurHandler',
       'focus .keyword': 'keyword_focusHandler',
-      'click .options a': 'options_clickHandler',
+      'click .clear-button': 'clearButton_clickHandler',
       'keydown': 'keyDownHandler',
-      'input': 'inputHandler'
+      'input': 'inputHandler',
+      'submit': 'submitHandler'
     },
-    initialize: function (options) {
+    initialize: function () {
       this.result = this.$('.result');
-      this.template = Handlebars.compile(this.result.find('script').html());
+      this.template = Handlebars.compile(this.$('script').html());
+      this.spinner = this.$('.fa-spinner');
       this.clearButton = this.$('.clear-button');
       this.input = this.$('.keyword');
 
-      this.model = new Backbone.Model();
-      this.model.on('sync', this.render, this);
       this.fetch = _.bind(this.fetch, this);
-      this.error = _.bind(this.errorHandler, this);
       this.hide = _.bind(this.hide, this);
     },
     remove: function () {
@@ -30,15 +29,23 @@
       this.model = null;
       Backbone.View.remove.call(this);
     },
-    render: function () {
-      var data = this.model.toJSON()
-        , html = this.template({list: data});
-      html = html || this.template({
-          error: true,
-          msg: '没有结果，请修改关键词，然后再试。'
-        });
-      this.list.html(html).show();
-      this.clearButton.hide();
+    /**
+     * 渲染搜索结果列表
+     *
+     * @param {Object} response
+     * @param {Array} response.ads 搜索结果
+     * @param {String} response.keyword 搜索关键词
+     * @param {Boolean} response.has_info 是否要显示广告投放情报链接
+     */
+    render: function (response) {
+      response.ads = response.ads && response.ads.length > 0 ? response.ads : false;
+      this.hasResult = !!response.ads;
+      if (this.hasResult) {
+        response.keyword = this.input.val();
+        response.has_info = response.keyword.split(' ').length === 1;
+      }
+      this.result.html(this.template(response)).show();
+      this.spinner.hide();
       this.input.focus();
       this.xhr = null;
     },
@@ -46,32 +53,41 @@
       if (this.xhr) {
         this.xhr.abort();
       }
-      this.xhr = this.model.fetch({
-        data: {keyword: this.input.val()},
-        error: this.error
+      this.xhr = tp.service.Manager.get(tp.API + 'search/', {
+        keyword: this.input.val()
+      }, {
+        success: this.render,
+        error: this.error,
+        context: this
       });
+      this.clearButton.hide();
       this.spinner.show();
     },
     hide: function (event) {
       if (!event || !$.contains(this.el, event.target)) {
-        this.list.hide();
+        this.result.hide();
       }
     },
+    clearButton_clickHandler: function () {
+      if (this.xhr) {
+        this.xhr.abort();
+      }
+      this.input.val('');
+      this.clearButton.hide();
+      this.spinner.hide();
+    },
     keyword_blurHandler: function () {
-      var list = this.list;
-      this.hideTimeout = setTimeout(function () {
-        list.hide();
-      }, 250);
+      this.hideTimeout = setTimeout(this.hide, 250);
     },
     keyword_focusHandler: function () {
       clearTimeout(this.hideTimeout);
-      if (this.collection.length > 0) {
-        this.list.show();
+      if (this.hasResult > 0) {
+        this.result.show();
       }
     },
     errorHandler: function () {
-      this.clearButton.hide();
-      this.list.append(this.list_template({
+      this.spinner.hide();
+      this.result.append(this.template({
         error: true,
         msg: '加载错误，大侠请重新来过'
       }));
@@ -79,11 +95,12 @@
     inputHandler: function () {
       clearTimeout(this.timeout);
       if (this.input.val().length > 1) {
+        this.clearButton.show();
         this.timeout = setTimeout(this.fetch, this.delay);
       }
     },
     keyDownHandler: function (event) {
-      var active = this.list.find('.active').removeClass('active');
+      var active = this.result.find('.active').removeClass('active');
       switch (event.keyCode) {
         case 13: // enter
           var id = active.children().attr('href');
@@ -93,7 +110,7 @@
               this.selected.add(this.collection.get(id));
             } else {
               this.selected.set([this.collection.get(id)]);
-              this.list.hide();
+              this.result.hide();
             }
           } else if (!this.input.prop('disabled') && this.input.val().length > 1) {
             this.fetch();
@@ -102,32 +119,36 @@
           break;
 
         case 40: // down
-          this.list.show();
+          this.result.show();
           if (active.length === 0 || active.is(':last-child')) {
-            this.list.children().eq(0).addClass('active');
+            this.result.children().first().addClass('active');
           } else {
-            active.next().addClass('active');
+            active.nextAll(':not(.divider,.disabled)').first().addClass('active');
           }
           event.preventDefault();
           break;
 
         case 38: // up
-          this.list.show();
+          this.result.show();
           if (active.length === 0 || active.is(':first-child')) {
-            this.list.children().last().addClass('active');
+            this.result.children().last().addClass('active');
           } else {
-            active.prev().addClass('active');
+            active.prevAll(':not(.divider,.disabled)').first().addClass('active');
           }
           event.preventDefault();
           break;
 
         case 27: // esc
-          if (this.list.is(':visible')) {
+          if (this.result.is(':visible')) {
             this.hide();
             event.stopPropagation();
           }
           break;
       }
+    },
+    submitHandler: function (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
   });
 }(Nervenet.createNameSpace('tp.view')));

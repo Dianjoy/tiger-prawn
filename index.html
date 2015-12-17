@@ -50,14 +50,19 @@
       <form class="navbar-form global-search navbar-left" role="search">
         <input type="search" class="form-control keyword" placeholder="搜索广告" title="搜索广告" pattern="\w{2,}" required>
         <button type="button" class="clear-button"><i class="fa fa-times"></i></button>
-        <ul class="dropdown-menu">
+        <span class="fa fa-spin fa-spinner"></span>
+        <ul class="dropdown-menu result">
           <script type="text/x-handlebars-template">
+            {{#if code}}
+            <li class="disabled"><a href="#">搜索过程发生错误，请稍后重试。</a></li>
+            {{else}}
             {{#each ads}}
-            <li><a href="#/ad/{{id}}">{{channel_name}} {{ad_name}} {{cid}}</a></li>
+            <li><a href="#/ad/{{id}}"><span class="label label-info">广告详情</span> {{channel_name}} {{ad_name}} {{cid}}</a></li>
             {{/each}}
-            {{#if single}}
+            {{#if has_info}}
             <li class="divider"></li>
-            <li><a href="#/info/{{keyword}}">{{keyword}}投放情报</a></li>
+            <li><a href="#/info/{{keyword}}"><span class="label label-warning">广告投放情报</span> {{keyword}}</a></li>
+            {{/if}}
             {{/if}}
           </script>
         </ul>
@@ -368,6 +373,7 @@
 <script src="js/view/SidebarEditor.js"></script>
 <script src="js/view/InvoiceListView.js" data-build="no"></script>
 <script src="js/view/Dashboard.js"></script>
+<script src="js/view/Search.js"></script>
 <script src="js/page/AdEditor.js"></script>
 <script src="js/page/DateRange.js"></script>
 <script src="js/page/AdDateRanger.js"></script>

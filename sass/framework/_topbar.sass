@@ -1,47 +1,9 @@
 @charset "UTF-8"
 
+@import "compass/css3/box-shadow"
 @import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
 @import "../../bower_components/colors/sass/variables"
 @import "../define"
-
-@media (max-width: $screen-xs-max)
-  .navbar-brand
-    margin-left: 0
-
-  #navbar-top
-    position: relative
-    margin-bottom: 0
-
-  .container-fluid
-    padding: 0
-
-  .navbar-header
-    padding: 0 $gap-p
-
-  .navbar-top-inner
-    background-color: #fff
-    width: 100%
-
-  .navbar-right
-    float: right
-    clear: both
-    margin-right: $gap-p
-    li
-      display: inline-block
-
-  .navbar-nav .open .dropdown-menu
-    position: absolute
-    top: 100%
-    left: auto
-    right: 0
-    background-color: white
-
-  .username, .dropdown .caret, .dropdown-toggle i
-    color: #000
-
-  .navbar-fixed-top
-    border: 0
-
 
 #navbar-top
   background-color: $topbar-background-color
@@ -61,6 +23,10 @@
     input
       background-color: $background-color
       border: none
+      padding: 4px 8px
+      margin-top: 2px
+      width: 200px
+      height: 30px
 
       &:focus
         background-color: $white
@@ -68,12 +34,19 @@
       &:valid + .clear-button
         display: block
 
+    .fa-spinner,
     .clear-button
-      background: transparent
-      border: none
       color: $black
       display: none
       position: absolute
+
+    .fa-spinner
+      top: $gap
+      right: $navbar-padding-horizontal + $gap
+
+    .clear-button
+      background: transparent
+      border: none
       width: $gap-l
       height: $gap-l
       line-height: $gap-l
@@ -81,6 +54,12 @@
       padding: 0
       top: $gap-s + 2px
       right: $navbar-padding-horizontal + $gap-s
+
+    .dropdown-menu
+      left: $navbar-padding-horizontal
+      min-width: 200px
+      max-height: 400px
+      overflow: scroll
 
   .nav > li > a
     color: $navbar-color
@@ -186,5 +165,71 @@
       .check-all
         display: none
 
-.accordion-toggle
-  background-color: $sidebar-background-color
+  @media (max-width: $screen-xs-max)
+    &
+      position: relative
+      margin-bottom: 0
+
+      .navbar-toggle
+        margin-top: $gap-s
+        margin-bottom: $gap-s
+
+      .container-fluid
+        padding: 0
+
+      .navbar-header
+        margin: 0
+
+      .navbar-top-inner
+        background-color: darken($topbar-background-color, 10%)
+        width: 100%
+
+      .navbar-form,
+      .navbar-nav
+        border: none
+        margin: 0
+
+      .global-search
+        @include box-shadow(none)
+        padding: $gap $gap 0
+
+        .fa-spinner,
+        .clear-button
+          color: $white
+          top: $gap + $gap-s
+          right: $gap + $gap-s
+          line-height: $gap-l
+
+        input
+          background-color: darken($topbar-background-color, 8%)
+          color: $silver
+          margin: 0
+          width: 100%
+
+          &:focus
+            color: $black
+
+            ~ .fa-spinner,
+            ~ .clear-button
+              color: $black
+
+        .dropdown-menu
+          left: $gap
+          right: $gap
+
+          > li > a
+            padding: 3px $gap
+
+      .navbar-nav
+        color: $white
+        text-align: center
+
+        > li
+          display: inline-block
+
+        .open .dropdown-menu
+          background: $white
+          position: absolute
+          top: 100%
+          left: 0
+          right: auto

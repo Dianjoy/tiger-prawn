@@ -17,6 +17,9 @@
     })
     , ranger = new tp.component.DateRanger({
       el: '.date-range'
+    })
+    , search = new tp.view.Search({
+      el: '.global-search'
     });
 
   // map values
