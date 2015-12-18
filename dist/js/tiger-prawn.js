@@ -1438,6 +1438,7 @@
           });
           continue;
         }
+        this.$('[data-name=' + key + ']:not([type=radio])').val(value);
         var items = this.$('[name= ' + key + ']:not([type=radio])').val(value);
         try {
           items.length > 0 || this.$('[name=' + key + '][value=' + value + '], [name="' + key + '[]"][value=' + value + ']').prop('checked', true);
