@@ -203,13 +203,6 @@
     counter[key] = 1;
     return '';
   });
-
-  h.registerHelper('sub', function (value, options) {
-    return options.data.root[value];
-  });
-  h.registerHelper('outer', function (value) {
-    return value;
-  });
 }(Handlebars));
 ;
 (function ($) {
@@ -650,6 +643,7 @@
   function callPopup(model, prop, options) {
     options.model = model;
     options.prop = prop;
+    options = _.defaults(options, model.toJSON());
     tp.popup.Manager.popupEditor(options);
   }
 
