@@ -44,7 +44,7 @@
       <td data-title="备注">{{comment}}</td>
       <td>
         {{#if need_renew}}
-        <a href="page/agreement/popup/renew.hbs" class="btn btn-info popup" title="申请续期" data-confirm="提交"
+        <a href="#status" data-type="long-text" data-template="agreement/popup/renew" class="btn btn-info edit" title="申请续期" data-confirm="提交"
            data-collection-id="list" data-id="{{id}}"><i
           class="fa fa-calendar-plus-o"></i> 续期</a>
         {{/if}}
