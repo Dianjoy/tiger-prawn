@@ -21,7 +21,8 @@ module.exports = function (grunt) {
           environment: 'production',
           force: true,
           noLineComments: true,
-          outputStyle: 'compressed'
+          outputStyle: 'compressed',
+          sourcemap: false
         }
       }
     },
