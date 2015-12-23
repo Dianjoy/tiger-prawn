@@ -6,7 +6,6 @@
   function callPopup(model, prop, options) {
     options.model = model;
     options.prop = prop;
-    options = _.defaults(options, model.toJSON());
     tp.popup.Manager.popupEditor(options);
   }
 

@@ -15,6 +15,7 @@
       'keyup #menu-search-input': 'menuSearchInput_keyupHandler'
     },
     initialize: function () {
+      this.sidebarCollapsed = JSON.parse(localStorage.getItem(tp.PROJECT + '-sidebar-collapsed'));
       this.hiddenItems = JSON.parse(localStorage.getItem(key)) || [];
       this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
     },
@@ -33,6 +34,9 @@
         }, this);
         var html = this.template({list: response});
         this.$('#navbar-side-inner').append(html);
+        if (this.sidebarCollapsed) {
+          $('body').addClass('sidebar-collapsed');
+        }
       }, this));
     },
     eyeEditButton_clickHandler: function (event) {
@@ -90,6 +94,8 @@
     },
     menuCollapseButton_clickHandler: function () {
       $('body').toggleClass('sidebar-collapsed');
+      this.sidebarCollapsed = $('body').hasClass('sidebar-collapsed');
+      localStorage.setItem(tp.PROJECT + '-sidebar-collapsed', this.sidebarCollapsed);
     },
     accordionToggle_clickHandler: function (event) {
       if ($('body').hasClass('sidebar-collapsed')) {
