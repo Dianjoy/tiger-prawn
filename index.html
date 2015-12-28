@@ -298,10 +298,10 @@
           <div class="info"></div>
           <div class="alert alert-msg" style="display: none"></div>
           <p class="loading"><i class="fa fa-spin fa-spinner fa-4x"></i></p>
-          {{#if comment}}
+          {{#if commentName}}
           <div class="form-group">
             <label for="editor-comment">附言</label>
-            <textarea class="form-control" id="editor-comment" form="prop-editor" name="{{comment}}" rows="2">{{content}}</textarea>
+            <textarea class="form-control" id="editor-comment" form="prop-editor" name="{{commentName}}" rows="2">{{lookup @root commentName}}</textarea>
           </div>
           {{/if}}
         </div>

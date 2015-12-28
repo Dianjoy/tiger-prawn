@@ -48,7 +48,7 @@
         {{else if cp}}
         <span>{{d100 quote_rmb}}</span>
         {{else}}
-        <a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-comment="message" data-refresh="true">{{d100 quote_rmb}}</a>
+        <a href="#quote_rmb" class="edit" title="调整报价" data-type="number" data-min="1" data-comment-name="message" data-refresh="true">{{d100 quote_rmb}}</a>
         {{/if}}
       </td>
       <td data-title="每日投放">
@@ -62,7 +62,7 @@
         {{#if set_rmb}}
           <span title="申请已提交，等待核准">{{#if previous}}{{previous.num}}{{else}}{{../num}}{{/if}} / {{set_rmb}}</span>
         {{else}}
-        <a href="#num" class="edit" title="调整今日余量" data-type="number" data-min="0" data-comment="message" data-refresh="true">{{num}}</a>
+        <a href="#num" class="edit" title="调整今日余量" data-type="number" data-min="0" data-comment-name="message" data-refresh="true">{{num}}</a>
         {{/if}}
       </td>
       <td data-title="状态">
@@ -70,7 +70,7 @@
           {{#if set_status}}
           <span class="label status-{{status}}">{{pick status 'ON' 'OFF'}}</span> <i class="fa fa-chevron-right"></i> {{pick set_status 'ON' 'OFF'}}
           {{else equal status 4}}
-          <a class="label status-{{status}} edit" href="#status" title="申请重审" data-type="status" data-active="申请重审" data-open="0" data-comment="message">被拒绝</a>
+          <a class="label status-{{status}} edit" href="#status" title="申请重审" data-type="status" data-active="申请重审" data-open="0" data-comment-name="message">被拒绝</a>
             {{#with reject}}
             <span class="popup label label-info" data-title="被拒绝原因" data-content="{{comment}} (by: {{author}} {{create_time}})" data-confirm="false" data-cancel="false">原因</span>
             {{/with}}
