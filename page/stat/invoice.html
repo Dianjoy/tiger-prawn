@@ -17,7 +17,7 @@
     </select>
   </div>
   <div class="form-group">
-    <label>运营核对：</label>
+    <label>运营审核：</label>
     <select class="form-control" name="status">
       <option value="21">全部</option>
       <option value="20">通过</option>
@@ -66,7 +66,7 @@
     <th>合同编号</th>
     <th>金额</th>
     <th>区域总监批复核减申请</th>
-    <th>运营核对</th>
+    <th>运营审核</th>
     <th>特批</th>
     <th>财务审核</th>
     <th>区域总监审核</th>
@@ -92,14 +92,14 @@
         {{#if is_show}}
         {{#equal status 8}}审核中{{/equal}}
         {{#equal status 9}}
-        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{reason}}" data-title="未通过原因">未通过</button>
+        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{manager_apply_reason}}" data-title="未通过原因">未通过</button>
         {{/equal}}
         {{#greater status 9}}
-        <a data-toggle="popover" data-content="{{reason}}" data-title="通过原因">通过</a>
+        <a data-toggle="popover" data-content="{{manager_apply_reason}}" data-title="通过原因">通过</a>
         {{/greater}}
         {{/if}}
       </td>
-      <td data-title="运营核对">
+      <td data-title="运营审核">
         {{#if is_show}}
         {{#in status 10 18}}审核中{{/in}}
         {{#equal status 19}}
