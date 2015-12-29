@@ -79,6 +79,10 @@
         return this.setTitle(title, sub, model);
       }
     },
+    setLatestStat: function (model) {
+      this.latest = this.latest || Handlebars.compile(this.$('.latest script').html());
+      this.$('.latest').html(this.latest(model.toJSON()));
+    },
     setTitle: function (title, sub, model) {
       if (model) {
         model = model instanceof Backbone.Model ? model.toJSON() : model;

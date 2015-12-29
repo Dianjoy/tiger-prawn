@@ -198,9 +198,18 @@
 </nav>
 
 <div id="content" class="clearfix">
-  <header class="page-header">
-    <h1>首页 <small>新近数据统计</small></h1>
-  </header>
+  <div class="row">
+    <header class="page-header col-sm-6 col-xs-12">
+      <h1>首页 <small>新近数据统计</small></h1>
+    </header>
+    <div class="col-sm-6 col-xs-12 latest">
+      <script type="text/x-handlebars-template">
+        最近一小时：
+        <span class="label label-default android" title="Android 广告"><i class="fa fa-android"></i> {{pack_name_count_android}}</span>
+        <span class="label label-default apple" title="iOS 广告"><i class="fa fa-apple"></i> {{pack_name_count_ios}} <small>回调 {{ios_ratio}}%</small></span>
+      </script>
+    </div>
+  </div>
   <ul class="breadcrumb page-breadcrumb">
     <li class="active">首页</li>
     <li class="pull-right date-range">
