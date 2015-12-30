@@ -8,13 +8,18 @@
     </span>
   </div>
 </div>
-<h4>搜索结果</h4>
+<h4>当前选择</h4>
+<div class="form-group select-button">
+  {{#each (lookup @root list)}}
+    <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{id}}" name="{{prop}}" value="{{id}}"><label for="curr-{{id}}">{{> item}}</label>
+  {{/each}}
+</div>
 <hr>
+<h4>搜索结果</h4>
 <div class="form-group search-result select-button">
   <script type="text/x-handlebars-template">
   {{{{raw-helper}}}}
   <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="prop-{{id}}" name="{{prop}}" value="{{id}}"><label for="prop-{{id}}">{{> item}}</label>
   {{{{/raw-helper}}}}
   </script>
-</div>
 </div>
