@@ -11,7 +11,7 @@
 <h4>当前选择</h4>
 <div class="form-group select-button">
   {{#each (lookup @root list)}}
-    <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{id}}" name="{{prop}}" value="{{id}}"><label for="curr-{{id}}">{{> item}}</label>
+    <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{id}}" name="{{prop}}" value="{{id}}" checked><label for="curr-{{id}}">{{> item}}</label>
   {{/each}}
 </div>
 <hr>
