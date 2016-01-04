@@ -31,7 +31,10 @@
     "grunt-contrib-uglify": "~0.10.1",
     "gulp": "^3.9.0",
     "gulp-compass": "^2.1.0",
-    "gulp-minify-css": "^1.2.2",
-    "gulp-uglify": "^1.5.1"
+    "gulp-concat": "^2.6.0",
+    "gulp-minify-css": "^1.2.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.1",
+    "underscore": "^1.8.3"
   }
 }
