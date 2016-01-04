@@ -90,7 +90,7 @@
         sub = Handlebars.compile(sub)(model);
       }
       title = title + (sub ? ' <small>' + sub + '</small>' : '');
-      this.$('#content > .page-header > h1').html(title);
+      this.$('#content .page-header > h1').html(title);
       return this;
     },
     start: function (showFramework) {
