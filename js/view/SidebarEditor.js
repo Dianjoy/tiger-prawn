@@ -1,6 +1,7 @@
 'use strict';
 (function (ns) {
-  var key = tp.PROJECT + '-hidden-items';
+  var HIDDEN_ITEMS = tp.PROJECT + '-hidden-items'
+    , COLLAPSED_STATUS = tp.PROJECT + '-sidebar-collapsed';
   ns.SidebarEditor = Backbone.View.extend({
     events: {
       'click .eye-edit-button': 'eyeEditButton_clickHandler',
@@ -15,7 +16,8 @@
       'keyup #menu-search-input': 'menuSearchInput_keyupHandler'
     },
     initialize: function () {
-      this.hiddenItems = JSON.parse(localStorage.getItem(key)) || [];
+      this.is_collapsed = !!localStorage.getItem(COLLAPSED_STATUS);
+      this.hiddenItems = JSON.parse(localStorage.getItem(HIDDEN_ITEMS)) || [];
       this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
     },
     render: function () {
@@ -33,6 +35,7 @@
         }, this);
         var html = this.template({list: response});
         this.$('#navbar-side-inner').append(html);
+        $('body').toggleClass('sidebar-collapsed', this.is_collapsed);
       }, this));
     },
     eyeEditButton_clickHandler: function (event) {
@@ -51,7 +54,7 @@
       });
       this.$el.removeClass('sidebar-editing');
       this.hiddenItems = hiddenItems;
-      localStorage.setItem(key, JSON.stringify(hiddenItems));
+      localStorage.setItem(HIDDEN_ITEMS, JSON.stringify(hiddenItems));
     },
     editCancelButton_clickHandler: function () {
       this.$el.removeClass('sidebar-editing');
@@ -89,7 +92,8 @@
       }
     },
     menuCollapseButton_clickHandler: function () {
-      $('body').toggleClass('sidebar-collapsed');
+      this.is_collapsed = $('body').toggleClass('sidebar-collapsed').hasClass('sidebar-collapsed');
+      localStorage.setItem(COLLAPSED_STATUS, this.is_collapsed);
     },
     accordionToggle_clickHandler: function (event) {
       if ($('body').hasClass('sidebar-collapsed')) {

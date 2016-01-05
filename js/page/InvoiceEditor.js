@@ -58,7 +58,12 @@
     },
     collection_changeHandler: function (data) {
       var products = this.model.get('products')
-        , product = _.findWhere(products, {id: data.id});
+        , product = _.findWhere(products, {id: data.id})
+        , invoice_ad = data.get('invoice_ad');
+      this.model.set({
+        joy_income: invoice_ad.joy_income,
+        red_ad_income: invoice_ad.red_ad_income
+      });
       _.extend(product, _.omit(data.toJSON(), 'previous'));
       var json = this.model.toJSON();
       products = json.products;

@@ -79,6 +79,10 @@
         return this.setTitle(title, sub, model);
       }
     },
+    setLatestStat: function (model) {
+      this.latest = this.latest || Handlebars.compile(this.$('.latest script').html());
+      this.$('.latest').html(this.latest(model.toJSON()));
+    },
     setTitle: function (title, sub, model) {
       if (model) {
         model = model instanceof Backbone.Model ? model.toJSON() : model;
@@ -86,7 +90,7 @@
         sub = Handlebars.compile(sub)(model);
       }
       title = title + (sub ? ' <small>' + sub + '</small>' : '');
-      this.$('#content > .page-header > h1').html(title);
+      this.$('#content .page-header > h1').html(title);
       return this;
     },
     start: function (showFramework) {

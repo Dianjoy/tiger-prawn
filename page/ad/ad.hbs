@@ -19,7 +19,7 @@
             {{#equal status 4}}
               <h4>原因</h4>
               <blockquote>{{decline.NAME}}：<br>{{decline.comment}}</blockquote>
-              <a class="edit btn btn-primary" href="#status" data-type="status" data-open="0" data-deactive="" data-active="申请再审" data-comment="message">我已查验，修改完毕，再次申请。</a>
+              <a class="edit btn btn-primary" href="#status" data-type="status" data-open="0" data-deactive="" data-active="申请再审" data-comment-name="message">我已查验，修改完毕，再次申请。</a>
             {{/equal}}
           </td>
         </tr>
@@ -81,7 +81,7 @@
               <a class="edit" href="#ad_url">{{ad_url}}</a>
             {{else}}
               <a class="btn btn-default" href="{{ad_url}}" download="{{ad_name}}.{{ext ad_url}}"><i class="fa fa-download"></i> 下载测试</a>
-              <a class="edit btn btn-warning" href="#ad_url" data-type="file" data-accept="*.{{ext ad_url}}" data-comment="message"><i class="fa fa-upload"></i> 更换安装包</a>
+              <a class="edit btn btn-warning" href="#ad_url" data-type="file" data-accept="*.{{ext ad_url}}" data-comment-name="message"><i class="fa fa-upload"></i> 更换安装包</a>
               <a class="popup btn btn-info" href="page/ad/popup/upload-history.hbs" data-cancel="关闭" title="安装包上传记录"><i class="fa fa-list"></i> 上传记录</a>
             {{/if}}
           </td>

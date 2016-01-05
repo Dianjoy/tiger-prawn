@@ -1,8 +1,8 @@
 @charset "UTF-8"
 
-@import "../define"
 @import "../../bower_components/colors/sass/variables"
 @import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap/variables"
+@import "../define"
 
 #content
   margin-top: $topbar-height
@@ -10,12 +10,31 @@
   margin-bottom: $footer-height
   padding: $gap-l
 
-
-  > .page-header
+  .page-header
     margin: 0
 
     h1
       margin: 0
+
+  .latest
+    padding-top: $gap + $gap-s
+    text-align: right
+    vertical-align: bottom
+
+    .label
+      font-size: 100%
+      line-height: 1.25
+
+      small
+        font-weight: normal
+
+    .android
+      background-color: $android-color
+      color: $white
+
+    .apple
+      background-color: $black
+      color: $silver
 
   > .breadcrumb
     background-color: $silver

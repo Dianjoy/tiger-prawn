@@ -198,9 +198,18 @@
 </nav>
 
 <div id="content" class="clearfix">
-  <header class="page-header">
-    <h1>首页 <small>新近数据统计</small></h1>
-  </header>
+  <div class="row">
+    <header class="page-header col-sm-6 col-xs-12">
+      <h1>首页 <small>新近数据统计</small></h1>
+    </header>
+    <div class="col-sm-6 col-xs-12 latest">
+      <script type="text/x-handlebars-template">
+        最近一小时：
+        <span class="label label-default android" title="Android 广告"><i class="fa fa-android"></i> {{pack_name_count_android}}</span>
+        <span class="label label-default apple" title="iOS 广告"><i class="fa fa-apple"></i> {{pack_name_count_ios}} <small>回调 {{ios_ratio}}%</small></span>
+      </script>
+    </div>
+  </div>
   <ul class="breadcrumb page-breadcrumb">
     <li class="active">首页</li>
     <li class="pull-right date-range">
@@ -226,12 +235,12 @@
             <label for="stat-range-start-date">开始日期</label>
             <div class="input-group date">
               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-              <input type="date" class="form-control" name="start" id="stat-range-start-date">
+              <input class="form-control" name="start" id="stat-range-start-date">
             </div>
             <label for="stat-range-end-date">结束日期</label>
             <div class="input-group date">
               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-              <input type="date" class="form-control" name="end" id="stat-range-end-date">
+              <input class="form-control" name="end" id="stat-range-end-date">
             </div>
             <button type="button" class="btn btn-primary btn-block"><i class="fa fa-play"></i> 检索</button>
           </li>
@@ -298,10 +307,10 @@
           <div class="info"></div>
           <div class="alert alert-msg" style="display: none"></div>
           <p class="loading"><i class="fa fa-spin fa-spinner fa-4x"></i></p>
-          {{#if comment}}
+          {{#if commentName}}
           <div class="form-group">
             <label for="editor-comment">附言</label>
-            <textarea class="form-control" id="editor-comment" form="prop-editor" name="{{comment}}" rows="2" required>{{lookup @root comment}}</textarea>
+            <textarea class="form-control" id="editor-comment" form="prop-editor" name="{{commentName}}" rows="2">{{lookup @root commentName}}</textarea>
           </div>
           {{/if}}
         </div>

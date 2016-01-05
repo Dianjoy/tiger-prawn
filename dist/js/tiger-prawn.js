@@ -284,8 +284,9 @@
         data: range,
         loader: tp.view.Dashboard
       });
-      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
+      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '欢迎你，' + this.$me.get('fullname'));
       this.$ranger.use(model);
+      model.once('sync', this.$body.setLatestStat, this.$body);
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
@@ -640,10 +641,19 @@
   };
 }(Nervenet.createNameSpace('tp')));;
 (function (ns) {
+  /**
+   *
+   * @param {Backbone.Model} model
+   * @param {string} prop
+   * @param {object} options
+   * @param {string} options.commentName 备注的字段名
+   */
   function callPopup(model, prop, options) {
     options.model = model;
     options.prop = prop;
-    options = _.defaults(options, model.toJSON());
+    if (options.commentName) {
+      options[options.commentName] = model.get(options.commentName);
+    }
     tp.popup.Manager.popupEditor(options);
   }
 
@@ -2036,7 +2046,7 @@
       'click .range button': 'range_clickHandler'
     },
     initialize: function () {
-      this.$('[type=date]').datetimepicker({format: moment.DATE_FORMAT});
+      this.$('.date input').datetimepicker({format: moment.DATE_FORMAT});
       if (!this.$('script').html()) {
         return;
       }
@@ -2046,7 +2056,7 @@
         , month = date.getMonth()
         , months = _.map(_.range(month, month - 3, -1), function (value) {
           return {
-            month: value,
+            month: value <= 0 ? value + 12 : value,
             start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
             end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
           }
@@ -2066,16 +2076,23 @@
     },
     render: function (options) {
       // 默认显示一个月
-      var range = _.defaults(options, {
-          start: -31,
+      options.format = options.format || moment.DATE_FORMAT;
+      var isMonth = !/d/i.test(options.format) && /M/.test(options.format)
+        , unit = isMonth ? 'months' : 'days'
+        , range = _.defaults(options, {
+          start: isMonth ? -1 : -31,
           end: 0
         });
+      this.$('.date input').each(function () {
+        $(this).data("DateTimePicker").format(range.format).viewMode(unit);
+      });
+      this.$el.toggleClass('select-month', isMonth);
 
       if (!isNaN(range.start)) {
-        range.start = moment().add(range.start, 'days').format(moment.DATE_FORMAT);
+        range.start = moment().add(range.start, unit).format(range.format);
       }
       if (!isNaN(range.end)) {
-        range.end = moment().add(range.end, 'days').format(moment.DATE_FORMAT);
+        range.end = moment().add(range.end, unit).format(range.format);
       }
 
       this.$('[name=start]').val(range.start);
@@ -2100,7 +2117,7 @@
     },
     use: function (model) {
       this.model = model;
-      var range = this.render(model.pick('start', 'end'));
+      var range = this.render(model.pick('start', 'end', 'format'));
       this.model.set(range, {silent: true});
     },
     input_clickHandler: function (event) {
@@ -2828,6 +2845,10 @@
         return this.setTitle(title, sub, model);
       }
     },
+    setLatestStat: function (model) {
+      this.latest = this.latest || Handlebars.compile(this.$('.latest script').html());
+      this.$('.latest').html(this.latest(model.toJSON()));
+    },
     setTitle: function (title, sub, model) {
       if (model) {
         model = model instanceof Backbone.Model ? model.toJSON() : model;
@@ -2835,7 +2856,7 @@
         sub = Handlebars.compile(sub)(model);
       }
       title = title + (sub ? ' <small>' + sub + '</small>' : '');
-      this.$('#content > .page-header > h1').html(title);
+      this.$('#content .page-header > h1').html(title);
       return this;
     },
     start: function (showFramework) {
@@ -2924,7 +2945,8 @@
   });
 }(Nervenet.createNameSpace('tp.view')));;
 (function (ns) {
-  var key = tp.PROJECT + '-hidden-items';
+  var HIDDEN_ITEMS = tp.PROJECT + '-hidden-items'
+    , COLLAPSED_STATUS = tp.PROJECT + '-sidebar-collapsed';
   ns.SidebarEditor = Backbone.View.extend({
     events: {
       'click .eye-edit-button': 'eyeEditButton_clickHandler',
@@ -2939,7 +2961,8 @@
       'keyup #menu-search-input': 'menuSearchInput_keyupHandler'
     },
     initialize: function () {
-      this.hiddenItems = JSON.parse(localStorage.getItem(key)) || [];
+      this.is_collapsed = !!localStorage.getItem(COLLAPSED_STATUS);
+      this.hiddenItems = JSON.parse(localStorage.getItem(HIDDEN_ITEMS)) || [];
       this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
     },
     render: function () {
@@ -2957,6 +2980,7 @@
         }, this);
         var html = this.template({list: response});
         this.$('#navbar-side-inner').append(html);
+        $('body').toggleClass('sidebar-collapsed', this.is_collapsed);
       }, this));
     },
     eyeEditButton_clickHandler: function (event) {
@@ -2975,7 +2999,7 @@
       });
       this.$el.removeClass('sidebar-editing');
       this.hiddenItems = hiddenItems;
-      localStorage.setItem(key, JSON.stringify(hiddenItems));
+      localStorage.setItem(HIDDEN_ITEMS, JSON.stringify(hiddenItems));
     },
     editCancelButton_clickHandler: function () {
       this.$el.removeClass('sidebar-editing');
@@ -3013,7 +3037,8 @@
       }
     },
     menuCollapseButton_clickHandler: function () {
-      $('body').toggleClass('sidebar-collapsed');
+      this.is_collapsed = $('body').toggleClass('sidebar-collapsed').hasClass('sidebar-collapsed');
+      localStorage.setItem(COLLAPSED_STATUS, this.is_collapsed);
     },
     accordionToggle_clickHandler: function (event) {
       if ($('body').hasClass('sidebar-collapsed')) {
@@ -3408,7 +3433,7 @@
 
       // 起止日期
       if ('ranger' in options) {
-        this.model.set(_.pick(options, 'start', 'end'), {silent: true});
+        this.model.set(_.pick(options, 'start', 'end', 'format'), {silent: true});
         this.$ranger.use(this.model);
       }
 

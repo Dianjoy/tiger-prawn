@@ -56,35 +56,10 @@
         json.previous = previous;
       }
       var start = json.start ? json.start.split('-') : moment().format('YYYY-MM').split('-')
-        , agreementInfo = _.pick(json, 'company', 'company_short', 'cycle', 'ad_name', 'sign_date', 'rmb', 'agreement_comment');
-      json.start = start[0] + '年' + start[1] + '月';
-      json.agreement_info = _.map(agreementInfo, function(element, key) {
-        switch (key) {
-          case 'company':
-            element = '客户名称: ' + element;
-            break;
-          case 'company_short':
-            element = '客户简称: ' + element;
-            break;
-          case 'cycle':
-            element = '付款周期: ' + element;
-            break;
-          case 'ad_name':
-            element = '推广产品: ' + element;
-            break;
-          case 'sign_date':
-            element = '签约时间: ' + element;
-            break;
-          case 'rmb':
-            element = '合作单价: ' + element;
-            break;
-          case 'agreement_comment':
-            element = '备注: ' + element;
-            break;
-        }
-        return element;
-      });
-      var products = json.products
+        , agreementInfo = json.agreement_info
+        , archive = Number(agreementInfo.archive) === 1 ? '是' : '否'
+        , range = agreementInfo.start + '/' + agreementInfo.end + (agreementInfo.over ? ' 到期' : '')
+        , products = json.products
         , obj = {
           cpa_first_total: 0,
           cpa_after_total: 0,
@@ -92,6 +67,18 @@
           income_after_total: 0,
           rmb: ''
         };
+      json.start = start[0] + '年' + start[1] + '月';
+      json.agreement_info = {
+        company: '客户名称: ' + agreementInfo.company,
+        company_short: '客户简称: ' + agreementInfo.company_short,
+        cycle: '付款周期: ' + agreementInfo.cycle,
+        ad_name: '推广产品: ' + agreementInfo.ad_name,
+        sign_date: '签约时间: ' + agreementInfo.sign_date,
+        rmb: '合作单价: ' + agreementInfo.rmb,
+        archive: '是否归档: ' + archive,
+        range: '合作期限: ' + range,
+        comment: '备注: ' + agreementInfo.comment
+      };
       products = _.map(products, function (element) {
         if (!element.quote_rmb_after) {
           _.extend(element, {

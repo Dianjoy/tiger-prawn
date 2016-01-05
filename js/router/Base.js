@@ -28,8 +28,9 @@
         data: range,
         loader: tp.view.Dashboard
       });
-      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '新近数据统计');
+      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '欢迎你，' + this.$me.get('fullname'));
       this.$ranger.use(model);
+      model.once('sync', this.$body.setLatestStat, this.$body);
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {

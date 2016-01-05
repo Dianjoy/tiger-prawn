@@ -41,7 +41,7 @@
         {{#if is_url}}
         <a href="{{before}}">原链接</a> / <a href="{{#if ad_url}}{{ad_url}}{{else}}{{after}}{{/if}}">现链接</a>
         {{#unless handler}}
-        <a class="edit btn btn-warning" href="#ad_url" data-type="file" data-accept="*.apk" data-comment="message"><i class="fa fa-upload"></i> 编辑</a>
+        <a class="edit btn btn-warning" href="#ad_url" data-type="file" data-accept="*.apk" data-comment-name="message"><i class="fa fa-upload"></i> 编辑</a>
         {{/unless}}
         {{else if is_status}}
         {{#if before}}{{pick before '上线' '下线'}} / {{/if}}{{pick after '上线' '下线'}}
