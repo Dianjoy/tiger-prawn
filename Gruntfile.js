@@ -14,6 +14,7 @@ module.exports = function (grunt) {
       begin: [config.temp, config.dist],
       end: [config.temp]
     },
+    // TODO 移除page的样式
     compass: {
       all: {
         options: {
