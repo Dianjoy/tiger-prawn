@@ -10,7 +10,7 @@
       'click .range button': 'range_clickHandler'
     },
     initialize: function () {
-      this.$('[type=date]').datetimepicker({format: moment.DATE_FORMAT});
+      this.$('.date input').datetimepicker({format: moment.DATE_FORMAT});
       if (!this.$('script').html()) {
         return;
       }
@@ -20,7 +20,7 @@
         , month = date.getMonth()
         , months = _.map(_.range(month, month - 3, -1), function (value) {
           return {
-            month: value,
+            month: value <= 0 ? value + 12 : value,
             start: moment(new Date(date.getFullYear(), value - 1, 1)).format(moment.DATE_FORMAT),
             end: moment(new Date(date.getFullYear(), value, 0)).format(moment.DATE_FORMAT)
           }
@@ -40,16 +40,23 @@
     },
     render: function (options) {
       // 默认显示一个月
-      var range = _.defaults(options, {
-          start: -31,
+      options.format = options.format || moment.DATE_FORMAT;
+      var isMonth = !/d/i.test(options.format) && /M/.test(options.format)
+        , unit = isMonth ? 'months' : 'days'
+        , range = _.defaults(options, {
+          start: isMonth ? -1 : -31,
           end: 0
         });
+      this.$('.date input').each(function () {
+        $(this).data("DateTimePicker").format(range.format).viewMode(unit);
+      });
+      this.$el.toggleClass('select-month', isMonth);
 
       if (!isNaN(range.start)) {
-        range.start = moment().add(range.start, 'days').format(moment.DATE_FORMAT);
+        range.start = moment().add(range.start, unit).format(range.format);
       }
       if (!isNaN(range.end)) {
-        range.end = moment().add(range.end, 'days').format(moment.DATE_FORMAT);
+        range.end = moment().add(range.end, unit).format(range.format);
       }
 
       this.$('[name=start]').val(range.start);
@@ -74,7 +81,7 @@
     },
     use: function (model) {
       this.model = model;
-      var range = this.render(model.pick('start', 'end'));
+      var range = this.render(model.pick('start', 'end', 'format'));
       this.model.set(range, {silent: true});
     },
     input_clickHandler: function (event) {
