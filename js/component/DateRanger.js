@@ -48,7 +48,7 @@
           format: moment.DATE_FORMAT
         });
       this.$('.date input').each(function () {
-        $(this).data("DateTimePicker").viewMode(unit);
+        $(this).data("DateTimePicker").format(range.format).viewMode(unit);
       });
       this.$el.toggleClass('select-month', isMonth);
 
