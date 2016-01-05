@@ -1,16 +1,29 @@
 /**
  * Created by meathill on 15/12/21.
  */
+'use strict';
 
-var build = require('./build.json')
-  , fs = require('fs')
+var fs = require('fs')
   , _ = require('underscore')
   , gulp = require('gulp')
   , compass = require('gulp-compass')
   , minifyCSS= require('gulp-minify-css')
   , uglify = require('gulp-uglify')
   , concat = require('gulp-concat')
-  , rename = require('gulp-rename');
+  , rename = require('gulp-rename')
+  , replace = require('gulp-replace')
+  , del = require('del')
+  , sequence = require('run-sequence')
+  , minify = require('html-minifier').minify;
+
+gulp.task('clear', function () {
+  return del([
+    'index.html',
+    'css/screen.css',
+    'js/bundle.js',
+    'js/bundle.min.js'
+  ]);
+});
 
 gulp.task('compass', function () {
   gulp.src('sass/*.sass')
@@ -21,13 +34,13 @@ gulp.task('compass', function () {
       style: 'compressed'
     }))
     .pipe(minifyCSS())
-    .pipe(gulp.dest(build.build + '/css/'));
+    .pipe(gulp.dest('css'));
 });
 
 gulp.task('js', function () {
   let html = fs.readFileSync('index.dev.html', 'utf8')
     , jses = [];
-  html = html.replace(/<script src="js\/(.*?\.js)"(?: ([\w\-])+(?:="([^"]*)")?)*><\/script>/, function (match, src) {
+  html = html.replace(/<script src="js\/(.*?\.js)"(?: ([\w\-])+(?:="([^"]*)")?)*><\/script>\n/g, function (match, src) {
     if (/^define.js$/.test(src)) {
       return '';
     }
@@ -38,13 +51,21 @@ gulp.task('js', function () {
     return '';
   });
 
-  let others = _.chain(fs.readSync('js'))
+  // 更新 manifest.appcache
+  html = html.replace('<html', '<html manifest="manifest.appcache"');
+  fs.writeFile('index.html', minify(html, {
+    removeComments: true,
+    collapseWhitespace: true
+  }));
+
+  let others = _.chain(fs.readdirSync('js'))
     .filter(function (filename) {
-      let stat = fs.fstatSync('js/' + filename);
+      let fd = fs.openSync('js/' + filename, 'r')
+        , stat = fs.fstatSync(fd);
       return stat.isDirectory();
     })
     .map(function (dir) {
-      return _.map(fs.readSync('js/' + dir), function (value) {
+      return _.map(fs.readdirSync('js/' + dir), function (value) {
         return dir + '/' + value;
       });
     })
@@ -54,12 +75,32 @@ gulp.task('js', function () {
     })
     .value();
 
-  gulp.src(jses.concat(others))
+  jses = _.map(jses.concat(others), function (value) {
+    return 'js/' + value;
+  });
+
+  gulp.src(jses)
     .pipe(concat('bundle.js'))
-    .pipe(gulp.dest(build.build + 'js/'))
+    .pipe(gulp.dest('js/'))
     .pipe(uglify())
     .pipe(rename('bundle.min.js'))
-    .pipe(gulp.dest(build.build + 'js/'));
+    .pipe(gulp.dest('js/'));
+});
 
-  fs.writeFile(build + 'index.html', html);
+gulp.task('manifest', function () {
+  let config = fs.readFileSync('js/config.js', 'utf8')
+    , api = config.match(/ns.API = '([^']+)'/)[1];
+  gulp.src('manifest.appcache.sample')
+    .pipe(replace('{{date}}', (new Date()).toISOString()))
+    .pipe(replace('{{API}}', api))
+    .pipe(rename('manifest.appcache'))
+    .pipe(gulp.dest(''));
+});
+
+gulp.task('default', function (taskDone) {
+  sequence(
+    'clear',
+    ['js', 'compass', 'manifest'],
+    taskDone
+  );
 });

@@ -9,3 +9,6 @@ node_modules
 **/.sass-cache
 **/*.css
 **/*.map
+index.html
+manifest.appcache
+js/bundle.*

@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2015-12-14
+# {{date}}
 
 # something needs to be cached
 CACHE:
@@ -7,7 +7,7 @@ index.html
 img/fav.png
 img/logo.png
 css/screen.css
-js/bundle.js
+js/bundle.min.js
 
 # something may not be cached
 NETWORK:
