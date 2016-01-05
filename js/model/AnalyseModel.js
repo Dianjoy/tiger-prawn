@@ -1,23 +1,13 @@
 'use strict';
 (function (ns) {
-  ns.AnalyseModel = Backbone.Model.extend({
-    parse: function (response) {
-      var key = this.key || (this.collection ? this.collection.key : 'data');
-      if ('code' in response && 'msg' in response && key in response) {
-        return response[key];
-      }
-      return response;
-    },
+  ns.AnalyseModel = ns.ListCollection.prototype.model.extend({
     toJSON: function (options) {
-      var json = Backbone.Model.prototype.toJSON.call(this, options)
+      var json = ns.ListCollection.model.prototype.toJSON.call(this, options)
         , key = tp.PROJECT + '-invoice-list';
       if (options) { // from sync，因为{patch: true}
         return json;
       }
-      var previous = this.previousAttributes();
-      if (!_.isEmpty(previous)) {
-        json.previous = previous;
-      }
+
       var store = localStorage.getItem(key)
         , ad_id = json.id
         , start = $('#stat-range-start-date').val()
@@ -35,7 +25,7 @@
         json.is_selected = !_.isUndefined(isSelected);
       }
 
-      return _.extend(json, this.options, this.collection ? this.collection.options : null);
+      return json;
     }
   })
 }(Nervenet.createNameSpace('tp.model')));

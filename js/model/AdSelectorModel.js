@@ -1,16 +1,13 @@
 'use strict';
 (function (ns) {
-  ns.AdSelectorModel = ns.AnalyseModel.extend({
+  ns.AdSelectorModel = ns.ListCollection.prototype.model.extend({
     toJSON: function (options) {
-      var json = Backbone.Model.prototype.toJSON.call(this, options)
+      var json = ns.ListCollection.prototype.model.prototype.toJSON.call(this, options)
         , key = tp.PROJECT + '-invoice-list';
       if (options) { // from sync，因为{patch: true}
         return json;
       }
-      var previous = this.previousAttributes();
-      if (!_.isEmpty(previous)) {
-        json.previous = previous;
-      }
+
       var store = localStorage.getItem(key)
         , ad_id = json.ad_id
         , start = $('#settle-start-date').val()
@@ -28,7 +25,7 @@
         json.is_selected = !_.isUndefined(isSelected);
       }
 
-      return _.extend(json, this.options, this.collection ? this.collection.options : null);
+      return json;
     }
   })
 }(Nervenet.createNameSpace('tp.model')));

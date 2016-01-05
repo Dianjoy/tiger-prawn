@@ -44,10 +44,10 @@ gulp.task('js', function () {
     if (/^define.js$/.test(src)) {
       return '';
     }
+    jses.push(src);
     if (/^index.js$/.test(src)) {
       return '<script src="js/bundle.min.js"></script>';
     }
-    jses.push(src);
     return '';
   });
 

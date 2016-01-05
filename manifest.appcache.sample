@@ -11,7 +11,16 @@ js/bundle.min.js
 
 # something may not be cached
 NETWORK:
+bower_components/
+js/
+page/
+template/
+docs/
+{{API}}
+http://www.google-analytics.com/
+http://cc-cdn.dianjoy.com/
+*
 
 # something would be used when offline
 FALLBACK:
-{{API}}/auth/ offline/auth.json
+{{API}}auth/ offline/auth.json

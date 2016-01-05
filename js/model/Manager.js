@@ -2,13 +2,10 @@
  * Created by meathill on 15/11/12.
  */
 'use strict';
-/**
- * @param {{
- */
 (function (ns) {
   var collections = {};
 
-  ns.ListManager = {
+  var manager = ns.ListManager = {
     /**
      * 取得一个ListCollection实例
      * @param {{collectionType: string}} options
@@ -35,7 +32,9 @@
             return value;
           })
           .value();
-        params.model = _.isEmpty(init) ? Model : Model.extend(init);
+        if (!_.isEmpty(init)) {
+          params.model = Model.extend(init);
+        }
       }
       if (params.collectionType) {
         var klass = Nervenet.parseNamespace(params.collectionType);
@@ -53,5 +52,8 @@
         delete collections[id];
       }
     }
-  }
+  };
+
+  // 为了兼容以前的写法
+  _.extend(ns.ListCollection, manager);
 }(Nervenet.createNameSpace('tp.model')));
