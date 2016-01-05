@@ -40,12 +40,12 @@
     },
     render: function (options) {
       // 默认显示一个月
-      var isMonth = options.format === 'YYYY-MM'
+      options.format = options.format || moment.DATE_FORMAT;
+      var isMonth = !/d/i.test(options.format) && /M/.test(options.format)
         , unit = isMonth ? 'months' : 'days'
         , range = _.defaults(options, {
           start: isMonth ? -1 : -31,
-          end: 0,
-          format: moment.DATE_FORMAT
+          end: 0
         });
       this.$('.date input').each(function () {
         $(this).data("DateTimePicker").format(range.format).viewMode(unit);
