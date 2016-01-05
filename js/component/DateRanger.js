@@ -40,16 +40,23 @@
     },
     render: function (options) {
       // 默认显示一个月
-      var range = _.defaults(options, {
-          start: -31,
-          end: 0
+      var isMonth = options.format === 'YYYY-MM'
+        , unit = isMonth ? 'months' : 'days'
+        , range = _.defaults(options, {
+          start: isMonth ? -1 : -31,
+          end: 0,
+          format: moment.DATE_FORMAT
         });
+      this.$('.date input').each(function () {
+        $(this).data("DateTimePicker").viewMode(unit);
+      });
+      this.$el.toggleClass('select-month', isMonth);
 
       if (!isNaN(range.start)) {
-        range.start = moment().add(range.start, 'days').format(range.format || moment.DATE_FORMAT);
+        range.start = moment().add(range.start, unit).format(range.format);
       }
       if (!isNaN(range.end)) {
-        range.end = moment().add(range.end, 'days').format(range.format || moment.DATE_FORMAT);
+        range.end = moment().add(range.end, unit).format(range.format);
       }
 
       this.$('[name=start]').val(range.start);
@@ -75,12 +82,6 @@
     use: function (model) {
       this.model = model;
       var range = this.render(model.pick('start', 'end', 'format'));
-      if (range.format) {
-        this.$('.date input').each(function () {
-          $(this).data("DateTimePicker").format(range.format);
-        });
-        this.$el.addClass('select-month');
-      }
       this.model.set(range, {silent: true});
     },
     input_clickHandler: function (event) {
