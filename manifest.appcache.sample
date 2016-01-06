@@ -4,21 +4,19 @@ CACHE MANIFEST
 # something needs to be cached
 CACHE:
 index.html
-img/fav.png
-img/logo.png
-css/screen.css
-js/bundle.min.js
-
-# something may not be cached
-NETWORK:
 bower_components/
+img/
+css/
 js/
 page/
 template/
 docs/
-{{API}}
-http://www.google-analytics.com/
 http://cc-cdn.dianjoy.com/
+http://www.google-analytics.com/
+
+# something may not be cached
+NETWORK:
+{{API}}
 *
 
 # something would be used when offline
