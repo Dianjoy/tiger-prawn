@@ -15,7 +15,6 @@
     },
     showDashboard: function (start, end) {
       var range = moment.createRange(start, end)
-        , page = this.$me.isCP() ? '_cp' : ''
         , Model = Backbone.Model.extend({
           url: tp.API + 'dashboard/',
           parse: function (response) {
@@ -23,12 +22,12 @@
           }
         })
         , model = new Model(range);
-      this.$body.load('page/dashboard' + page + '.hbs', model, {
+      this.$body.load('page/dashboard' + this.$me.getUserRole() + '.hbs', model, {
         refresh: true,
         data: range,
         loader: tp.view.Dashboard
       });
-      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '欢迎你，' + this.$me.get('fullname'));
+      this.$body.setFramework('has-date-range dashboard dashboard-' + this.$me.getUserRole(), '欢迎你，' + this.$me.get('fullname'));
       this.$ranger.use(model);
       model.once('sync', this.$body.setLatestStat, this.$body);
     },

@@ -100,7 +100,6 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
-        this.$el.toggleClass('cp', this.model.isCP());
         tp.component.Manager.createComponents();
       }
     },

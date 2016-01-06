@@ -271,7 +271,6 @@
     },
     showDashboard: function (start, end) {
       var range = moment.createRange(start, end)
-        , page = this.$me.isCP() ? '_cp' : ''
         , Model = Backbone.Model.extend({
           url: tp.API + 'dashboard/',
           parse: function (response) {
@@ -279,12 +278,12 @@
           }
         })
         , model = new Model(range);
-      this.$body.load('page/dashboard' + page + '.hbs', model, {
+      this.$body.load('page/dashboard' + this.$me.getUserRole() + '.hbs', model, {
         refresh: true,
         data: range,
         loader: tp.view.Dashboard
       });
-      this.$body.setFramework('has-date-range dashboard dashboard-' + (this.$me.isCP() ? 'cp' : 'sale'), '欢迎你，' + this.$me.get('fullname'));
+      this.$body.setFramework('has-date-range dashboard dashboard-' + this.$me.getUserRole(), '欢迎你，' + this.$me.get('fullname'));
       this.$ranger.use(model);
       model.once('sync', this.$body.setLatestStat, this.$body);
     },
@@ -726,6 +725,14 @@
         error: _.bind(this.onError, this)
       }, options));
     },
+    /**
+     *
+     * @param response
+     * @param {object} response.me
+     * @param {number} response.me.balance
+     * @param {number} response.me.amount
+     * @returns {object}
+     */
     parse: function (response) {
       var me = response.me;
       if ('balance' in me) {
@@ -734,8 +741,8 @@
       }
       return me;
     },
-    isCP: function () {
-      return this.get('role') === 'cp';
+    getUserRole: function () {
+      return this.get('role');
     },
     id_changeHandler: function (model, id) {
       if (id) {
@@ -801,15 +808,17 @@
           this.model = klass;
         } else {
           var self = this;
-          $.getScript(tp.component.Manager.getPath(klass), function () {
-            self.model = Nervenet.parseNamespace(klass);
-            if (self.cache.options.reset) {
-              self.reset(self.cache.response, self.cache.options);
-            } else {
-              self.set(this.parse(self.cache.response), self.cache.options);
-              self.trigger('sync');
+          $.getScript(tp.component.Manager.getPath(this.model), function () {
+            self.model = Nervenet.parseNamespace(self.model);
+            if (self.cache) {
+              if (self.cache.options.reset) {
+                self.reset(self.cache.response, self.cache.options);
+              } else {
+                self.set(this.parse(self.cache.response), self.cache.options);
+                self.trigger('sync');
+              }
+              this.cache = null;
             }
-            this.cache = null;
           });
         }
       }
@@ -850,7 +859,7 @@
       }
       for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
         if (response.hasOwnProperty(key) && (_.isArray(response[key]) || _.isObject(response[key]))) {
-          this.trigger('data:' + key, response[key]);
+          this.trigger('data:' + key, response[key], this);
         }
       }
       return _.isArray(response) ? response : response.list;
@@ -2878,7 +2887,6 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
-        this.$el.toggleClass('cp', this.model.isCP());
         tp.component.Manager.createComponents();
       }
     },

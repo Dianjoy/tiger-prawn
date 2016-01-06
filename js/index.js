@@ -2,7 +2,7 @@
 (function () {
   // start here
   var context = Nervenet.createContext()
-    , me = new tp.model.Me()
+    , me = new tp.model.DIYUser()
     , profile = new tp.view.Me({
       el: '.me',
       model: me

@@ -19,15 +19,17 @@
           this.model = klass;
         } else {
           var self = this;
-          $.getScript(tp.component.Manager.getPath(klass), function () {
-            self.model = Nervenet.parseNamespace(klass);
-            if (self.cache.options.reset) {
-              self.reset(self.cache.response, self.cache.options);
-            } else {
-              self.set(this.parse(self.cache.response), self.cache.options);
-              self.trigger('sync');
+          $.getScript(tp.component.Manager.getPath(this.model), function () {
+            self.model = Nervenet.parseNamespace(self.model);
+            if (self.cache) {
+              if (self.cache.options.reset) {
+                self.reset(self.cache.response, self.cache.options);
+              } else {
+                self.set(this.parse(self.cache.response), self.cache.options);
+                self.trigger('sync');
+              }
+              this.cache = null;
             }
-            this.cache = null;
           });
         }
       }
@@ -68,7 +70,7 @@
       }
       for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
         if (response.hasOwnProperty(key) && (_.isArray(response[key]) || _.isObject(response[key]))) {
-          this.trigger('data:' + key, response[key]);
+          this.trigger('data:' + key, response[key], this);
         }
       }
       return _.isArray(response) ? response : response.list;

@@ -17,6 +17,14 @@
         error: _.bind(this.onError, this)
       }, options));
     },
+    /**
+     *
+     * @param response
+     * @param {object} response.me
+     * @param {number} response.me.balance
+     * @param {number} response.me.amount
+     * @returns {object}
+     */
     parse: function (response) {
       var me = response.me;
       if ('balance' in me) {
@@ -25,8 +33,8 @@
       }
       return me;
     },
-    isCP: function () {
-      return this.get('role') === 'cp';
+    getUserRole: function () {
+      return this.get('role');
     },
     id_changeHandler: function (model, id) {
       if (id) {
