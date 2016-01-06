@@ -33,7 +33,7 @@
           })
           .value();
         if (!_.isEmpty(init)) {
-          params.model = Model.extend(init);
+          params.model = ns.Model.extend(init);
         }
       }
       if (params.collectionType) {

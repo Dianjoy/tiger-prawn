@@ -39,7 +39,7 @@ module.exports = function (grunt) {
       }
     },
     index: {
-      index: 'index.html'
+      index: 'index.dev.html'
     },
     concat: {
       options: {
@@ -106,7 +106,7 @@ module.exports = function (grunt) {
         return '';
       }
       // 只打包model目录里的通用类
-      if (/^js\/model\//.test(src) && !/(Me|Notice|ListCollection|TableMemento)\./.test(src)) {
+      if (/^js\/model\//.test(src) && !/(Model|Me|Notice|ListCollection|TableMemento|ProxyCollection|Manager)\./.test(src)) {
         return '';
       }
       jsFiles.push(src);

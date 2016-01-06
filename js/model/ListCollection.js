@@ -3,31 +3,9 @@
  */
 'use strict';
 (function (ns) {
-  'use strict';
-  var Model = Backbone.Model.extend({
-    parse: function (response) {
-      var key = this.key || (this.collection ? this.collection.key : 'data');
-      if ('code' in response && 'msg' in response && key in response) {
-        return response[key];
-      }
-      return response;
-    },
-    toJSON: function (options) {
-      var json = Backbone.Model.prototype.toJSON.call(this, options);
-      if (options) { // from sync，因为{patch: true}
-        return json;
-      }
-      var previous = this.previousAttributes();
-      if (!_.isEmpty(previous)) {
-        json.previous = previous;
-      }
-      return _.extend(json, this.options, this.collection ? this.collection.options : null);
-    }
-  });
-
   ns.ListCollection = Backbone.Collection.extend({
     cache: null,
-    model: Model,
+    model: ns.Model,
     total: 0,
     pagesize: 10,
     isLoading: false,
