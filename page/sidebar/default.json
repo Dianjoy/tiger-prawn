@@ -11,12 +11,17 @@
     "sub-id": "sidebar-components",
     "sub": [
       {
+        "title": "Bootstrap",
+        "link": "#/components/bootstrap",
+        "icon": "bold"
+      },
+      {
         "title": "表格",
         "link": "#/components/smart-table",
         "icon": "table"
       },
       {
-        "title": "表单",
+        "title": "图表",
         "link": "#/components/morris-chart",
         "icon": "pie-chart"
       }

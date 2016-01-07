@@ -7,10 +7,12 @@
     $body: null,
     routes: {
       '': 'showWelcome',
-      ':cate/:sub': 'showDocuments'
+      ':cate(/:sub)': 'showDocuments'
     },
     showDocuments: function (cate, sub) {
-
+      var md = 'page/' + cate + (sub ? '/' + sub : '') + '.md';
+      this.$body.load(md);
+      this.$body.setFramework('doc', '文档');
     },
     showWelcome: function () {
       this.$body.load('page/welcome.md');

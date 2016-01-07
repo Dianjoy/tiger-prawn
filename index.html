@@ -9,9 +9,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="format-detection" content="telephone=no" />
-  <link rel="apple-touch-icon-precomposed" href="http://diy.dianjoy.com/img/logo-57.png" /> <!--默认 57x57 像素-->
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://diy.dianjoy.com/img/logo-72.png" /> <!--iPad 1 72x72 像素-->
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://diy.dianjoy.com/img/logo-114.png" /> <!--iPhone 4 114x114 像素-->
+  <link rel="apple-touch-icon-precomposed" href="//diy.dianjoy.com/img/logo-57.png" /> <!--默认 57x57 像素-->
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//diy.dianjoy.com/img/logo-72.png" /> <!--iPad 1 72x72 像素-->
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="//diy.dianjoy.com/img/logo-114.png" /> <!--iPhone 4 114x114 像素-->
 
   <!-- for Windows 8 -->
   <meta name="msapplication-TileColor" content="#888"/> <!-- Windows 8 磁贴颜色 -->
@@ -22,18 +22,18 @@
 
   <title>Tiger Prawn</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/css/bootstrap-datetimepicker.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cc-cdn.dianjoy.com/static/bower/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-  <link rel="stylesheet" href="dist/css/screen.min.css">
+  <link rel="stylesheet" href="//cc-cdn.dianjoy.com/static/bower/tiger-prawn/dist/css/screen.min.css">
   <link rel="stylesheet" href="css/screen.css" media="screen">
   <link>
 </head>
 <body class="full-page">
 
 <div id="page-preloader">
-  <p><img src="img/logo.png" class="img-circle"></p>
-  <p><i class="fa fa-spinner fa-spin"></i> 点乐广告自助后台</p>
+  <p><img src="//cc-cdn.dianjoy.com/static/img/logo.png" class="img-circle"></p>
+  <p><i class="fa fa-spinner fa-spin"></i> Tiger Prawn</p>
 </div>
 
 <nav class="navbar navbar-fixed-top" role="navigation" id="navbar-top">
@@ -43,10 +43,10 @@
         <span class="sr-only">导航栏</span>
         <i class="fa fa-bars"></i>
       </button>
-      <a class="navbar-brand" href="/">点乐广告自助平台</a>
+      <a class="navbar-brand" href="/">Tiger Prawn</a>
     </div>
 
-    <div class="navbar-top-inner clearfix">
+    <div class="navbar-top-inner clearfix hidden">
       <ul class="nav navbar-nav navbar-right">
         <li class="pit dropdown-list"><a href="#"><i class="fa fa-tasks"></i></a></li>
         <li class="dropdown system-notice dropdown-list">
@@ -90,43 +90,60 @@
 
 <nav class="collapse navbar-collapse navbar-side" role="navigation" id="navbar-side">
   <ul id="navbar-side-inner" class="nav navbar-nav side-nav">
-    <li class="navbar-user pit">
-      <img src="img/logo.png" class="img-circle">
-      <h4>Meathill</h4>
-      <span class="pull-right pit">充值</span>
-      <label class="pit">您的余额：65/100</label>
-      <progress value="65" max="100" class="pit">65%</progress>
-    </li>
-    <li><a href="./"><i class="fa fa-dashboard"></i> 首页</a></li>
+    <li><a href="#/dashboard"><i class="fa fa-dashboard"></i><span>简介</span></a></li>
     <script type="text/x-handlebars-template">
       {{#each list}}
-      <li class="sidebar-nav-item">
+      <li class="sidebar-nav-item {{#if invisible}}hidden{{/if}}" id="parent-{{link}}{{sub-id}}">
         {{#if sub}}
         <a href="javascript:void(0);" data-parent="#navbar-side-inner" data-toggle="collapse" class="accordion-toggle" data-target="#{{sub-id}}">
-        {{else}}
-        <a href="{{link}}">
-        {{/if}}
-          {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}} {{title}} {{#if sub}}<span class="caret"></span>{{/if}}
-        </a>
-        {{#if sub}}
-        <ul class="nav collapse" id="{{sub-id}}">
-          {{#each sub}}
-          <li><a href="{{link}}">{{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}} {{title}}</a></li>
-          {{/each}}
-        </ul>
-        {{/if}}
+          {{else}}
+          <a href="{{link}}">
+            {{/if}}
+            {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}
+            <span>{{title}}</span>
+            <button type="button" class="eye-edit-button"><i class="fa fa-eye"></i></button>
+            {{#if sub}}<span class="caret"></span>{{/if}}
+          </a>
+          {{#if sub}}
+          <ul class="nav collapse" id="{{sub-id}}">
+            {{#each sub}}
+            <li id="{{link}}" class="{{#if invisible}}hidden{{/if}}">
+              <a href="{{link}}">
+                {{#if icon}}<i class="fa fa-{{icon}}"></i>{{/if}}
+                <span>{{title}}</span>
+                <button type="button" class="eye-edit-button"><i class="fa fa-eye"></i></button>
+              </a>
+            </li>
+            {{/each}}
+          </ul>
+          {{/if}}
       </li>
       {{/each}}
     </script>
   </ul>
+  <div class="sidebar-btn-group">
+    <form id="menu-search-form">
+      <input type="search" class="form-control" id="menu-search-input"  autocomplete="off" placeholder="搜索菜单项">
+      <button type="button" id="search-clear-button"><i class="fa fa-close"></i></button>
+    </form>
+    <div class="menu-operation">
+      <button type="button" id="menu-search-button"><i class="fa fa-search"></i></button>
+      <button type="button" id="menu-edit-button"><i class="fa fa-pencil"></i></button>
+      <button type="button" id="menu-collapse-button"><i class="fa fa-arrow-left"></i></button>
+    </div>
+    <div class="edit-btn-group">
+      <button type="button" id="edit-confirm-button"><i class="fa fa-check"></i></button>
+      <button type="button" id="edit-cancel-button"><i class="fa fa-remove"></i></button>
+    </div>
+  </div>
 </nav>
 
 <div id="content" class="clearfix">
   <header class="page-header">
-    <h1>首页 <small>新近数据统计</small></h1>
+    <h1>欢迎欢迎 <small>热烈欢迎</small></h1>
   </header>
   <ul class="breadcrumb page-breadcrumb">
-    <li class="active">首页</li>
+    <li class="active">简介</li>
     <li class="pull-right date-range">
       <div class="dropdown">
         <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="data-range-btn">
@@ -168,7 +185,7 @@
 
 <footer id="footer">
   <a class="pull-right top-button" href="#"><i class="fa fa-arrow-up"></i> 返回顶部</a>
-  <p>点乐广告自助平台（测试版） &copy; 2014 <a href="http://www.dianjoy.com">Dianjoy</a>. 保留一切权利。</p>
+  <p>Tiger Prawn 前端框架</p>
 </footer>
 
 <ul id="growl">
@@ -235,18 +252,18 @@
 <iframe id="history-recorder" src="about:blank" class="hide"></iframe>
 
 <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.4/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.1/backbone-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/js/bootstrap-datetimepicker.min.js"></script>
-<script src="http://diy.dianjoy.com/bower_components/nervenet/nervenet.min.js"></script>
-<script src="http://diy.dianjoy.com/bower_components/mh-simple-uploader/dist/js/SimpleUploader.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.3/backbone-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.0/moment-with-locales.min.js"></script>
+<script src="//cc-cdn.dianjoy.com/static/bower/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="//cc-cdn.dianjoy.com/static/bower/nervenet/nervenet.min.js"></script>
+<script src="//cc-cdn.dianjoy.com/static/bower/mh-simple-uploader/dist/js/SimpleUploader.min.js"></script>
 <script src="js/config.js"></script>
-<script src="http://diy.dianjoy.com/dist/js/tiger-prawn.js"></script>
+<script src="//cc-cdn.dianjoy.com/static/bower/tiger-prawn/dist/js/tiger-prawn.min.js"></script>
 <script src="js/router/Docs.js"></script>
 <script src="js/index.js"></script>
 </body>
