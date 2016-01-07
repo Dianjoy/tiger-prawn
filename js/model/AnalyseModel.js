@@ -1,7 +1,7 @@
 'use strict';
 (function (ns) {
   ns.AnalyseModel = ns.Model.extend({
-    toJSON: function (options) {debugger;
+    toJSON: function (options) {
       var json = ns.Model.prototype.toJSON.call(this, options)
         , key = tp.PROJECT + '-invoice-list';
       if (options) { // from sync，因为{patch: true}
