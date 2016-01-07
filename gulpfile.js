@@ -14,7 +14,8 @@ var fs = require('fs')
   , replace = require('gulp-replace')
   , del = require('del')
   , sequence = require('run-sequence')
-  , minify = require('html-minifier').minify;
+  , minify = require('html-minifier').minify
+  , libs = [];
 
 gulp.task('clear', function () {
   return del([
@@ -26,7 +27,7 @@ gulp.task('clear', function () {
 });
 
 gulp.task('compass', function () {
-  gulp.src('sass/*.sass')
+  return gulp.src('sass/*.sass')
     .pipe(compass({
       sass: 'sass',
       css: 'css',
@@ -40,6 +41,7 @@ gulp.task('compass', function () {
 gulp.task('js', function () {
   let html = fs.readFileSync('index.dev.html', 'utf8')
     , jses = [];
+  // 取所有js
   html = html.replace(/<script src="js\/(.*?\.js)"(?: ([\w\-])+(?:="([^"]*)")?)*><\/script>\n/g, function (match, src) {
     if (/^define.js$/.test(src)) {
       return '';
@@ -49,6 +51,10 @@ gulp.task('js', function () {
       return '<script src="js/bundle.min.js"></script>';
     }
     return '';
+  });
+  // 取所有库
+  html.replace(/(?:href|src)="(bower_components[^"]*(?:css|js))"/g, function (match, src) {
+    libs.push(src);
   });
 
   // 更新 manifest.appcache
@@ -79,7 +85,7 @@ gulp.task('js', function () {
     return 'js/' + value;
   });
 
-  gulp.src(jses)
+  return gulp.src(jses)
     .pipe(concat('bundle.js'))
     .pipe(gulp.dest('js/'))
     .pipe(uglify())
@@ -91,8 +97,9 @@ gulp.task('manifest', function () {
   let config = fs.readFileSync('js/config.js', 'utf8')
     , api = config.match(/ns.API = '([^']+)'/)[1];
   gulp.src('manifest.appcache.sample')
-    .pipe(replace('{{date}}', (new Date()).toISOString()))
-    .pipe(replace('{{API}}', api))
+    .pipe(replace('# {{date}}', (new Date()).toISOString()))
+    .pipe(replace('# {{API}}', api))
+    .pipe(replace('# {{libs}}', libs.join('\n')))
     .pipe(rename('manifest.appcache'))
     .pipe(gulp.dest(''));
 });
@@ -100,7 +107,8 @@ gulp.task('manifest', function () {
 gulp.task('default', function (taskDone) {
   sequence(
     'clear',
-    ['js', 'compass', 'manifest'],
+    ['js', 'compass'],
+    'manifest',
     taskDone
   );
 });
