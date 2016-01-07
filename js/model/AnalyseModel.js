@@ -1,20 +1,16 @@
 'use strict';
 (function (ns) {
   ns.AnalyseModel = ns.Model.extend({
-    toJSON: function (options) {
-      var json = Backbone.Model.prototype.toJSON.call(this, options)
+    toJSON: function (options) {debugger;
+      var json = ns.Model.prototype.toJSON.call(this, options)
         , key = tp.PROJECT + '-invoice-list';
       if (options) { // from sync，因为{patch: true}
         return json;
       }
-      var previous = this.previousAttributes();
-      if (!_.isEmpty(previous)) {
-        json.previous = previous;
-      }
       var store = localStorage.getItem(key)
-        , ad_id = json.id
-        , start = $('#stat-range-start-date').val()
-        , end = $('#stat-range-end-date').val();
+        , ad_id = json.id || json.ad_id
+        , start = json.id ? $('#stat-range-start-date').val() : $('#settle-start-date').val()
+        , end = json.id ? $('#stat-range-end-date').val() : $('#settle-end-date').val();
       json.start = start;
       json.end = end;
       this.defaults = {start: start, end: end};
@@ -28,7 +24,7 @@
         json.is_selected = !_.isUndefined(isSelected);
       }
 
-      return _.extend(json, this.options, this.collection ? this.collection.options : null);
+      return json;
     }
   })
 }(Nervenet.createNameSpace('tp.model')));
