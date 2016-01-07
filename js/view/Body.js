@@ -55,7 +55,7 @@
         this.container.html(page.$el);
         page.once('complete', this.page_loadCompleteHandler, this);
       } else if (/.md$/.test(url)) {
-        tp.service.Manager.get(url, this.md_loadCompleteHandler, this);
+        tp.service.Manager.fetch(url, this.md_loadCompleteHandler, this);
       } else {
         this.container.load(url, this.loadCompleteHandler);
       }
