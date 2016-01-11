@@ -15,10 +15,10 @@
     $body: null,
     $me: null,
     call: function (url, data, options) {
-      options = _.extend({
+      options = _.defaults(options, {
         url: url,
         data: data
-      }, defaults, options);
+      }, defaults);
       var self = this
         , error = options.error || this.onError
         , success = options.success || this.onSuccess;

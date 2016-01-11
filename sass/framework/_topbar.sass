@@ -19,6 +19,7 @@
     width: $sidebar-width
 
   .global-search
+    margin-top: $gap
     padding: 0
     position: relative
 
@@ -26,7 +27,6 @@
       background-color: $background-color
       border: none
       padding: 4px 8px
-      margin-top: 2px
       width: 200px
       height: 30px
 
@@ -43,7 +43,7 @@
       position: absolute
 
     .fa-spinner
-      top: $gap
+      top: $gap - 2px
       right: $gap
 
     .clear-button
@@ -54,10 +54,10 @@
       line-height: $gap-l
       margin: 0
       padding: 0
-      top: $gap-s + 2px
+      top: $gap-s
       right: $gap-s
 
-    .dropdown-menu
+    .result
       min-width: 200px
       max-height: 400px
       overflow: scroll

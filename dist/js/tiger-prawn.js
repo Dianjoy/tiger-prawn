@@ -330,10 +330,10 @@
     $body: null,
     $me: null,
     call: function (url, data, options) {
-      options = _.extend({
+      options = _.defaults(options, {
         url: url,
         data: data
-      }, defaults, options);
+      }, defaults);
       var self = this
         , error = options.error || this.onError
         , success = options.success || this.onSuccess;
@@ -3145,11 +3145,9 @@
       if (this.xhr) {
         this.xhr.abort();
       }
-      this.xhr = tp.service.Manager.get(tp.API + 'search/', {
-        keyword: this.input.val()
-      }, {
+      this.xhr = tp.service.Manager.get(tp.API + 'search/', this.$el.serialize(), {
         success: this.render,
-        error: this.error,
+        error: this.errorHandler,
         context: this
       });
       this.clearButton.hide();
@@ -3179,10 +3177,10 @@
     },
     errorHandler: function () {
       this.spinner.hide();
-      this.result.append(this.template({
+      this.result.html(this.template({
         error: true,
         msg: '加载错误，大侠请重新来过'
-      }));
+      })).show();
     },
     inputHandler: function () {
       clearTimeout(this.timeout);
