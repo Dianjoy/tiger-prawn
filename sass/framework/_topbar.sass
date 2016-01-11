@@ -16,8 +16,10 @@
     background-size: 36px auto
     text-indent: 36px
     position: relative
+    width: $sidebar-width
 
   .global-search
+    padding: 0
     position: relative
 
     input
@@ -42,7 +44,7 @@
 
     .fa-spinner
       top: $gap
-      right: $navbar-padding-horizontal + $gap
+      right: $gap
 
     .clear-button
       background: transparent
@@ -53,10 +55,9 @@
       margin: 0
       padding: 0
       top: $gap-s + 2px
-      right: $navbar-padding-horizontal + $gap-s
+      right: $gap-s
 
     .dropdown-menu
-      left: $navbar-padding-horizontal
       min-width: 200px
       max-height: 400px
       overflow: scroll
@@ -169,6 +170,9 @@
     &
       position: relative
       margin-bottom: 0
+
+      .navbar-brand
+        width: auto
 
       .navbar-toggle
         margin-top: $gap-s
