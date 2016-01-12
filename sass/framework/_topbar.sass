@@ -62,6 +62,9 @@
       max-height: 400px
       overflow: scroll
 
+      > li > a
+        padding: 3px $gap
+
   .nav > li > a
     color: $navbar-color
 
@@ -217,12 +220,9 @@
             ~ .clear-button
               color: $black
 
-        .dropdown-menu
+        .result
           left: $gap
           right: $gap
-
-          > li > a
-            padding: 3px $gap
 
       .navbar-nav
         color: $white

@@ -3138,6 +3138,7 @@
       }
       this.result.html(this.template(response)).show();
       this.spinner.hide();
+      this.clearButton.show();
       this.input.focus();
       this.xhr = null;
     },
