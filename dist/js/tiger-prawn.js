@@ -94,7 +94,12 @@
 
   // 除100，用于币值转换
   h.registerHelper('d100', function (value) {
-    return (value / 100).toFixed(2);
+    return (Math.round(value) / 100).toFixed(2);
+  });
+  // 取整
+  h.registerHelper('round', function (value, length) {
+    length = Math.pow(10, length);
+    return Math.round(value * length) / length;
   });
 
   // 换算简单的数字
