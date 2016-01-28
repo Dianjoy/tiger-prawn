@@ -12,6 +12,7 @@
     onLoadComplete: function (response) {
       tp.popup.Base.prototype.onLoadComplete.call(this, response);
       var start = $('input[name="start-date"]');
+      this.setMinDate(start, moment().subtract('1', 'months').format(FORMAT));
       this.setMaxDate(start, moment());
     },
     startDate_changeHandler: function (event) {
@@ -67,6 +68,9 @@
       } else if (start > max) {
         return moment(start).add(6,'days').format(FORMAT);
       }
+    },
+    submitButton_clickHandler: function () {
+      this.$el.modal('hide');
     }
   });
 }(Nervenet.createNameSpace('tp.page')));
