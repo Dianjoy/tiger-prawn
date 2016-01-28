@@ -1354,7 +1354,9 @@
       this.initUploader();
     },
     remove: function () {
-      this.model.off(null, null, this);
+      if (this.model) {
+        this.model.off(null, null, this);
+      }
       _.each(this.uploaders, function (uploader) {
         uploader.off('data');
         if (uploader.remove) {
