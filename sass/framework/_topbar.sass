@@ -16,15 +16,17 @@
     background-size: 36px auto
     text-indent: 36px
     position: relative
+    width: $sidebar-width
 
   .global-search
+    margin-top: $gap
+    padding: 0
     position: relative
 
     input
       background-color: $background-color
       border: none
       padding: 4px 8px
-      margin-top: 2px
       width: 200px
       height: 30px
 
@@ -41,8 +43,8 @@
       position: absolute
 
     .fa-spinner
-      top: $gap
-      right: $navbar-padding-horizontal + $gap
+      top: $gap - 2px
+      right: $gap
 
     .clear-button
       background: transparent
@@ -52,14 +54,16 @@
       line-height: $gap-l
       margin: 0
       padding: 0
-      top: $gap-s + 2px
-      right: $navbar-padding-horizontal + $gap-s
+      top: $gap-s
+      right: $gap-s
 
-    .dropdown-menu
-      left: $navbar-padding-horizontal
+    .result
       min-width: 200px
       max-height: 400px
       overflow: scroll
+
+      > li > a
+        padding: 3px $gap
 
   .nav > li > a
     color: $navbar-color
@@ -170,6 +174,9 @@
       position: relative
       margin-bottom: 0
 
+      .navbar-brand
+        width: auto
+
       .navbar-toggle
         margin-top: $gap-s
         margin-bottom: $gap-s
@@ -213,12 +220,9 @@
             ~ .clear-button
               color: $black
 
-        .dropdown-menu
+        .result
           left: $gap
           right: $gap
-
-          > li > a
-            padding: 3px $gap
 
       .navbar-nav
         color: $white

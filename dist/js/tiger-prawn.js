@@ -94,7 +94,12 @@
 
   // 除100，用于币值转换
   h.registerHelper('d100', function (value) {
-    return (value / 100).toFixed(2);
+    return (Math.round(value) / 100).toFixed(2);
+  });
+  // 取整
+  h.registerHelper('round', function (value, length) {
+    length = Math.pow(10, length);
+    return Math.round(value * length) / length;
   });
 
   // 换算简单的数字
@@ -330,10 +335,10 @@
     $body: null,
     $me: null,
     call: function (url, data, options) {
-      options = _.extend({
+      options = _.defaults(options, {
         url: url,
         data: data
-      }, defaults, options);
+      }, defaults);
       var self = this
         , error = options.error || this.onError
         , success = options.success || this.onSuccess;
@@ -2818,6 +2823,7 @@
       this.$context.removeValue('model');
       tp.component.Manager.clear(this.container);
       if (this.page) {
+        tp.component.Manager.clear(this.page);
         this.page.remove();
         this.page = null;
       }
@@ -3138,6 +3144,7 @@
       }
       this.result.html(this.template(response)).show();
       this.spinner.hide();
+      this.clearButton.show();
       this.input.focus();
       this.xhr = null;
     },
@@ -3145,11 +3152,9 @@
       if (this.xhr) {
         this.xhr.abort();
       }
-      this.xhr = tp.service.Manager.get(tp.API + 'search/', {
-        keyword: this.input.val()
-      }, {
+      this.xhr = tp.service.Manager.get(tp.API + 'search/', this.$el.serialize(), {
         success: this.render,
-        error: this.error,
+        error: this.errorHandler,
         context: this
       });
       this.clearButton.hide();
@@ -3179,10 +3184,10 @@
     },
     errorHandler: function () {
       this.spinner.hide();
-      this.result.append(this.template({
+      this.result.html(this.template({
         error: true,
         msg: '加载错误，大侠请重新来过'
-      }));
+      })).show();
     },
     inputHandler: function () {
       clearTimeout(this.timeout);

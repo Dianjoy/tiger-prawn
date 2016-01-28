@@ -17,7 +17,7 @@
     </select>
   </div>
   <div class="form-group">
-    <label>运营审核：</label>
+    <label>结算组核对：</label>
     <select class="form-control" name="status">
       <option value="21">全部</option>
       <option value="20">通过</option>
@@ -66,7 +66,7 @@
     <th>合同编号</th>
     <th>金额</th>
     <th>区域总监批复核减申请</th>
-    <th>运营审核</th>
+    <th>结算组核对</th>
     <th>特批</th>
     <th>财务审核</th>
     <th>区域总监审核</th>
@@ -99,7 +99,7 @@
         {{/greater}}
         {{/if}}
       </td>
-      <td data-title="运营审核">
+      <td data-title="结算组核对">
         {{#if is_show}}
         {{#in status 10 18}}审核中{{/in}}
         {{#equal status 19}}

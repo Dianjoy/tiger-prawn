@@ -48,7 +48,7 @@
 
     <div class="navbar-top-inner clearfix">
       <form class="navbar-form global-search navbar-left" role="search">
-        <input type="search" class="form-control keyword" placeholder="搜索广告" title="搜索广告" pattern="\w{2,}" required>
+        <input type="search" name="keyword" class="form-control keyword" placeholder="搜索广告" title="搜索广告" pattern="\w{2,}" required>
         <button type="button" class="clear-button"><i class="fa fa-times"></i></button>
         <span class="fa fa-spin fa-spinner"></span>
         <ul class="dropdown-menu result">
@@ -105,7 +105,7 @@
                     <input type="checkbox" class="check-all" value="channel_{{channel}}">渠道: {{alias}}
                     <input name="c_{{channel}}" value="{{channel}}" class="hidden">
                   </label>
-                  <a class="btn clear-button" title="删除" data-msg="确定删除整个渠道的广告吗？"><i class="fa fa-trash-o fa-fw"></i></a>
+                  <a class="btn clear-button" title="删除" data-msg="您不准备申请这个渠道的发票吗？"><i class="fa fa-trash-o fa-fw"></i></a>
                 </li>
                 {{/if}}
                 <li class="ids invalid-{{channel}}" id="{{id}}">
@@ -198,10 +198,10 @@
 </nav>
 
 <div id="content" class="clearfix">
-  <div class="row">
-    <header class="page-header col-sm-6 col-xs-12">
+  <header class="row">
+    <div class="page-header col-sm-6 col-xs-12">
       <h1>首页 <small>新近数据统计</small></h1>
-    </header>
+    </div>
     <div class="col-sm-6 col-xs-12 latest">
       <script type="text/x-handlebars-template">
         最近一小时：
@@ -209,7 +209,7 @@
         <span class="label label-default apple" title="iOS 广告"><i class="fa fa-apple"></i> {{pack_name_count_ios}} <small>回调 {{ios_ratio}}%</small></span>
       </script>
     </div>
-  </div>
+  </header>
   <ul class="breadcrumb page-breadcrumb">
     <li class="active">首页</li>
     <li class="pull-right date-range">

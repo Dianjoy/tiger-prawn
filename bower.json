@@ -26,13 +26,13 @@
     "colors": "~2.2.0",
     "backbone": "~1.2.3",
     "nervenet": "~0.1.9",
-    "handlebars": "~4.0.4",
+    "handlebars": "^4.0.5",
     "animate.css": "~3.4.0",
-    "moment": "~2.11.0",
+    "moment": "^2.11.1",
     "eonasdan-bootstrap-datetimepicker": "meathill/bootstrap-datetimepicker#master",
     "morrisjs": "~0.5.1",
-    "jquery": "~2.1.4",
-    "mh-simple-uploader": "^0.6.7",
+    "jquery": ">=2.2.0",
+    "mh-simple-uploader": "^0.6.8",
     "marked": "~0.3.5"
   },
   "devDependencies": {
