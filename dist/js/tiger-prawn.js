@@ -2749,6 +2749,10 @@
         this.refresh = options.refresh;
       }
     },
+    remove: function () {
+      Backbone.View.prototype.remove.call(this);
+      tp.component.Manager.clear(this.$el);
+    },
     render: function () {
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
       if (this.refresh) {
@@ -2823,7 +2827,6 @@
       this.$context.removeValue('model');
       tp.component.Manager.clear(this.container);
       if (this.page) {
-        tp.component.Manager.clear(this.page);
         this.page.remove();
         this.page = null;
       }

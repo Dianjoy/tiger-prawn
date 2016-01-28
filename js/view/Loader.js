@@ -24,6 +24,10 @@
         this.refresh = options.refresh;
       }
     },
+    remove: function () {
+      Backbone.View.prototype.remove.call(this);
+      tp.component.Manager.clear(this.$el);
+    },
     render: function () {
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
       if (this.refresh) {

@@ -31,7 +31,6 @@
       this.$context.removeValue('model');
       tp.component.Manager.clear(this.container);
       if (this.page) {
-        tp.component.Manager.clear(this.page);
         this.page.remove();
         this.page = null;
       }
