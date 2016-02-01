@@ -56,7 +56,7 @@
       tp.component.Manager.clear(this.$el);
       this.render();
       if (id) {
-        this.$('[href=#' + id + '][data-toggle]').click();
+        this.$('[href="#' + id + '"][data-toggle]').click();
       }
     },
     model_syncHandler: function () {

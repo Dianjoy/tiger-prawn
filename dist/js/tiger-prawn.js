@@ -2783,7 +2783,7 @@
       tp.component.Manager.clear(this.$el);
       this.render();
       if (id) {
-        this.$('[href=#' + id + '][data-toggle]').click();
+        this.$('[href="#' + id + '"][data-toggle]').click();
       }
     },
     model_syncHandler: function () {
@@ -3545,7 +3545,7 @@
           .value();
       if (order) {
         this.$('.order').removeClass('active inverse');
-        this.$('.order[href=#' + order + ']').addClass('active').toggleClass('inverse', seq == 'desc');
+        this.$('.order[href="#' + order + '"]').addClass('active').toggleClass('inverse', seq == 'desc');
       }
       this.$('.filters').append(labels.join());
     },

@@ -142,7 +142,7 @@
           .value();
       if (order) {
         this.$('.order').removeClass('active inverse');
-        this.$('.order[href=#' + order + ']').addClass('active').toggleClass('inverse', seq == 'desc');
+        this.$('.order[href="#' + order + '"]').addClass('active').toggleClass('inverse', seq == 'desc');
       }
       this.$('.filters').append(labels.join());
     },
