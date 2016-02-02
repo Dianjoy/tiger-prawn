@@ -2364,6 +2364,7 @@
       clearTimeout(timeout);
       this.options = null;
       this.off();
+      tp.component.Manager.clear(this.$el);
       Backbone.View.prototype.remove.call(this);
     },
     hide: function (delay) {
