@@ -6,6 +6,7 @@
     events: {
       'click .eye-edit-button': 'eyeEditButton_clickHandler',
       'click .accordion-toggle': 'accordionToggle_clickHandler',
+      'click .view li a': 'link_clickHandler',
       'click #menu-edit-button': 'menuEditButton_clickHandler',
       'click #edit-confirm-button': 'editConfirmButton_clickHandler',
       'click #edit-cancel-button': 'editCancelButton_clickHandler',
@@ -16,7 +17,7 @@
       'keyup #menu-search-input': 'menuSearchInput_keyupHandler'
     },
     initialize: function () {
-      this.is_collapsed = !!localStorage.getItem(COLLAPSED_STATUS);
+      this.is_collapsed = localStorage.getItem(COLLAPSED_STATUS) === 'true';
       this.hiddenItems = JSON.parse(localStorage.getItem(HIDDEN_ITEMS)) || [];
       this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
     },
@@ -104,6 +105,9 @@
         event.preventDefault();
         event.stopPropagation();
       }
+    },
+    link_clickHandler: function () {
+      this.$('.view').removeClass('view');
     }
   });
 }(Nervenet.createNameSpace('tp.view')));
