@@ -40,7 +40,7 @@
     },
     render: function (options) {
       // 默认显示一个月
-      options.format = options.format || moment.DATE_FORMAT;
+      options.format = options.dateFormat || moment.DATE_FORMAT;
       var isMonth = !/d/i.test(options.format) && /M/.test(options.format)
         , unit = isMonth ? 'months' : 'days'
         , range = _.defaults(options, {
@@ -81,7 +81,7 @@
     },
     use: function (model) {
       this.model = model;
-      var range = this.render(model.pick('start', 'end', 'format'));
+      var range = this.render(model.pick('start', 'end', 'dateFormat'));
       this.model.set(range, {silent: true});
     },
     input_clickHandler: function (event) {

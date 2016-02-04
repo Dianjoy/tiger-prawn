@@ -2104,7 +2104,7 @@
     },
     render: function (options) {
       // 默认显示一个月
-      options.format = options.format || moment.DATE_FORMAT;
+      options.format = options.dateFormat || moment.DATE_FORMAT;
       var isMonth = !/d/i.test(options.format) && /M/.test(options.format)
         , unit = isMonth ? 'months' : 'days'
         , range = _.defaults(options, {
@@ -2145,7 +2145,7 @@
     },
     use: function (model) {
       this.model = model;
-      var range = this.render(model.pick('start', 'end', 'format'));
+      var range = this.render(model.pick('start', 'end', 'dateFormat'));
       this.model.set(range, {silent: true});
     },
     input_clickHandler: function (event) {
@@ -3464,7 +3464,9 @@
 
       // 起止日期
       if ('ranger' in options) {
-        this.model.set(_.pick(options, 'start', 'end', 'format'), {silent: true});
+        if (!this.model.has('start')) {
+          this.model.set(_.pick(options, 'start', 'end', 'dateFormat'), {silent: true});
+        }
         this.$ranger.use(this.model);
       }
 
@@ -3531,7 +3533,7 @@
       // 排序
       var order = this.model.get('order')
         , seq = this.model.get('seq')
-        , status = this.model.omit('keyword', 'order', 'seq', 'start', 'end')
+        , status = this.model.omit('keyword', 'order', 'seq', 'start', 'end', 'dateFormat')
         , labels = _.chain(status)
           .omit(function (value, key) {
             return key.match(/_label$/);
