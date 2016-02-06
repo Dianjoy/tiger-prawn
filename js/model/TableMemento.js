@@ -20,6 +20,12 @@
       }
       return Backbone.Model.prototype._validate.call(this, attr, options);
     },
+    toJSON: function (options) {
+      var json = Backbone.Model.prototype.toJSON.call(this, options);
+      return _.omit(json, function (value, key) {
+        return /_label$/.test(key);
+      });
+    },
     validate: function (attr, options) {
       if (this.waiting || ('ignore' in options && !options.ignore)) {
         return '表格正在更新数据，请稍候。';

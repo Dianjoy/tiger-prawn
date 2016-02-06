@@ -40,23 +40,23 @@
     },
     render: function (options) {
       // 默认显示一个月
-      options.format = options.dateFormat || moment.DATE_FORMAT;
-      var isMonth = !/d/i.test(options.format) && /M/.test(options.format)
+      options.dateFormat = options.dateFormat || moment.DATE_FORMAT;
+      var isMonth = !/d/i.test(options.dateFormat) && /M/.test(options.dateFormat)
         , unit = isMonth ? 'months' : 'days'
         , range = _.defaults(options, {
           start: isMonth ? -1 : -31,
           end: 0
         });
       this.$('.date input').each(function () {
-        $(this).data("DateTimePicker").format(range.format).viewMode(unit);
+        $(this).data("DateTimePicker").format(range.dateFormat).viewMode(unit);
       });
       this.$el.toggleClass('select-month', isMonth);
 
       if (!isNaN(range.start)) {
-        range.start = moment().add(range.start, unit).format(range.format);
+        range.start = moment().add(range.start, unit).format(range.dateFormat);
       }
       if (!isNaN(range.end)) {
-        range.end = moment().add(range.end, unit).format(range.format);
+        range.end = moment().add(range.end, unit).format(range.dateFormat);
       }
 
       this.$('[name=start]').val(range.start);

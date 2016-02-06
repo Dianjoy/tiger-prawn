@@ -39,6 +39,22 @@
   };
 }(Backbone));;
 (function (h) {
+  function toReadableNumber(value) {
+    value = Number(value);
+    value = (value % 1 != 0 ? round(value, 2) : value).toString();
+    value = value.replace('.', ',');
+    var reg = /(\d)(\d{3})(,|$)/;
+    while(reg.test(value)){
+      value = value.replace(reg, '$1,$2$3');
+    }
+    value = value.replace(/,(\d{1,2})$/, '.$1');
+    return value.replace(/^\./, '0.');
+  }
+  function round(value, length) {
+    length = Math.pow(10, length);
+    return Math.round(value * length) / length;
+  }
+
   var slice = Array.prototype.slice
     , pop = Array.prototype.pop
     , counter = {};
@@ -94,13 +110,10 @@
 
   // 除100，用于币值转换
   h.registerHelper('d100', function (value) {
-    return (Math.round(value) / 100).toFixed(2);
+    return toReadableNumber(Math.round(value) / 100);
   });
   // 取整
-  h.registerHelper('round', function (value, length) {
-    length = Math.pow(10, length);
-    return Math.round(value * length) / length;
-  });
+  h.registerHelper('round', round);
 
   // 换算简单的数字
   h.registerHelper('short_n', function (value) {
@@ -118,17 +131,7 @@
     return str;
   });
   //千位分割并保留到小数点后两位
-  h.registerHelper('readable_n', function (value) {
-    value = Number(value);
-    value = value % 1 === 0 ? value.toString() : value.toFixed(2);
-    value = value.replace('.', ',');
-    var reg = /(\d)(\d{3})(,|$)/;
-    while(reg.test(value)){
-      value = value.replace(reg, '$1,$2$3');
-    }
-    value = value.replace(/,(\d\d)$/, '.$1');
-    return value.replace(/^\./, '0.');
-  });
+  h.registerHelper('readable_n', toReadableNumber);
   // 百分比
   h.registerHelper('percent', function (value, total) {
     value = Number(value);
@@ -1078,6 +1081,12 @@
         options.validate = true;
       }
       return Backbone.Model.prototype._validate.call(this, attr, options);
+    },
+    toJSON: function (options) {
+      var json = Backbone.Model.prototype.toJSON.call(this, options);
+      return _.omit(json, function (value, key) {
+        return /_label$/.test(key);
+      });
     },
     validate: function (attr, options) {
       if (this.waiting || ('ignore' in options && !options.ignore)) {
@@ -2104,23 +2113,23 @@
     },
     render: function (options) {
       // 默认显示一个月
-      options.format = options.dateFormat || moment.DATE_FORMAT;
-      var isMonth = !/d/i.test(options.format) && /M/.test(options.format)
+      options.dateFormat = options.dateFormat || moment.DATE_FORMAT;
+      var isMonth = !/d/i.test(options.dateFormat) && /M/.test(options.dateFormat)
         , unit = isMonth ? 'months' : 'days'
         , range = _.defaults(options, {
           start: isMonth ? -1 : -31,
           end: 0
         });
       this.$('.date input').each(function () {
-        $(this).data("DateTimePicker").format(range.format).viewMode(unit);
+        $(this).data("DateTimePicker").format(range.dateFormat).viewMode(unit);
       });
       this.$el.toggleClass('select-month', isMonth);
 
       if (!isNaN(range.start)) {
-        range.start = moment().add(range.start, unit).format(range.format);
+        range.start = moment().add(range.start, unit).format(range.dateFormat);
       }
       if (!isNaN(range.end)) {
-        range.end = moment().add(range.end, unit).format(range.format);
+        range.end = moment().add(range.end, unit).format(range.dateFormat);
       }
 
       this.$('[name=start]').val(range.start);
