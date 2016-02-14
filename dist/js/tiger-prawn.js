@@ -1935,15 +1935,18 @@
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {
-        this.model.unset('keyword', {silent: true}); // 这次搜索之前要先把关键字删掉，保证触发change
-        this.model.set({
-          keyword: event.target.value,
-          page: 0
-        });
+        event.preventDefault();
+        var no_keyword = !event.target.value;
+        this.model.unset('keyword', {silent: !no_keyword}); // 这次搜索之前要先把关键字删掉，保证触发change
+        if (!no_keyword) {
+          this.model.set({
+            keyword: event.target.value,
+            page: 0
+          });
+        }
         this.$el.prop('readonly', true);
         this.spinner = this.spinner || $(tp.component.spinner);
         this.spinner.insertAfter(this.$el);
-        event.preventDefault();
       }
     }
   });
