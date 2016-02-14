@@ -31,6 +31,9 @@
       this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento(this.params);
       this.model.on('change', this.model_changeHandler, this);
       this.model.on('invalid', this.model_invalidHandler, this);
+      if (options.tags) {
+        this.model.tags = options.tags.split(',');
+      }
       this.renderHeader();
 
       // 启用搜索
@@ -129,7 +132,7 @@
       // 排序
       var order = this.model.get('order')
         , seq = this.model.get('seq')
-        , status = this.model.omit('keyword', 'order', 'seq', 'start', 'end', 'dateFormat')
+        , status = this.model.getTags()
         , labels = _.chain(status)
           .omit(function (value, key) {
             return key.match(/_label$/);
@@ -146,7 +149,7 @@
         this.$('.order').removeClass('active inverse');
         this.$('.order[href="#' + order + '"]').addClass('active').toggleClass('inverse', seq == 'desc');
       }
-      this.$('.filters').append(labels.join());
+      this.$('.filters').append(labels.join(''));
     },
     saveModel: function (button, id, prop, value, options) {
       button.spinner();

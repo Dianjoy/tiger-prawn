@@ -131,7 +131,9 @@
     render: function () {
       var data = this.model.toJSON();
       for (var prop in data) {
-        this.$('[name=' + prop + ']').val(data[prop]);
+        this.$('[name=' + prop + ']')
+          .val(data[prop])
+          .data('value', data[prop]);
       }
     },
     remove: function () {
@@ -160,7 +162,8 @@
         self
           .addClass('ready')
           .html(template(options))
-          .prepend(fixed);
+          .prepend(fixed)
+          .val(self.data('value'));
       });
     },
     model_changeHandler: function () {

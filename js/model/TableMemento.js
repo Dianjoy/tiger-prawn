@@ -4,12 +4,14 @@
 'use strict';
 (function (ns) {
   ns.TableMemento = Backbone.Model.extend({
+    RESERVED: ['keyword', 'order', 'seq', 'start', 'end', 'dateFormat'],
+    tags: null,
     waiting: false,
     initialize: function () {
       this.key = tp.PROJECT + location.hash;
       var storage = localStorage.getItem(this.key);
       if (storage) {
-        storage = JSON.parse(storage);
+        storage = _.defaults(this.toJSON(), JSON.parse(storage)); // 需要以当前的参数为主,存储的次之
         this.set(storage, {silent: true});
       }
       this.on('change', this.changeHandler, this);
@@ -31,8 +33,15 @@
         return '表格正在更新数据，请稍候。';
       }
     },
+    getTags: function () {
+      var tags = this.tags ? this.pick(this.tags) : this.omit(this.RESERVED);
+      _.each(tags, function (value, key) {
+        tags[key + '_label'] = this.get(key + '_label');
+      }, this);
+      return tags;
+    },
     changeHandler: function () {
-      localStorage.setItem(this.key, JSON.stringify(this.omit('page', 'keyword')));
+      localStorage.setItem(this.key, JSON.stringify(this.omit('page')));
     }
   });
 }(Nervenet.createNameSpace('tp.model')));
