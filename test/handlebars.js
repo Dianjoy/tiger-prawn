@@ -114,3 +114,22 @@ QUnit.test('readable_n', function (assert) {
   assert.ok(result3 === '-1,234.57');
   assert.ok(result4 === '123,456');
 });
+
+QUnit.test('d100', function (assert) {
+  "use strict";
+  var html = '{{d100 num}}'
+    , template = Handlebars.compile(html)
+    , obj = { num: 1234 }
+    , obj2 = { num: 1234567 }
+    , obj3 = { num: 12340 }
+    , obj4 = { num: 123400 }
+    , result = template(obj)
+    , result2 = template(obj2)
+    , result3 = template(obj3)
+    , result4 = template(obj4);
+
+  assert.ok(result === '12.34');
+  assert.ok(result2 === '12,345.67');
+  assert.ok(result3 === '123.4');
+  assert.ok(result4 === '1,234');
+});
