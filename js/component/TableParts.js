@@ -102,7 +102,10 @@
       this.spinner && this.spinner.remove();
     },
     model_changeHandler: function (model, keyword) {
-      this.el.value = keyword;
+      this.el.value = keyword || '';
+      this.$el.prop('readonly', true);
+      this.spinner = this.spinner || $(tp.component.spinner);
+      this.spinner.insertAfter(this.$el);
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {
@@ -115,9 +118,6 @@
             page: 0
           });
         }
-        this.$el.prop('readonly', true);
-        this.spinner = this.spinner || $(tp.component.spinner);
-        this.spinner.insertAfter(this.$el);
       }
     }
   });

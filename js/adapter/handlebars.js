@@ -107,12 +107,20 @@
   });
 
   // 用来生成可读时间
-  h.registerHelper('moment', function (value) {
-    value = value ? moment(value).calendar() : '';
+  /**
+   * @param {object} options.hash
+   * @param {boolean} options.hash.php
+   */
+  h.registerHelper('moment', function (value, options) {
+    value = value ? moment(options.hash.php ? value * 1000 : value).calendar() : '';
     return /invalid/i.test(value) ? '' : value;
   });
-  h.registerHelper('from-now', function (value) {
-    return value ? moment(value).fromNow() : '';
+  /**
+   * @param {object} options.hash
+   * @param {boolean} options.hash.php
+   */
+  h.registerHelper('from-now', function (value, options) {
+    return value ? moment(options.hash.php ? value * 1000 : value).fromNow() : '';
   });
   h.registerHelper('to_date', function (value, plus) {
     return value ? moment(value).add(plus, 'days').format(moment.DATE_FORMAT) : '';

@@ -142,12 +142,20 @@
   });
 
   // 用来生成可读时间
-  h.registerHelper('moment', function (value) {
-    value = value ? moment(value).calendar() : '';
+  /**
+   * @param {object} options.hash
+   * @param {boolean} options.hash.php
+   */
+  h.registerHelper('moment', function (value, options) {
+    value = value ? moment(options.hash.php ? value * 1000 : value).calendar() : '';
     return /invalid/i.test(value) ? '' : value;
   });
-  h.registerHelper('from-now', function (value) {
-    return value ? moment(value).fromNow() : '';
+  /**
+   * @param {object} options.hash
+   * @param {boolean} options.hash.php
+   */
+  h.registerHelper('from-now', function (value, options) {
+    return value ? moment(options.hash.php ? value * 1000 : value).fromNow() : '';
   });
   h.registerHelper('to_date', function (value, plus) {
     return value ? moment(value).add(plus, 'days').format(moment.DATE_FORMAT) : '';
@@ -1713,7 +1721,7 @@
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
-      this.$('.waiting').hide();
+      this.$('.waiting').remove();
       this.container.append(this.fragment);
       this.fragment = '';
       this.$el.removeClass('loading');
@@ -1931,7 +1939,10 @@
       this.spinner && this.spinner.remove();
     },
     model_changeHandler: function (model, keyword) {
-      this.el.value = keyword;
+      this.el.value = keyword || '';
+      this.$el.prop('readonly', true);
+      this.spinner = this.spinner || $(tp.component.spinner);
+      this.spinner.insertAfter(this.$el);
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {
@@ -1944,9 +1955,6 @@
             page: 0
           });
         }
-        this.$el.prop('readonly', true);
-        this.spinner = this.spinner || $(tp.component.spinner);
-        this.spinner.insertAfter(this.$el);
       }
     }
   });
@@ -3285,7 +3293,7 @@
     initialize: function (options) {
       options = _.extend({
         container: 'tbody'
-      }, options);
+      }, options, this.$el.data());
       this.collection = new Backbone.Collection();
       ns.BaseList.prototype.initialize.call(this, options);
 
