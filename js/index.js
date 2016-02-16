@@ -32,6 +32,7 @@
   context
     .inject(me)
     .inject(body)
+    .inject(sidebarEditor)
     .inject(tp.component.Manager)
     .inject(tp.popup.Manager)
     .inject(tp.service.Manager)

@@ -3,10 +3,10 @@
   var HIDDEN_ITEMS = tp.PROJECT + '-hidden-items'
     , COLLAPSED_STATUS = tp.PROJECT + '-sidebar-collapsed';
   ns.SidebarEditor = Backbone.View.extend({
+    $body: null,
     events: {
       'click .eye-edit-button': 'eyeEditButton_clickHandler',
       'click .accordion-toggle': 'accordionToggle_clickHandler',
-      'click .view li a': 'link_clickHandler',
       'click #menu-edit-button': 'menuEditButton_clickHandler',
       'click #edit-confirm-button': 'editConfirmButton_clickHandler',
       'click #edit-cancel-button': 'editCancelButton_clickHandler',
@@ -17,7 +17,7 @@
       'keyup #menu-search-input': 'menuSearchInput_keyupHandler'
     },
     initialize: function () {
-      this.is_collapsed = localStorage.getItem(COLLAPSED_STATUS) === 'true';
+      this.is_collapsed = !!localStorage.getItem(COLLAPSED_STATUS);
       this.hiddenItems = JSON.parse(localStorage.getItem(HIDDEN_ITEMS)) || [];
       this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
     },
@@ -94,10 +94,15 @@
     },
     menuCollapseButton_clickHandler: function () {
       this.is_collapsed = $('body').toggleClass('sidebar-collapsed').hasClass('sidebar-collapsed');
-      localStorage.setItem(COLLAPSED_STATUS, this.is_collapsed);
+      if (this.is_collapsed) {
+        localStorage.setItem(COLLAPSED_STATUS, this.is_collapsed);
+      } else {
+        localStorage.removeItem(COLLAPSED_STATUS);
+      }
     },
     accordionToggle_clickHandler: function (event) {
       if ($('body').hasClass('sidebar-collapsed')) {
+        this.$body.$el.one('click', _.bind(this.items_hideHandler, this));
         this.$('.accordion-toggle').each(function () {
           var ul = $(this).siblings('ul');
           this === event.currentTarget ? ul.toggleClass('view').height('auto') : ul.removeClass('view');
@@ -106,7 +111,7 @@
         event.stopPropagation();
       }
     },
-    link_clickHandler: function () {
+    items_hideHandler: function () {
       this.$('.view').removeClass('view');
     }
   });
