@@ -24,7 +24,7 @@
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
-      this.$('.waiting').hide();
+      this.$('.waiting').remove();
       this.container.append(this.fragment);
       this.fragment = '';
       this.$el.removeClass('loading');

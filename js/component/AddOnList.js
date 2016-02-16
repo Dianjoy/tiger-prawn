@@ -8,7 +8,7 @@
     initialize: function (options) {
       options = _.extend({
         container: 'tbody'
-      }, options);
+      }, options, this.$el.data());
       this.collection = new Backbone.Collection();
       ns.BaseList.prototype.initialize.call(this, options);
 

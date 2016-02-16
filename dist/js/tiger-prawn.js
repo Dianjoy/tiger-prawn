@@ -142,12 +142,20 @@
   });
 
   // 用来生成可读时间
-  h.registerHelper('moment', function (value) {
-    value = value ? moment(value).calendar() : '';
+  /**
+   * @param {object} options.hash
+   * @param {boolean} options.hash.php
+   */
+  h.registerHelper('moment', function (value, options) {
+    value = value ? moment(options.hash.php ? value * 1000 : value).calendar() : '';
     return /invalid/i.test(value) ? '' : value;
   });
-  h.registerHelper('from-now', function (value) {
-    return value ? moment(value).fromNow() : '';
+  /**
+   * @param {object} options.hash
+   * @param {boolean} options.hash.php
+   */
+  h.registerHelper('from-now', function (value, options) {
+    return value ? moment(options.hash.php ? value * 1000 : value).fromNow() : '';
   });
   h.registerHelper('to_date', function (value, plus) {
     return value ? moment(value).add(plus, 'days').format(moment.DATE_FORMAT) : '';
@@ -1066,12 +1074,14 @@
 }(Nervenet.createNameSpace('tp.model')));;
 (function (ns) {
   ns.TableMemento = Backbone.Model.extend({
+    RESERVED: ['keyword', 'order', 'seq', 'start', 'end', 'dateFormat'],
+    tags: null,
     waiting: false,
     initialize: function () {
       this.key = tp.PROJECT + location.hash;
       var storage = localStorage.getItem(this.key);
       if (storage) {
-        storage = JSON.parse(storage);
+        storage = _.defaults(this.toJSON(), JSON.parse(storage)); // 需要以当前的参数为主,存储的次之
         this.set(storage, {silent: true});
       }
       this.on('change', this.changeHandler, this);
@@ -1093,8 +1103,15 @@
         return '表格正在更新数据，请稍候。';
       }
     },
+    getTags: function () {
+      var tags = this.tags ? this.pick(this.tags) : this.omit(this.RESERVED);
+      _.each(tags, function (value, key) {
+        tags[key + '_label'] = this.get(key + '_label');
+      }, this);
+      return tags;
+    },
     changeHandler: function () {
-      localStorage.setItem(this.key, JSON.stringify(this.omit('page', 'keyword')));
+      localStorage.setItem(this.key, JSON.stringify(this.omit('page')));
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
@@ -1704,7 +1721,7 @@
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
-      this.$('.waiting').hide();
+      this.$('.waiting').remove();
       this.container.append(this.fragment);
       this.fragment = '';
       this.$el.removeClass('loading');
@@ -1922,19 +1939,22 @@
       this.spinner && this.spinner.remove();
     },
     model_changeHandler: function (model, keyword) {
-      this.el.value = keyword;
+      this.el.value = keyword || '';
+      this.$el.prop('readonly', true);
+      this.spinner = this.spinner || $(tp.component.spinner);
+      this.spinner.insertAfter(this.$el);
     },
     keydownHandler: function (event) {
       if (event.keyCode === 13) {
-        this.model.unset('keyword', {silent: true}); // 这次搜索之前要先把关键字删掉，保证触发change
-        this.model.set({
-          keyword: event.target.value,
-          page: 0
-        });
-        this.$el.prop('readonly', true);
-        this.spinner = this.spinner || $(tp.component.spinner);
-        this.spinner.insertAfter(this.$el);
         event.preventDefault();
+        var no_keyword = !event.target.value;
+        this.model.unset('keyword', {silent: !no_keyword}); // 这次搜索之前要先把关键字删掉，保证触发change
+        if (!no_keyword) {
+          this.model.set({
+            keyword: event.target.value,
+            page: 0
+          });
+        }
       }
     }
   });
@@ -1951,7 +1971,9 @@
     render: function () {
       var data = this.model.toJSON();
       for (var prop in data) {
-        this.$('[name=' + prop + ']').val(data[prop]);
+        this.$('[name=' + prop + ']')
+          .val(data[prop])
+          .data('value', data[prop]);
       }
     },
     remove: function () {
@@ -1980,7 +2002,8 @@
         self
           .addClass('ready')
           .html(template(options))
-          .prepend(fixed);
+          .prepend(fixed)
+          .val(self.data('value'));
       });
     },
     model_changeHandler: function () {
@@ -3270,7 +3293,7 @@
     initialize: function (options) {
       options = _.extend({
         container: 'tbody'
-      }, options);
+      }, options, this.$el.data());
       this.collection = new Backbone.Collection();
       ns.BaseList.prototype.initialize.call(this, options);
 
@@ -3444,6 +3467,9 @@
       this.model = this.model && this.model instanceof tp.model.TableMemento ? this.model : new tp.model.TableMemento(this.params);
       this.model.on('change', this.model_changeHandler, this);
       this.model.on('invalid', this.model_invalidHandler, this);
+      if (options.tags) {
+        this.model.tags = options.tags.split(',');
+      }
       this.renderHeader();
 
       // 启用搜索
@@ -3542,7 +3568,7 @@
       // 排序
       var order = this.model.get('order')
         , seq = this.model.get('seq')
-        , status = this.model.omit('keyword', 'order', 'seq', 'start', 'end', 'dateFormat')
+        , status = this.model.getTags()
         , labels = _.chain(status)
           .omit(function (value, key) {
             return key.match(/_label$/);
@@ -3559,7 +3585,7 @@
         this.$('.order').removeClass('active inverse');
         this.$('.order[href="#' + order + '"]').addClass('active').toggleClass('inverse', seq == 'desc');
       }
-      this.$('.filters').append(labels.join());
+      this.$('.filters').append(labels.join(''));
     },
     saveModel: function (button, id, prop, value, options) {
       button.spinner();
