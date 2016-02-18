@@ -3,7 +3,6 @@
   var HIDDEN_ITEMS = tp.PROJECT + '-hidden-items'
     , COLLAPSED_STATUS = tp.PROJECT + '-sidebar-collapsed';
   ns.SidebarEditor = Backbone.View.extend({
-    $body: null,
     events: {
       'click .eye-edit-button': 'eyeEditButton_clickHandler',
       'click .accordion-toggle': 'accordionToggle_clickHandler',
@@ -101,8 +100,9 @@
       }
     },
     accordionToggle_clickHandler: function (event) {
-      if ($('body').hasClass('sidebar-collapsed')) {
-        this.$body.$el.one('click', _.bind(this.items_hideHandler, this));
+      var body = $('body');
+      if (body.hasClass('sidebar-collapsed')) {
+        body.one('click', _.bind(this.items_hideHandler, this));
         this.$('.accordion-toggle').each(function () {
           var ul = $(this).siblings('ul');
           this === event.currentTarget ? ul.toggleClass('view').height('auto') : ul.removeClass('view');

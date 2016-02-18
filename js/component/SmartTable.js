@@ -241,7 +241,7 @@
       this.model.set({
         order: order,
         seq: target.hasClass('inverse') ? 'desc' : 'asc'
-      });
+      }, {reset: true});
       event.preventDefault();
     },
     pagesize_changeHandler: function (event) {
