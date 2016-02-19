@@ -3800,7 +3800,7 @@
       this.collection.off(null, null, this);
       this.selected.off();
       this.selected = null;
-      Backbone.View.remove.call(this);
+      Backbone.View.prototype.remove.call(this);
     },
     fetch: function () {
       if (this.xhr) {
