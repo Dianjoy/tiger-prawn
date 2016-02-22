@@ -4,6 +4,31 @@
  */
 'use strict';
 (function (h) {
+  function d100(value) {
+    value = value || 0;
+    return toReadableNumber(Math.round(value) / 100);
+  }
+  function round(value, length) {
+    length = Math.pow(10, length);
+    return Math.round(value * length) / length;
+  }
+  function sum() {
+    var params = slice.call(arguments, 0, -1)
+      , options = arguments[arguments.length - 1]
+      , amount = _.reduce(params, function (memo, value) {
+        if (value === '-') {
+          this.isMinos = true;
+        } else {
+          memo += (this.isMinos ? -1 : 1) * value;
+          this.isMinos = false;
+        }
+        return memo;
+      }, 0, params);
+    if (options.hash.d100) {
+      amount = d100(amount);
+    }
+    return amount;
+  }
   function toReadableNumber(value) {
     value = Number(value);
     value = (value % 1 != 0 ? round(value, 2) : value).toString();
@@ -14,23 +39,6 @@
     }
     value = value.replace(/,(\d{1,2})$/, '.$1');
     return value.replace(/^\./, '0.');
-  }
-  function round(value, length) {
-    length = Math.pow(10, length);
-    return Math.round(value * length) / length;
-  }
-  function sum() {
-    var params = slice.call(arguments, 0, -1)
-      , result = _.reduce(params, function (memo, value) {
-        if (value === '-') {
-          this.isMinos = true;
-        } else {
-          memo += (this.isMinos ? -1 : 1) * value;
-          this.isMinos = false;
-        }
-        return memo;
-      }, 0, params);
-    return result.sum;
   }
 
   var slice = Array.prototype.slice
@@ -87,10 +95,7 @@
   });
 
   // 除100，用于币值转换
-  h.registerHelper('d100', function (value) {
-    value = value || 0;
-    return toReadableNumber(Math.round(value) / 100);
-  });
+  h.registerHelper('d100', d100);
   // 取整
   h.registerHelper('round', round);
   // 加合
