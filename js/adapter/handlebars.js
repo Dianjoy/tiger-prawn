@@ -19,6 +19,19 @@
     length = Math.pow(10, length);
     return Math.round(value * length) / length;
   }
+  function sum() {
+    var params = slice.call(arguments, 0, -1)
+      , result = _.reduce(params, function (memo, value) {
+        if (value === '-') {
+          this.isMinos = true;
+        } else {
+          memo += (this.isMinos ? -1 : 1) * value;
+          this.isMinos = false;
+        }
+        return memo;
+      }, 0, params);
+    return result.sum;
+  }
 
   var slice = Array.prototype.slice
     , pop = Array.prototype.pop
@@ -75,10 +88,13 @@
 
   // 除100，用于币值转换
   h.registerHelper('d100', function (value) {
+    value = value || 0;
     return toReadableNumber(Math.round(value) / 100);
   });
   // 取整
   h.registerHelper('round', round);
+  // 加合
+  h.registerHelper('sum', sum);
 
   // 换算简单的数字
   h.registerHelper('short_n', function (value) {
