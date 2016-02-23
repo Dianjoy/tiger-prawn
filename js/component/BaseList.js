@@ -42,8 +42,11 @@
 
       this.params = tp.utils.decodeURLParam(options.params);
       // 起止日期
+      if (options.defaults && _.isString(options.defaults)) {
+        options.defaults = tp.utils.decodeURLParam(options.defaults);
+      }
       if (options.start || options.end) {
-        options.defaults = _.pick(options, 'start', 'end');
+        options.defaults = _.extend(options.defaults, _.pick(options, 'start', 'end'));
       }
 
       return tp.model.ListCollection.getInstance(options);

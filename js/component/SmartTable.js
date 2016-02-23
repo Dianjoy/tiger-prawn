@@ -34,6 +34,9 @@
       if (options.tags) {
         this.model.tags = options.tags.split(',');
       }
+      if (this.model.has('start')) {
+        _.extend(this.collection.model.prototype.defaults, this.model.pick('start', 'end'));
+      }
       this.renderHeader();
 
       // 启用搜索
