@@ -33,6 +33,9 @@
             }, this);
           }
         }, this);
+        response = _.reject(response, function (item) {
+          return item.only && !_.contains(item.only.split(','), this.$me.get('id'));
+        }, this);
         var html = this.template({list: response});
         this.$('#navbar-side-inner').append(html);
         $('body').toggleClass('sidebar-collapsed', this.is_collapsed);
