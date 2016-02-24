@@ -37,7 +37,7 @@
     var current = date ? moment(date) : moment().add(-1, 'days')
       , today = moment().add(-1, 'days')
       , yesterday = current.clone().add(-1, 'days').format(DATE)
-      , tomorrow = current.isSame(today) ? null : current.add(1, 'days').format(DATE);
+      , tomorrow = current.isSame(today) ? null : current.clone().add(1, 'days').format(DATE);
     return {
       date: current.format(DATE),
       yesterday: yesterday,
