@@ -35,7 +35,9 @@
         this.model.tags = options.tags.split(',');
       }
       if (this.model.has('start')) {
-        _.extend(this.collection.model.prototype.defaults, this.model.pick('start', 'end'));
+        if (!_.isString(this.collection.model)) {
+          _.extend(this.collection.model.prototype.defaults, this.model.pick('start', 'end'));
+        }
       }
       this.renderHeader();
 
