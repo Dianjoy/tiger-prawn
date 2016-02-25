@@ -3092,6 +3092,9 @@
             }, this);
           }
         }, this);
+        response = _.reject(response, function (item) {
+          return item.only && !_.contains(item.only.split(','), this.model.get('id'));
+        }, this);
         var html = this.template({list: response});
         this.$('#navbar-side-inner').append(html);
         $('body').toggleClass('sidebar-collapsed', this.is_collapsed);
@@ -3530,7 +3533,9 @@
         this.model.tags = options.tags.split(',');
       }
       if (this.model.has('start')) {
-        _.extend(this.collection.model.prototype.defaults, this.model.pick('start', 'end'));
+        if (!_.isString(this.collection.model)) {
+          _.extend(this.collection.model.prototype.defaults, this.model.pick('start', 'end'));
+        }
       }
       this.renderHeader();
 

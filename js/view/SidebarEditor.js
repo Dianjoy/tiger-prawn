@@ -34,7 +34,7 @@
           }
         }, this);
         response = _.reject(response, function (item) {
-          return item.only && !_.contains(item.only.split(','), this.$me.get('id'));
+          return item.only && !_.contains(item.only.split(','), this.model.get('id'));
         }, this);
         var html = this.template({list: response});
         this.$('#navbar-side-inner').append(html);
