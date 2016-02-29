@@ -1,35 +1,42 @@
 <div class="form-group">
   <label for="editor-popup-input">{{label}}</label>
   <div class="uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="{{accept}}" id="app-uploader" data-id="{{id}}" data-name="{{prop}}" {{#if multiple}}data-multiple="true"{{/if}} {{#if append}}data-append="true"{{/if}}>
-    <div class="btn-group su-tabs">
-      <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传文件</button>
-      <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络地址</button>
-    </div>
-    <button type="button" class="btn btn-default fetch-button"><i class="fa fa-cloud-download"></i> 抓取</button>
-    <div class="su-placeholder {{#if removable}}su-removable{{/if}}" data-initial="请上传文件。" data-progress="上传文件中..">
-      {{#if multiple}}
-        {{#each items}}
-          <div class="su-item">
-            {{#if ../isImage}}
-              <img src="{{.}}" class="img-thumbnail">
-            {{else}}
-              <a href="{{.}}" download="{{ad_name}}-{{@index}}.{{ext value}}">文件链接</a>
-            {{/if}}
-          </div>
-        {{/each}}
-      {{else if value}}
-        <div class="su-item">
-          {{#if isImage}}
-          <img src="{{value}}" class="img-thumbnail">
-          {{else}}
-          <a href="{{value}}" download="{{ad_name}}.{{ext value}}">文件链接</a>
+    <ul class="nav nav-tabs su-tabs">
+      <li role="presentation" class="active"><a href="#su-uploader" aria-controls="su-uploader" role="tab" data-toggle="tab"><i class="fa fa-upload"></i> 上传文件</a></li>
+      <li role="presentation"><a href="#su-fetcher" aria-controls="su-fetcher" role="tab" data-toggle="tab"><i class="fa fa-link"></i> 用网址抓取</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="active tab-pane" role="tabpanel" id="su-uploader">
+        <div class="su-placeholder {{#if removable}}su-removable{{/if}}" data-initial="请上传文件。" data-progress="上传文件中..">
+          {{#if multiple}}
+            {{#each items}}
+              <div class="su-item">
+                {{#if ../isImage}}
+                  <img src="{{.}}" class="img-thumbnail">
+                {{else}}
+                  <a href="{{.}}" download="{{ad_name}}-{{@index}}.{{ext value}}">文件链接</a>
+                {{/if}}
+              </div>
+            {{/each}}
+          {{else if value}}
+            <div class="su-item">
+              {{#if isImage}}
+                <img src="{{value}}" class="img-thumbnail">
+              {{else}}
+                <a href="{{value}}" download="{{ad_name}}.{{ext value}}">文件链接</a>
+              {{/if}}
+            </div>
           {{/if}}
         </div>
-      {{/if}}
+        <label class="btn btn-info btn-block su-upload-button">
+          <i class="fa fa-upload"></i> 选择文件并上传
+        </label>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="su-fetcher">
+        <label for="url-{{prop}}" class="control-label">请填入欲抓取的链接：</label>
+        <input name="{{prop}}" value="{{value}}" class="su-url form-control" id="url-{{prop}}">
+        <button type="button" class="btn btn-info btn-block fetch-button su-fetch-button"><i class="fa fa-cloud-download"></i> 抓取</button>
+      </div>
     </div>
-    <label class="btn btn-info btn-block su-upload-button">
-      <i class="fa fa-upload"></i> 选择文件并上传
-    </label>
-    <input type="hidden" name="{{prop}}" value="{{value}}" class="su-url form-control">
   </div>
 </div>
