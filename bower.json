@@ -22,18 +22,18 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.6",
-    "font-awesome": "~4.5.0",
+    "font-awesome": "^4.5.0",
     "colors": "~2.2.0",
     "backbone": "~1.2.3",
     "nervenet": "~0.1.9",
     "handlebars": "^4.0.5",
-    "animate.css": "~3.4.0",
+    "animate.css": "^3.4.0",
     "moment": "^2.11.1",
     "eonasdan-bootstrap-datetimepicker": "meathill/bootstrap-datetimepicker#master",
     "morrisjs": "~0.5.1",
     "jquery": ">=2.2.0",
-    "mh-simple-uploader": "^0.6.8",
-    "marked": "~0.3.5"
+    "mh-simple-uploader": "^0.7.0",
+    "marked": "^0.3.5"
   },
   "devDependencies": {
     "bootstrap-sass": "~3.3.6",

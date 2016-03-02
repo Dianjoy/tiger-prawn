@@ -8,22 +8,29 @@
     <div class="form-group">
       <label class="col-sm-2 control-label" for="ad_url">广告链接</label>
       <div class="col-sm-6 col-md-5 uploader fetcher" data-url="{{API}}file/" data-need-validate="true" data-accept="*.apk" id="app-uploader" data-name="ad_url">
-        <div class="btn-group su-tabs">
-          <button type="button" class="btn btn-info active" data-target="upload"><i class="fa fa-upload"></i> 上传安装包</button>
-          <button type="button" class="btn btn-info" data-target="url"><i class="fa fa-link"></i> 输入网络地址</button>
-        </div>
-        <button type="button" class="btn fetch-button" disabled><i class="fa fa-cloud-download"></i> 抓取</button>
-        <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中..">
-          {{#if ad_url}}
-            <div class="su-item">
-              <a href="{{UPLOAD}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
+        <ul class="nav nav-tabs su-tabs">
+          <li role="presentation" class="active"><a href="#su-uploader" aria-controls="su-uploader" role="tab" data-toggle="tab"><i class="fa fa-upload"></i> 上传安装包</a></li>
+          <li role="presentation"><a href="#su-fetcher" aria-controls="su-fetcher" role="tab" data-toggle="tab"><i class="fa fa-link"></i> 用网址抓取</a></li>
+        </ul>
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="su-uploader">
+            <div class="su-placeholder" data-initial="请上传文件。" data-progress="上传文件中..">
+              {{#if ad_url}}
+                <div class="su-item">
+                  <a href="{{UPLOAD}}{{ad_url}}" download="{{ad_name}}.apk">文件链接</a>
+                </div>
+              {{/if}}
             </div>
-          {{/if}}
+            <label class="btn btn-info btn-block su-upload-button">
+              <i class="fa fa-upload"></i> 选择安装包并上传
+            </label>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="su-fetcher">
+            <label for="ad_url" class="control-label">请填入欲抓取的链接：</label>
+            <input name="ad_url" value="{{ad_url}}" class="su-url form-control" id="ad_url">
+            <button type="button" class="btn btn-block btn-info fetch-button su-fetch-button" disabled><i class="fa fa-cloud-download"></i> 抓取</button>
+          </div>
         </div>
-        <label class="btn btn-info btn-block su-upload-button">
-          <i class="fa fa-upload"></i> 选择安装包并上传
-        </label>
-        <input type="hidden" name="ad_url" value="{{ad_url}}" class="su-url form-control">
       </div>
     </div>
     <div class="form-group">

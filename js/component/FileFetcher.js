@@ -4,9 +4,18 @@
 'use strict';
 (function (ns) {
   ns.FileFetcher = Backbone.View.extend({
+    timeout: 0,
     events: {
       'click .fetch-button': 'fetchButton_clickHandler',
-      'change [name]': 'input_changeHandler'
+      'input': 'inputHandler'
+    },
+    initialize: function () {
+      this.button = this.$('.fetch-button');
+    },
+    reset: function () {
+      this.button.prop('disabled', false)
+        .find('i').removeClass('fa-spin fa-spinner');
+      this.$('[name=ad_url]').prop('disabled', false);
     },
     validate: function (value) {
       var reg = /^https?:\/\//;
@@ -38,20 +47,26 @@
     fetchFile_successHandler: function (response) {
       alert('服务器抓取文件成功');
       this.trigger('data', response.form);
-      this.$('.fetch-button').prop('disabled', false)
-        .find('i').removeClass('fa-spin fa-spinner');
-      this.$('[name=ad_url]').prop('disabled', false);
+      this.reset();
     },
+    /**
+     *
+     * @param response object
+     * @param response.responseJSON object
+     * @param response.msg string
+     */
     fetchFile_errorHandler: function (response) {
+      if ('responseJSON' in response) {
+        response = response.responseJSON;
+      }
       console.log(response);
-      alert(response.msg);
+      alert(response.msg || '抓取失败');
+      this.reset();
     },
-    input_changeHandler: function (event) {
+    inputHandler: function (event) {
       event.target.value = event.target.value.replace(/\s/g, '');
       var has_url = this.validate(event.target.value);
-      this.$('.fetch-button')
-        .toggleClass('btn-warning', has_url)
-        .prop('disabled', !has_url);
+      this.button.prop('disabled', !has_url);
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
