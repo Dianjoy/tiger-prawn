@@ -35,16 +35,16 @@
         <a href="#/channel/{{channel}}" class="filter label label-channel">{{channel}}</a>
         <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
         {{cid}}
+        <a data-toggle="popover" data-content="{{invoice_status}}" data-title="发票状态"><i class="fa fa-info-circle fa-lg"></i></a>
       </td>
       <td data-title="创建时间">{{create_time}}</td>
-      <td data-title="收入">{{income}}</td>
-      <td data-title="核减金额">{{cut}}</td>
-      <td data-title="回款金额">{{rmb}}</td>
+      <td data-title="收入">{{readable_n income}}</td>
+      <td data-title="核减金额">{{readable_n cut}}</td>
+      <td data-title="回款金额">{{readable_n rmb}}</td>
       <td data-title="预计到款时间">
-        <!--{{#each payment}}-->
-          <!--{{predict_repay_date}}<br/>-->
-        <!--{{/each}}-->
-        <a data-toggle="popover" data-content="{{invoice_status}}" data-title="发票状态"><i class="fa fa-info-circle fa-lg"></i></a>
+        {{#each payment}}
+          {{predict_repay_date}}<br/>
+        {{/each}}
       </td>
       <td data-title="回款状况">
         {{#each payment}}
