@@ -23,6 +23,11 @@
         "title": "竞品广告",
         "icon": "bell",
         "link": "#/competitor_ad/"
+      },
+      {
+       "title": "我的回款状况",
+       "icon": "money",
+       "link": "#/payment/"
       }
     ]
   },
