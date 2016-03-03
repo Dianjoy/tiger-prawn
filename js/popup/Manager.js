@@ -49,6 +49,11 @@
         options.content = target.href;
         options.isRemote = true;
       }
+      if ('model' in options) {
+        options.model = new tp.model.Model();
+        options.model.urlRoot = tp.API + options.url;
+        options.autoFetch = true;
+      }
       options.title = options.title || target.title;
       this.popup(options);
       event.preventDefault();

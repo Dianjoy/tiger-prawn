@@ -490,6 +490,11 @@
         options.content = target.href;
         options.isRemote = true;
       }
+      if ('model' in options) {
+        options.model = new tp.model.Model();
+        options.model.urlRoot = tp.API + options.url;
+        options.autoFetch = true;
+      }
       options.title = options.title || target.title;
       this.popup(options);
       event.preventDefault();
@@ -1838,9 +1843,18 @@
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
   ns.FileFetcher = Backbone.View.extend({
+    timeout: 0,
     events: {
       'click .fetch-button': 'fetchButton_clickHandler',
-      'change [name]': 'input_changeHandler'
+      'input': 'inputHandler'
+    },
+    initialize: function () {
+      this.button = this.$('.fetch-button');
+    },
+    reset: function () {
+      this.button.prop('disabled', false)
+        .find('i').removeClass('fa-spin fa-spinner');
+      this.$('[name=ad_url]').prop('disabled', false);
     },
     validate: function (value) {
       var reg = /^https?:\/\//;
@@ -1872,20 +1886,26 @@
     fetchFile_successHandler: function (response) {
       alert('服务器抓取文件成功');
       this.trigger('data', response.form);
-      this.$('.fetch-button').prop('disabled', false)
-        .find('i').removeClass('fa-spin fa-spinner');
-      this.$('[name=ad_url]').prop('disabled', false);
+      this.reset();
     },
+    /**
+     *
+     * @param response object
+     * @param response.responseJSON object
+     * @param response.msg string
+     */
     fetchFile_errorHandler: function (response) {
+      if ('responseJSON' in response) {
+        response = response.responseJSON;
+      }
       console.log(response);
-      alert(response.msg);
+      alert(response.msg || '抓取失败');
+      this.reset();
     },
-    input_changeHandler: function (event) {
+    inputHandler: function (event) {
       event.target.value = event.target.value.replace(/\s/g, '');
       var has_url = this.validate(event.target.value);
-      this.$('.fetch-button')
-        .toggleClass('btn-warning', has_url)
-        .prop('disabled', !has_url);
+      this.button.prop('disabled', !has_url);
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
@@ -2439,6 +2459,10 @@
       } else {
         this.onLoadComplete(options.content);
       }
+      if (options.autoFetch) {
+        this.model.fetch();
+        this.model.on('sync', this.model_syncHandler, this);
+      }
       this.options = options;
       this.$el.modal(options);
     },
@@ -2475,6 +2499,11 @@
       this.hide(delay);
       this.trigger('success');
     },
+    model_syncHandler: function (model) {
+      if (this.template) {
+        this.onLoadComplete(this.template(_.extend({}, this.options, model.toJSON())));
+      }
+    },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {
         this.$el.modal('hide');
@@ -2483,6 +2512,9 @@
     },
     template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
+      if (this.options && this.options.autoFetch && !this.model.hasChanged()) {
+        return;
+      }
       var data = _.extend({API: tp.API}, this.options, this.model ? this.model.toJSON() : null);
       this.onLoadComplete(this.template(data));
     },

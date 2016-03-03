@@ -35,6 +35,10 @@
       } else {
         this.onLoadComplete(options.content);
       }
+      if (options.autoFetch) {
+        this.model.fetch();
+        this.model.on('sync', this.model_syncHandler, this);
+      }
       this.options = options;
       this.$el.modal(options);
     },
@@ -71,6 +75,11 @@
       this.hide(delay);
       this.trigger('success');
     },
+    model_syncHandler: function (model) {
+      if (this.template) {
+        this.onLoadComplete(this.template(_.extend({}, this.options, model.toJSON())));
+      }
+    },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {
         this.$el.modal('hide');
@@ -79,6 +88,9 @@
     },
     template_loadedHandler: function (response) {
       this.template = Handlebars.compile(response);
+      if (this.options && this.options.autoFetch && !this.model.hasChanged()) {
+        return;
+      }
       var data = _.extend({API: tp.API}, this.options, this.model ? this.model.toJSON() : null);
       this.onLoadComplete(this.template(data));
     },
