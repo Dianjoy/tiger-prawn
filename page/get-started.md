@@ -56,4 +56,4 @@ Tiger Prawn 使用 [Compass](https://compass-style.org/) + [Sass](https://sass-l
 
 ## 针对功能的二次开发
 
-这方面想对复杂，我们将单开一个页面详述。
+这方面相对复杂，我们将单开一个页面详述。
