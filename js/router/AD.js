@@ -15,7 +15,8 @@
       "ad/:id": "edit",
       "apply/(:id)": "listApplies",
       "info/(:query)": "showHistoryInfo",
-      'competitor_ad/': 'listCompetitorAds'
+      "competitor_ad/": "listCompetitorAds",
+      "payment/": "listAdPayments"
     },
     create: function () {
       var model = this.$context.createInstance(tp.model.AD)
@@ -70,6 +71,11 @@
       this.$body
         .load('page/agreement/agreement.html')
         .setFramework('agreement', '我的合同');
+    },
+    listAdPayments: function () {
+      this.$body
+        .load('page/ad/payment.html')
+        .setFramework('agreement has-date-range', '我的回款状况')
     }
   });
 }(Nervenet.createNameSpace('tp.router')));
