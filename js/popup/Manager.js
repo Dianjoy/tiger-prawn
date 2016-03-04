@@ -49,7 +49,7 @@
         options.content = target.href;
         options.isRemote = true;
       }
-      if ('model' in options) {
+      if ('model' in options && options.model === '' && options.url) {
         options.model = new tp.model.Model();
         options.model.urlRoot = tp.API + options.url;
         options.autoFetch = true;
