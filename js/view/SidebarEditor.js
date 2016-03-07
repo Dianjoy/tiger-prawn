@@ -36,10 +36,51 @@
         response = _.reject(response, function (item) {
           return item.only && !_.contains(item.only.split(','), this.model.get('id'));
         }, this);
+        this.data = response;
+        if (this.hasnoData) {
+          this.setBreadcrumb();
+        }
         var html = this.template({list: response});
         this.$('#navbar-side-inner').append(html);
         $('body').toggleClass('sidebar-collapsed', this.is_collapsed);
       }, this));
+    },
+    getBreadcrumb: function () {
+      if (this.data) {
+        this.setBreadcrumb();
+      } else {
+        this.hasnoData = true;
+      }
+    },
+    setBreadcrumb: function () {
+      this.breadcrumb = this.breadcrumb || Handlebars.compile($('.breadcrumb-items').remove().html());
+      var items = [];
+      _.each(this.data, function (parent) {
+        if (parent.link) {
+          items = this.setBreadcrumbTitle(items, [parent], parent.link);
+        } else {
+          _.each(parent.sub, function (child) {
+            items = this.setBreadcrumbTitle(items, [parent, child], child.link);
+          }, this);
+        }
+      }, this);
+      items.unshift({title: '首页'});
+      items[items.length - 1].active = true;
+      $('.breadcrumb-item').remove();
+      $('.page-breadcrumb').append(this.breadcrumb({breadcrumb: items}));
+    },
+    setBreadcrumbTitle: function (items, breadcrumb, link) {
+      var hash = location.hash
+        , itemsLink = items.length ? items[items.length - 1].link : '';
+      if (hash.indexOf(link) !== -1 && itemsLink.length < link.length) {
+        items = _.map(breadcrumb, function (element) {
+          return {
+            title: element.title,
+            link: element.link
+          }
+        });
+      }
+      return items;
     },
     eyeEditButton_clickHandler: function (event) {
       var li = $(event.currentTarget).closest('li');

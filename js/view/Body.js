@@ -18,7 +18,6 @@
       this.framework = this.$('.framework');
       this.container = this.$('#page-container');
       this.loading = this.$('#page-loading').remove().removeClass('hide');
-      this.setBreadcrumb = _.bind(this.setBreadcrumb, this);
       this.loadCompleteHandler = _.bind(this.loadCompleteHandler, this); // 这样就不用每次都bind了
       this.$el
         .popover({
@@ -40,7 +39,6 @@
       this.$sidebarEditor.render();
     },
     load: function (url, data, options) {
-      var role = this.model.get('sidebar') ? this.model.get('sidebar') : 'default';
       options = options || {};
       this.clear();
       this.$el.toggleClass('full-page', !!options.isFull)
@@ -63,7 +61,7 @@
       }
 
       this.container.append(this.loading);
-      $.getJSON('page/sidebar/' + role + '.json', this.setBreadcrumb);
+      this.$sidebarEditor.getBreadcrumb();
 
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
@@ -81,36 +79,6 @@
       } else {
         return this.setTitle(title, sub, model);
       }
-    },
-    setBreadcrumb: function (items) {
-      this.breadcrumb = this.breadcrumb || Handlebars.compile(this.$('.breadcrumb-items').remove().html());
-      var data = [];
-      _.each(items, function (parent) {
-        if (parent.link) {
-          data = this.setBreadcrumbTitle(data, [parent], parent.link);
-        } else {
-          _.each(parent.sub, function (child) {
-            data = this.setBreadcrumbTitle(data, [parent, child], child.link);
-          }, this);
-        }
-      }, this);
-      data.unshift({title: '首页'});
-      data[data.length - 1].active = true;
-      this.$('.breadcrumb-item').remove();
-      this.$('.page-breadcrumb').append(this.breadcrumb({breadcrumb: data}));
-    },
-    setBreadcrumbTitle: function (data, breadcrumb, link) {
-      var hash = location.hash
-        , dataLink = data.length ? data[data.length - 1].link : '';
-      if (hash.indexOf(link) !== -1 && dataLink.length < link.length) {
-        data = _.map(breadcrumb, function (element) {
-          return {
-            title: element.title,
-            link: element.link
-          }
-        });
-      }
-      return data;
     },
     setLatestStat: function (model) {
       this.latest = this.latest || Handlebars.compile(this.$('.latest script').html());
