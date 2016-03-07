@@ -211,7 +211,11 @@
     </div>
   </header>
   <ul class="breadcrumb page-breadcrumb">
-    <li class="active">首页</li>
+    <script type="text/x-handlebars-template" class="breadcrumb-items">
+      {{#each breadcrumb}}
+      <li class="breadcrumb-item{{#if active}} active{{/if}}">{{title}}</li>
+      {{/each}}
+    </script>
     <li class="pull-right date-range">
       <div class="dropdown">
         <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="data-range-btn">
