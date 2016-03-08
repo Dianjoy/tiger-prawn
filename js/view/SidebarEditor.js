@@ -38,7 +38,7 @@
         response = _.reject(response, function (item) {
           return item.only && !_.contains(item.only.split(','), this.model.get('id'));
         }, this);
-        this.breadcrumbItems = response;
+        this.sidebarItems = response;
         if (this.refreshBreadcrumb) {
           this.setBreadcrumb();
         }
@@ -48,7 +48,7 @@
       }, this));
     },
     getBreadcrumb: function () {
-      if (this.breadcrumbItems) {
+      if (this.sidebarItems) {
         this.setBreadcrumb();
       } else {
         this.refreshBreadcrumb = true;
@@ -56,7 +56,7 @@
     },
     setBreadcrumb: function () {
       var items = [];
-      _.each(this.breadcrumbItems, function (parent) {
+      _.each(this.sidebarItems, function (parent) {
         if (parent.link) {
           items = this.setBreadcrumbTitle(items, [parent], parent.link);
         } else {
