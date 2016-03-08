@@ -38,7 +38,7 @@
         response = _.reject(response, function (item) {
           return item.only && !_.contains(item.only.split(','), this.model.get('id'));
         }, this);
-        this.data = response;
+        this.breadcrumbItems = response;
         if (this.refreshBreadcrumb) {
           this.setBreadcrumb();
         }
@@ -48,7 +48,7 @@
       }, this));
     },
     getBreadcrumb: function () {
-      if (this.data) {
+      if (this.breadcrumbItems) {
         this.setBreadcrumb();
       } else {
         this.refreshBreadcrumb = true;
@@ -56,7 +56,7 @@
     },
     setBreadcrumb: function () {
       var items = [];
-      _.each(this.data, function (parent) {
+      _.each(this.breadcrumbItems, function (parent) {
         if (parent.link) {
           items = this.setBreadcrumbTitle(items, [parent], parent.link);
         } else {
