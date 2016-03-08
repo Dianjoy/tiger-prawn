@@ -19,6 +19,7 @@
       this.is_collapsed = !!localStorage.getItem(COLLAPSED_STATUS);
       this.hiddenItems = JSON.parse(localStorage.getItem(HIDDEN_ITEMS)) || [];
       this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+      this.breadcrumb = Handlebars.compile($('#breadcrumb-container').find('.breadcrumb-items').remove().html());
     },
     render: function () {
       this.$('.sidebar-nav-item').remove();
@@ -37,7 +38,7 @@
           return item.only && !_.contains(item.only.split(','), this.model.get('id'));
         }, this);
         this.data = response;
-        if (this.hasnoData) {
+        if (this.refreshBreadcrumb) {
           this.setBreadcrumb();
         }
         var html = this.template({list: response});
@@ -49,11 +50,10 @@
       if (this.data) {
         this.setBreadcrumb();
       } else {
-        this.hasnoData = true;
+        this.refreshBreadcrumb = true;
       }
     },
     setBreadcrumb: function () {
-      this.breadcrumb = this.breadcrumb || Handlebars.compile($('.breadcrumb-items').remove().html());
       var items = [];
       _.each(this.data, function (parent) {
         if (parent.link) {
@@ -66,8 +66,8 @@
       }, this);
       items.unshift({title: '首页'});
       items[items.length - 1].active = true;
-      $('.breadcrumb-item').remove();
-      $('.page-breadcrumb').append(this.breadcrumb({breadcrumb: items}));
+      $('#breadcrumb-container').find('.breadcrumb-item').remove();
+      $('#breadcrumb-container').append(this.breadcrumb({breadcrumb: items}));
     },
     setBreadcrumbTitle: function (items, breadcrumb, link) {
       var hash = location.hash
