@@ -19,7 +19,8 @@
       this.is_collapsed = !!localStorage.getItem(COLLAPSED_STATUS);
       this.hiddenItems = JSON.parse(localStorage.getItem(HIDDEN_ITEMS)) || [];
       this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
-      this.breadcrumb = Handlebars.compile($('#breadcrumb-container').find('.breadcrumb-items').remove().html());
+      this.breadcrumbContainer = $('#breadcrumb-container');
+      this.breadcrumb = Handlebars.compile(this.breadcrumbContainer.find('.breadcrumb-items').remove().html());
     },
     render: function () {
       this.$('.sidebar-nav-item').remove();
@@ -54,8 +55,7 @@
       }
     },
     setBreadcrumb: function () {
-      var items = []
-        , breadcrumbContainer = $('#breadcrumb-container');
+      var items = [];
       _.each(this.data, function (parent) {
         if (parent.link) {
           items = this.setBreadcrumbTitle(items, [parent], parent.link);
@@ -67,8 +67,8 @@
       }, this);
       items.unshift({title: '首页'});
       items[items.length - 1].active = true;
-      breadcrumbContainer.find('.breadcrumb-item').remove();
-      breadcrumbContainer.append(this.breadcrumb({breadcrumb: items}));
+      this.breadcrumbContainer.find('.breadcrumb-item').remove();
+      this.breadcrumbContainer.append(this.breadcrumb({breadcrumb: items}));
     },
     setBreadcrumbTitle: function (items, breadcrumb, link) {
       var hash = location.hash
