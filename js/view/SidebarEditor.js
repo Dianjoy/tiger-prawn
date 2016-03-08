@@ -54,7 +54,8 @@
       }
     },
     setBreadcrumb: function () {
-      var items = [];
+      var items = []
+        , breadcrumbContainer = $('#breadcrumb-container');
       _.each(this.data, function (parent) {
         if (parent.link) {
           items = this.setBreadcrumbTitle(items, [parent], parent.link);
@@ -66,8 +67,8 @@
       }, this);
       items.unshift({title: '首页'});
       items[items.length - 1].active = true;
-      $('#breadcrumb-container').find('.breadcrumb-item').remove();
-      $('#breadcrumb-container').append(this.breadcrumb({breadcrumb: items}));
+      breadcrumbContainer.find('.breadcrumb-item').remove();
+      breadcrumbContainer.append(this.breadcrumb({breadcrumb: items}));
     },
     setBreadcrumbTitle: function (items, breadcrumb, link) {
       var hash = location.hash
