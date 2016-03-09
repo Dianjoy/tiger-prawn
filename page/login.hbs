@@ -1,5 +1,5 @@
 <div id="login" data-mediator-class="tp.component.LoginForm">
-  <div id="logo">
+  <div class="logo">
     <a href="#/user/login">
       <img src="img/logo.png" alt="Logo" />
     </a>
@@ -9,7 +9,7 @@
 
   <h5>请登录</h5>
 
-  <form id="login-form" action="{{api}}" class="ajax" method="post">
+  <form action="{{api}}" class="ajax" method="post">
     <input type="hidden" name="hash" value="" id="hash">
     <div class="alert alert-danger alert-msg" style="display: none"></div>
 
@@ -32,9 +32,7 @@
     </div>
 
     <div class="form-group">
-
-      <button id="login-btn" class="btn btn-primary btn-block">登录 &nbsp; <i class="fa fa-play-circle"></i></button>
-
+      <button class="btn btn-primary btn-block">登录 &nbsp; <i class="fa fa-play-circle"></i></button>
     </div>
   </form>
 

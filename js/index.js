@@ -52,17 +52,19 @@
       me.set(response.me);
     }
   });
-  Backbone.on('backbone-error', function (xhr) {
-    if (xhr.statusCode() === '401') {
-      me.unset('id');
-    }
-  });
 
   // 验证用户身份
   me.fetch();
 
   // moment使用中式语法
   moment.locale('zh-cn');
+
+  // 全局处理 ajax 错误
+  $(document).ajaxError(function (event, xhr) {
+    if (xhr.status === 401) {
+      me.unset('id');
+    }
+  });
 
   // GA
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

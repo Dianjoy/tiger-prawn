@@ -18,13 +18,6 @@
         success.call(options.context, response);
       };
     }
-    var error = options.error;
-    options.error = function (response) {
-      b.trigger('backbone-error', response);
-      if (error) {
-        error(response);
-      }
-    };
 
 
     if ('xhrField' in options) {

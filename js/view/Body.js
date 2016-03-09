@@ -95,6 +95,9 @@
       return this;
     },
     start: function (showFramework) {
+      if (this.isStart) {
+        return;
+      }
       this.isStart = true;
       this.$('#page-preloader').remove();
       if (showFramework) {
