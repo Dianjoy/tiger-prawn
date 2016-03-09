@@ -68,7 +68,7 @@
       items.unshift({title: '首页'});
       items[items.length - 1].active = true;
       this.breadcrumbContainer.find('.breadcrumb-item').remove();
-      this.breadcrumbContainer.append(this.breadcrumb({breadcrumb: items}));
+      this.breadcrumbContainer.prepend(this.breadcrumb({breadcrumb: items}));
     },
     setBreadcrumbTitle: function (items, breadcrumb, link) {
       var hash = location.hash
