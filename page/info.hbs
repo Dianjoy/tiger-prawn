@@ -38,6 +38,7 @@
     <th>广告名</th>
     <th>创建时间</th>
     <th>广告主报价</th>
+    <th>转化率</th>
     <th>上线要求</th>
     <th>下线要求</th>
     <th>数据反馈</th>
@@ -60,6 +61,7 @@
       </td>
       <td><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td>&yen;{{d100 quote_rmb}}</td>
+      <td>{{percent ratio}}%</td>
       <td>{{{text-collapse others 30}}}</td>
       <td>{{{text-collapse offline_msg 30}}}</td>
       <td>{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据'}}</td>

@@ -36,13 +36,8 @@
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
-    {{#with show.amount}}
+    {{#with show}}
       <tr>
-        {{#equal owner false}}
-          <td>-</td>
-        {{else}}
-          <td>{{owner}}</td>
-        {{/equal}}
         <td data-title="总包数">{{readable_n count}}</td>
         <td data-title="总CPA投放数">{{readable_n transfer}}</td>
         <td data-title="总渠道CPA数">{{readable_n cpa}}</td>
@@ -56,39 +51,7 @@
         <td data-title="毛利润率"><span>{{readable_n profit_ratio}}</span>%</td>
       </tr>
     {{/with}}
-    {{#with show.happy_lock}}
-      <tr>
-        <td>红包锁屏</td>
-        <td data-title="总包数">-</td>
-        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
-        <td data-title="总渠道CPA数">-</td>
-        <td data-title="结算率"><span>-</span></td>
-        <td data-title="推广支出">&yen; {{readable_n out}}</td>
-        <td data-title="其他支出">-</td>
-        <td data-title="总支出">-</td>
-        <td data-title="总收入">&yen; {{readable_n income}}</td>
-        <td data-title="CPA单价">-</td>
-        <td data-title="毛利润">-</td>
-        <td data-title="毛利润率"><span>-</span></td>
-      </tr>
-    {{/with}}
-    {{#with show.without_happy_lock}}
-      <tr>
-        <td>其他媒体</td>
-        <td data-title="总包数">-</td>
-        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
-        <td data-title="总渠道CPA数">-</td>
-        <td data-title="结算率">-</td>
-        <td data-title="推广支出">&yen; {{readable_n out}}</td>
-        <td data-title="其他支出">-</td>
-        <td data-title="总支出">-</td>
-        <td data-title="总收入">&yen; {{readable_n income}}</td>
-        <td data-title="CPA单价">-</td>
-        <td data-title="毛利润">-</td>
-        <td data-title="毛利润率">-</td>
-      </tr>
-    {{/with}}
-    {{#with all.amount}}
+    {{#with all}}
       <tr>
         <td>总计</td>
         <td data-title="总包数">{{readable_n count}}</td>
@@ -102,38 +65,6 @@
         <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
         <td data-title="毛利润">&yen; {{readable_n profit}}</td>
         <td data-title="毛利润率"><span>{{readable_n profit_ratio}}</span>%</td>
-      </tr>
-    {{/with}}
-    {{#with all.without_happy_lock}}
-      <tr>
-        <td>总计(不含红包锁屏)</td>
-        <td data-title="总包数">-</td>
-        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
-        <td data-title="总渠道CPA数">-</td>
-        <td data-title="结算率">-</td>
-        <td data-title="推广支出">&yen; {{readable_n out}}</td>
-        <td data-title="其他支出">&yen; {{readable_n operation_cost}}</td>
-        <td data-title="总支出">&yen; {{readable_n total_cost}}</td>
-        <td data-title="总收入">&yen; {{readable_n income}}</td>
-        <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
-        <td data-title="毛利润">-</td>
-        <td data-title="毛利润率">-</td>
-      </tr>
-    {{/with}}
-    {{#with all.happy_lock}}
-      <tr>
-        <td>红包锁屏</td>
-        <td data-title="总包数">-</td>
-        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
-        <td data-title="总渠道CPA数">-</td>
-        <td data-title="结算率">-</td>
-        <td data-title="推广支出">&yen; {{readable_n out}}</td>
-        <td data-title="其他支出">&yen; {{readable_n operation_cost}}</td>
-        <td data-title="总支出">&yen; {{readable_n total_cost}}</td>
-        <td data-title="总收入">&yen; {{readable_n income}}</td>
-        <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
-        <td data-title="毛利润">-</td>
-        <td data-title="毛利润率">-</td>
       </tr>
     {{/with}}
     {{{{/raw-helper}}}}
