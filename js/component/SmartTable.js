@@ -69,7 +69,10 @@
       // 起止日期
       if ('ranger' in options) {
         if (!this.model.has('start')) {
-          this.model.set(_.pick(options, 'start', 'end', 'dateFormat'), {silent: true});
+          this.model.set(_.pick(options, 'start', 'end'), {silent: true});
+        }
+        if ('dateFormat' in options) {
+          this.model.set('dateFormat', options.dateFormat);
         }
         this.$ranger.use(this.model);
       }
