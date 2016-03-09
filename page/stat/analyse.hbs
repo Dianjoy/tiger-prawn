@@ -21,8 +21,8 @@
   <tr>
     <th></th>
     <th>总包数</th>
-    <th>总CPA投放数</th>
-    <th>总渠道CPA数</th>
+    <th>总CPA</th>
+    <th>总渠道CPA</th>
     <th>结算率</th>
     <th>推广支出</th>
     <th>其他支出</th>
@@ -36,37 +36,38 @@
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
-    {{#with show}}
+    {{#if amount}}
+      {{#with amount}}
       <tr>
+        <td></td>
         <td data-title="总包数">{{readable_n count}}</td>
-        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
-        <td data-title="总渠道CPA数">{{readable_n cpa}}</td>
-        <td data-title="结算率"><span>{{readable_n ratio}}</span>%</td>
-        <td data-title="推广支出">&yen; {{readable_n out}}</td>
-        <td data-title="其他支出">-</td>
-        <td data-title="总支出">&yen; {{readable_n total_cost}}</td>
-        <td data-title="总收入">&yen; {{readable_n income}}</td>
-        <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
-        <td data-title="毛利润">&yen; {{readable_n profit}}</td>
-        <td data-title="毛利润率"><span>{{readable_n profit_ratio}}</span>%</td>
+        <td data-title="总CPA">{{readable_n transfer}}</td>
+        <td data-title="总渠道CPA">{{readable_n cpa}}</td>
+        <td data-title="结算率">{{percent ratio}}%</td>
+        <td data-title="推广支出">&yen;{{d100 out}}</td>
+        <td data-title="其他支出">&yen;{{d100 operation_cost}}</td>
+        <td data-title="总支出">&yen;{{d100 total_cost}}</td>
+        <td data-title="总收入">&yen;{{d100 income}}</td>
+        <td data-title="CPA单价">&yen;{{d100 average_rmb}}</td>
+        <td data-title="毛利润">&yen;{{d100 profit}}</td>
+        <td data-title="毛利润率">{{d100 profit_ratio}}%</td>
       </tr>
-    {{/with}}
-    {{#with all}}
-      <tr>
-        <td>总计</td>
-        <td data-title="总包数">{{readable_n count}}</td>
-        <td data-title="总CPA投放数">{{readable_n transfer}}</td>
-        <td data-title="总渠道CPA数">{{readable_n cpa}}</td>
-        <td data-title="结算率"><span>{{readable_n ratio}}</span>%</td>
-        <td data-title="推广支出">&yen; {{readable_n out}}</td>
-        <td data-title="其他支出">&yen; {{readable_n operation_cost}}</td>
-        <td data-title="总支出">&yen; {{readable_n total_cost}}</td>
-        <td data-title="总收入">&yen; {{readable_n income}}</td>
-        <td data-title="CPA单价">&yen; {{readable_n average_rmb}}</td>
-        <td data-title="毛利润">&yen; {{readable_n profit}}</td>
-        <td data-title="毛利润率"><span>{{readable_n profit_ratio}}</span>%</td>
-      </tr>
-    {{/with}}
+      {{/with}}
+    {{/if}}
+    <tr>
+      <td>总计</td>
+      <td data-title="总包数">{{readable_n count}}</td>
+      <td data-title="总CPA">{{readable_n transfer}}</td>
+      <td data-title="总渠道CPA">{{readable_n cpa}}</td>
+      <td data-title="结算率">{{percent ratio}}%</td>
+      <td data-title="推广支出">&yen;{{d100 out}}</td>
+      <td data-title="其他支出">&yen;{{d100 operation_cost}}</td>
+      <td data-title="总支出">&yen;{{d100 total_cost}}</td>
+      <td data-title="总收入">&yen;{{d100 income}}</td>
+      <td data-title="CPA单价">&yen;{{d100 average_rmb}}</td>
+      <td data-title="毛利润">&yen;{{d100 profit}}</td>
+      <td data-title="毛利润率">{{d100 profit_ratio}}%</td>
+    </tr>
     {{{{/raw-helper}}}}
   </script>
   </tbody>
@@ -79,7 +80,7 @@
   </tfoot>
 </table>
 
-<table class="smart-table table table-bordered table-hover responsive-table" data-search="#search-query" data-filter=".table-header"  data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list" data-model="tp.model.AnalyseModel">
+<table class="smart-table table table-bordered table-hover responsive-table" data-search="#search-query" data-filter=".table-header"  data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list" data-model="tp.model.AnalyseModel" data-date-format="YYYY-MM">
   <thead>
     <tr>
       <th class="filters">管理名</th>
@@ -104,20 +105,28 @@
           <a href="#/ad_name/{{ad_name}}" class="filter label label-ad_name">{{ad_name}}</a>
           {{cid}}
         </td>
-        <td data-title="上线时间">{{moment create_time}}</td>
+        <td data-title="上线时间">{{substring create_time 5 5}}</td>
         <td data-title="状态">
           <span class="label status-{{status}}">
             {{pick status 'ON' 'OFF'}}
           </span>
           <i class="fa fa-{{pick ad_app_type '' 'android' 'apple'}} platform"></i>
         </td>
-        <td data-title="收入">&yen; {{readable_n income}}</td>
+        <td data-title="收入">&yen;{{d100 income}}</td>
         <td data-title="CPA">{{readable_n transfer}}</td>
         <td data-title="渠道CPA">{{readable_n cpa}}</td>
-        <td data-title="单价/元">&yen; {{quote_rmb}}</td>
-        <td data-title="实际价格">&yen; {{readable_n real}}</td>
-        <td data-title="毛利润">&yen; {{readable_n profit}}</td>
-        <td data-title="毛利润率">{{readable_n profit_ratio}}%</td>
+        <td data-title="单价/元">
+          {{#with quote_rmb}}
+          {{#if only}}
+          &yen;{{d100 only}}
+          {{else}}
+          &yen;{{d100 min}} ~ &yen;{{d100 max}}
+          {{/if}}
+          {{/with}}
+        </td>
+        <td data-title="实际价格">&yen;{{d100 real_price}}</td>
+        <td data-title="毛利润">&yen;{{d100 profit}}</td>
+        <td data-title="毛利润率">{{d100 profit_ratio}}%</td>
         <td data-title="操作">
           <div class="btn-group"  style="position:static">
             <a href="#/stat/analyse/daily/{{id}}/{{start}}/{{end}}" class="btn btn-default" title="多日详情">
