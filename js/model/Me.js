@@ -12,6 +12,11 @@
     initialize: function () {
       this.on('change:id', this.id_changeHandler, this);
     },
+    fetch: function (options) {
+      Backbone.Model.prototype.fetch.call(this, _.extend({
+        error: _.bind(this.onError, this)
+      }, options));
+    },
     /**
      *
      * @param response
@@ -43,14 +48,13 @@
             route = Backbone.history.start({
               root: tp.BASE
             });
-          } else {
-            Backbone.history.loadUrl(Backbone.history.fragment);
           }
           if (!route || /^#\/user\/\w+$/.test(location.hash)) {
             var from = localStorage.getItem(tp.PROJECT + '-from');
             from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
+            localStorage.removeItem(tp.PROJECT + '-from');
             location.hash = from || tp.startPage || '#/dashboard';
-          } else {}
+          }
         }, 10);
       } else {
         if (this.$body.isStart && location.hash !== '#/user/logout') {
@@ -66,6 +70,16 @@
           location.hash = '#/user/login';
         }
       }
+    },
+    onError: function () {
+      this.$body.start();
+      if (location.hash && !/^#\/user\/log(in|out)$/.test(location.hash)) {
+        localStorage.setItem(tp.PROJECT + '-from', location.hash);
+      }
+      location.hash = '#/user/login';
+      Backbone.history.start({
+        root: tp.BASE
+      });
     }
   });
 }(Nervenet.createNameSpace('tp.model')));

@@ -95,15 +95,14 @@
       return this;
     },
     start: function (showFramework) {
-      if (this.isStart) {
-        return;
-      }
       this.isStart = true;
       this.$('#page-preloader').remove();
       if (showFramework) {
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
+      }
+      if (this.isStart) {
         tp.component.Manager.createComponents();
       }
     },

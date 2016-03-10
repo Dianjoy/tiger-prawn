@@ -143,8 +143,7 @@
       for (var i = 0, len = this.components.length; i < len; i++) {
         var func = this.components[i][0]
           , params = this.components[i][1];
-        func = _.bind(func, this, params);
-        func();
+        func.apply(this, params);
       }
     },
     registerComponent: function (func, params) {

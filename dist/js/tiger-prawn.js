@@ -14,13 +14,6 @@
         success.call(options.context, response);
       };
     }
-    var error = options.error;
-    options.error = function (response) {
-      b.trigger('backbone-error', response);
-      if (error) {
-        error(response);
-      }
-    };
 
 
     if ('xhrField' in options) {
@@ -828,21 +821,19 @@
           if (!route || /^#\/user\/\w+$/.test(location.hash)) {
             var from = localStorage.getItem(tp.PROJECT + '-from');
             from = /^#\/user\/log(in|out)$/.test(from) ? '' : from;
+            localStorage.removeItem(tp.PROJECT + '-from');
             location.hash = from || tp.startPage || '#/dashboard';
           }
         }, 10);
       } else {
         if (this.$body.isStart && location.hash !== '#/user/logout') {
-          var login = tp.config.login;
-          login.welcome = '登录已失效，请重新登录';
-          login.api = this.url;
-          tp.popup.Manager.popup(_.extend({
-            title: '登录',
+          var login = _.defaults({
+            title: '登录已失效，请重新登录',
             content: 'page/login.hbs',
-            confirm: '登录',
-            cancel: '退出',
-            isRemote: true
-          }, login));
+            isRemote: true,
+            api: this.url
+          }, tp.config.login);
+          tp.popup.Manager.popup(login);
         } else {
           localStorage.setItem(tp.PROJECT + '-from', location.hash);
           location.hash = '#/user/login';
@@ -851,7 +842,9 @@
     },
     onError: function () {
       this.$body.start();
-      localStorage.setItem(tp.PROJECT + '-from', location.hash);
+      if (location.hash && !/^#\/user\/log(in|out)$/.test(location.hash)) {
+        localStorage.setItem(tp.PROJECT + '-from', location.hash);
+      }
       location.hash = '#/user/login';
       Backbone.history.start({
         root: tp.BASE
@@ -2417,8 +2410,7 @@
       for (var i = 0, len = this.components.length; i < len; i++) {
         var func = this.components[i][0]
           , params = this.components[i][1];
-        func = _.bind(func, this, params);
-        func();
+        func.apply(this, params);
       }
     },
     registerComponent: function (func, params) {
@@ -2974,6 +2966,7 @@
       }
 
       this.container.append(this.loading);
+      this.$sidebarEditor.getBreadcrumb();
 
       this.trigger('load:start', url);
       ga('send', 'pageview', url);
@@ -3013,6 +3006,8 @@
         this.createSidebar();
         this.$el.removeClass('full-page')
           .find('.login').remove();
+      }
+      if (this.isStart) {
         tp.component.Manager.createComponents();
       }
     },
@@ -3110,6 +3105,8 @@
       this.is_collapsed = !!localStorage.getItem(COLLAPSED_STATUS);
       this.hiddenItems = JSON.parse(localStorage.getItem(HIDDEN_ITEMS)) || [];
       this.template = Handlebars.compile(this.$('#navbar-side-inner').find('script').remove().html());
+      this.breadcrumbContainer = $('#breadcrumb-container');
+      this.breadcrumb = Handlebars.compile(this.breadcrumbContainer.find('.breadcrumb-items').remove().html());
     },
     render: function () {
       this.$('.sidebar-nav-item').remove();
@@ -3127,10 +3124,50 @@
         response = _.reject(response, function (item) {
           return item.only && !_.contains(item.only.split(','), this.model.get('id'));
         }, this);
+        this.sidebarItems = response;
+        if (this.refreshBreadcrumb) {
+          this.setBreadcrumb();
+        }
         var html = this.template({list: response});
         this.$('#navbar-side-inner').append(html);
         $('body').toggleClass('sidebar-collapsed', this.is_collapsed);
       }, this));
+    },
+    getBreadcrumb: function () {
+      if (this.sidebarItems) {
+        this.setBreadcrumb();
+      } else {
+        this.refreshBreadcrumb = true;
+      }
+    },
+    setBreadcrumb: function () {
+      var items = [];
+      _.each(this.sidebarItems, function (parent) {
+        if (parent.link) {
+          items = this.setBreadcrumbTitle(items, [parent], parent.link);
+        } else {
+          _.each(parent.sub, function (child) {
+            items = this.setBreadcrumbTitle(items, [parent, child], child.link);
+          }, this);
+        }
+      }, this);
+      items.unshift({title: '首页'});
+      items[items.length - 1].active = true;
+      this.breadcrumbContainer.find('.breadcrumb-item').remove();
+      this.breadcrumbContainer.prepend(this.breadcrumb({breadcrumb: items}));
+    },
+    setBreadcrumbTitle: function (items, breadcrumb, link) {
+      var hash = location.hash
+        , itemsLink = items.length ? items[items.length - 1].link : '';
+      if (hash.indexOf(link) !== -1 && itemsLink.length < link.length) {
+        items = _.map(breadcrumb, function (element) {
+          return {
+            title: element.title,
+            link: element.link
+          }
+        });
+      }
+      return items;
     },
     eyeEditButton_clickHandler: function (event) {
       var li = $(event.currentTarget).closest('li');
@@ -3599,7 +3636,10 @@
       // 起止日期
       if ('ranger' in options) {
         if (!this.model.has('start')) {
-          this.model.set(_.pick(options, 'start', 'end', 'dateFormat'), {silent: true});
+          this.model.set(_.pick(options, 'start', 'end'), {silent: true});
+        }
+        if ('dateFormat' in options) {
+          this.model.set('dateFormat', options.dateFormat);
         }
         this.$ranger.use(this.model);
       }
