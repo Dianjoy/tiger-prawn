@@ -9,6 +9,7 @@
     events: {
       'click .archive-button': 'archiveButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
+      'click .refresh-button': 'refreshButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'click tbody .filter': 'tbodyFilter_clickHandler',
       'click thead .filter': 'theadFilter_clickHandler',
@@ -182,6 +183,9 @@
       var id = button.closest('tr').attr('id');
       this.saveModel(button, id, button.attr('name'), button.val(), {remove: true});
     },
+    collection_errorHandler: function (collection, response) {
+      this.$('.waiting td').html(ns.Manager.createErrorMsg(response));
+    },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
@@ -255,6 +259,10 @@
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
       this.refresh();
+    },
+    refreshButton_clickHandler: function (event) {
+      this.refresh();
+      $(event.currentTarget).spinner();
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)

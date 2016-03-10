@@ -15,6 +15,7 @@
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
+      this.collection.on('error', this.collection_errorHandler, this);
       if (options.autoFetch || !('autoFetch' in options) && this.autoFetch) {
         this.refresh(options);
       }
@@ -69,6 +70,9 @@
     collection_changeHandler: function (model) {
       var html = this.template(model.toJSON());
       $(document.getElementById(model.id || model.cid)).replaceWith(html); // 因为id里可能有.
+    },
+    collection_errorHandler: function (collection, response, options) {
+      console.log('error', collection, response, options);
     },
     collection_removeHandler: function (model, collection, options) {
       var item = $(document.getElementById(model.id || model.cid));

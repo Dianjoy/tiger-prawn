@@ -41,6 +41,7 @@
       }
       var size = localStorage.getItem(this.save);
       this.pagesize = size || options.pagesize || this.pagesize;
+      this.on('error', this.errorHandler, this);
     },
     fetch: function (options) {
       if (this.isLoading) {
@@ -93,6 +94,9 @@
     setPagesize: function (size) {
       this.pagesize = size;
       localStorage.setItem(this.save, size);
+    },
+    errorHandler: function () {
+      this.isLoading = false;
     }
   });
 }(Nervenet.createNameSpace('tp.model')));

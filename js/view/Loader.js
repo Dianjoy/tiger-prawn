@@ -8,17 +8,20 @@
     fresh: false,
     tagName: 'div',
     events: {
-      'click .edit': 'edit_clickHandler'
+      'click .edit': 'edit_clickHandler',
+      'click .refresh-button': 'refreshButton_clickHandler'
     },
     initialize: function (options) {
       if (this.model instanceof Backbone.Model && !options.hasData) {
         this.model.once('sync', this.model_syncHandler, this);
+        this.model.on('error', this.model_errorHandler, this);
         this.model.fetch(options);
       } else {
         this.isModelReady = true;
       }
 
       $.get(options.template, _.bind(this.template_getHandler, this), 'html');
+      this.options = options;
 
       if ('refresh' in options) {
         this.refresh = options.refresh;
@@ -41,6 +44,7 @@
         tp.component.Manager.check($el, model);
         self.trigger('complete');
       }, 0);
+      this.options = null;
     },
     edit_clickHandler: function (event) {
       var target = $(event.currentTarget)
@@ -59,11 +63,20 @@
         this.$('[href="#' + id + '"][data-toggle]').click();
       }
     },
+    model_errorHandler: function (model, response, options) {
+      this.$el.html(tp.component.Manager.createErrorMsg(response));
+      this.trigger('complete');
+    },
     model_syncHandler: function () {
       if (this.template) {
         return this.render();
       }
       this.isModelReady = true;
+      this.model.off('error', null, this);
+    },
+    refreshButton_clickHandler: function (event) {
+      this.model.fetch(this.options);
+      $(event.currentTarget).spinner();
     },
     template_getHandler: function (data) {
       this.template = Handlebars.compile(data);

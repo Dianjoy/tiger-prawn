@@ -891,6 +891,7 @@
       }
       var size = localStorage.getItem(this.save);
       this.pagesize = size || options.pagesize || this.pagesize;
+      this.on('error', this.errorHandler, this);
     },
     fetch: function (options) {
       if (this.isLoading) {
@@ -943,6 +944,9 @@
     setPagesize: function (size) {
       this.pagesize = size;
       localStorage.setItem(this.save, size);
+    },
+    errorHandler: function () {
+      this.isLoading = false;
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
@@ -1757,6 +1761,7 @@
       this.collection.on('remove', this.collection_removeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.collection.on('reset', this.collection_resetHandler, this);
+      this.collection.on('error', this.collection_errorHandler, this);
       if (options.autoFetch || !('autoFetch' in options) && this.autoFetch) {
         this.refresh(options);
       }
@@ -1811,6 +1816,9 @@
     collection_changeHandler: function (model) {
       var html = this.template(model.toJSON());
       $(document.getElementById(model.id || model.cid)).replaceWith(html); // 因为id里可能有.
+    },
+    collection_errorHandler: function (collection, response, options) {
+      console.log('error', collection, response, options);
     },
     collection_removeHandler: function (model, collection, options) {
       var item = $(document.getElementById(model.id || model.cid));
@@ -2351,6 +2359,16 @@
       }
       components.length = 0;
     },
+    createErrorMsg: function (xhr) {
+      var status = xhr.status
+        , response = xhr.responseJSON;
+      if (status >= 500) {
+        response.msg = '程序出错，请联系管理员。';
+      } else if (status === 401) {
+        response.msg = '您的登录已失效。请重新登录后再试。'
+      }
+      return ns.errorMsg(response);
+    },
     find: function ($el, className) {
       var components = $el.data('components');
       if (!components) {
@@ -2417,7 +2435,13 @@
       this.components.push([func, params]);
     }
   };
+
+  // 一些通用模板
   ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';
+  ns.errorMsg = Handlebars.compile('<div class="alert alert-warning">' +
+    '<h4><i class="fa fa-warning"></i> 加载数据出错</h4>' +
+    '<p>{{msg}}</p>' +
+    '<button type="button" class="btn btn-primary refresh-button"><i class="fa fa-refresh"></i> 再试一次</button></div>')
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
 
@@ -2432,6 +2456,7 @@
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
       'click [data-dismiss=modal]': 'closeButton_clickHandler',
+      'click .refresh-button': 'refreshButton_clickHandler',
       'keydown': 'keydownHandler',
       'success': 'form_successHandler'
     },
@@ -2453,7 +2478,8 @@
       }
       if (options.autoFetch) {
         this.model.fetch();
-        this.model.on('sync', this.model_syncHandler, this);
+        this.model.once('sync', this.model_syncHandler, this);
+        this.model.on('error', this.model_errorHandler, this);
       }
       this.options = options;
       this.$el.modal(options);
@@ -2491,10 +2517,17 @@
       this.hide(delay);
       this.trigger('success');
     },
+    model_errorHandler: function (model, response) {
+      this.$('.modal-body').html(tp.component.Manager.createErrorMsg(response));
+    },
     model_syncHandler: function (model) {
       if (this.template) {
         this.onLoadComplete(this.template(_.extend({}, this.options, model.toJSON())));
       }
+    },
+    refreshButton_clickHandler: function (event) {
+      this.model.fetch();
+      $(event.currentTarget).spinner();
     },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {
@@ -2842,17 +2875,20 @@
     fresh: false,
     tagName: 'div',
     events: {
-      'click .edit': 'edit_clickHandler'
+      'click .edit': 'edit_clickHandler',
+      'click .refresh-button': 'refreshButton_clickHandler'
     },
     initialize: function (options) {
       if (this.model instanceof Backbone.Model && !options.hasData) {
         this.model.once('sync', this.model_syncHandler, this);
+        this.model.on('error', this.model_errorHandler, this);
         this.model.fetch(options);
       } else {
         this.isModelReady = true;
       }
 
       $.get(options.template, _.bind(this.template_getHandler, this), 'html');
+      this.options = options;
 
       if ('refresh' in options) {
         this.refresh = options.refresh;
@@ -2875,6 +2911,7 @@
         tp.component.Manager.check($el, model);
         self.trigger('complete');
       }, 0);
+      this.options = null;
     },
     edit_clickHandler: function (event) {
       var target = $(event.currentTarget)
@@ -2893,11 +2930,20 @@
         this.$('[href="#' + id + '"][data-toggle]').click();
       }
     },
+    model_errorHandler: function (model, response, options) {
+      this.$el.html(tp.component.Manager.createErrorMsg(response));
+      this.trigger('complete');
+    },
     model_syncHandler: function () {
       if (this.template) {
         return this.render();
       }
       this.isModelReady = true;
+      this.model.off('error', null, this);
+    },
+    refreshButton_clickHandler: function (event) {
+      this.model.fetch(this.options);
+      $(event.currentTarget).spinner();
     },
     template_getHandler: function (data) {
       this.template = Handlebars.compile(data);
@@ -2916,7 +2962,6 @@
     events: {
       'click .add-button': 'addButton_clickHandler',
       'click .print-button': 'printButton_clickHandler',
-      'click .refresh-button': 'refreshButton_clickHandler',
       'click .request-button': 'requestButton_clickHandler'
     },
     initialize: function () {
@@ -3024,10 +3069,6 @@
       this.container.html(marked(response));
       this.loading.remove();
       this.trigger('load:complete');
-    },
-    refreshButton_clickHandler: function (event) {
-      Backbone.history.loadUrl(Backbone.history.fragment);
-      event.preventDefault();
     },
     requestButton_clickHandler: function (event) {
       var href = event.target.getAttribute('href');
@@ -3576,6 +3617,7 @@
     events: {
       'click .archive-button': 'archiveButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
+      'click .refresh-button': 'refreshButton_clickHandler',
       'click .edit': 'edit_clickHandler',
       'click tbody .filter': 'tbodyFilter_clickHandler',
       'click thead .filter': 'theadFilter_clickHandler',
@@ -3749,6 +3791,9 @@
       var id = button.closest('tr').attr('id');
       this.saveModel(button, id, button.attr('name'), button.val(), {remove: true});
     },
+    collection_errorHandler: function (collection, response) {
+      this.$('.waiting td').html(ns.Manager.createErrorMsg(response));
+    },
     collection_syncHandler: function () {
       ns.BaseList.prototype.collection_syncHandler.call(this);
       this.model.waiting = false;
@@ -3822,6 +3867,10 @@
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
       this.refresh();
+    },
+    refreshButton_clickHandler: function (event) {
+      this.refresh();
+      $(event.currentTarget).spinner();
     },
     select_changeHandler: function (event) {
       var target = $(event.currentTarget)

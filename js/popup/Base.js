@@ -16,6 +16,7 @@
       'loaded.bs.modal': 'loadCompleteHandler',
       'click .modal-footer .btn-primary': 'submitButton_clickHandler',
       'click [data-dismiss=modal]': 'closeButton_clickHandler',
+      'click .refresh-button': 'refreshButton_clickHandler',
       'keydown': 'keydownHandler',
       'success': 'form_successHandler'
     },
@@ -37,7 +38,8 @@
       }
       if (options.autoFetch) {
         this.model.fetch();
-        this.model.on('sync', this.model_syncHandler, this);
+        this.model.once('sync', this.model_syncHandler, this);
+        this.model.on('error', this.model_errorHandler, this);
       }
       this.options = options;
       this.$el.modal(options);
@@ -75,10 +77,17 @@
       this.hide(delay);
       this.trigger('success');
     },
+    model_errorHandler: function (model, response) {
+      this.$('.modal-body').html(tp.component.Manager.createErrorMsg(response));
+    },
     model_syncHandler: function (model) {
       if (this.template) {
         this.onLoadComplete(this.template(_.extend({}, this.options, model.toJSON())));
       }
+    },
+    refreshButton_clickHandler: function (event) {
+      this.model.fetch();
+      $(event.currentTarget).spinner();
     },
     submitButton_clickHandler: function (event) {
       if (!event.currentTarget.form) {

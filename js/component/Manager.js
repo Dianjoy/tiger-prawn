@@ -84,6 +84,16 @@
       }
       components.length = 0;
     },
+    createErrorMsg: function (xhr) {
+      var status = xhr.status
+        , response = xhr.responseJSON;
+      if (status >= 500) {
+        response.msg = '程序出错，请联系管理员。';
+      } else if (status === 401) {
+        response.msg = '您的登录已失效。请重新登录后再试。'
+      }
+      return ns.errorMsg(response);
+    },
     find: function ($el, className) {
       var components = $el.data('components');
       if (!components) {
@@ -150,5 +160,11 @@
       this.components.push([func, params]);
     }
   };
+
+  // 一些通用模板
   ns.spinner = '<i class="fa fa-spin fa-spinner"></i>';
+  ns.errorMsg = Handlebars.compile('<div class="alert alert-warning">' +
+    '<h4><i class="fa fa-warning"></i> 加载数据出错</h4>' +
+    '<p>{{msg}}</p>' +
+    '<button type="button" class="btn btn-primary refresh-button"><i class="fa fa-refresh"></i> 再试一次</button></div>')
 }(Nervenet.createNameSpace('tp.component')));
