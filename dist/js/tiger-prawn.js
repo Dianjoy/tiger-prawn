@@ -1792,6 +1792,9 @@
       if (options.defaults && _.isString(options.defaults)) {
         options.defaults = tp.utils.decodeURLParam(options.defaults);
       }
+      if (!options.defaults) {
+        options.defaults = {};
+      }
       if (options.start || options.end) {
         options.defaults = _.extend(options.defaults, _.pick(options, 'start', 'end'));
       }
@@ -2513,8 +2516,8 @@
       this.$el.modal('hide');
       this.trigger('cancel', this);
     },
-    form_successHandler: function (delay) {
-      this.hide(delay);
+    form_successHandler: function () {
+      this.hide();
       this.trigger('success');
     },
     model_errorHandler: function (model, response) {
