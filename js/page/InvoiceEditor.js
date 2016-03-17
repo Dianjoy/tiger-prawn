@@ -4,6 +4,7 @@
     $invoiceList: null,
     events: _.extend({
       'click .export-button': 'exportButton_clickHandler',
+      'blur [name=header]': 'header_blurHandler',
       'success form': 'form_successHandler'
     }, tp.view.Loader.prototype.events),
     $context: null,
@@ -86,6 +87,9 @@
       var channel = this.model.get('channel')
         , models = this.$invoiceList.where({channel: channel});
       this.$invoiceList.remove(models);
+    },
+    header_blurHandler: function (event) {
+      this.$('.header').text(event.target.value);
     }
   });
 }(Nervenet.createNameSpace('tp.page')));
