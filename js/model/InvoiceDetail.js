@@ -55,6 +55,11 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
+      if (this.options.is_assistant && this.isNew()) {
+        var charger = this.options.chargers[0] || {};
+        json.size = charger.size;
+        json.department = charger.department;
+      }
       var start = json.start ? json.start.split('-') : moment().format('YYYY-MM').split('-')
         , agreementInfo = json.agreement_info
         , archive = Number(agreementInfo.archive) === 1 ? '是' : '否'

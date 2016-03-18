@@ -5,6 +5,7 @@
     events: _.extend({
       'click .export-button': 'exportButton_clickHandler',
       'blur [name=header]': 'header_blurHandler',
+      'change .charger': 'charger_changeHandler',
       'success form': 'form_successHandler'
     }, tp.view.Loader.prototype.events),
     $context: null,
@@ -59,18 +60,9 @@
     },
     collection_changeHandler: function (data) {
       var products = this.model.get('products')
-        , product = _.findWhere(products, {id: data.id})
-        , invoice_ad = data.get('invoice_ad');
-      this.model.set({
-        joy_income: invoice_ad.joy_income,
-        red_ad_income: invoice_ad.red_ad_income
-      });
+        , product = _.findWhere(products, {id: data.id});
       _.extend(product, _.omit(data.toJSON(), 'previous'));
-      var json = this.model.toJSON();
-      products = json.products;
-      products.push({amount: true});
-      data.collection.reset(products);
-      products.pop();
+      this.model_changeHandler();
       if (this.model.isNew()) {
         $(".modal").modal('hide');
       }
@@ -90,6 +82,15 @@
     },
     header_blurHandler: function (event) {
       this.$('.header').text(event.target.value);
+    },
+    charger_changeHandler: function (event) {
+      var target = $(event.target)
+        , index = parseInt(target.find('option:selected').data('index'))
+        , charger = this.model.options.chargers[index]
+        , size = charger.size
+        , department = charger.department;
+      this.$('.size').text(size);
+      this.$('.department').text(department);
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

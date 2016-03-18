@@ -118,16 +118,13 @@
       <div class="form-group">
         <label class="control-label col-sm-4">规格型号：</label>
         <div class="col-sm-8">
-          <p class="form-control-static">DAP V1.0</p>
+          <p class="form-control-static size">{{size}}</p>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">开票金额：</label>
         <div class="col-sm-4">
-          <p class="form-control-static">红包锁屏收入金额：&yen; {{red_ad_income}}</p>
-        </div>
-        <div class="col-sm-4">
-          <p class="form-control-static">其他收入金额：&yen; {{joy_income}}</p>
+          <p class="form-control-static invoice-rmb">&yen; {{readable_n income_after_total}}</p>
         </div>
       </div>
       <div class="form-group">
@@ -163,47 +160,37 @@
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">收款方：</label>
-        <div class="col-sm-8">
-          {{#if accept_company}}
-            <p class="form-control-static">{{accept_company}}</p>
-            {{else}}
-              <p class="form-control-static warning-info">系统没录入，请找鲍橙橙选择签约公司名称</p>
-          {{/if}}
-        </div>
+        <div class="col-sm-8"><p class="form-control-static">北京无限点乐科技有限公司</p></div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">开户名称：</label>
-        <div class="col-sm-8">
-        <p class="form-control-static">{{accept_company}}</p>
-        </div>
+        <div class="col-sm-8"><p class="form-control-static">北京无限点乐科技有限公司</p></div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">开户银行：</label>
-        <div class="col-sm-8">
-        <p class="form-control-static">{{accept_bank}}</p>
-        </div>
+        <div class="col-sm-8"><p class="form-control-static">招商银行北京双榆树支行</p></div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">开户账号：</label>
+        <div class="col-sm-8"><p class="form-control-static">110909024210401</p></div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-4">所属部门：</label>
         <div class="col-sm-8">
-        <p class="form-control-static">{{accept_account}}</p>
+          <p class="form-control-static department">{{department}}</p>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">业务负责人：</label>
         <div class="col-sm-8">
-        {{#if init}}
         {{#if is_assistant}}
-          <select name="{{charger}}" class="form-control">
+          <select name="charger" class="form-control charger">
           {{#each chargers}}
-            <option value={{this}}>{{this}}</option>
-            {{/each}}
+            <option value="{{key}}" data-index="{{@index}}">{{value}}</option>
+          {{/each}}
           </select>
           {{else}}
           <p class="form-control-static">{{applicant}}</p>
-          {{/if}}
-        {{else}}
-        <p class="form-control-static">{{#if charger}}{{charger}}{{else}}{{applicant}}{{/if}}</p>
         {{/if}}
         </div>
       </div>
