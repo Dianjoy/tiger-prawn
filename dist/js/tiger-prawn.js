@@ -3684,7 +3684,7 @@
           this.model.set(_.pick(options, 'start', 'end'), {silent: true});
         }
         if ('dateFormat' in options) {
-          this.model.set('dateFormat', options.dateFormat);
+          this.model.set('dateFormat', options.dateFormat, {silent: true});
         }
         this.$ranger.use(this.model);
       }
