@@ -98,6 +98,7 @@
         <a data-toggle="popover" data-content="{{manager_pifu_comment}}" data-title="通过原因">通过</a>
         {{/greater}}
         {{/if}}
+        {{#if is_send_email}}<a data-toggle="popover" data-content="已邮件通知运营" data-title="提醒"><i class="fa fa-info-circle fa-lg"></i></a>{{/if}}
       </td>
       <td data-title="结算组核对">
         {{#if is_show}}

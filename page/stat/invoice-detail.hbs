@@ -105,12 +105,17 @@
         </tr>
         <tr>
           <th>规格型号</th>
-          <td colspan="11">DAP V1.0</td>
+          <td colspan="11">
+            {{#if is_assistant}}
+              {{#each chargers}}{{#equal ../charger key}}{{size}}{{/equal}}{{/each}}
+            {{else}}
+              {{size}}
+            {{/if}}
+          </td>
         </tr>
         <tr>
           <th>开票金额</th>
-          <td colspan="6">红包锁屏收入金额：&yen; {{red_ad_income}}</td>
-          <td colspan="5">其他收入金额：&yen; {{joy_income}}</td>
+          <td colspan="6" class="invoice-rmb">&yen; {{readable_n income_after_total}}</td>
         </tr>
         <tr>
           <th>业务负责人</th>
@@ -134,25 +139,43 @@
       <table class="table table-bordered table-striped print-table" style="display: inline-table;">
         <tr>
           <th width="10%">收款方</th>
-          <td colspan="11">
-            {{#if accept_company}}{{accept_company}}{{else}}<p class="warning-info">系统没录入，请找鲍橙橙选择签约公司名称</p>{{/if}}
-          </td>
+          <td colspan="11">北京无限点乐科技有限公司</td>
         </tr>
         <tr>
           <th>开户名称</th>
-          <td colspan="11">{{accept_company}}</td>
+          <td colspan="11">北京无限点乐科技有限公司</td>
         </tr>
         <tr>
           <th>开户银行</th>
-          <td colspan="11">{{accept_bank}}</td>
+          <td colspan="11">招商银行北京双榆树支行</td>
         </tr>
         <tr>
           <th>开户账号</th>
-          <td colspan="11" id="accept-account">{{accept_account}}</td>
+          <td colspan="11" id="accept-account">110909024210401</td>
+        </tr>
+        <tr>
+          <th>所属部门</th>
+          <td colspan="11" id="department">
+            {{#if is_assistant}}
+              {{#each chargers}}{{#equal ../charger key}}{{department}}{{/equal}}{{/each}}
+            {{else}}
+              {{department}}
+            {{/if}}
+          </td>
         </tr>
         <tr>
           <th>业务负责人</th>
-          <td colspan="11">{{#if charger}}{{charger}}{{else}}{{applicant}}{{/if}}</td>
+          <td colspan="11">
+            {{#if is_assistant}}
+              {{#each chargers}}
+                {{#equal ../charger key}}
+                <a href="#charger" class="edit" data-type="select" data-list="#chargers">{{value}}</a>
+              {{/equal}}
+              {{/each}}
+            {{else}}
+              {{applicant}}
+            {{/if}}
+          </td>
         </tr>
         <tr>
           <th>手机号码</th>
@@ -183,17 +206,17 @@
           <td>
             {{#if view}}
               {{#if attachment}}
-                <a href="{{attachment}}" download="{{attachment}}">{{attachment}}
+                <a href="{{UPLOAD}}{{attachment}}" download="{{UPLOAD}}{{attachment}}">{{UPLOAD}}{{attachment}}
                   <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                 </a><br>
-                <a><img src="{{attachment}}" class="img-thumbnail"></a>
+                <a><img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail"></a>
               {{/if}}
             {{else}}
               {{#if attachment}}
-                <a href="{{attachment}}" download="{{attachment}}">{{attachment}}
+                <a href="{{UPLOAD}}{{attachment}}" download="{{UPLOAD}}{{attachment}}">{{UPLOAD}}{{attachment}}
                   <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                 </a><br>
-                <a class="edit" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true"><img src="{{attachment}}" class="img-thumbnail"></a>
+                <a class="edit" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true"><img src="{{UPLOAD}}{{attachment}}" class="img-thumbnail"></a>
               {{else}}
                 <a class="edit btn btn-primary" href="#attachment" data-type="file" data-append="true" data-refresh="true" data-removable="true" data-accept="*.pdf,*jpg,*png">上传对账单</a>
               {{/if}}
@@ -204,3 +227,8 @@
     </div>
   </div>
 </div>
+<datalist id="chargers">
+  {{#each chargers}}
+    <option value="{{key}}">{{value}}</option>
+  {{/each}}
+</datalist>
