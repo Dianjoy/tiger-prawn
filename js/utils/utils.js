@@ -15,6 +15,13 @@
     }
     return result;
   };
+  ns.encodeURLParam = function (obj) {
+    var result = [];
+    for (var prop in obj) {
+      result.push(encodeURIComponent(prop) + '=' + encodeURIComponent(obj[prop]));
+    }
+    return result.join('&');
+  };
   ns.convertCurrency = function (currencyDigits) {
     var MAXIMUM_NUMBER = 99999999999.99;
     var CN_ZERO = '零';

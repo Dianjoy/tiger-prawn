@@ -3,6 +3,9 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   */
   ns.TableMemento = Backbone.Model.extend({
     RESERVED: ['keyword', 'order', 'seq', 'start', 'end', 'dateFormat'],
     tags: null,

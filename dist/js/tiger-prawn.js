@@ -316,14 +316,24 @@
   }
 }());;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Base = Backbone.Router.extend({
     $ranger: null,
     $body: null,
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
+      'oauth/:from/': 'oauth',
       'dashboard(/:start/:end)': 'showDashboard',
       'my/profile/': 'showMyProfile'
+    },
+    oauth: function (from) {
+      var oauth = tp.config.oauth[from];
+      oauth.isOAuth = true;
+      oauth.capital = oauth.logo ? '' : oauth.name.substr(0, 1).toUpperCase();
+      this.showUserPage('login', oauth);
     },
     showDashboard: function (start, end) {
       var range = moment.createRange(start, end)
@@ -352,7 +362,7 @@
       });
       this.$body.setFramework('me profile', '我的账户');
     },
-    showUserPage: function (page) {
+    showUserPage: function (page, options) {
       if (page === 'logout') {
         return this.$me.destroy({
           success: function (model) {
@@ -365,8 +375,10 @@
         this.navigate(tp.startPage || '#/dashboard');
         return;
       }
-      tp.config.login.api = this.$me.url;
-      this.$body.load(tp.path + 'page/' + page + '.hbs', tp.config.login, {
+      options = _.defaults(options || {}, tp.config.login, {
+        api: this.$me.url
+      });
+      this.$body.load(tp.path + 'page/' + page + '.hbs', options, {
         isFull: true
       });
       this.$body.setFramework('login', '登录');
@@ -558,6 +570,13 @@
       result[arr[0]] = decodeURIComponent(arr[1]);
     }
     return result;
+  };
+  ns.encodeURLParam = function (obj) {
+    var result = [];
+    for (var prop in obj) {
+      result.push(encodeURIComponent(prop) + '=' + encodeURIComponent(obj[prop]));
+    }
+    return result.join('&');
   };
   ns.convertCurrency = function (currencyDigits) {
     var MAXIMUM_NUMBER = 99999999999.99;
@@ -772,6 +791,9 @@
   })
 }(Nervenet.createNameSpace('tp.model')));;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Me = Backbone.Model.extend({
     $body: null,
     url: tp.API + 'auth/',
@@ -807,6 +829,12 @@
     },
     id_changeHandler: function (model, id) {
       if (id) {
+        // 如果是外部登录,直接跳转
+        if (model.get('signature')) {
+          location.href = model.get('backURL') + '?' + tp.utils.encodeURLParam(model.pick('id', 'user', 'fullname', 'role'));
+          return;
+        }
+        
         this.$body.start(true);
         tp.notification.Manager.start();
 
@@ -845,7 +873,9 @@
       if (location.hash && !/^#\/user\/log(in|out)$/.test(location.hash)) {
         localStorage.setItem(tp.PROJECT + '-from', location.hash);
       }
-      location.hash = '#/user/login';
+      if (!/^#\/oauth\/[\w+_-]+\/$/.test(location.hash)) {
+        location.hash = '#/user/login';
+      }
       Backbone.history.start({
         root: tp.BASE
       });
@@ -1122,6 +1152,9 @@
   });
 }(Nervenet.createNameSpace('tp.model')));;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.TableMemento = Backbone.Model.extend({
     RESERVED: ['keyword', 'order', 'seq', 'start', 'end', 'dateFormat'],
     tags: null,
@@ -3613,6 +3646,9 @@
 (function (ns) {
   var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{#if label}}{{label}}{{else}}{{value}}{{/if}}</a>');
 
+  /**
+   * @class
+   */
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
     $ranger: null,

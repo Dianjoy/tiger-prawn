@@ -2,6 +2,9 @@
 (function (ns) {
   var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{#if label}}{{label}}{{else}}{{value}}{{/if}}</a>');
 
+  /**
+   * @class
+   */
   ns.SmartTable = ns.BaseList.extend({
     $context: null,
     $ranger: null,

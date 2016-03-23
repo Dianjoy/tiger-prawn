@@ -3,6 +3,9 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Me = Backbone.Model.extend({
     $body: null,
     url: tp.API + 'auth/',
@@ -38,6 +41,12 @@
     },
     id_changeHandler: function (model, id) {
       if (id) {
+        // 如果是外部登录,直接跳转
+        if (model.get('signature')) {
+          location.href = model.get('backURL') + '?' + tp.utils.encodeURLParam(model.pick('id', 'user', 'fullname', 'role'));
+          return;
+        }
+        
         this.$body.start(true);
         tp.notification.Manager.start();
 
@@ -76,7 +85,9 @@
       if (location.hash && !/^#\/user\/log(in|out)$/.test(location.hash)) {
         localStorage.setItem(tp.PROJECT + '-from', location.hash);
       }
-      location.hash = '#/user/login';
+      if (!/^#\/oauth\/[\w+_-]+\/$/.test(location.hash)) {
+        location.hash = '#/user/login';
+      }
       Backbone.history.start({
         root: tp.BASE
       });

@@ -12,6 +12,13 @@
       admin: 'service@dianjoy.com',
       verify: ns.API + 'showimg.php',
       className: 'login'
+    },
+    oauth: {
+      kepler: {
+        name: 'kepler',
+        backURL: 'http://kepler.dianjoy.cn/enter_url.php',
+        welcome: '将授权给 Kelper 使用'
+      }
     }
   };
 

@@ -4,14 +4,24 @@
 
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Base = Backbone.Router.extend({
     $ranger: null,
     $body: null,
     $me: null,
     routes: {
       'user/:page': 'showUserPage',
+      'oauth/:from/': 'oauth',
       'dashboard(/:start/:end)': 'showDashboard',
       'my/profile/': 'showMyProfile'
+    },
+    oauth: function (from) {
+      var oauth = tp.config.oauth[from];
+      oauth.isOAuth = true;
+      oauth.capital = oauth.logo ? '' : oauth.name.substr(0, 1).toUpperCase();
+      this.showUserPage('login', oauth);
     },
     showDashboard: function (start, end) {
       var range = moment.createRange(start, end)
@@ -40,7 +50,7 @@
       });
       this.$body.setFramework('me profile', '我的账户');
     },
-    showUserPage: function (page) {
+    showUserPage: function (page, options) {
       if (page === 'logout') {
         return this.$me.destroy({
           success: function (model) {
@@ -53,8 +63,10 @@
         this.navigate(tp.startPage || '#/dashboard');
         return;
       }
-      tp.config.login.api = this.$me.url;
-      this.$body.load(tp.path + 'page/' + page + '.hbs', tp.config.login, {
+      options = _.defaults(options || {}, tp.config.login, {
+        api: this.$me.url
+      });
+      this.$body.load(tp.path + 'page/' + page + '.hbs', options, {
         isFull: true
       });
       this.$body.setFramework('login', '登录');
