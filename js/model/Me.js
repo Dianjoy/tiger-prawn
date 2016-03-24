@@ -16,6 +16,14 @@
       this.on('change:id', this.id_changeHandler, this);
     },
     fetch: function (options) {
+      if (location.hash && /^#\/oauth\/[\w_-]+\/$/.test(location.hash)) {
+        var oauth = location.hash.split('/')[2];
+        options = options || {};
+        options.data = _.defaults({
+          oauth: oauth,
+          backURL: tp.config.oauth[oauth].backURL
+        }, options.data);
+      }
       Backbone.Model.prototype.fetch.call(this, _.extend({
         error: _.bind(this.onError, this)
       }, options));
@@ -43,7 +51,8 @@
       if (id) {
         // 如果是外部登录,直接跳转
         if (model.get('signature')) {
-          location.href = model.get('backURL') + '?' + tp.utils.encodeURLParam(model.pick('id', 'user', 'fullname', 'role'));
+          location.href = model.get('backURL') + '?data=' + encodeURIComponent(JSON.stringify(model.pick('id', 'user', 'fullname', 'role'))) + '&sign=' + model.get('signature');
+          $('#page-preloader').append('<p>即将跳转到目标平台，请稍候</p>');
           return;
         }
         

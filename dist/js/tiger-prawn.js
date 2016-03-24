@@ -238,7 +238,7 @@
 (function ($) {
   $.fn.spinner = function (roll) {
     roll = roll === undefined ? true : roll;
-    return this.each(function (i) {
+    return this.each(function () {
       if (this.tagName.toLowerCase() === 'a') {
         $(this).toggleClass('disabled', roll);
       } else if (this.tagName.toLowerCase() === 'button') {
@@ -255,6 +255,13 @@
       }
     });
   };
+  
+  // 取某个元素内所有文本
+  $.fn.texts = function () {
+    return this.contents().filter(function () {
+      return this.nodeType === 3;
+    });
+  }
 }(jQuery));;
 (function (m) {
   var DATE = m.DATE_FORMAT = 'YYYY-MM-DD' // 通用日期格式
@@ -804,6 +811,14 @@
       this.on('change:id', this.id_changeHandler, this);
     },
     fetch: function (options) {
+      if (location.hash && /^#\/oauth\/[\w_-]+\/$/.test(location.hash)) {
+        var oauth = location.hash.split('/')[2];
+        options = options || {};
+        options.data = _.defaults({
+          oauth: oauth,
+          backURL: tp.config.oauth[oauth].backURL
+        }, options.data);
+      }
       Backbone.Model.prototype.fetch.call(this, _.extend({
         error: _.bind(this.onError, this)
       }, options));
@@ -831,7 +846,8 @@
       if (id) {
         // 如果是外部登录,直接跳转
         if (model.get('signature')) {
-          location.href = model.get('backURL') + '?' + tp.utils.encodeURLParam(model.pick('id', 'user', 'fullname', 'role'));
+          location.href = model.get('backURL') + '?data=' + encodeURIComponent(JSON.stringify(model.pick('id', 'user', 'fullname', 'role'))) + '&sign=' + model.get('signature');
+          $('#page-preloader').append('<p>即将跳转到目标平台，请稍候</p>');
           return;
         }
         
@@ -1947,7 +1963,9 @@
   });
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
-
+  /**
+   * @class
+   */
   ns.Pager = Backbone.View.extend({
     events: {
       'click a': 'clickHandler'
@@ -2021,6 +2039,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.Search = Backbone.View.extend({
     events: {
       'keydown': 'keydownHandler'
@@ -2030,7 +2051,7 @@
         this.$el.val(this.model.get('keyword'));
       }
       if (this.el.value) {
-        this.model.set('keyword', this.el.value);
+        this.model.set('keyword', this.el.value, {silent: true});
       }
       this.model.on('change:keyword', this.model_changeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
@@ -2066,6 +2087,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.Filter = Backbone.View.extend({
     events: {
       'change': 'changeHandler'
@@ -2134,6 +2158,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.FixedHeader = Backbone.View.extend({
     className: 'fixed-table-header',
     tagName: 'div',
@@ -3146,16 +3173,23 @@
   });
 }(Nervenet.createNameSpace('tp.view')));;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Me = Backbone.View.extend({
     initialize: function () {
-      this.template = Handlebars.compile(this.$('script').html());
+      if (this.$('script').length > 0) {
+        this.template = Handlebars.compile(this.$('script').html());
+      }
       this.model.on('change', this.model_changeHandler, this);
     },
     render: function () {
       if ('fullname' in this.model.changed) {
         this.$('.username').text(this.model.get('fullname'));
       }
-      this.$el.filter('.navbar-user').html(this.template(this.model.toJSON()));
+      if (this.template) {
+        this.$el.filter('.navbar-user').html(this.template(this.model.toJSON()));
+      }
     },
     model_changeHandler: function () {
       this.render();
@@ -3525,7 +3559,12 @@
 (function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {
-      'click #verify-code': 'verifyCode_clickHandler'
+      'click #verify-code': 'verifyCode_clickHandler',
+      'success .oauth': 'oauth_successHandler'
+    },
+    oauth_successHandler: function () {
+      this.$('input, button').prop('disabled', true);
+      this.$('.btn-primary').text('跳转中，请稍候');
     },
     verifyCode_clickHandler: function (event) {
       var src = event.target.src
@@ -3934,7 +3973,7 @@
         , label = target.text()
         , path = target.attr('href').split('/').slice(-2)
         , hasFilter = this.model.has(path[0])
-        , attr = {};
+        , attr = { page: 0 }; // 要自动切回第一页
       attr[path[0]] = path[1];
       if (path[0] != label) {
         attr[path[0] + '_label'] = label;
@@ -3950,7 +3989,8 @@
     theadFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)
         , path = target.attr('href').split('/').slice(-2);
-      this.model.unset(path[0], {reset: true});
+      this.model.set('page', 0, {silent: true}) // 自动切回第一页
+        .unset(path[0], {reset: true});
       target.remove();
       event.preventDefault();
     }

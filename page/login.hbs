@@ -17,7 +17,7 @@
 
   <h5>请登录</h5>
 
-  <form action="{{api}}" class="ajax" method="post">
+  <form action="{{api}}" class="ajax {{#if isOAuth}}oauth{{/if}}" method="post">
     <input type="hidden" name="hash" value="" id="hash">
     <input type="hidden" name="backURL" value="{{backURL}}">
     <input type="hidden" name="oauth" value="{{name}}">

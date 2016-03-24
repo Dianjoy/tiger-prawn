@@ -6,7 +6,7 @@
 (function ($) {
   $.fn.spinner = function (roll) {
     roll = roll === undefined ? true : roll;
-    return this.each(function (i) {
+    return this.each(function () {
       if (this.tagName.toLowerCase() === 'a') {
         $(this).toggleClass('disabled', roll);
       } else if (this.tagName.toLowerCase() === 'button') {
@@ -23,4 +23,11 @@
       }
     });
   };
+  
+  // 取某个元素内所有文本
+  $.fn.texts = function () {
+    return this.contents().filter(function () {
+      return this.nodeType === 3;
+    });
+  }
 }(jQuery));

@@ -3,7 +3,9 @@
  */
 'use strict';
 (function (ns) {
-
+  /**
+   * @class
+   */
   ns.Pager = Backbone.View.extend({
     events: {
       'click a': 'clickHandler'
@@ -77,6 +79,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.Search = Backbone.View.extend({
     events: {
       'keydown': 'keydownHandler'
@@ -86,7 +91,7 @@
         this.$el.val(this.model.get('keyword'));
       }
       if (this.el.value) {
-        this.model.set('keyword', this.el.value);
+        this.model.set('keyword', this.el.value, {silent: true});
       }
       this.model.on('change:keyword', this.model_changeHandler, this);
       this.collection.on('sync', this.collection_syncHandler, this);
@@ -122,6 +127,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.Filter = Backbone.View.extend({
     events: {
       'change': 'changeHandler'
@@ -190,6 +198,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.FixedHeader = Backbone.View.extend({
     className: 'fixed-table-header',
     tagName: 'div',

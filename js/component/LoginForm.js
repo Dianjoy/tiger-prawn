@@ -5,7 +5,12 @@
 (function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {
-      'click #verify-code': 'verifyCode_clickHandler'
+      'click #verify-code': 'verifyCode_clickHandler',
+      'success .oauth': 'oauth_successHandler'
+    },
+    oauth_successHandler: function () {
+      this.$('input, button').prop('disabled', true);
+      this.$('.btn-primary').text('跳转中，请稍候');
     },
     verifyCode_clickHandler: function (event) {
       var src = event.target.src

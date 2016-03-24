@@ -290,7 +290,7 @@
         , label = target.text()
         , path = target.attr('href').split('/').slice(-2)
         , hasFilter = this.model.has(path[0])
-        , attr = {};
+        , attr = { page: 0 }; // 要自动切回第一页
       attr[path[0]] = path[1];
       if (path[0] != label) {
         attr[path[0] + '_label'] = label;
@@ -306,7 +306,8 @@
     theadFilter_clickHandler: function (event) {
       var target = $(event.currentTarget)
         , path = target.attr('href').split('/').slice(-2);
-      this.model.unset(path[0], {reset: true});
+      this.model.set('page', 0, {silent: true}) // 自动切回第一页
+        .unset(path[0], {reset: true});
       target.remove();
       event.preventDefault();
     }
