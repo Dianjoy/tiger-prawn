@@ -5,6 +5,9 @@
 (function (ns) {
   var print_header = '<link rel="stylesheet" href="{{url}}css/screen.css"><link rel="stylesheet" href="{{url}}css/print.css"><title>{{title}}</title>';
 
+  /**
+   * @class
+   */
   ns.Body = Backbone.View.extend({
     $context: null,
     $sidebarEditor: null,
