@@ -8,7 +8,7 @@
     </select>
   </div>
   <div class="form-group">
-    <label>区域总监批复核减申请：</label>
+    <label>核减审查：</label>
     <select class="form-control" name="status">
       <option value="11">全部</option>
       <option value="10">通过</option>
@@ -65,7 +65,7 @@
     <th>付款方</th>
     <th>合同编号</th>
     <th>金额</th>
-    <th>区域总监批复核减申请</th>
+    <th>核减审查</th>
     <th>结算组核对</th>
     <th>特批</th>
     <th>财务审核</th>
@@ -79,26 +79,24 @@
   <tbody>
   <script type="text/x-handlebars-template">
     <tr id="{{id}}">
-      <td data-title="申请日期">
-        {{apply_time}}
-      </td>
+      <td data-title="申请日期">{{apply_time}}</td>
       <td data-title="付款方">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}</td>
       <td data-title="合同编号">{{agreement_number}}</td>
       <td data-title="金额">
         {{d100 income}}
         {{#if is_notice}} <a data-toggle="popover" data-content="有渠道CPA为0" data-title="提醒"><i class="fa fa-info-circle fa-lg"></i></a>{{/if}}
       </td>
-      <td data-title="区域总监批复核减申请">
-        {{#if is_show}}
-        {{#equal status 8}}审核中{{/equal}}
-        {{#equal status 9}}
-        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{manager_pifu_comment}}" data-title="未通过原因">未通过</button>
+      <td data-title="核减审查">
+        {{#if is_active}}
+        {{#equal op_cut_result 3}}
+        <a data-toggle="popover" data-content="{{#each products}}{{ad_name}} {{pick cut_type ../cut_types}} {{#in cut_type '1' '2'}}{{pick op_cut_type ../op_cut_types}}{{/in}}<br>{{/each}}{{op_cut_comment}}" data-html="true">{{pick op_cut_result op_cut_results}}</a><br>
+        {{else}}
+        {{pick op_cut_result op_cut_results}}<br>
         {{/equal}}
-        {{#greater status 9}}
-        <a data-toggle="popover" data-content="{{manager_pifu_comment}}" data-title="通过原因">通过</a>
-        {{/greater}}
+        {{#equal status 8}}审核中{{/equal}}
+        {{#equal status 9}}<button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{manager_pifu_comment}}" data-title="未通过原因">未通过</button>{{/equal}}
+        {{#greater status 9}}<a data-toggle="popover" data-content="{{manager_pifu_comment}}" data-title="通过原因">通过</a>{{/greater}}
         {{/if}}
-        {{#if is_send_email}}<a data-toggle="popover" data-content="已邮件通知运营" data-title="提醒"><i class="fa fa-info-circle fa-lg"></i></a>{{/if}}
       </td>
       <td data-title="结算组核对">
         {{#if is_show}}
@@ -145,23 +143,22 @@
         {{/if}}
       </td>
       <td data-title="快递单号">
-        {{#if is_beijing}}
-          {{#greater status 49}}
-            <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
-          {{/greater}}
-        {{else}}
-        {{express_number}}
-        {{/if}}
+        {{#greater status 49}}
+          <a href="#express_number" class="edit" title="编辑">{{express_number}}</a>
+        {{/greater}}
       </td>
       <td data-title="发票号码">{{number}}</td>
       <td data-title="发票日期">{{handle_time}}</td>
       <td data-title="操作">
         <div class="btn-group">
-          {{#if is_show}}
           {{#in status 8 10 18 20 28 30 38 40 48}}
           <a href="#/invoice/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
           {{#equal status 8}}
-          <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+            <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+          {{else}}
+            {{#unless is_active}}
+              <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
+            {{/unless}}
           {{/equal}}
           {{/in}}
           {{#in status 9 19 29 39 49}}
@@ -170,10 +167,6 @@
           {{#in status 50}}
           <a href="#/invoice/{{id}}" class="btn btn-info" title="发票详情"><i class="fa fa-file-text"></i></a>
           {{/in}}
-          {{else}}
-          <a href="#/invoice/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
-          <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>
-          {{/if}}
         </div>
       </td>
     </tr>

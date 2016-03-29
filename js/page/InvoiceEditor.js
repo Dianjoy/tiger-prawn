@@ -50,19 +50,24 @@
     },
     getProductList: function (components) {
       var products =  this.model.get('products')
-        , opt = this.model.options;
+        , options = this.model.options;
       this.productList = components[0];
       products.push({amount: true});
       this.productList.collection.on('change', this.collection_changeHandler, this);
-      this.productList.collection.options = opt;
+      this.productList.collection.options = options;
       this.productList.collection.reset(products);
       products.pop();
     },
     collection_changeHandler: function (data) {
       var products = this.model.get('products')
         , product = _.findWhere(products, {id: data.id});
-      _.extend(product, _.omit(data.toJSON(), 'previous'));
-      this.model_changeHandler();
+      _.extend(product, data.toJSON());
+      products = this.model.toJSON().products;
+      products.push({amount: true});
+      data.collection.reset(products);
+      products.pop();
+      var incomeTotal = this.$('#income-total').text();
+      this.$('.invoice-rmb').text(incomeTotal);
       if (this.model.isNew()) {
         $(".modal").modal('hide');
       }
@@ -77,7 +82,7 @@
     },
     form_successHandler: function () {
       var channel = this.model.get('channel')
-        , models = this.$invoiceList.where({channel: channel});
+        , models = this.$invoiceList.where({channel: _.isString(channel) ? channel : channel.toString()});
       this.$invoiceList.remove(models);
     },
     header_blurHandler: function (event) {
