@@ -89,7 +89,7 @@
       <td data-title="核减审查">
         {{#if is_active}}
         {{#equal op_cut_result 3}}
-        <a data-toggle="popover" data-content="{{#each products}}{{ad_name}} {{pick cut_type ../cut_types}} {{#in cut_type '1' '2'}}{{pick op_cut_type ../op_cut_types}}{{/in}}<br>{{/each}}{{op_cut_comment}}" data-html="true">{{pick op_cut_result op_cut_results}}</a><br>
+        <a data-toggle="popover" data-content="{{#each products}}{{ad_name}} {{pick cut_type ../cut_types}} {{#in cut_type '1' '2'}}{{pick reply_type ../reply_types}}{{/in}}<br>{{/each}}{{reply_comment}}" data-html="true">{{pick op_cut_result op_cut_results}}</a><br>
         {{else}}
         {{pick op_cut_result op_cut_results}}<br>
         {{/equal}}
