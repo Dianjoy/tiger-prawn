@@ -2424,7 +2424,7 @@
     },
     createErrorMsg: function (xhr) {
       var status = 0
-        , response = xhr;
+        , response = xhr || {};
       if ('status' in xhr) {
         status = xhr.status;
         response = xhr.responseJSON;
