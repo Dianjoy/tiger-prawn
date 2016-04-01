@@ -76,3 +76,10 @@
   ga('create', 'UA-35957679-15', 'auto');
   ga('send', 'pageview');
 }());
+
+// 防止被 iframe
+(function () {
+  if (self != top) {
+    top.location = self.location;
+  }
+}());

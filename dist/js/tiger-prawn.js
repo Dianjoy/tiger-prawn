@@ -2423,8 +2423,12 @@
       components.length = 0;
     },
     createErrorMsg: function (xhr) {
-      var status = xhr.status
-        , response = xhr.responseJSON;
+      var status = 0
+        , response = xhr;
+      if ('status' in xhr) {
+        status = xhr.status;
+        response = xhr.responseJSON;
+      }
       if (status >= 500) {
         response.msg = '程序出错，请联系管理员。';
       } else if (status === 401) {
@@ -2933,6 +2937,9 @@
   });
 }(Nervenet.createNameSpace('tp.popup')));;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Loader = Backbone.View.extend({
     $context: null,
     fresh: false,
@@ -2950,7 +2957,12 @@
         this.isModelReady = true;
       }
 
-      $.get(options.template, _.bind(this.template_getHandler, this), 'html');
+      $.ajax({
+        url: options.template,
+        success: _.bind(this.template_getHandler, this),
+        error: _.bind(this.template_errorHandler, this),
+        contentType: 'html'
+      });
       this.options = options;
 
       if ('refresh' in options) {
@@ -3005,8 +3017,18 @@
       this.model.off('error', null, this);
     },
     refreshButton_clickHandler: function (event) {
+      if (this.noTemplate) {
+        return Backbone.history.loadUrl(Backbone.history.fragment);
+      }
       this.model.fetch(this.options);
       $(event.currentTarget).spinner();
+    },
+    template_errorHandler: function () {
+      this.noTemplate = true;
+      this.$el.html(tp.component.Manager.createErrorMsg({
+        msg: '加载模板失败，请稍后重试。'
+      }));
+      this.trigger('complete');
     },
     template_getHandler: function (data) {
       this.template = Handlebars.compile(data);
@@ -3019,6 +3041,9 @@
 (function (ns) {
   var print_header = '<link rel="stylesheet" href="{{url}}css/screen.css"><link rel="stylesheet" href="{{url}}css/print.css"><title>{{title}}</title>';
 
+  /**
+   * @class
+   */
   ns.Body = Backbone.View.extend({
     $context: null,
     $sidebarEditor: null,

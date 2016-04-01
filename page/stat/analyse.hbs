@@ -39,11 +39,11 @@
     {{#if amount}}
       {{#with amount}}
       <tr>
-        <td></td>
+        <td>{{#if is_all}}我的{{else}}筛选{{/if}}</td>
         <td data-title="总包数">{{readable_n count}}</td>
         <td data-title="总CPA">{{readable_n transfer}}</td>
         <td data-title="总渠道CPA">{{readable_n cpa}}</td>
-        <td data-title="结算率">{{percent ratio}}%</td>
+        <td data-title="结算率">{{d100 transfer_ratio}}%</td>
         <td data-title="推广支出">&yen;{{d100 out}}</td>
         <td data-title="其他支出">&yen;{{d100 operation_cost}}</td>
         <td data-title="总支出">&yen;{{d100 total_cost}}</td>
@@ -55,11 +55,11 @@
       {{/with}}
     {{/if}}
     <tr>
-      <td>总计</td>
+      <td>全公司</td>
       <td data-title="总包数">{{readable_n count}}</td>
       <td data-title="总CPA">{{readable_n transfer}}</td>
       <td data-title="总渠道CPA">{{readable_n cpa}}</td>
-      <td data-title="结算率">{{percent ratio}}%</td>
+      <td data-title="结算率">{{d100 transfer_ratio}}%</td>
       <td data-title="推广支出">&yen;{{d100 out}}</td>
       <td data-title="其他支出">&yen;{{d100 operation_cost}}</td>
       <td data-title="总支出">&yen;{{d100 total_cost}}</td>
@@ -67,6 +67,9 @@
       <td data-title="CPA单价">&yen;{{d100 average_rmb}}</td>
       <td data-title="毛利润">&yen;{{d100 profit}}</td>
       <td data-title="毛利润率">{{d100 profit_ratio}}%</td>
+    </tr>
+    <tr>
+      <td colspan="12" class="tar"><small>缓存更新时间：<time>{{from-now created_time php=1}}</time></small></td>
     </tr>
     {{{{/raw-helper}}}}
   </script>
@@ -80,7 +83,7 @@
   </tfoot>
 </table>
 
-<table class="smart-table table table-bordered table-hover responsive-table" data-search="#search-query" data-filter=".table-header"  data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list" data-model="tp.model.AnalyseModel" data-date-format="YYYY-MM">
+<table class="smart-table table table-bordered table-hover responsive-table" data-search="#search-query" data-filter=".table-header"  data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list" data-model="tp.model.AnalyseModel">
   <thead>
     <tr>
       <th class="filters">管理名</th>
