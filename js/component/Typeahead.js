@@ -3,6 +3,9 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Typeahead = Backbone.View.extend({
     timeout: null,
     delay: 500,

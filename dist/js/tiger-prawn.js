@@ -1424,7 +1424,7 @@
     collection: collection
   });
 }(Nervenet.createNameSpace('tp.notification')));;
-(function (ns) {
+(function (ns, $) {
   var history = 'history-recorder';
 
   function showErrorPopup(target, msgs) {
@@ -1796,7 +1796,7 @@
         }), ' ');
       $(target).removeClass(classes).addClass(className);
     });
-}(Nervenet.createNameSpace('tp.component')));;
+}(Nervenet.createNameSpace('tp.component'), jQuery));;
 (function (ns) {
   ns.BaseList = Backbone.View.extend({
     autoFetch: true,
@@ -4022,6 +4022,9 @@
   });
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Typeahead = Backbone.View.extend({
     timeout: null,
     delay: 500,
