@@ -13,6 +13,7 @@
   function callPopup(model, prop, options) {
     options.model = model;
     options.prop = prop;
+    options.API = tp.API;
     if (options.commentName) {
       options[options.commentName] = model.get(options.commentName);
     }

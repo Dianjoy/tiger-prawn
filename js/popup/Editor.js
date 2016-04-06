@@ -2,9 +2,10 @@
  * Created by meathill on 14-9-17.
  */
 'use strict';
-(function (ns) {
+(function (ns, $) {
   var timeout;
   /**
+   * @class
    * @property {object} options
    * @property {boolean} options.hasComponents 是否有组件需要初始化
    */
@@ -45,12 +46,6 @@
       this.form.on('success', this.form_successHandler, this);
       this.form.on('error', this.form_errorHandler, this);
 
-      html = this.$('script').remove().html();
-      if (html) {
-        this.template = Handlebars.compile(html);
-        this.$('script').empty();
-      }
-
       var dateFields = this.$('.datetimepicker');
       if (dateFields.length) {
         dateFields.each(function () {
@@ -63,6 +58,12 @@
       }
 
       this.submit.prop('disabled', false);
+    },
+    createTemplate: function () {
+      var html = this.$('script').remove().html();
+      if (html) {
+        this.template = Handlebars.compile(html);
+      }
     },
     hide: function (delay) {
       delay = delay === undefined ? 3000 : delay;
@@ -131,6 +132,7 @@
     },
     render: function (response) {
       Editor.prototype.render.call(this, response);
+      this.createTemplate();
     },
     search: function () {
       var keyword = this.$('[type=search]').val();
@@ -179,6 +181,7 @@
           model.set('tag', model.get(prop));
         });
       }
+      this.createTemplate();
       this.$('.tags').html(this.template({value: this.collection.toJSON()}));
     },
     add: function () {
@@ -309,4 +312,4 @@
       Editor.prototype.initialize.call(this, options);
     }
   });
-}(Nervenet.createNameSpace('tp.popup')));
+}(Nervenet.createNameSpace('tp.popup'), jQuery));

@@ -8,6 +8,9 @@
   var timeout
     , placeholder = '<p><i class="fa fa-spinner fa-spin fa-4x"></i></p>';
 
+  /**
+   * @class
+   */
   ns.Base = tp.view.DataSyncView.extend({
     $context: null,
     events: {

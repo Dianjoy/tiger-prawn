@@ -737,6 +737,7 @@
   function callPopup(model, prop, options) {
     options.model = model;
     options.prop = prop;
+    options.API = tp.API;
     if (options.commentName) {
       options[options.commentName] = model.get(options.commentName);
     }
@@ -898,7 +899,10 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model')));;
-(function (ns) {
+(function (ns, $) {
+  /**
+   * class
+   */
   ns.ListCollection = Backbone.Collection.extend({
     cache: null,
     model: ns.Model,
@@ -995,7 +999,7 @@
       this.isLoading = false;
     }
   });
-}(Nervenet.createNameSpace('tp.model')));;
+}(Nervenet.createNameSpace('tp.model'), jQuery));;
 (function (ns) {
   var proxy = ns.ProxyCollection = function (options) {
     var klass = options.collectionType
@@ -2515,6 +2519,9 @@
   var timeout
     , placeholder = '<p><i class="fa fa-spinner fa-spin fa-4x"></i></p>';
 
+  /**
+   * @class
+   */
   ns.Base = tp.view.DataSyncView.extend({
     $context: null,
     events: {
@@ -2628,9 +2635,10 @@
     }
   });
 }(Nervenet.createNameSpace('tp.popup')));;
-(function (ns) {
+(function (ns, $) {
   var timeout;
   /**
+   * @class
    * @property {object} options
    * @property {boolean} options.hasComponents 是否有组件需要初始化
    */
@@ -2671,12 +2679,6 @@
       this.form.on('success', this.form_successHandler, this);
       this.form.on('error', this.form_errorHandler, this);
 
-      html = this.$('script').remove().html();
-      if (html) {
-        this.template = Handlebars.compile(html);
-        this.$('script').empty();
-      }
-
       var dateFields = this.$('.datetimepicker');
       if (dateFields.length) {
         dateFields.each(function () {
@@ -2689,6 +2691,12 @@
       }
 
       this.submit.prop('disabled', false);
+    },
+    createTemplate: function () {
+      var html = this.$('script').remove().html();
+      if (html) {
+        this.template = Handlebars.compile(html);
+      }
     },
     hide: function (delay) {
       delay = delay === undefined ? 3000 : delay;
@@ -2757,6 +2765,7 @@
     },
     render: function (response) {
       Editor.prototype.render.call(this, response);
+      this.createTemplate();
     },
     search: function () {
       var keyword = this.$('[type=search]').val();
@@ -2805,6 +2814,7 @@
           model.set('tag', model.get(prop));
         });
       }
+      this.createTemplate();
       this.$('.tags').html(this.template({value: this.collection.toJSON()}));
     },
     add: function () {
@@ -2935,7 +2945,7 @@
       Editor.prototype.initialize.call(this, options);
     }
   });
-}(Nervenet.createNameSpace('tp.popup')));;
+}(Nervenet.createNameSpace('tp.popup'), jQuery));;
 (function (ns) {
   /**
    * @class

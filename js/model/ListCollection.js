@@ -2,7 +2,10 @@
  * Created by meathill on 14-3-12.
  */
 'use strict';
-(function (ns) {
+(function (ns, $) {
+  /**
+   * class
+   */
   ns.ListCollection = Backbone.Collection.extend({
     cache: null,
     model: ns.Model,
@@ -99,4 +102,4 @@
       this.isLoading = false;
     }
   });
-}(Nervenet.createNameSpace('tp.model')));
+}(Nervenet.createNameSpace('tp.model'), jQuery));
