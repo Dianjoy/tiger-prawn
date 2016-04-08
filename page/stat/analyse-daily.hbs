@@ -70,14 +70,14 @@
       {{else}}
       <td data-title="日期">{{date}}</td>
       {{/if}}
-      <td data-title="CPA">{{transfer}}</td>
-      <td data-title="渠道CPA">{{cpa}}</td>
+      <td data-title="CPA">{{readable_n transfer}}</td>
+      <td data-title="渠道CPA">{{readable_n cpa}}</td>
       <td data-title="单价/元">{{d100 quote_rmb}}</td>
-      <td data-title="结算率">{{ratio}}%</td>
-      <td data-title="实际价格">{{real}}</td>
-      <td data-title="支出">{{d100 outcome}}</td>
-      <td data-title="收入">{{d100 income}}</td>
-      <td data-title="毛利润">{{d100 profit}}</td>
+      <td data-title="结算率">{{readable_n ratio}}%</td>
+      <td data-title="实际价格">&yen;{{d100 real}}</td>
+      <td data-title="支出">&yen;{{d100 outcome}}</td>
+      <td data-title="收入">&yen;{{d100 income}}</td>
+      <td data-title="毛利润">&yen;{{d100 profit}}</td>
     </tr>
     {{{{/raw-helper}}}}
   </script>
