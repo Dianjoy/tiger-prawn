@@ -89,6 +89,14 @@
           collection: this.collection
         });
       }
+      
+      // 导出按钮
+      if ('exportButton' in options) {
+        this.exportButton = new tp.component.ExportButton({
+          model: this.model,
+          el: options.exportButton
+        });
+      }
 
       // 桌面默认都固定表头
       if (document.body.clientWidth >= 768 && this.$el.closest('modal').length === 0 && typeahead) {
@@ -117,6 +125,9 @@
       }
       if (this.header) {
         this.header.remove();
+      }
+      if (this.exportButton) {
+        this.exportButton.remove();
       }
       this.model.off(null, null, this);
       this.collection.off(null, null, this);
