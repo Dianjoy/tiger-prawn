@@ -172,7 +172,7 @@
     return value ? moment(options.hash.php ? value * 1000 : value).fromNow() : '';
   });
   h.registerHelper('to_date', function (value, plus) {
-    return value ? moment(value).add(plus, 'days').format(moment.DATE_FORMAT) : '';
+    return moment(value).add(plus, 'days').format(moment.DATE_FORMAT);
   });
 
   // 等于
@@ -746,7 +746,7 @@
 
   ns.editModelCommand = function (model, prop, options) {
     options = _.extend({}, options);
-    options.value = model.get(prop);
+    options.value = options.defaultValue ? options.defaultValue : model.get(prop);
     callPopup(model, prop, options);
   }
 }(Nervenet.createNameSpace('tp.controller')));;

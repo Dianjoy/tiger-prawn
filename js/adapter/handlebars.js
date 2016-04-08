@@ -144,7 +144,7 @@
     return value ? moment(options.hash.php ? value * 1000 : value).fromNow() : '';
   });
   h.registerHelper('to_date', function (value, plus) {
-    return value ? moment(value).add(plus, 'days').format(moment.DATE_FORMAT) : '';
+    return moment(value).add(plus, 'days').format(moment.DATE_FORMAT);
   });
 
   // 等于

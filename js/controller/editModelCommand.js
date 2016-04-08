@@ -22,7 +22,7 @@
 
   ns.editModelCommand = function (model, prop, options) {
     options = _.extend({}, options);
-    options.value = model.get(prop);
+    options.value = options.defaultValue ? options.defaultValue : model.get(prop);
     callPopup(model, prop, options);
   }
 }(Nervenet.createNameSpace('tp.controller')));
