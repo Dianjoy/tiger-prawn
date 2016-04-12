@@ -8,7 +8,7 @@
     src: {},
     initialize: function (options) {
       if ((!this.$el.width() || !this.$el.height()) && !this.rendered) {
-        this.el.on('render', this.renderHandler, this);
+        this.$el.on('render', null, this, this.renderHandler);
         return;
       } else {
         this.rendered = true;
@@ -114,10 +114,11 @@
       this.options.data = json;
       this.render();
     },
-    renderHandler: function () {
-      this.initialize({el: this.el});
-      this.el.off('render', this.renderHandler, this);
-      this.rendered = true;
+    renderHandler: function (event) {
+      var self = event.data;
+      self.initialize({el: this.el});
+      self.$el.off('render', this.renderHandler);
+      self.rendered = true;
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
