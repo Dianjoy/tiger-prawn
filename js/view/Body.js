@@ -15,7 +15,7 @@
       'click .add-button': 'addButton_clickHandler',
       'click .print-button': 'printButton_clickHandler',
       'click .request-button': 'requestButton_clickHandler',
-      'shown.bs.tab': 'shownHandler'
+      'shown.bs.tab': 'bootstrapTab_shownHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -160,12 +160,10 @@
       this.loading.remove();
       this.trigger('load:complete');
     },
-    shownHandler: function (event) {
-      var id = event.target.innerText
-        , tab = this.$('#' + id)
-        , chart = tab.find('.morris-chart')
-        , chartData = chart.find('script');
-      if (chartData.length) {
+    bootstrapTab_shownHandler: function (event) {
+      var tab = this.$(event.target.hash)
+        , chart = tab.find('.morris-chart');
+      if (!chart.hasClass('rendered')) {
         chart.trigger('render');
       }
     }

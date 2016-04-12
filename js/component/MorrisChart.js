@@ -7,11 +7,10 @@
     $colors: null,
     src: {},
     initialize: function (options) {
-      if ((!this.$el.width() || !this.$el.height()) && !this.rendered) {
-        this.$el.on('render', null, this, this.renderHandler);
+      options = options || {};
+      if (!this.rendered && (!this.$el.width() || !this.$el.height())) {
+        this.$el.one('render', _.bind(this.renderHandler, this));
         return;
-      } else {
-        this.rendered = true;
       }
 
       if (options.data) {
@@ -57,6 +56,8 @@
     render: function () {
       this.$el.empty();
       this.chart = new Morris[this.className](this.options);
+      this.$el.addClass('rendered');
+      this.rendered = true;
     },
     createOptions: function (options, chartData) {
       options = _.extend({
@@ -114,11 +115,8 @@
       this.options.data = json;
       this.render();
     },
-    renderHandler: function (event) {
-      var self = event.data;
-      self.initialize({el: this.el});
-      self.$el.off('render', this.renderHandler);
-      self.rendered = true;
+    renderHandler: function () {
+      this.initialize();
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
