@@ -10,9 +10,13 @@
 </div>
 <h4>当前选择</h4>
 <div class="form-group select-button">
-  {{#each (lookup @root list)}}
-    <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{id}}" name="{{prop}}" value="{{id}}" checked><label for="curr-{{id}}">{{> item}}</label>
-  {{/each}}
+  {{#if (lookup @root list)}}
+    {{#each (lookup @root list)}}
+      <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{id}}" name="{{prop}}" value="{{id}}" checked><label for="curr-{{id}}">{{> item}}</label>
+    {{/each}}
+  {{else}}
+    <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{value}}" name="{{prop}}" value="{{value}}" checked><label for="curr-{{value}}">{{> item}}</label>
+  {{/if}}
 </div>
 <hr>
 <h4>搜索结果</h4>
