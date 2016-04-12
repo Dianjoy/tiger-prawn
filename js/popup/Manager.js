@@ -15,8 +15,14 @@
       'click .popup': 'popupButton_clickHandler'
     },
     initialize: function () {
-      this.template = Handlebars.compile(this.$('#popup').remove().html());
-      this.editor = Handlebars.compile(this.$('#editor-popup').remove().html());
+      var popup = this.$('#popup').remove().html()
+        , editor = this.$('#editor-popup').remove().html();
+      if (popup) {
+        this.template = Handlebars.compile(popup);
+      }
+      if (editor) {
+        this.editor = Handlebars.compile(editor);
+      }
     },
     postConstruct: function () {
       if (popup) {

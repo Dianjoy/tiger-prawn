@@ -48,6 +48,16 @@
       }
     },
     start: function () {
+      if (!this.panel) {
+        this.panel = new ns.Panel({
+          el: '.system-notice',
+          collection: collection
+        });
+        this.growl = new ns.Growl({
+          el: '#growl',
+          collection: collection
+        });
+      }
       if (tp.NOTICE_KEY) {
         this.collection.fetch();
       }
@@ -67,15 +77,6 @@
   });
 
   var collection = new tp.model.Notice();
-  new ns.Panel({
-    el: '.system-notice',
-    collection: collection
-  });
-  new ns.Growl({
-    el: '#growl',
-    collection: collection
-  });
-
   ns.Manager = new Manager({
     collection: collection
   });
