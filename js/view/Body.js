@@ -14,7 +14,8 @@
     events: {
       'click .add-button': 'addButton_clickHandler',
       'click .print-button': 'printButton_clickHandler',
-      'click .request-button': 'requestButton_clickHandler'
+      'click .request-button': 'requestButton_clickHandler',
+      'shown.bs.tab': 'shownHandler'
     },
     initialize: function () {
       this.framework = this.$('.framework');
@@ -158,6 +159,15 @@
       }
       this.loading.remove();
       this.trigger('load:complete');
+    },
+    shownHandler: function (event) {
+      var id = event.target.innerText
+        , tab = this.$('#' + id)
+        , chart = tab.find('.morris-chart')
+        , chartData = chart.find('script');
+      if (chartData.length) {
+        chart.trigger('render');
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.view')));

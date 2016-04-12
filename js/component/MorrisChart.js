@@ -6,13 +6,14 @@
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
     src: {},
-    events: {
-      'redraw': 'redrawHandler'
-    },
     initialize: function (options) {
-      if (!this.$el.width() || !this.$el.height()) {
+      if ((!this.$el.width() || !this.$el.height()) && !this.rendered) {
+        this.el.on('render', this.renderHandler, this);
         return;
+      } else {
+        this.rendered = true;
       }
+
       if (options.data) {
         this.createOptions(options);
         this.render();
@@ -113,8 +114,10 @@
       this.options.data = json;
       this.render();
     },
-    redrawHandler: function () {
+    renderHandler: function () {
       this.initialize({el: this.el});
+      this.el.off('render', this.renderHandler, this);
+      this.rendered = true;
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
