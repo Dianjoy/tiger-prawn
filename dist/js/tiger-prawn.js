@@ -3633,7 +3633,7 @@
         , end = ''
         , href = this.$el.attr('href')
         , hasDate = $('.date-range').is(':visible');
-      if (!/^https?:\/\//.test(href)) {
+      if (!/^(https?:)?\/\//.test(href)) {
         href = href.indexOf('{{API}}') === -1 ? tp.API + href : href.replace('{{API}}', tp.API);
         this.el.href = href;
       }
