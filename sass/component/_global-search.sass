@@ -1,0 +1,47 @@
+.global-search
+  margin-top: $gap
+  padding: 0
+  position: relative
+
+  input
+    background-color: $input-bg-color
+    border: none
+    padding: 4px 8px
+    width: 200px
+    height: 30px
+
+    &:focus
+      background-color: $white
+
+    &:valid + .clear-button
+      display: block
+
+  .fa-spinner,
+  .clear-button
+    color: $black
+    display: none
+    position: absolute
+
+  .fa-spinner
+    top: $gap - 2px
+    right: $gap
+
+  .clear-button
+    background: transparent
+    border: none
+    width: $gap-l
+    height: $gap-l
+    line-height: $gap-l
+    margin: 0
+    padding: 0
+    top: $gap-s
+    right: $gap-s
+
+  .result
+    min-width: 200px
+    max-height: 400px
+    overflow: scroll
+
+    > li > a
+      padding: 3px $gap
+
