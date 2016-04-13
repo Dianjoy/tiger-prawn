@@ -7,6 +7,12 @@
     $colors: null,
     src: {},
     initialize: function (options) {
+      options = options || {};
+      if (!this.rendered && (!this.$el.width() || !this.$el.height())) {
+        this.$el.one('render', _.bind(this.renderHandler, this));
+        return;
+      }
+
       if (options.data) {
         this.createOptions(options);
         this.render();
@@ -50,6 +56,8 @@
     render: function () {
       this.$el.empty();
       this.chart = new Morris[this.className](this.options);
+      this.$el.addClass('rendered');
+      this.rendered = true;
     },
     createOptions: function (options, chartData) {
       options = _.extend({
@@ -106,6 +114,9 @@
       }
       this.options.data = json;
       this.render();
+    },
+    renderHandler: function () {
+      this.initialize();
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
