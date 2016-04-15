@@ -14,7 +14,7 @@
     {{#each (lookup @root list)}}
       <input type="{{#if ../multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{id}}" name="{{../prop}}" value="{{id}}" checked><label for="curr-{{id}}">{{> item}}</label>
     {{/each}}
-  {{else}}
+  {{else if value}}
     <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{value}}" name="{{prop}}" value="{{value}}" checked><label for="curr-{{value}}">{{> item}}</label>
   {{/if}}
 </div>
