@@ -459,15 +459,13 @@
 }(Nervenet.createNameSpace('tp.service')));
 
 ;
-(function (ns) {var popup
-    , editor;
-
+(function (ns) {
+  /**
+   * @class
+   */
   var Klass = Backbone.View.extend({
     $context: null,
-    events: {
-      'click .popup': 'popupButton_clickHandler'
-    },
-    initialize: function () {
+    postConstruct: function () {
       var popup = this.$('#popup').remove().html()
         , editor = this.$('#editor-popup').remove().html();
       if (popup) {
@@ -476,11 +474,7 @@
       if (editor) {
         this.editor = Handlebars.compile(editor);
       }
-    },
-    postConstruct: function () {
-      if (popup) {
-        this.$context.inject(popup);
-      }
+      this.$el.on('click', '.popup', _.bind(this.popupButton_clickHandler, this))
     },
     popup: function (options) {
       var popup = $(this.template(options))
@@ -1462,6 +1456,9 @@
       .closest('.form-group').addClass('error');
   }
 
+  /**
+   * @class
+   */
   var smart = ns.SmartForm = tp.view.DataSyncView.extend({
     $context: null,
     $router: null,
@@ -1725,6 +1722,13 @@
             attr[key] = value;
           }
         }, this);
+        // 空白的复选框有时候也有保存的必要
+        var empty = {};
+        this.$(':checkbox[name]:not(:checked)').each(function () {
+          empty[this.name] = '';
+        });
+        attr = _.defaults(attr, empty);
+        // 开关类的值需要特殊处理
         this.$('.switch').each(function () {
           var isNumber = !isNaN(parseInt(this.value))
             , value = isNumber ? Number(this.value) : this.value
@@ -4120,7 +4124,7 @@
    */
   ns.Typeahead = Backbone.View.extend({
     timeout: null,
-    delay: 500,
+    delay: 1000,
     events: {
       'blur .keyword': 'keyword_blurHandler',
       'focus .keyword': 'keyword_focusHandler',

@@ -5,16 +5,12 @@
  */
 'use strict';
 (function (ns) {
-  'use strict';
-  var popup
-    , editor;
-
+  /**
+   * @class
+   */
   var Klass = Backbone.View.extend({
     $context: null,
-    events: {
-      'click .popup': 'popupButton_clickHandler'
-    },
-    initialize: function () {
+    postConstruct: function () {
       var popup = this.$('#popup').remove().html()
         , editor = this.$('#editor-popup').remove().html();
       if (popup) {
@@ -23,11 +19,7 @@
       if (editor) {
         this.editor = Handlebars.compile(editor);
       }
-    },
-    postConstruct: function () {
-      if (popup) {
-        this.$context.inject(popup);
-      }
+      this.$el.on('click', '.popup', _.bind(this.popupButton_clickHandler, this))
     },
     popup: function (options) {
       var popup = $(this.template(options))

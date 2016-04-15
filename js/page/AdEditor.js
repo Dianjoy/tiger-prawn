@@ -9,7 +9,10 @@
     , option_template = '{{#each list}}<option value="{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
     , aso_desc = 'App Store搜索关键字“XX”，找到“XXX”（约第X位）\n下载并注册帐号后，二次登录体验可得奖励。'
     , omit = ['ad_url', 'ad_lib', 'ad_size', 'id', 'pack_name'];
-  
+
+  /**
+   * @class
+   */
   ns.AdEditor = tp.view.Loader.extend({
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',

@@ -26,6 +26,9 @@
       .closest('.form-group').addClass('error');
   }
 
+  /**
+   * @class
+   */
   var smart = ns.SmartForm = tp.view.DataSyncView.extend({
     $context: null,
     $router: null,
@@ -289,6 +292,13 @@
             attr[key] = value;
           }
         }, this);
+        // 空白的复选框有时候也有保存的必要
+        var empty = {};
+        this.$(':checkbox[name]:not(:checked)').each(function () {
+          empty[this.name] = '';
+        });
+        attr = _.defaults(attr, empty);
+        // 开关类的值需要特殊处理
         this.$('.switch').each(function () {
           var isNumber = !isNaN(parseInt(this.value))
             , value = isNumber ? Number(this.value) : this.value

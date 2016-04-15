@@ -8,7 +8,7 @@
    */
   ns.Typeahead = Backbone.View.extend({
     timeout: null,
-    delay: 500,
+    delay: 1000,
     events: {
       'blur .keyword': 'keyword_blurHandler',
       'focus .keyword': 'keyword_focusHandler',
