@@ -2,7 +2,10 @@
  * Created by 路佳 on 2015/12/11.
  */
 'use strict';
-(function (ns) {
+(function (ns, $) {
+  /**
+   * @class
+   */
   ns.Search = Backbone.View.extend({
     timeout: null,
     delay: 500,
@@ -51,10 +54,16 @@
       this.xhr = null;
     },
     fetch: function () {
+      var query = this.$el.serialize();
+      if (this.query === query) {
+        return;
+      }
+
+      this.query = query;
       if (this.xhr) {
         this.xhr.abort();
       }
-      this.xhr = tp.service.Manager.get(tp.API + 'search/', this.$el.serialize(), {
+      this.xhr = tp.service.Manager.get(tp.API + 'search/', query, {
         success: this.render,
         error: this.errorHandler,
         context: this
@@ -150,4 +159,4 @@
       event.stopPropagation();
     }
   });
-}(Nervenet.createNameSpace('tp.view')));
+}(Nervenet.createNameSpace('tp.view'), jQuery));

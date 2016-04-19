@@ -970,9 +970,7 @@
         this.options = response.options;
       }
       for (var key in _.omit(response, 'total', 'list', 'options', 'code', 'msg')) {
-        if (response.hasOwnProperty(key) && (_.isArray(response[key]) || _.isObject(response[key]))) {
-          this.trigger('data:' + key, response[key], this);
-        }
+        this.trigger('data:' + key, response[key], this);
       }
       return _.isArray(response) ? response : response.list;
     },
@@ -3434,7 +3432,10 @@
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
-(function (ns) {
+(function (ns, $) {
+  /**
+   * @class
+   */
   ns.Search = Backbone.View.extend({
     timeout: null,
     delay: 500,
@@ -3483,10 +3484,16 @@
       this.xhr = null;
     },
     fetch: function () {
+      var query = this.$el.serialize();
+      if (this.query === query) {
+        return;
+      }
+
+      this.query = query;
       if (this.xhr) {
         this.xhr.abort();
       }
-      this.xhr = tp.service.Manager.get(tp.API + 'search/', this.$el.serialize(), {
+      this.xhr = tp.service.Manager.get(tp.API + 'search/', query, {
         success: this.render,
         error: this.errorHandler,
         context: this
@@ -3582,7 +3589,7 @@
       event.stopPropagation();
     }
   });
-}(Nervenet.createNameSpace('tp.view')));;
+}(Nervenet.createNameSpace('tp.view'), jQuery));;
 (function (ns) {
   ns.AddOnList = ns.BaseList.extend({
     autoFetch: false,
