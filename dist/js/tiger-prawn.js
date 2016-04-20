@@ -3597,7 +3597,8 @@
       options = _.extend({
         container: 'tbody'
       }, options, this.$el.data());
-      this.collection = new Backbone.Collection();
+      this.options = options;
+      this.collection = tp.model.ListCollection.getInstance();
       ns.BaseList.prototype.initialize.call(this, options);
 
       var id = this.$el.data('collection-id')
@@ -3612,6 +3613,10 @@
         this.collection.model = Backbone.Model.extend({
           defaults: collection.options
         });
+      }
+      if (this.options.amount) {
+        var data = this.collection.getAmount(this.options.omits);
+        list.push(data);
       }
       this.collection.reset(list);
     }
