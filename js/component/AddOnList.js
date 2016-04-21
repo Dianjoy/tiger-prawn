@@ -26,11 +26,11 @@
           defaults: collection.options
         });
       }
+      this.collection.reset(list);
       if (this.options.amount) {
         var data = this.collection.getAmount(this.options.omits);
-        list.push(data);
+        this.collection_addHandler(data, null, {immediately: true});
       }
-      this.collection.reset(list);
     }
   });
 }(Nervenet.createNameSpace('tp.component')));
