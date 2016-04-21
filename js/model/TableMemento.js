@@ -10,8 +10,8 @@
     RESERVED: ['keyword', 'order', 'seq', 'start', 'end', 'dateFormat'],
     tags: null,
     waiting: false,
-    initialize: function () {
-      this.key = tp.PROJECT + location.hash;
+    initialize: function (attrs, options) {
+      this.key = tp.PROJECT + location.hash + (options.tableId ? ('-' + options.tableId) : '');
       var storage = localStorage.getItem(this.key);
       if (storage) {
         storage = _.defaults(this.toJSON(), JSON.parse(storage)); // 需要以当前的参数为主,存储的次之
