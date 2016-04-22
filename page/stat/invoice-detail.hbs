@@ -114,13 +114,7 @@
         </tr>
         <tr>
           <th>规格型号</th>
-          <td colspan="11">
-            {{#if is_assistant}}
-              {{#each chargers}}{{#equal ../charger key}}{{size}}{{/equal}}{{/each}}
-            {{else}}
-              {{size}}
-            {{/if}}
-          </td>
+          <td colspan="11">{{size}}</td>
         </tr>
         <tr>
           <th>开票金额</th>
@@ -163,13 +157,9 @@
           <td colspan="11" id="accept-account">110909024210401</td>
         </tr>
         <tr>
-          <th>所属部门</th>
-          <td colspan="11" id="department">
-            {{#if is_assistant}}
-              {{#each chargers}}{{#equal ../charger key}}{{department}}{{/equal}}{{/each}}
-            {{else}}
-              {{department}}
-            {{/if}}
+          <th>业务线分类</th>
+          <td colspan="11">
+            <a href="#sub_status" class="edit" data-type="select" data-options="sub_statuses">{{pick sub_status sub_statuses}}</a>
           </td>
         </tr>
         <tr>

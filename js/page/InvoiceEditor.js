@@ -5,7 +5,7 @@
     events: _.extend({
       'click .export-button': 'exportButton_clickHandler',
       'blur [name=header]': 'header_blurHandler',
-      'change .charger': 'charger_changeHandler',
+      'change .sub-status': 'subStatus_changeHandler',
       'success form': 'form_successHandler'
     }, tp.view.Loader.prototype.events),
     $context: null,
@@ -88,14 +88,10 @@
     header_blurHandler: function (event) {
       this.$('.header').text(event.target.value);
     },
-    charger_changeHandler: function (event) {
-      var target = $(event.target)
-        , index = parseInt(target.find('option:selected').data('index'))
-        , charger = this.model.options.chargers[index]
-        , size = charger.size
-        , department = charger.department;
+    subStatus_changeHandler: function (event) {
+      var value = event.target.value % 2
+        , size = value === 0 ? 'Android' : 'iOS';
       this.$('.size').text(size);
-      this.$('.department').text(department);
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

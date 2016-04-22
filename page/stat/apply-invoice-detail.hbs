@@ -119,7 +119,13 @@
       <div class="form-group">
         <label class="control-label col-sm-4">规格型号：</label>
         <div class="col-sm-8">
-          <p class="form-control-static size">{{size}}</p>
+          <p class="form-control-static size">
+            {{#in sub_status 2 3}}
+              {{size}}
+            {{else}}
+              Android
+            {{/in}}
+          </p>
         </div>
       </div>
       <div class="form-group">
@@ -176,9 +182,13 @@
         <div class="col-sm-8"><p class="form-control-static">110909024210401</p></div>
       </div>
       <div class="form-group">
-        <label class="control-label col-sm-4">所属部门：</label>
+        <label class="control-label col-sm-4">业务线分类：</label>
         <div class="col-sm-8">
-          <p class="form-control-static department">{{department}}</p>
+          <select name="sub_status" class="form-control sub-status">
+            {{#each sub_statuses}}
+              <option value="{{@index}}" {{#equal ../sub_status @index}}selected{{/equal}}>{{.}}</option>
+            {{/each}}
+          </select>
         </div>
       </div>
       <div class="form-group">
