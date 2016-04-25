@@ -1811,11 +1811,14 @@
     });
 }(Nervenet.createNameSpace('tp.component'), jQuery));;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.BaseList = Backbone.View.extend({
     autoFetch: true,
     fragment: '',
     initialize: function (options) {
-      this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
+      this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ' '));
       this.container = options.container ? this.$(options.container) : this.$el;
       this.collection = this.getCollection(options);
       this.collection.on('add', this.collection_addHandler, this);
@@ -2971,7 +2974,7 @@
       if (this.model instanceof Backbone.Model && !options.hasData) {
         this.model.once('sync', this.model_syncHandler, this);
         this.model.on('error', this.model_errorHandler, this);
-        this.model.fetch(options);
+        this.model.fetch(_.omit(options, 'loader', 'model'));
       } else {
         this.isModelReady = true;
       }

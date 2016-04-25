@@ -3,6 +3,9 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   */
   ns.DIYUser = ns.Me.extend({
     isCP: function () {
       return this.get('role') === 'cp';

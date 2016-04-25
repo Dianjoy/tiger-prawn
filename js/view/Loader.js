@@ -18,7 +18,7 @@
       if (this.model instanceof Backbone.Model && !options.hasData) {
         this.model.once('sync', this.model_syncHandler, this);
         this.model.on('error', this.model_errorHandler, this);
-        this.model.fetch(options);
+        this.model.fetch(_.omit(options, 'loader', 'model'));
       } else {
         this.isModelReady = true;
       }

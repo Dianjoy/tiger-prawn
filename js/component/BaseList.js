@@ -3,11 +3,14 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   */
   ns.BaseList = Backbone.View.extend({
     autoFetch: true,
     fragment: '',
     initialize: function (options) {
-      this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ''));
+      this.template = Handlebars.compile(this.$('script').remove().html().replace(/\s{2,}|\n/g, ' '));
       this.container = options.container ? this.$(options.container) : this.$el;
       this.collection = this.getCollection(options);
       this.collection.on('add', this.collection_addHandler, this);
