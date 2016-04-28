@@ -89,7 +89,7 @@
         , response = xhr || {};
       if ('status' in xhr) {
         status = xhr.status;
-        response = xhr.responseJSON;
+        response = xhr.responseJSON || {};
       }
       if (status >= 500) {
         response.msg = '程序出错，请联系管理员。';
