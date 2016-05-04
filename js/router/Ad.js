@@ -10,7 +10,7 @@
     $me: null,
     routes: {
       "ad(/)": "list",
-      "ad/create": "create",
+      "ad/create(/)": "create",
       "agreement/": "listAgreements",
       "ad/:id": "edit",
       "apply/(:id)": "listApplies",
