@@ -41,10 +41,7 @@
   Handlebars.$context = context;
 
   // routers
-  context.createInstance(tp.router.Base);
-  context.createInstance(tp.router.AD);
-  context.createInstance(tp.router.Stat);
-  context.createInstance(tp.router.Me);
+  _.each(tp.router, context.createInstance);
 
   // 全局处理取得数据后的操作
   Backbone.on('backbone-sync', function (response) {

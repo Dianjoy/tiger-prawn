@@ -3,6 +3,9 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   */
   ns.Model = Backbone.Model.extend({
     parse: function (response) {
       var key = this.key || (this.collection ? this.collection.key : 'data');
@@ -20,7 +23,7 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      return _.extend(json, this.options, this.collection ? this.collection.options : null);
+      return _.extend(this.collection ? this.collection.options : null, this.options, json);
     }
   })
 }(Nervenet.createNameSpace('tp.model')));
