@@ -797,7 +797,7 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      return _.extend(this.collection ? this.collection.options : null, this.options, json);
+      return _.extend(this.collection ? this.collection.options : {}, this.options, json);
     }
   })
 }(Nervenet.createNameSpace('tp.model')));;
