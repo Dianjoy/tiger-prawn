@@ -38,7 +38,7 @@
       }
       if (params.collectionType) {
         var klass = Nervenet.parseNamespace(params.collectionType);
-        return klass ? new klass(null, params) : new ns.ProxyCollection(params);
+        collection = klass ? new klass(null, params) : new ns.ProxyCollection(params);
       } else {
         collection = new ns.ListCollection(null, params);
       }

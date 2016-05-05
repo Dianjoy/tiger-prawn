@@ -3,6 +3,9 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   */
   ns.AddOnList = ns.BaseList.extend({
     autoFetch: false,
     initialize: function (options) {

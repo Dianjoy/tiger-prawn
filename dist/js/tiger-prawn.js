@@ -797,7 +797,7 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      return _.extend(this.collection ? this.collection.options : {}, this.options, json);
+      return _.extend(this.collection && this.collection.options ? this.collection.options : {}, this.options, json);
     }
   })
 }(Nervenet.createNameSpace('tp.model')));;
@@ -1025,6 +1025,7 @@
         real.on(event, handler.method, handler.context);
       }, this);
       real.on('sync', this.onSync, this);
+      this.events = null;
     },
     fetch: function (options) {
       if (this.real) {
@@ -1052,9 +1053,9 @@
     }
   };
 
-  _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON'], function (method) {
+  _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON', 'getAmount'], function (method) {
     proxy.prototype[method] = function () {
-      return Collection.prototype[method].apply(this.real, arguments);
+      return ns.ListCollection.prototype[method].apply(this.real, arguments);
     };
   });
 }(Nervenet.createNameSpace('tp.model')));;
@@ -1094,7 +1095,7 @@
       }
       if (params.collectionType) {
         var klass = Nervenet.parseNamespace(params.collectionType);
-        return klass ? new klass(null, params) : new ns.ProxyCollection(params);
+        collection = klass ? new klass(null, params) : new ns.ProxyCollection(params);
       } else {
         collection = new ns.ListCollection(null, params);
       }
@@ -2477,6 +2478,9 @@
       return 'js/' + arr.join('/') + '.js';
     },
     loadMediatorClass: function (components, className, dom, callback) {
+      if (!className) {
+        return;
+      }
       var self = this
         , script = document.createElement("script");
       script.async = true;
@@ -3597,6 +3601,9 @@
   });
 }(Nervenet.createNameSpace('tp.view'), jQuery));;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.AddOnList = ns.BaseList.extend({
     autoFetch: false,
     initialize: function (options) {

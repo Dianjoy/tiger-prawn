@@ -26,6 +26,7 @@
         real.on(event, handler.method, handler.context);
       }, this);
       real.on('sync', this.onSync, this);
+      this.events = null;
     },
     fetch: function (options) {
       if (this.real) {
@@ -53,9 +54,9 @@
     }
   };
 
-  _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON'], function (method) {
+  _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON', 'getAmount'], function (method) {
     proxy.prototype[method] = function () {
-      return Collection.prototype[method].apply(this.real, arguments);
+      return ns.ListCollection.prototype[method].apply(this.real, arguments);
     };
   });
 }(Nervenet.createNameSpace('tp.model')));

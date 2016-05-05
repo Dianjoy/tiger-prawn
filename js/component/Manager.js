@@ -120,6 +120,9 @@
       return 'js/' + arr.join('/') + '.js';
     },
     loadMediatorClass: function (components, className, dom, callback) {
+      if (!className) {
+        return;
+      }
       var self = this
         , script = document.createElement("script");
       script.async = true;
