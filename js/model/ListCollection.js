@@ -4,7 +4,7 @@
 'use strict';
 (function (ns, $) {
   /**
-   * class
+   * @class
    */
   ns.ListCollection = Backbone.Collection.extend({
     cache: null,
