@@ -39,7 +39,7 @@
         this.model.tags = options.tags.split(',');
       }
       if (this.model.has('start')) {
-        if (!_.isString(this.collection.model)) {
+        if (this.collection.model && !_.isString(this.collection.model)) {
           _.extend(this.collection.model.prototype.defaults, this.model.pick('start', 'end'));
         }
       }
@@ -250,7 +250,7 @@
       options = _.omit(options, 'unset') || {};
       this.refresh(options);
 
-      if ('start' in model.changed || 'end' in model.changed) {
+      if (this.collection.model && ('start' in model.changed || 'end' in model.changed)) {
         _.extend(this.collection.model.prototype.defaults, _.pick(model.changed, 'start', 'end'));
       }
       this.$el.addClass('loading');
