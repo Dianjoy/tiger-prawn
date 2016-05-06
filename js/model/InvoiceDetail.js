@@ -75,6 +75,7 @@
       json.start = start[0] + '年' + start[1] + '月';
       json.agreement_info = {
         company: '客户名称: ' + agreementInfo.company,
+        business_license_record: '是否备案营业执照: ' + this.options.business_license_records[agreementInfo.business_license_record],
         company_short: '客户简称: ' + agreementInfo.company_short,
         cycle: '付款周期: ' + agreementInfo.cycle,
         ad_name: '推广产品: ' + agreementInfo.ad_name,
