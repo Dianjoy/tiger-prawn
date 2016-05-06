@@ -29,7 +29,22 @@
           defaults: collection.options
         });
       }
-      this.collection.reset(list);
+      if (this.options.sum) {
+        var sum = [];
+        _.each(list, function (element) {
+          if(element.data) {
+            this.collection.reset(element.data, { silent: true });
+            var total = _.reduce(element.filters, function (memo, filter) {
+              return memo + this.collection.getAmount()[filter];
+            }, 0, this);
+            sum.push(_.extend(element, { total: total }));
+          }
+        }, this);
+        this.collection.reset(sum);
+      } else {
+        this.collection.reset(list);
+      }
+
       if (this.options.amount) {
         var data = this.collection.getAmount(this.options.omits);
         this.collection_addHandler(data, null, {immediately: true});
