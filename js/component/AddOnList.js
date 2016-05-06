@@ -30,7 +30,6 @@
         });
       }
       this.collection.reset(list);
-      
       if (this.options.amount) {
         var data = this.collection.getAmount(this.options.omits);
         this.collection_addHandler(data, null, {immediately: true});
