@@ -60,6 +60,11 @@
     "link": "#/agreement/"
   },
   {
+    "title": "我的广告主",
+    "icon": "briefcase",
+    "link": "#/channel/"
+  },
+  {
     "title": "广告投放情报",
     "link": "#/info/",
     "icon": "search"

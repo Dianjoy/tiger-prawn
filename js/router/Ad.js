@@ -14,6 +14,8 @@
       "agreement/": "listAgreements",
       "ad/:id": "edit",
       "apply/(:id)": "listApplies",
+      "channel(/)": "listChannel",
+      "channel/:id": "listChannelPrepaid",
       "info/(:query)": "showHistoryInfo",
       "competitor_ad/": "listCompetitorAds",
       "payment/": "listAdPayments"
@@ -52,6 +54,25 @@
       this.$body
         .load('page/ad/apply.html')
         .setFramework('apply', '我的申请');
+    },
+    listChannel: function () {
+      this.$body
+        .load('page/channel/list.hbs', {
+          API: tp.API
+        })
+        .setFramework('channel', '我的广告主');
+    },
+    listChannelPrepaid: function (id) {
+      var Model = tp.model.Model.extend({
+          urlRoot: tp.API + 'channel/'
+        })
+        , model = new Model({
+          API: tp.API,
+          id: id
+        });
+      this.$body
+        .load('page/channel/prepaid.hbs', model)
+        .setFramework('channel prepaid', '广告主预收款明细');
     },
     listCompetitorAds: function () {
       this.$body
