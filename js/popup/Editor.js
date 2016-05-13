@@ -28,7 +28,7 @@
       var info = $('.editor-info');
       if (info.length) {
         info = Handlebars.compile(info.html());
-        this.$('.info').html(info(this.model.toJSON()));
+        this.$('.info').html(info(_.defaults({}, this.model.toJSON(), options)));
       }
       this.$el.modal(options);
     },
@@ -104,6 +104,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.SearchEditor = Editor.extend({
     fragment: '',
     item: '{{label}}',
@@ -165,6 +168,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.TagsEditor = Editor.extend({
     events: _.extend(Editor.prototype.events, {
       'click .add-button': 'addButton_clickHandler'
@@ -211,6 +217,7 @@
   });
 
   /**
+   * @class
    * @property {object} options
    * @property {boolean} options.addNew
    */
@@ -243,6 +250,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.NumberEditor = Editor.extend({
     initialize: function (options) {
       options.range = options.type === 'range';
@@ -251,6 +261,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.FileEditor = Editor.extend({
     events: _.extend({
       'click [data-dismiss]': 'clickHandler'
@@ -278,12 +291,15 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.SwitchEditor = Editor.extend({
     initialize: function (options) {
       var defaults = {
         open: 1,
         close: 0,
-        readonly: true
+        readonly: false
       };
       options = _.extend(defaults, options);
       options.value = this.model.get(options.prop) != options.open;
