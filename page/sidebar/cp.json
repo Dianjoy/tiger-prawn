@@ -1,25 +1,7 @@
-
 [
   {
-    "title": "广告投放计划",
-    "icon": "flag",
-    "sub-id": "sidebar-ad",
-    "sub": [
-      {
-        "title": "创建投放计划",
-        "icon": "plus",
-        "link": "#/ad/create"
-      },
-      {
-        "title": "我的投放计划",
-        "icon": "list",
-        "link": "#/ad/"
-      }
-    ]
-  },
-  {
-    "title": "投放结果统计",
+    "title": "点乐投放结果",
     "icon": "line-chart",
-    "link": "#/stat/"
+    "link": "#/stat-dj/"
   }
 ]

@@ -31,7 +31,11 @@
       <td>{{alias}}</td>
       <td>&yen;{{d100 prepaid}}</td>
       <td>
-        <a href="#has_export" data-type="status" class="edit label label-{{#if has_export}}success{{else}}default{{/if}}">{{#if has_export}}<i class="fa fa-check-square"></i> 已开启{{else}}未开启{{/if}}</a>
+        {{#if diy_id}}
+        <a href="#has_export" data-type="status" class="edit label label-{{#if has_export}}success{{else}}danger{{/if}}"><i class="fa fa-{{#if has_export}}check-square{{else}}ban{{/if}}"></i> {{#if has_export}}已开启{{else}}未开启{{/if}}</a>
+        {{else}}
+        <span class="label label-default"><i class="fa fa-times"></i> 未开启自助后台</span>
+        {{/if}}
       </td>
       <td>
         <a href="#/channel/{{id}}" class="btn btn-info"><i class="fa fa-list"></i> 预收款明细</a>

@@ -1,0 +1,31 @@
+<div class="page-header">
+  <h1>{{ad_name}}</h1>
+</div>
+
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-id-attribute="date">
+  <thead>
+  <tr>
+    <th>日期</th>
+    <th>激活数</th>
+    <th>详细</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <tr id="{{date}}">
+      <td data-title="日期">{{date}}</td>
+      <td data-title="激活数">{{transfer}}</td>
+      <td><a href="#/stat/{{ad_id}}/{{date}}" class="btn btn-primary" title="分日统计"><i class="fa fa-clock-o"></i></a></td>
+    </tr>
+    {{{{/raw-helper}}}}
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="3">
+      <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
+    </td>
+  </tr>
+  </tfoot>
+</table>

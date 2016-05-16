@@ -9,8 +9,9 @@
     $context: null,
     routes: {
       'stat/(:ad_type)': 'showStat',
-      'stat/ad_type/:id/:start/:end': 'showADStat',
+      'stat/:id/:start/:end': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
+      'stat-dj/(:adType)': 'showDianjoyStat',
       'invoice/': 'showInvoice',
       'invoice/:id': 'invoiceDetail',
       'invoice/apply/:channel/:ids': 'applyInvoice',
@@ -19,12 +20,14 @@
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
     showADStat: function (id, start, end) {
-      var model = new tp.model.AD({
-        id: id,
-        start: start,
-        end: end
-      });
-      this.$body.load('page/stat/daily.hbs', model, {
+      var page = this.$me.isCP() ? '_cp' : ''
+        , model = new tp.model.AD({
+          API: tp.API,
+          id: id,
+          start: start,
+          end: end
+        }, { simple: true });
+      this.$body.load('page/stat/daily' + page + '.hbs', model, {
         className: 'stat stat-ad'
       });
       this.$body.setFramework('has-date-range', '单个广告按日期统计');
@@ -33,26 +36,38 @@
       if (this.$body.page && this.$body.page.$el.is('.stat.stat-date')) {
         this.$body.page.model.set('date', date);
       }
-      var model = new tp.model.AD({
-        id: id,
-        date: date
-      });
-      this.$body.load('page/stat/hourly.hbs', model, {
+      var page = this.$me.isCP() ? '_cp' : ''
+        , model = new tp.model.AD({
+          API: tp.API,
+          id: id,
+          date: date
+        });
+      this.$body.load('page/stat/hourly' + page + '.hbs', model, {
         refresh: true,
         className: 'stat stat-date'
       });
-      this.$body.setFramework('has-date-range', '单个广告一天内统计');
+      this.$body.setFramework('stat-ad-date', '单个广告一天内统计');
     },
     showStat: function (ad_type) {
-      var page = this.$me.isCP() ? '_cp.html' : '.hbs'
+      var page = this.$me.isCP() ? '_cp' : ''
         , range = moment.createRange(null, null, true)
         , obj = _.extend(range, {
           API: tp.API,
           ad_type: ad_type,
           is_android: ad_type === 'android'
         });
-      this.$body.load('page/stat/list' + page, this.$me.isCP() ? null : obj);
-      this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type + '-stat'), '投放结果统计');
+      this.$body.load('page/stat/list' + page + '.hbs', obj);
+      this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type + '-stat'), '我的投放效果');
+    },
+    showDianjoyStat: function (adType) {
+      var range = moment.createRange(null, null, true)
+        , obj = _.extend(range, {
+          API: tp.API,
+          ad_type: adType,
+          isDianjoy: true
+        });
+      this.$body.load('page/stat/list_cp.hbs', obj);
+      this.$body.setFramework('has-date-range stat-dj', '点乐投放效果');
     },
     showInvoice: function () {
       this.$body.load('page/stat/invoice.html');

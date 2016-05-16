@@ -33,45 +33,7 @@
   </div>
 </div>
 <div class="row mt2e">
-  <div class="col-md-4 col-sm-12">
-    <div class="portlet portlet-orange left-money pit">
-      <div class="portlet-leading">
-        <h4 class="portlet-title"><i class="fa fa-money"></i> 您的余额</h4>
-      </div>
-      <div class="portlet-body">
-        <p><strong>&yen; {{cash}}</strong> / &yen; {{saved}}</p>
-        <div class="progress">
-          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="width: {{percent}}%">
-            <span class="sr-only">剩余{{percent}}%</span>
-          </div>
-        </div>
-        <a href="#" class="btn btn-primary btn-block">
-          <i class="fa fa-bolt"></i> 立刻充值！
-        </a>
-      </div>
-    </div>
-    <div class="portlet portlet-green">
-      <div class="portlet-leading">
-        <h4 class="portlet-title"><i class="fa fa-history"></i> 上下线记录</h4>
-        <div class="btn-group btn-group-sm more">
-          <a class="btn" href="#/ad/" title="全部广告"><i class="fa fa-ellipsis-h"></i></a>
-        </div>
-      </div>
-      <div class="portlet-body">
-        <ul class="list-group icon-list-group">
-          {{#each record}}
-            <li class="list-group-item list-group-item-{{pick status 'info' 'success' 'default' 'default' 'danger'}}" id="{{id}}">
-              <i class="fa fa-{{pick status 'play' 'check' 'pause' 'pause' 'times'}}"></i>
-              <a href="#/ad/{{id}}">{{agreement}} {{channel_alias}} {{ad_name}} {{cid}}</a>
-              {{#if is_checked}}于 <time datetime="{{status_time}}">{{from-now status_time}}</time>{{/if}}
-              <strong>{{pick status '上线' '完成下线' '等待审核' '等待审核' '被拒绝'}}</strong>
-            </li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-8 col-sm-12">
+  <div class="col-sm-12">
     <div class="portlet portlet-blue">
       <div class="portlet-leading">
         <h4 class="portlet-title"><i class="fa fa-line-chart"></i> 流量统计</h4>
