@@ -64,7 +64,8 @@
         , obj = _.extend(range, {
           API: tp.API,
           ad_type: adType,
-          isDianjoy: true
+          isDianjoy: true,
+          has_export: this.$me.get('has_export')
         });
       this.$body.load('page/stat/list_cp.hbs', obj);
       this.$body.setFramework('has-date-range stat-dj', '点乐投放效果');

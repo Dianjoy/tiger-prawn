@@ -2,7 +2,7 @@
   <h1>{{ad_name}}</h1>
 </div>
 
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-id-attribute="date">
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-id-attribute="date" {{#if has_export}}data-defaults="has_export=1"{{/if}}>
   <thead>
   <tr>
     <th>日期</th>
@@ -16,7 +16,14 @@
     <tr id="{{date}}">
       <td data-title="日期">{{date}}</td>
       <td data-title="激活数">{{transfer}}</td>
-      <td><a href="#/stat/{{ad_id}}/{{date}}" class="btn btn-primary" title="分日统计"><i class="fa fa-clock-o"></i></a></td>
+      <td>
+        <div class="btn-group">
+          <a href="#/stat/{{ad_id}}/{{date}}" class="btn btn-primary" title="分日统计"><i class="fa fa-clock-o"></i></a>
+          {{#if has_export}}
+          <a href="page/ad/export-idfa_cp.hbs" class="btn btn-primary popup" title="导出数据" data-confirm="导出CSV" data-popup="tp.page.DateRange" data-start="{{date}}"><i class="fa fa-download"></i></a>
+          {{/if}}
+        </div>
+      </td>
     </tr>
     {{{{/raw-helper}}}}
   </script>

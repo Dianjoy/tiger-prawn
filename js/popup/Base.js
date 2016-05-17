@@ -3,7 +3,7 @@
  * Created by meathill on 14-9-17.
  */
 'use strict';
-(function (ns) {
+(function (ns, $) {
 
   var timeout
     , placeholder = '<p><i class="fa fa-spinner fa-spin fa-4x"></i></p>';
@@ -123,4 +123,4 @@
       this.$('.modal-footer .btn-primary').prop('disabled', false);
     }
   });
-}(Nervenet.createNameSpace('tp.popup')));
+}(Nervenet.createNameSpace('tp.popup'), jQuery));

@@ -4,7 +4,7 @@
     <input type="search" class="form-control" id="search-query" name="query" placeholder="关键词">
   </div>
 </div>
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-start="-31" data-end="0" data-search="#search-query" data-collection-id="stat" {{#if isDianjoy}}data-params="isDianjoy=1"{{/if}}>
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-search="#search-query" data-collection-id="stat" {{#if has_export}}data-defaults="has_export=1"{{/if}} {{#if isDianjoy}}data-params="isDianjoy=1"{{/if}}>
   <thead>
   <tr>
     <th class="filters">广告名</th>
@@ -22,7 +22,14 @@
       </td>
       <td data-title="创建时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td data-title="激活数">{{readable_n transfer}}</td>
-      <td><a href="#/stat/{{id}}/{{start}}/{{end}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a></td>
+      <td>
+        <div class="btn-group">
+          <a href="#/stat/{{id}}/{{start}}/{{end}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a>
+          {{#if has_export}}
+          <a href="page/ad/export-idfa_cp.hbs" class="btn btn-primary popup" title="导出数据" data-id="{{id}}" data-confirm="导出CSV" data-popup="tp.page.DateRange" data-collection-id="stat"><i class="fa fa-download"></i></a>
+          {{/if}}
+        </div>
+      </td>
     </tr>
     {{{{/raw-helper}}}}
   </script>
