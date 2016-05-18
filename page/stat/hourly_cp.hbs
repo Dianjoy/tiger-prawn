@@ -13,15 +13,26 @@
   <thead>
   <tr>
     <th>时间</th>
+    <th>关键词</th>
     <th>激活数</th>
+    <th>总计</th>
   </tr>
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
     <tr>
-      <td data-title="时间">{{hour}} 时</td>
-      <td data-title="激活数">{{transfer}}</td>
+      <td data-title="时间" rowspan="{{count}}">{{hour}} 时</td>
+      {{#each keywords}}
+      {{#unless @first}}<tr>{{/unless}}
+      <td data-title="关键词">{{#if search_key}}{{search_key}}{{else}}<span class="text-muted">（无）</span>{{/if}}</td>
+      <td data-title="激活数">{{readable_n num}}</td>
+      {{#if @first}}
+      <td data-title="总计" rowspan="{{../count}}">{{readable_n ../total}}</td>
+      {{else}}
+      </tr>
+      {{/if}}
+      {{/each}}
     </tr>
     {{{{/raw-helper}}}}
   </script>

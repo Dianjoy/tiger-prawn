@@ -2,35 +2,46 @@
   <h1>{{ad_name}}</h1>
 </div>
 
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-id-attribute="date" {{#if has_export}}data-defaults="has_export=1"{{/if}}>
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-id-attribute="date" data-defaults="{{#if has_export}}has_export=1&{{/if}}ad_id={{id}}">
   <thead>
   <tr>
     <th>日期</th>
+    <th>关键词</th>
     <th>激活数</th>
-    <th>详细</th>
+    <th>总计</th>
+    <th></th>
   </tr>
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
     <tr id="{{date}}">
-      <td data-title="日期">{{date}}</td>
-      <td data-title="激活数">{{transfer}}</td>
-      <td>
+      <td data-title="日期" rowspan="{{count}}">{{date}}</td>
+      {{#each keywords}}
+      {{#unless @first}}<tr>{{/unless}}
+      <td data-title="关键词">{{#if search_key}}{{search_key}}{{else}}<span class="text-muted">（无）</span>{{/if}}</td>
+      <td data-title="激活数">{{readable_n num}}</td>
+      {{#if @first}}
+      <td data-title="总计" rowspan="{{../count}}">{{readable_n ../total}}</td>
+      <td rowspan="{{../count}}">
         <div class="btn-group">
-          <a href="#/stat/{{ad_id}}/{{date}}" class="btn btn-primary" title="分日统计"><i class="fa fa-clock-o"></i></a>
+          <a href="#/stat/{{../ad_id}}/{{../date}}" class="btn btn-primary" title="分日统计"><i class="fa fa-clock-o"></i></a>
           {{#if has_export}}
           <a href="page/ad/export-idfa_cp.hbs" class="btn btn-primary popup" title="导出数据" data-confirm="导出CSV" data-popup="tp.page.DateRange" data-start="{{date}}"><i class="fa fa-download"></i></a>
           {{/if}}
         </div>
       </td>
+      {{else}}
+      </tr>
+      {{/if}}
+      {{/each}}
     </tr>
     {{{{/raw-helper}}}}
   </script>
   </tbody>
   <tfoot class="waiting">
   <tr>
-    <td colspan="4">
+    <td colspan="5">
       <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
     </td>
   </tr>
