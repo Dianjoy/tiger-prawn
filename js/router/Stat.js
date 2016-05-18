@@ -11,7 +11,7 @@
       'stat/(:ad_type)': 'showStat',
       'stat/:id/:start/:end': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
-      'stat-dj/(:adType)': 'showDianjoyStat',
+      'stat-dj/(:start/:end)': 'showDianjoyStat',      
       'invoice/': 'showInvoice',
       'invoice/:id': 'invoiceDetail',
       'invoice/apply/:channel/:ids': 'applyInvoice',
@@ -59,11 +59,10 @@
       this.$body.load('page/stat/list' + page + '.hbs', obj);
       this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type + '-stat'), '我的投放效果');
     },
-    showDianjoyStat: function (adType) {
-      var range = moment.createRange(null, null, true)
+    showDianjoyStat: function (start, end) {
+      var range = moment.createRange(start, end, true)
         , obj = _.extend(range, {
           API: tp.API,
-          ad_type: adType,
           isDianjoy: true,
           has_export: this.$me.get('has_export')
         });

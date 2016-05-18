@@ -1,59 +1,42 @@
 <div class="row dashboard-stats">
-  <div class="col-md-3 col-sm-6 dashboard-stat stat-primary">
-    <i class="fa fa-cloud fa-3x circle-title"></i>
-    <div class="dashboard-stat-content">
-      <h3 class="title">在线广告数</h3>
-      <p>{{ad}}</p>
-    </div>
-    <a href="#/ad/" class="more">详情 <i class="fa fa-play-circle"></i></a>
-  </div>
-  <div class="col-md-3 col-sm-6 dashboard-stat stat-secondary">
+  <div class="col-sm-6 dashboard-stat stat-secondary">
     <i class="fa fa-check fa-3x circle-title"></i>
     <div class="dashboard-stat-content">
-      <h3 class="title">一周激活数</h3>
-      <p>{{total_transfer}}</p>
+      <h3 class="title">昨日激活</h3>
+      <p>{{yesterday_transfer}}</p>
     </div>
-    <a href="#/stat/" class="more">详情 <i class="fa fa-play-circle"></i></a>
+    <a href="#/stat-dj/{{yesterday}}/{{yesterday}}" class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
-  <div class="col-md-3 col-sm-6 dashboard-stat stat-tertiary">
-    <i class="fa fa-money fa-3x circle-title"></i>
+  <div class="col-sm-6 dashboard-stat stat-tertiary">
+    <i class="fa fa-play fa-3x circle-title"></i>
     <div class="dashboard-stat-content">
-      <h3 class="title">一周推广费用</h3>
-      <p>&yen; {{money}}</p>
+      <h3 class="title">今日激活</h3>
+      <p>{{today_transfer}}</p>
     </div>
-    <a href="#/stat/" class="more">详情 <i class="fa fa-play-circle"></i></a>
-  </div>
-  <div class="col-md-3 col-sm-6 dashboard-stat stat-quartus">
-    <i class="fa fa-download fa-3x circle-title"></i>
-    <div class="dashboard-stat-content">
-      <h3 class="title">一周下载数</h3>
-      <p>{{total_download}}</p>
-    </div>
-    <a href="#/stat/" class="more">详情 <i class="fa fa-play-circle"></i></a>
+    <a href="#/stat-dj/{{today}}/{{today}}" class="more">详情 <i class="fa fa-play-circle"></i></a>
   </div>
 </div>
 <div class="row mt2e">
   <div class="col-sm-12">
     <div class="portlet portlet-blue">
       <div class="portlet-leading">
-        <h4 class="portlet-title"><i class="fa fa-line-chart"></i> 流量统计</h4>
+        <h4 class="portlet-title"><i class="fa fa-line-chart"></i> 最近一月激活走势</h4>
       </div>
       <div class="portlet-body">
         <div class="morris-chart" style="height: 300px">
           <script type="application/json">
             {
               "data": [
-                {{#each transfer}}
+                {{#each chart}}
                 {
-                  "date": "{{date}}",
-                  "transfer": {{transfer}},
-                  "rmb": {{d100 rmb}}
+                  "date": "{{@key}}",
+                  "transfer": {{.}}
                 }{{#unless @last}},{{/unless}}
                 {{/each}}
               ],
               "xkey": "date",
-              "ykeys": ["transfer", "rmb"],
-              "labels": ["推广量", "消耗"]
+              "ykeys": ["transfer"],
+              "labels": ["激活数"]
             }
           </script>
         </div>

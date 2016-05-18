@@ -4,12 +4,13 @@
     <input type="search" class="form-control" id="search-query" name="query" placeholder="关键词">
   </div>
 </div>
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-search="#search-query" data-collection-id="stat" {{#if has_export}}data-defaults="has_export=1"{{/if}} {{#if isDianjoy}}data-params="isDianjoy=1"{{/if}}>
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/" data-pagesize-controller="#pagesize" data-pagesize="10" data-pagination=".pagination" data-ranger=".date-range" data-search="#search-query" data-collection-id="stat" data-start="{{start}}" data-end="{{end}}" {{#if has_export}}data-defaults="has_export=1"{{/if}} {{#if isDianjoy}}data-params="isDianjoy=1"{{/if}}>
   <thead>
   <tr>
     <th class="filters">广告名</th>
     <th>创建时间</th>
     <th>激活数</th>
+    <th>费用（预估）</th>
     <th>详细</th>
   </tr>
   </thead>
@@ -22,6 +23,7 @@
       </td>
       <td data-title="创建时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td data-title="激活数">{{readable_n transfer}}</td>
+      <td data-title="费用（预估）">&yen;{{d100 cost}}</td>
       <td>
         <div class="btn-group">
           <a href="#/stat/{{id}}/{{start}}/{{end}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a>
@@ -36,7 +38,7 @@
   </tbody>
   <tfoot class="waiting">
   <tr>
-    <td colspan="4">
+    <td colspan="5">
       <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
     </td>
   </tr>

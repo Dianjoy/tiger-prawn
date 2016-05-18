@@ -3,6 +3,9 @@
  */
 "use strict";
 (function (ns) {
+  /**
+   * @class
+   */
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
     src: {},

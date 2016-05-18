@@ -24,15 +24,18 @@
       this.showUserPage('login', oauth);
     },
     showDashboard: function (start, end) {
+      var Model = Backbone.Model.extend({
+        url: tp.API + 'dashboard/',
+        parse: function (response) {
+          return response.data;
+        }
+      });
+      if (this.$me.isCP()) {
+        return this.showCPDashboard(Model);
+      }
       var range = moment.createRange(start, end)
-        , Model = Backbone.Model.extend({
-          url: tp.API + 'dashboard/',
-          parse: function (response) {
-            return response.data;
-          }
-        })
         , model = new Model(range);
-      this.$body.load('page/dashboard' + this.$me.getUserRole() + '.hbs', model, {
+      this.$body.load('page/dashboard.hbs', model, {
         refresh: true,
         data: range,
         loader: tp.view.Dashboard
@@ -40,6 +43,13 @@
       this.$body.setFramework('has-date-range dashboard dashboard-' + this.$me.getUserRole(), '欢迎你，' + this.$me.get('fullname'));
       this.$ranger.use(model);
       model.once('sync', this.$body.setLatestStat, this.$body);
+    },
+    showCPDashboard: function (Model) {
+      var model = new Model();
+      this.$body.load('page/dashboard-cp.hbs', model, {
+        loader: tp.view.Dashboard
+      });
+      this.$body.setFramework('dashboard dashboard-cp', '欢迎你，' + this.$me.get('fullname'));
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
