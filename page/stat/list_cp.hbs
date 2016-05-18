@@ -10,7 +10,6 @@
     <th class="filters">广告名</th>
     <th>创建时间</th>
     <th>激活数</th>
-    <th>费用（预估）</th>
     <th>详细</th>
   </tr>
   </thead>
@@ -23,7 +22,6 @@
       </td>
       <td data-title="创建时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       <td data-title="激活数">{{readable_n transfer}}</td>
-      <td data-title="费用（预估）">&yen;{{d100 cost}}</td>
       <td>
         <div class="btn-group">
           <a href="#/stat/{{id}}/{{start}}/{{end}}" class="btn btn-primary" title="分日统计"><i class="fa fa-calendar"></i></a>
