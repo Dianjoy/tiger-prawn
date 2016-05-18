@@ -188,9 +188,12 @@
         return;
       }
       if (!value) {
+        this.model.set('page', 0, {silent: true});
         this.model.unset(name, {reset: true});
       } else {
-        this.model.set(name, value, {
+        var attr = {page: 0};
+        attr[name] = value;
+        this.model.set(attr, {
           reset: true
         });
       }

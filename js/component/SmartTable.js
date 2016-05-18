@@ -272,7 +272,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.refresh();
+      this.model.set('page', 0);
     },
     refreshButton_clickHandler: function (event) {
       this.refresh();

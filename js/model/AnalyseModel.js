@@ -1,6 +1,7 @@
 'use strict';
 (function (ns) {
   ns.AnalyseModel = ns.Model.extend({
+    idAttribute: 'ad_id',
     toJSON: function (options) {
       var json = ns.Model.prototype.toJSON.call(this, options)
         , key = tp.PROJECT + '-invoice-list';

@@ -797,7 +797,7 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      return _.extend(this.collection && this.collection.options ? this.collection.options : {}, this.options, json);
+      return _.extend({}, this.collection && this.collection.options ? this.collection.options : {}, this.options, json);
     }
   })
 }(Nervenet.createNameSpace('tp.model')));;
@@ -904,7 +904,7 @@
 }(Nervenet.createNameSpace('tp.model')));;
 (function (ns, $) {
   /**
-   * class
+   * @class
    */
   ns.ListCollection = Backbone.Collection.extend({
     cache: null,
@@ -2168,9 +2168,12 @@
         return;
       }
       if (!value) {
+        this.model.set('page', 0, {silent: true});
         this.model.unset(name, {reset: true});
       } else {
-        this.model.set(name, value, {
+        var attr = {page: 0};
+        attr[name] = value;
+        this.model.set(attr, {
           reset: true
         });
       }
@@ -2680,7 +2683,7 @@
       var info = $('.editor-info');
       if (info.length) {
         info = Handlebars.compile(info.html());
-        this.$('.info').html(info(this.model.toJSON()));
+        this.$('.info').html(info(_.defaults({}, this.model.toJSON(), options)));
       }
       this.$el.modal(options);
     },
@@ -2756,6 +2759,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.SearchEditor = Editor.extend({
     fragment: '',
     item: '{{label}}',
@@ -2817,6 +2823,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.TagsEditor = Editor.extend({
     events: _.extend(Editor.prototype.events, {
       'click .add-button': 'addButton_clickHandler'
@@ -2863,6 +2872,7 @@
   });
 
   /**
+   * @class
    * @property {object} options
    * @property {boolean} options.addNew
    */
@@ -2895,6 +2905,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.NumberEditor = Editor.extend({
     initialize: function (options) {
       options.range = options.type === 'range';
@@ -2903,6 +2916,9 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.FileEditor = Editor.extend({
     events: _.extend({
       'click [data-dismiss]': 'clickHandler'
@@ -2930,12 +2946,15 @@
     }
   });
 
+  /**
+   * @class
+   */
   ns.SwitchEditor = Editor.extend({
     initialize: function (options) {
       var defaults = {
         open: 1,
         close: 0,
-        readonly: true
+        readonly: false
       };
       options = _.extend(defaults, options);
       options.value = this.model.get(options.prop) != options.open;
@@ -3858,7 +3877,7 @@
         this.model.tags = options.tags.split(',');
       }
       if (this.model.has('start')) {
-        if (!_.isString(this.collection.model)) {
+        if (this.collection.model && !_.isString(this.collection.model)) {
           _.extend(this.collection.model.prototype.defaults, this.model.pick('start', 'end'));
         }
       }
@@ -4069,7 +4088,7 @@
       options = _.omit(options, 'unset') || {};
       this.refresh(options);
 
-      if ('start' in model.changed || 'end' in model.changed) {
+      if (this.collection.model && ('start' in model.changed || 'end' in model.changed)) {
         _.extend(this.collection.model.prototype.defaults, _.pick(model.changed, 'start', 'end'));
       }
       this.$el.addClass('loading');
@@ -4091,7 +4110,7 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.refresh();
+      this.model.set('page', 0);
     },
     refreshButton_clickHandler: function (event) {
       this.refresh();
