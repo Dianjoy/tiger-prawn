@@ -184,14 +184,14 @@
         {{/if}}
         <tr>
           <th width="10%">关联合同</th>
-          <td><a href="#agreement_id" class="edit" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{agreement_id}}{{{{/raw-helper}}}}）">{{agreement}}</a></td>
+          <td><a href="#agreement_id" class="edit" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{#if aid}}{{aid}}{{else}}{{agreement_id}}{{/if}}{{{{/raw-helper}}}}）">{{channel}}</a></td>
         </tr>
-        {{#if channel}}
+        {{#unless agreement_id}}
         <tr>
           <th>渠道名称</th>
-          <td><a href="#channel" class="edit" data-type="select" data-add-new="true" data-options="channels" data-template="ad/popup/channel-edit" data-url="channel/">{{channel_alias}}</a></td>
+          <td><a href="#channel" class="edit" data-type="select" data-add-new="true" data-options="channels" data-template="ad/popup/channel-edit" data-url="channel/">{{channel}}</a></td>
         </tr>
-        {{/if}}
+        {{/unless}}
         <tr>
           <th>渠道号</th>
           <td><a href="#cid" class="edit">{{cid}}</a></td>
