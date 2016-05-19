@@ -226,11 +226,14 @@
     </div>
   </div>
   <div class="form-group col-sm-12">
-    <label class="col-sm-2 control-label">客户对账单：</label>
+    <label class="col-sm-2 control-label">发票备注：</label>
     <div class="col-sm-10">
-      <input type="text" placeholder="描述（可不填）" class="form-control" name="attachment_desc">
+      <input type="text" class="form-control" name="reason">
     </div>
-    <div class="uploader col-sm-10 col-sm-offset-2 invoice-margin" data-url="{{API}}file/" data-need-validate="true" data-accept="*.pdf,*jpg,*png">
+  </div>
+  <div class="form-group col-sm-12">
+    <label class="col-sm-2 control-label">上传文件：</label>
+    <div class="uploader col-sm-10 invoice-margin" data-url="{{API}}file/" data-need-validate="true" data-accept="*.pdf,*jpg,*png,*doc,*docx,*xls,*xlsx,*zip,*rar" data-multiple="true" data-append="true">
       <div class="su-placeholder su-removable" data-initial="请上传文件。" data-progress="上传文件中..">
         {{#if attachment}}
           <div class="su-item">

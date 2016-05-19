@@ -13,7 +13,6 @@
       this.getProductList = _.bind(this.getProductList, this);
       tp.view.Loader.prototype.render.call(this);
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', this.$('#ad_table'), this.getProductList);
-      $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
       $('.invalid-' + this.model.get('channel')).addClass('invalid');
       $('.invoice-list form').removeClass('processing');
       $('.apply .fa-spinner').remove();
@@ -29,11 +28,14 @@
         , acceptAccount = '~' + this.$('#accept-account').text();
 
       for (var i = 0; i < tableList.length; i++) {
-        tableList.find('a').replaceWith(function (i) {
+        tableList.eq(i).find('a').replaceWith(function () {
           return this.innerHTML;
         });
+        if (i === 0) {
+          tableList.eq(0).find('th,td').css('border', '1px solid #ddd');
+        }
         if (i === 2) {
-          tableList.find('#accept-account').text(acceptAccount);
+          tableList.eq(2).find('#accept-account').text(acceptAccount);
         }
         tables.push(tableList[i].innerHTML);
       }
@@ -57,6 +59,7 @@
       this.productList.collection.options = options;
       this.productList.collection.reset(products);
       products.pop();
+      $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
     },
     collection_changeHandler: function (data) {
       var products = this.model.get('products')

@@ -44,6 +44,7 @@
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
       }
+      response.invoice.attachment = response.invoice.attachment || '';
       return response.invoice;
     },
     toJSON: function (options) {
@@ -85,6 +86,16 @@
         range: '合作期限: ' + range,
         comment: '备注: ' + agreementInfo.comment
       };
+      if (json.attachment) {
+        json.attachment = _.map(json.attachment.split(','), function (item) {
+          var index = item.lastIndexOf('.')
+            , type = item.substr(index + 1).toLocaleLowerCase();
+          return {
+            fileName: item,
+            isImage: type === 'jpg' || type === 'png'
+          }
+        });
+      }
       products = _.map(products, function (element) {
         if (!element.quote_rmb_after) {
           _.extend(element, {
