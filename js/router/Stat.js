@@ -25,7 +25,8 @@
           API: tp.API,
           id: id,
           start: start,
-          end: end
+          end: end,
+          has_export: this.$me.get('has_export')
         }, { simple: true });
       this.$body.load('page/stat/daily' + page + '.hbs', model, {
         className: 'stat stat-ad'
@@ -36,13 +37,12 @@
       if (this.$body.page && this.$body.page.$el.is('.stat.stat-date')) {
         this.$body.page.model.set('date', date);
       }
-      var page = this.$me.isCP() ? '_cp' : ''
-        , model = new tp.model.AD({
-          API: tp.API,
-          id: id,
-          date: date
-        });
-      this.$body.load('page/stat/hourly' + page + '.hbs', model, {
+      var model = new tp.model.AD({
+        API: tp.API,
+        id: id,
+        date: date
+      });
+      this.$body.load('page/stat/hourly.hbs', model, {
         refresh: true,
         className: 'stat stat-date'
       });
