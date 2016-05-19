@@ -18,7 +18,13 @@
         var start = this.start.val();
         this.setEndDateRange(start, moment(start).add(6, 'days'));
       }
-      this.delegateEvents(this.dpEvents);
+      for (var key in this.dpEvents) {
+        var method = this.dpEvents[key];
+        if (!_.isFunction(method)) method = this[method];
+        if (!method) continue;
+        var match = key.match(/^(\S+)\s*(.*)$/);
+        this.delegate(match[1], match[2], _.bind(method, this));
+      }
     },
     startDate_changeHandler: function (event) {
       var startDate = event.date
