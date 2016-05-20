@@ -24,7 +24,7 @@
       </td>
       <td data-title="创建时间" rowspan="{{count}}"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
       {{#each keywords}}
-      {{#unless @first}}<tr>{{/unless}}
+      {{#unless @first}}<tr class="relate-to-{{../id}}">{{/unless}}
       <td data-title="关键词">{{#if search_key}}{{search_key}}{{else}}<span class="text-muted"> （无）</span>{{/if}}</td>
       <td data-title="激活数">{{readable_n num}}</td>
       {{#if @first}}

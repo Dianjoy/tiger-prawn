@@ -81,7 +81,9 @@
       console.log('error', collection, response, options);
     },
     collection_removeHandler: function (model, collection, options) {
-      var item = $(document.getElementById(model.id || model.cid));
+      var id = model.id || model.cid
+        , item = $(document.getElementById(id));
+      item = item.add(item.siblings('.relate-to-' + id)); // 有时候面临一拖N的局面,需要处理一下
       if (options.fadeOut) {
         item.fadeOut(function () {
           $(this).remove();
