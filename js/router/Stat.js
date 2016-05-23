@@ -16,7 +16,7 @@
       'invoice/:id': 'invoiceDetail',
       'invoice/apply/:channel/:ids': 'applyInvoice',
       'stat/analyse/': 'showAdminADStat',
-      'stat/analyse/:start/:end': 'showAdminADStatTime',
+      'analyse/:start/:end': 'showAdminADStatTime',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
     showADStat: function (id, start, end) {
