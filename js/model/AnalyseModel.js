@@ -9,9 +9,9 @@
         return json;
       }
       var store = localStorage.getItem(key)
-        , ad_id = json.id || json.ad_id
-        , start = json.id ? $('#stat-range-start-date').val() : $('#settle-start-date').val()
-        , end = json.id ? $('#stat-range-end-date').val() : $('#settle-end-date').val();
+        , ad_id = json.ad_id
+        , start = json.ad_notice ? $('#settle-start-date').val() : $('#stat-range-start-date').val()
+        , end = json.ad_notice ? $('#settle-end-date').val() : $('#stat-range-end-date').val() ;
       json.start = start;
       json.end = end;
       this.defaults = {start: start, end: end};

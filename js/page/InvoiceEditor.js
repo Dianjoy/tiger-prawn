@@ -5,7 +5,6 @@
     events: _.extend({
       'click .export-button': 'exportButton_clickHandler',
       'blur [name=header]': 'header_blurHandler',
-      'change .sub-status': 'subStatus_changeHandler',
       'success form': 'form_successHandler'
     }, tp.view.Loader.prototype.events),
     $context: null,
@@ -21,6 +20,7 @@
       event.currentTarget.href = this.exportHref;
     },
     tableToExcel: function (template) {
+      this.excelTemplate = template;
       var tables = []
         , uri = 'data:application/vnd.ms-excel;base64,'
         , tableList = this.$('.print-table').clone()
@@ -32,10 +32,18 @@
           return this.innerHTML;
         });
         if (i === 0) {
-          tableList.eq(0).find('th,td').css('border', '1px solid #ddd');
+          var table = tableList.eq(i);
+          table.find('.do-not-print').remove();
+          table.find('.print-title').text(function () {
+            return $(this).data('printTitle');
+          });
+          table.find('#rmb,#reason,#income-total').attr('colspan', function () {
+            return $(this).data('colspan');
+          });
+          table.find('th,td').css('border', '1px solid #ddd');
         }
         if (i === 2) {
-          tableList.eq(2).find('#accept-account').text(acceptAccount);
+          tableList.eq(i).find('#accept-account').text(acceptAccount);
         }
         tables.push(tableList[i].innerHTML);
       }
@@ -51,7 +59,7 @@
       return window.btoa(unescape(encodeURIComponent(str)));
     },
     getProductList: function (components) {
-      var products =  this.model.get('products')
+      var products = this.model.get('products')
         , options = this.model.options;
       this.productList = components[0];
       products.push({amount: true});
@@ -62,17 +70,19 @@
       $.get(tp.path + 'template/table-to-excel.hbs', _.bind(this.tableToExcel, this), 'html');
     },
     collection_changeHandler: function (data) {
-      var products = this.model.get('products')
+      var model = this.model
+        , products = model.get('products')
         , product = _.findWhere(products, {id: data.id});
       _.extend(product, data.toJSON());
-      products = this.model.toJSON().products;
+      products = model.toJSON().products;
       products.push({amount: true});
       data.collection.reset(products);
       products.pop();
-      var incomeTotal = this.$('#income-total').text();
-      this.$('.invoice-rmb').text(incomeTotal);
-      if (this.model.isNew()) {
-        $(".modal").modal('hide');
+      this.$('#ad_income').text(model.get('ad_income'));
+      this.$('#ios_income').text(model.get('ios_income'));
+      this.tableToExcel(this.excelTemplate);
+      if (model.isNew()) {
+        $('.modal').modal('hide');
       }
     },
     remove: function () {
@@ -90,11 +100,6 @@
     },
     header_blurHandler: function (event) {
       this.$('.header').text(event.target.value);
-    },
-    subStatus_changeHandler: function (event) {
-      var value = event.target.value % 2
-        , size = value === 0 ? 'Android' : 'iOS';
-      this.$('.size').text(size);
     }
   });
 }(Nervenet.createNameSpace('tp.page')));

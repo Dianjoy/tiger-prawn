@@ -44,7 +44,12 @@
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
       }
+      var android, ios = false;
+      _.each(response.invoice.products, function (product) {
+        product.ad_app_type == 1 ? android = true : ios = true;
+      });
       response.invoice.attachment = response.invoice.attachment || '';
+      response.invoice.kind = android && ios ? 2 : !android ? 1 : 0;
       return response.invoice;
     },
     toJSON: function (options) {
@@ -56,19 +61,14 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      if (this.options.is_assistant && this.isNew()) {
-        var charger = this.options.chargers[0] || {};
-        json.size = charger.size;
-        json.department = charger.department;
-      }
       var start = json.start ? json.start.split('-') : moment().format('YYYY-MM').split('-')
         , agreementInfo = json.agreement_info
         , archive = Number(agreementInfo.archive) === 1 ? '是' : '否'
         , range = agreementInfo.start + '/' + agreementInfo.end + (agreementInfo.over ? ' 到期' : '')
         , products = json.products
         , obj = {
-          cpa_first_total: 0,
-          cpa_after_total: 0,
+          ad_income: 0,
+          ios_income: 0,
           income_before_total: 0,
           income_after_total: 0,
           rmb: ''
@@ -113,8 +113,8 @@
             money_cut: (element.income - element.quote_rmb_after * element.cpa_after)
           });
         }
-        obj.cpa_first_total += Number(element.cpa);
-        obj.cpa_after_total += Number(element.cpa_after);
+        var income_type = element.ad_app_type == 1 ? 'ad_income' : 'ios_income';
+        obj[income_type] += Number(element.income_after);
         obj.income_after_total += Number(element.income_after);
         obj.income_before_total += Number(element.income);
         obj.rmb = tp.utils.convertCurrency(obj.income_after_total);
@@ -123,8 +123,8 @@
       this.set({
         income: obj.income_after_total,
         income_first: obj.income_before_total,
-        cpa_first_total: obj.cpa_first_total,
-        cpa_after_total: obj.cpa_after_total
+        ad_income: obj.ad_income,
+        ios_income: obj.ios_income
       }, {silent: true});
       _.extend(this.options, obj);
       return _.extend(json, this.options);
