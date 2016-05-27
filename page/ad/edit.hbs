@@ -331,7 +331,7 @@
       <label class="col-sm-2 control-label" for="execute_owner">执行人</label>
       <div class="col-sm-4 col-xs-6">
         <select class="form-control" name="execute_owner" id="execute_owner">
-          {{#each sub_sales}}
+          {{#each sales}}
             <option value="{{@key}}">{{.}}</option>
           {{/each}}
         </select>
