@@ -10,6 +10,7 @@
   <tr>
     <th>推广期间</th>
     <th>广告名称</th>
+    <th>广告类型</th>
     <th>渠道号</th>
     <th class="do-not-print">单价（核减前）</th>
     <th class="do-not-print">渠道CPA（核减前）</th>
@@ -28,11 +29,12 @@
       <tr id="{{id}}">
         {{#if amount}}
           <td>合计人民币（大写）：</td>
-          <td colspan="7" id="rmb" data-colspan="4">{{rmb}}</td>
+          <td colspan="8" id="rmb" data-colspan="4">{{rmb}}</td>
           <td id="income-total" data-colspan="2" colspan="4">&yen; {{readable_n income_after_total}}</td>
         {{else}}
           <td data-title="推广期间">{{quote_start_date}} ~ {{quote_end_date}}</td>
           <td data-title="广告名称">{{ad_name}}</td>
+          <td data-title="广告类型">{{pick ad_app_type ad_app_types}}</td>
           <td data-title="渠道号">{{cid}}</td>
           <td data-title="单价（核减前）" class="do-not-print price">&yen; {{readable_n quote_rmb}}</td>
           <td data-title="渠道CPA（核减前）" class="do-not-print cpa-before">{{cpa}}</td>
@@ -66,7 +68,7 @@
   <tfoot>
     <tr>
       <td>发票备注</td>
-      <td id="reason" data-colspan="6" colspan="11"><a href="#reason" class="edit">{{reason}}</a></td>
+      <td id="reason" data-colspan="6" colspan="12"><a href="#reason" class="edit">{{reason}}</a></td>
     </tr>
   </tfoot>
 </table>
