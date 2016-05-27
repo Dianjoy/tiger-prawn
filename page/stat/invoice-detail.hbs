@@ -11,14 +11,14 @@
     <th>推广期间</th>
     <th>广告名称</th>
     <th>渠道号</th>
-    <th>单价（核减前）</th>
-    <th>渠道CPA（核减前）</th>
-    <th>应结算收入（核减前）</th>
-    <th>单价（核减后）</th>
-    <th>渠道CPA（核减后）</th>
-    <th>实际结算收入（核减后）</th>
-    <th>核减比例</th>
-    <th>核减金额</th>
+    <th class="do-not-print">单价（核减前）</th>
+    <th class="do-not-print">渠道CPA（核减前）</th>
+    <th class="do-not-print">应结算收入（核减前）</th>
+    <th class="print-title" data-print-title="单价（元）">单价（核减后）</th>
+    <th class="print-title" data-print-title="有效数据（个）">渠道CPA（核减后）</th>
+    <th class="print-title" data-print-title="推广费用（元）">实际结算收入（核减后）</th>
+    <th class="do-not-print">核减比例</th>
+    <th class="do-not-print">核减金额</th>
     <th>备注</th>
   </tr>
   </thead>
@@ -28,15 +28,15 @@
       <tr id="{{id}}">
         {{#if amount}}
           <td>合计人民币（大写）：</td>
-          <td colspan="7"  id="rmb">{{rmb}}</td>
-          <td id="income-total" colspan="4">&yen; {{readable_n income_after_total}}</td>
+          <td colspan="7" id="rmb" data-colspan="4">{{rmb}}</td>
+          <td id="income-total" data-colspan="2" colspan="4">&yen; {{readable_n income_after_total}}</td>
         {{else}}
           <td data-title="推广期间">{{quote_start_date}} ~ {{quote_end_date}}</td>
           <td data-title="广告名称">{{ad_name}}</td>
           <td data-title="渠道号">{{cid}}</td>
-          <td data-title="单价（核减前）" class="price">&yen; {{readable_n quote_rmb}}</td>
-          <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
-          <td data-title="应结算收入（核减前）" class="income-before">&yen; {{readable_n income}}</td>
+          <td data-title="单价（核减前）" class="do-not-print price">&yen; {{readable_n quote_rmb}}</td>
+          <td data-title="渠道CPA（核减前）" class="do-not-print cpa-before">{{cpa}}</td>
+          <td data-title="应结算收入（核减前）" class="do-not-print income-before">&yen; {{readable_n income}}</td>
           <td data-title="单价（核减后）">
             {{#if view}}
               &yen; {{readable_n quote_rmb_after}}
@@ -49,12 +49,12 @@
               {{cpa_after}}
             {{else}}
               <a href="#cpa_after" data-type="number" class="edit" title="渠道CPA（核减后）" data-template="stat/cut-type">{{cpa_after}}</a>
-              <p class="warning-info">{{pick cut_type cut_types}}</p>
+              <span class="warning-info">{{pick cut_type cut_types}}</span>
             {{/if}}
           </td>
           <td data-title="实际结算收入（核减后）" class="income-after">&yen; {{readable_n income_after}}</td>
-          <td data-title="核减比例" class="proportion">{{readable_n rate}}%</td>
-          <td data-title="核减金额" class="amount">&yen; {{readable_n money_cut}}</td>
+          <td data-title="核减比例" class="do-not-print proportion">{{readable_n rate}}%</td>
+          <td data-title="核减金额" class="do-not-print amount">&yen; {{readable_n money_cut}}</td>
           <td data-title="备注">
             {{#if view}}{{remark}}{{else}}<a href="#remark" data-type="long-text" class="edit" title="备注">{{remark}}</a>{{/if}}
           </td>
@@ -66,7 +66,7 @@
   <tfoot>
     <tr>
       <td>发票备注</td>
-      <td colspan="11"><a href="#reason" class="edit">{{reason}}</a></td>
+      <td id="reason" data-colspan="6" colspan="11"><a href="#reason" class="edit">{{reason}}</a></td>
     </tr>
   </tfoot>
 </table>
@@ -103,44 +103,50 @@
       <table class="table table-bordered table-striped print-table" style="display: inline-table;">
         <tr>
           <th width="10%">付款方</th>
-          <td colspan="11">{{header}}</td>
+          <td colspan="6">{{header}}</td>
         </tr>
         <tr>
           <th>发票抬头</th>
-          <td colspan="11">{{#if view}}{{header}}{{else}}<a class="edit" href="#header">{{header}}</a>{{/if}}</td>
+          <td colspan="6">{{#if view}}{{header}}{{else}}<a class="edit" href="#header">{{header}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>发票类型</th>
-          <td colspan="11">{{#if view}}{{pick type types}}{{else}}<a class="edit" href="#type" data-type="select" data-options="types">{{pick type types}}</a>{{/if}}</td>
+          <td colspan="6">{{#if view}}{{pick type types}}{{else}}<a class="edit" href="#type" data-type="select" data-options="types">{{pick type types}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>发票内容</th>
-          <td colspan="11">{{#if view}}{{pick content_type content_types}}{{else}}<a class="edit" href="#content_type" data-type="select" data-options="content_types">{{pick content_type content_types}}</a>{{/if}}
+          <td colspan="6">{{#if view}}{{pick content_type content_types}}{{else}}<a class="edit" href="#content_type" data-type="select" data-options="content_types">{{pick content_type content_types}}</a>{{/if}}
           </td>
         </tr>
         <tr>
           <th>规格型号</th>
-          <td colspan="11">{{size}}</td>
+          <td colspan="6">
+            {{#in kind 1 2}}<div class="col-sm-4 padding-zero">ios</div>{{/in}}
+            {{#in kind 0 2}}<div class="col-sm-4 padding-zero">android</div>{{/in}}
+          </td>
         </tr>
         <tr>
           <th>开票金额</th>
-          <td colspan="11" class="invoice-rmb">&yen; {{readable_n income_after_total}}</td>
+          <td colspan="6">
+            {{#if ad_income}}<div class="col-sm-4 padding-zero" id="ad_income">&yen; {{ad_income}}</div>{{/if}}
+            {{#if ios_income}}<div class="col-sm-4 padding-zero" id="ios_income">&yen; {{ios_income}}</div>{{/if}}
+          </td>
         </tr>
         <tr>
           <th>业务负责人</th>
-          <td colspan="11">{{#if view}}{{pay_charger}}{{else}}<a class="edit" href="#pay_charger">{{pay_charger}}</a>{{/if}}</td>
+          <td colspan="6">{{#if view}}{{pay_charger}}{{else}}<a class="edit" href="#pay_charger">{{pay_charger}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>手机号码</th>
-          <td colspan="11">{{#if view}}{{pay_telephone}}{{else}}<a class="edit" href="#pay_telephone">{{pay_telephone}}</a>{{/if}}</td>
+          <td colspan="6">{{#if view}}{{pay_telephone}}{{else}}<a class="edit" href="#pay_telephone">{{pay_telephone}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>地址</th>
-          <td colspan="11">{{#if view}}{{pay_address}}{{else}}<a class="edit" href="#pay_address">{{pay_address}}</a>{{/if}}</td>
+          <td colspan="6">{{#if view}}{{pay_address}}{{else}}<a class="edit" href="#pay_address">{{pay_address}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>日期</th>
-          <td colspan="11">{{apply_time}}</td>
+          <td colspan="6">{{apply_time}}</td>
         </tr>
       </table>
     </div>
@@ -148,29 +154,29 @@
       <table class="table table-bordered table-striped print-table" style="display: inline-table;">
         <tr>
           <th width="10%">收款方</th>
-          <td colspan="11">北京无限点乐科技有限公司</td>
+          <td colspan="6">北京无限点乐科技有限公司</td>
         </tr>
         <tr>
           <th>开户名称</th>
-          <td colspan="11">北京无限点乐科技有限公司</td>
+          <td colspan="6">北京无限点乐科技有限公司</td>
         </tr>
         <tr>
           <th>开户银行</th>
-          <td colspan="11">招商银行北京双榆树支行</td>
+          <td colspan="6">招商银行北京双榆树支行</td>
         </tr>
         <tr>
           <th>开户账号</th>
-          <td colspan="11" id="accept-account">110909024210401</td>
+          <td colspan="6" id="accept-account">110909024210401</td>
         </tr>
         <tr>
-          <th>业务线分类</th>
-          <td colspan="11">
+          <th>商务业务线</th>
+          <td colspan="6">
             <a href="#sub_status" class="edit" data-type="select" data-options="sub_statuses">{{pick sub_status sub_statuses}}</a>
           </td>
         </tr>
         <tr>
-          <th>业务负责人</th>
-          <td colspan="11">
+          <th>商务执行人</th>
+          <td colspan="6">
             {{#if is_assistant}}
               {{#each chargers}}
                 {{#equal ../charger key}}
@@ -184,15 +190,15 @@
         </tr>
         <tr>
           <th>手机号码</th>
-          <td colspan="11">{{#if view}}{{accept_telephone}}{{else}}<a class="edit" href="#accept_telephone">{{accept_telephone}}</a>{{/if}}</td>
+          <td colspan="6">{{#if view}}{{accept_telephone}}{{else}}<a class="edit" href="#accept_telephone">{{accept_telephone}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>地址</th>
-          <td colspan="11">{{#if view}}{{accept_address}}{{else}}<a class="edit" href="#accept_address">{{accept_address}}</a>{{/if}}</td>
+          <td colspan="6">{{#if view}}{{accept_address}}{{else}}<a class="edit" href="#accept_address">{{accept_address}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>日期</th>
-          <td colspan="11">{{apply_time}}</td>
+          <td colspan="6">{{apply_time}}</td>
         </tr>
       </table>
     </div>

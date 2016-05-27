@@ -8,6 +8,7 @@
   <tr>
     <th>推广期间</th>
     <th>广告名称</th>
+    <th>广告类型</th>
     <th>渠道号</th>
     <th>单价（核减前）</th>
     <th>渠道CPA（核减前）</th>
@@ -26,11 +27,12 @@
     <tr id="{{id}}">
       {{#if amount}}
         <td>合计人民币（大写）：</td>
-        <td colspan="7"  id="rmb">{{rmb}}</td>
+        <td id="rmb" colspan="8">{{rmb}}</td>
         <td id="income-total" colspan="4">&yen; {{readable_n income_after_total}}</td>
       {{else}}
         <td data-title="推广期间">{{quote_start_date}} ~ {{quote_end_date}}</td>
         <td data-title="广告名称">{{ad_name}}</td>
+        <td data-title="广告类型">{{pick ad_app_type ad_app_types}}</td>
         <td data-title="渠道号">{{cid}}</td>
         <td data-title="单价（核减前）" class="price">&yen; {{readable_n quote_rmb}}</td>
         <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
@@ -117,22 +119,27 @@
         </div>
       </div>
       <div class="form-group">
+        <input type="hidden" value="{{kind}}" name="kind">
         <label class="control-label col-sm-4">规格型号：</label>
-        <div class="col-sm-8">
-          <p class="form-control-static size">
-            {{#in sub_status 2 3}}
-              {{size}}
-            {{else}}
-              Android
-            {{/in}}
-          </p>
-        </div>
+        {{#in kind 0 2}}
+          <div class="col-sm-4"><p class="form-control-static">android</p></div>
+        {{/in}}
+        {{#in kind 1 2}}
+          <div class="col-sm-4"><p class="form-control-static">iOS</p></div>
+        {{/in}}
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">开票金额：</label>
+        {{#if ad_income}}
+          <div class="col-sm-4">
+            <p class="form-control-static">&yen;<span id="ad_income">{{readable_n ad_income}}</span></p>
+          </div>
+        {{/if}}
+        {{#if ios_income}}
         <div class="col-sm-4">
-          <p class="form-control-static invoice-rmb">&yen; {{readable_n income_after_total}}</p>
+          <p class="form-control-static">&yen;<span id="ios_income">{{readable_n ios_income}}</span></p>
         </div>
+        {{/if}}
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">业务负责人：</label>
@@ -182,17 +189,17 @@
         <div class="col-sm-8"><p class="form-control-static">110909024210401</p></div>
       </div>
       <div class="form-group">
-        <label class="control-label col-sm-4">业务线分类：</label>
+        <label class="control-label col-sm-4">商务业务线：</label>
         <div class="col-sm-8">
           <select name="sub_status" class="form-control sub-status">
             {{#each sub_statuses}}
-              <option value="{{@index}}" {{#equal ../sub_status @index}}selected{{/equal}}>{{.}}</option>
+              <option value="{{@key}}" {{#equal ../sub_status @key}}selected{{/equal}}>{{.}}</option>
             {{/each}}
           </select>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-4 control-label">业务负责人：</label>
+        <label class="col-sm-4 control-label">商务执行人：</label>
         <div class="col-sm-8">
         {{#if is_assistant}}
           <select name="charger" class="form-control charger">
