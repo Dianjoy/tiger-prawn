@@ -317,7 +317,6 @@
   <fieldset>
     <a name="channel-area"></a>
     <legend>渠道信息</legend>
-    {{#if sales}}
     <div class="form-group">
       <label class="col-sm-2 control-label" for="owner">负责人</label>
       <div class="col-sm-4 col-xs-6">
@@ -328,7 +327,16 @@
         </select>
       </div>
     </div>
-    {{/if}}
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="execute_owner">执行人</label>
+      <div class="col-sm-4 col-xs-6">
+        <select class="form-control" name="execute_owner" id="execute_owner">
+          {{#each sub_sales}}
+            <option value="{{@key}}">{{.}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
     <div class="form-group agreement">
       <label class="col-sm-2 control-label" for="agreement_id">关联合同</label>
       <div class="col-sm-5">
