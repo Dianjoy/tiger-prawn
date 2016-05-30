@@ -44,12 +44,14 @@
         this.options.API = tp.API;
         this.options.UPLOAD = tp.UPLOAD;
       }
-      var android, ios = false;
-      _.each(response.invoice.products, function (product) {
-        product.ad_app_type == 1 ? android = true : ios = true;
-      });
+      if (response.invoice.products) {
+        var android, ios = false;
+        _.each(response.invoice.products, function (product) {
+          product.ad_app_type == 1 ? android = true : ios = true;
+          response.invoice.kind = android && ios ? 2 : !android ? 1 : 0;
+        });
+      }
       response.invoice.attachment = response.invoice.attachment || '';
-      response.invoice.kind = android && ios ? 2 : !android ? 1 : 0;
       return response.invoice;
     },
     toJSON: function (options) {
