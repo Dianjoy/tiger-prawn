@@ -5,6 +5,7 @@
 (function (ns) {
   ns.API = 'http://ad-diy.com/';
   ns.UPLOAD = 'http://ad-diy.com/'; // 上传文件的起始路径
+  ns.VERSION = '${version}';
   ns.path = ''; // 项目路径
   ns.config = {
     login: {

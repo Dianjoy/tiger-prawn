@@ -3,7 +3,7 @@
  * Created by meathill on 14-9-17.
  */
 'use strict';
-(function (ns, $) {
+(function (ns, $, _, Backbone, tp) {
 
   var timeout
     , placeholder = '<p><i class="fa fa-spinner fa-spin fa-4x"></i></p>';
@@ -26,13 +26,14 @@
     initialize: function (options) {
       this.model = this.model || this.$context.getValue('model');
       if (options.isRemote) {
+        var url = options.content + '?v=' + tp.VERSION;
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
         if (/\.hbs$/.test(options.content)) {
-          $.get(options.content, _.bind(this.template_loadedHandler, this));
+          $.get(url, _.bind(this.template_loadedHandler, this));
         } else {
           options.isMD = /\.md$/.test(options.content);
-          $.get(options.content, _.bind(this.onLoadComplete, this));
+          $.get(url, _.bind(this.onLoadComplete, this));
         }
 
         ga('send', 'pageview', options.content);
@@ -123,4 +124,4 @@
       this.$('.modal-footer .btn-primary').prop('disabled', false);
     }
   });
-}(Nervenet.createNameSpace('tp.popup'), jQuery));
+}(Nervenet.createNameSpace('tp.popup'), jQuery, _, Backbone, tp));

@@ -2,7 +2,7 @@
  * Created by meathill on 14/11/13.
  */
 'use strict';
-(function (ns) {
+(function (ns, Backbone, _, $) {
   var print_header = '<link rel="stylesheet" href="{{url}}css/screen.css"><link rel="stylesheet" href="{{url}}css/print.css"><title>{{title}}</title>';
 
   /**
@@ -168,4 +168,4 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.view')));
+}(Nervenet.createNameSpace('tp.view'), Backbone, _, jQuery));

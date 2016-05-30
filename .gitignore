@@ -10,5 +10,6 @@ node_modules
 **/*.css
 **/*.map
 index.html
+index.tmp.html
 manifest.appcache
 js/bundle.*

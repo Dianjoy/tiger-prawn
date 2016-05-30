@@ -3,6 +3,11 @@
  */
 'use strict';
 
+const BUILD = 'BUILD';
+const VERSION = 'VERSION';
+const DEST_HTML = 'index.html';
+const TEMP_HTML = 'index.tmp.html';
+
 var fs = require('fs')
   , _ = require('underscore')
   , gulp = require('gulp')
@@ -15,15 +20,29 @@ var fs = require('fs')
   , del = require('del')
   , sequence = require('run-sequence')
   , minify = require('html-minifier').minify
-  , libs = [];
+  , libs = []
+  , version = '';
 
 gulp.task('clear', function () {
   return del([
-    'index.html',
+    DEST_HTML,
+    TEMP_HTML,
     'css/screen.css',
     'js/bundle.js',
     'js/bundle.min.js'
   ]);
+});
+
+gulp.task('version', function (callback) {
+  let build = fs.existsSync(BUILD) ? Number(fs.readFileSync(BUILD)) : 0;
+  version = fs.readFileSync(VERSION, 'utf8');
+
+  build++;
+  fs.writeFile(BUILD, build);
+
+  // 生成本次的版本号
+  version = version + '.' + build;
+  callback();
 });
 
 gulp.task('compass', function () {
@@ -41,6 +60,7 @@ gulp.task('compass', function () {
 gulp.task('js', function () {
   let html = fs.readFileSync('index.dev.html', 'utf8')
     , jses = [];
+
   // 取所有js
   html = html.replace(/<script src="js\/(.*?\.js)"(?: ([\w\-])+(?:="([^"]*)")?)*><\/script>\n/g, function (match, src) {
     if (/^define.js$/.test(src)) {
@@ -48,7 +68,7 @@ gulp.task('js', function () {
     }
     jses.push(src);
     if (/^index.js$/.test(src)) {
-      return '<script src="js/bundle.min.js"></script>';
+      return '<script src="js/bundle.min.js?v=' + version + '"></script>';
     }
     return '';
   });
@@ -56,10 +76,7 @@ gulp.task('js', function () {
   html.replace(/(?:href|src)="(bower_components[^"]*(?:css|js))"/g, function (match, src) {
     libs.push(src);
   });
-
-  // 更新 manifest.appcache
-  html = html.replace('<html', '<html manifest="manifest.appcache"');
-  fs.writeFile('index.html', minify(html, {
+  fs.writeFile(TEMP_HTML, minify(html, {
     removeComments: true,
     collapseWhitespace: true
   }));
@@ -87,28 +104,26 @@ gulp.task('js', function () {
 
   return gulp.src(jses)
     .pipe(concat('bundle.js'))
+    .pipe(replace('${version}', version))
     .pipe(gulp.dest('js/'))
     .pipe(uglify())
     .pipe(rename('bundle.min.js'))
     .pipe(gulp.dest('js/'));
 });
 
-gulp.task('manifest', function () {
-  let config = fs.readFileSync('js/config.js', 'utf8')
-    , api = config.match(/ns.API = '([^']+)'/)[1];
-  gulp.src('manifest.appcache.sample')
-    .pipe(replace('# {{date}}', (new Date()).toISOString()))
-    .pipe(replace('# {{API}}', api))
-    .pipe(replace('# {{libs}}', libs.join('\n')))
-    .pipe(rename('manifest.appcache'))
-    .pipe(gulp.dest(''));
+gulp.task('html', function () {
+  return gulp.src(TEMP_HTML)
+    .pipe(replace(/\.(css|js)"/g, '.$1?v=' + version + '"'))
+    .pipe(rename(DEST_HTML))
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('default', function (taskDone) {
   sequence(
     'clear',
+    'version',
     ['js', 'compass'],
-    'manifest',
+    'html',
     taskDone
   );
 });

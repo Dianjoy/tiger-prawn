@@ -1,5 +1,5 @@
 'use strict';
-(function (ns, $) {
+(function (ns, $, _, Backbone) {
   var history = 'history-recorder';
 
   function showErrorPopup(target, msgs) {
@@ -381,4 +381,4 @@
         }), ' ');
       $(target).removeClass(classes).addClass(className);
     });
-}(Nervenet.createNameSpace('tp.component'), jQuery));
+}(Nervenet.createNameSpace('tp.component'), jQuery, _, Backbone));
