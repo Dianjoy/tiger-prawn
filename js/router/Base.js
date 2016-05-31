@@ -30,7 +30,7 @@
           return response.data;
         }
       });
-      if (this.$me.isCP()) {
+      if (this.$me.isCP && this.$me.isCP()) {
         return this.showCPDashboard(Model);
       }
       var range = moment.createRange(start, end)
