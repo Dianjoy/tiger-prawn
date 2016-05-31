@@ -2,7 +2,7 @@
  * Created by meathill on 14-9-17.
  */
 'use strict';
-(function (ns, $) {
+(function (ns, $, _, moment, tp, Backbone) {
   var timeout;
   /**
    * @class
@@ -120,8 +120,9 @@
      */
     initialize: function (options) {
       Editor.prototype.initialize.call(this, options);
-      if (!options.template) {
-        Handlebars.registerPartial('item', options.itemLabel || this.item);
+      var item = options.itemLabel || this.item;
+      if (item) {
+        Handlebars.registerPartial('item', item);
       }
       this.collection = tp.model.ListCollection.getInstance();
       this.collection.url = tp.API + options.url;
@@ -232,21 +233,22 @@
       }
       Editor.prototype.render.call(this, response);
 
+      var select = this.$('[name="' + this.options.prop + '"]');
       if (this.options.addNew) {
         var collection = new tp.model.ListCollection.getInstance({
             collectionId: this.options.prop,
             url: tp.API + this.options.url
-          })
-          , select = new tp.component.CollectionSelect({
-            el: this.$('select'),
-            collection: collection
           });
+        select = new tp.component.CollectionSelect({
+          el: select,
+          collection: collection
+        });
         collection.reset(this.options.options);
       } else if (this.options.list) {
-        this.$('select').html($(this.options.list).html());
+        select.html($(this.options.list).html());
       }
 
-      this.$('select').val(this.options.value)
+      select.val(this.options.value)
     }
   });
 
@@ -328,4 +330,4 @@
       Editor.prototype.initialize.call(this, options);
     }
   });
-}(Nervenet.createNameSpace('tp.popup'), jQuery));
+}(Nervenet.createNameSpace('tp.popup'), jQuery, _, moment, tp, Backbone));

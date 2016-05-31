@@ -343,15 +343,18 @@
       this.showUserPage('login', oauth);
     },
     showDashboard: function (start, end) {
+      var Model = Backbone.Model.extend({
+        url: tp.API + 'dashboard/',
+        parse: function (response) {
+          return response.data;
+        }
+      });
+      if (this.$me.isCP()) {
+        return this.showCPDashboard(Model);
+      }
       var range = moment.createRange(start, end)
-        , Model = Backbone.Model.extend({
-          url: tp.API + 'dashboard/',
-          parse: function (response) {
-            return response.data;
-          }
-        })
         , model = new Model(range);
-      this.$body.load('page/dashboard' + this.$me.getUserRole() + '.hbs', model, {
+      this.$body.load('page/dashboard.hbs', model, {
         refresh: true,
         data: range,
         loader: tp.view.Dashboard
@@ -359,6 +362,13 @@
       this.$body.setFramework('has-date-range dashboard dashboard-' + this.$me.getUserRole(), '欢迎你，' + this.$me.get('fullname'));
       this.$ranger.use(model);
       model.once('sync', this.$body.setLatestStat, this.$body);
+    },
+    showCPDashboard: function (Model) {
+      var model = new Model();
+      this.$body.load('page/dashboard-cp.hbs', model, {
+        loader: tp.view.Dashboard
+      });
+      this.$body.setFramework('dashboard dashboard-cp', '欢迎你，' + this.$me.get('fullname'));
     },
     showMyProfile: function () {
       this.$body.load('page/cp/profile.hbs', this.$me, {
@@ -1431,7 +1441,7 @@
     collection: collection
   });
 }(Nervenet.createNameSpace('tp.notification')));;
-(function (ns, $) {
+(function (ns, $, _, Backbone) {
   var history = 'history-recorder';
 
   function showErrorPopup(target, msgs) {
@@ -1813,7 +1823,7 @@
         }), ' ');
       $(target).removeClass(classes).addClass(className);
     });
-}(Nervenet.createNameSpace('tp.component'), jQuery));;
+}(Nervenet.createNameSpace('tp.component'), jQuery, _, Backbone));;
 (function (ns) {
   /**
    * @class
@@ -1893,7 +1903,9 @@
       console.log('error', collection, response, options);
     },
     collection_removeHandler: function (model, collection, options) {
-      var item = $(document.getElementById(model.id || model.cid));
+      var id = model.id || model.cid
+        , item = $(document.getElementById(id));
+      item = item.add(item.siblings('.relate-to-' + id)); // 有时候面临一拖N的局面,需要处理一下
       if (options.fadeOut) {
         item.fadeOut(function () {
           $(this).remove();
@@ -2536,7 +2548,7 @@
     '<p>{{msg}}</p>' +
     '<button type="button" class="btn btn-primary refresh-button"><i class="fa fa-refresh"></i> 再试一次</button></div>')
 }(Nervenet.createNameSpace('tp.component')));;
-(function (ns) {
+(function (ns, $, _, Backbone, tp) {
 
   var timeout
     , placeholder = '<p><i class="fa fa-spinner fa-spin fa-4x"></i></p>';
@@ -2559,13 +2571,14 @@
     initialize: function (options) {
       this.model = this.model || this.$context.getValue('model');
       if (options.isRemote) {
+        var url = options.content + '?v=' + tp.VERSION;
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
         if (/\.hbs$/.test(options.content)) {
-          $.get(options.content, _.bind(this.template_loadedHandler, this));
+          $.get(url, _.bind(this.template_loadedHandler, this));
         } else {
           options.isMD = /\.md$/.test(options.content);
-          $.get(options.content, _.bind(this.onLoadComplete, this));
+          $.get(url, _.bind(this.onLoadComplete, this));
         }
 
         ga('send', 'pageview', options.content);
@@ -2656,8 +2669,8 @@
       this.$('.modal-footer .btn-primary').prop('disabled', false);
     }
   });
-}(Nervenet.createNameSpace('tp.popup')));;
-(function (ns, $) {
+}(Nervenet.createNameSpace('tp.popup'), jQuery, _, Backbone, tp));;
+(function (ns, $, _, moment, tp, Backbone) {
   var timeout;
   /**
    * @class
@@ -2775,8 +2788,9 @@
      */
     initialize: function (options) {
       Editor.prototype.initialize.call(this, options);
-      if (!options.template) {
-        Handlebars.registerPartial('item', options.itemLabel || this.item);
+      var item = options.itemLabel || this.item;
+      if (item) {
+        Handlebars.registerPartial('item', item);
       }
       this.collection = tp.model.ListCollection.getInstance();
       this.collection.url = tp.API + options.url;
@@ -2887,21 +2901,22 @@
       }
       Editor.prototype.render.call(this, response);
 
+      var select = this.$('[name="' + this.options.prop + '"]');
       if (this.options.addNew) {
         var collection = new tp.model.ListCollection.getInstance({
             collectionId: this.options.prop,
             url: tp.API + this.options.url
-          })
-          , select = new tp.component.CollectionSelect({
-            el: this.$('select'),
-            collection: collection
           });
+        select = new tp.component.CollectionSelect({
+          el: select,
+          collection: collection
+        });
         collection.reset(this.options.options);
       } else if (this.options.list) {
-        this.$('select').html($(this.options.list).html());
+        select.html($(this.options.list).html());
       }
 
-      this.$('select').val(this.options.value)
+      select.val(this.options.value)
     }
   });
 
@@ -2983,8 +2998,8 @@
       Editor.prototype.initialize.call(this, options);
     }
   });
-}(Nervenet.createNameSpace('tp.popup'), jQuery));;
-(function (ns) {
+}(Nervenet.createNameSpace('tp.popup'), jQuery, _, moment, tp, Backbone));;
+(function (ns, $, _, Backbone, Handlebars, tp) {
   /**
    * @class
    */
@@ -3006,7 +3021,7 @@
       }
 
       $.ajax({
-        url: options.template,
+        url: options.template + '?v=' + tp.VERSION,
         success: _.bind(this.template_getHandler, this),
         error: _.bind(this.template_errorHandler, this),
         contentType: 'html'
@@ -3053,7 +3068,7 @@
         this.$('[href="#' + id + '"][data-toggle]').click();
       }
     },
-    model_errorHandler: function (model, response, options) {
+    model_errorHandler: function (model, response) {
       this.$el.html(tp.component.Manager.createErrorMsg(response));
       this.trigger('complete');
     },
@@ -3085,8 +3100,8 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.view')));;
-(function (ns) {
+}(Nervenet.createNameSpace('tp.view'), jQuery, _, Backbone, Handlebars, tp));;
+(function (ns, Backbone, _, $) {
   var print_header = '<link rel="stylesheet" href="{{url}}css/screen.css"><link rel="stylesheet" href="{{url}}css/print.css"><title>{{title}}</title>';
 
   /**
@@ -3252,7 +3267,7 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.view')));;
+}(Nervenet.createNameSpace('tp.view'), Backbone, _, jQuery));;
 (function (ns) {
   /**
    * @class
@@ -3720,6 +3735,9 @@
   });
 }(Nervenet.createNameSpace('tp.component')));;
 (function (ns) {
+  /**
+   * @class
+   */
   ns.MorrisChart = Backbone.View.extend({
     $colors: null,
     src: {},
@@ -4162,7 +4180,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-(function (ns) {
+(function (ns, Backbone, _, $) {
   /**
    * @class
    */
@@ -4330,4 +4348,4 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.component')));}());
+}(Nervenet.createNameSpace('tp.component'), Backbone, _, jQuery));}());
