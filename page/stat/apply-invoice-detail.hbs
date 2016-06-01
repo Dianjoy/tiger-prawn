@@ -34,11 +34,11 @@
         <td data-title="广告名称">{{ad_name}}</td>
         <td data-title="广告类型">{{pick ad_app_type ad_app_types}}</td>
         <td data-title="渠道号">{{cid}}</td>
-        <td data-title="单价（核减前）" class="price">&yen; {{readable_n quote_rmb}}</td>
+        <td data-title="单价（核减前）" class="price">{{readable_n quote_rmb}}</td>
         <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
         <td data-title="应结算收入（核减前）" class="income-before">&yen; {{readable_n income}}</td>
         <td data-title="单价（核减后）">
-          <a href="#quote_rmb_after" data-step="0.01" class="edit" title="单价（核减后）" data-template="stat/cut-type">&yen; {{readable_n quote_rmb_after}}</a>
+          <a href="#quote_rmb_after" data-step="0.01" class="edit" title="单价（核减后）" data-template="stat/cut-type">{{readable_n quote_rmb_after}}</a>
         </td>
         <td data-title="渠道CPA（核减后）">
           <a href="#cpa_after" class="edit" title="渠道CPA（核减后）" data-template="stat/cut-type">{{cpa_after}}</a>
