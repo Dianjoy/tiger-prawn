@@ -184,7 +184,16 @@
         {{/if}}
         <tr>
           <th width="10%">关联合同</th>
-          <td><a href="#agreement_id" class="edit" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{#if aid}}{{aid}}{{else}}{{agreement_id}}{{/if}}{{{{/raw-helper}}}}）">{{channel}}</a></td>
+          <td>
+            <a href="#agreement_id" class="edit" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{#if aid}}{{aid}}{{else}}{{agreement_id}}{{/if}}{{{{/raw-helper}}}}）" data-template="ad/popup/agreement-edit">{{channel}}</a>
+            {{#if other_agreements}}
+            <ul>
+              {{#each other_agreements}}
+              <li>{{company}} {{agreement_id}}</li>
+              {{/each}}
+            </ul>
+            {{/if}}
+          </td>
         </tr>
         {{#unless agreement_id}}
         <tr>

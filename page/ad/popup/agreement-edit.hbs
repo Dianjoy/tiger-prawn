@@ -1,0 +1,47 @@
+<h4>搜索并关联合同</h4>
+<div class="form-group select-button">
+  {{#if (lookup @root list)}}
+    {{#each (lookup @root list)}}
+      <input type="{{#if ../multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{id}}" name="{{../prop}}" value="{{id}}" checked><label for="curr-{{id}}">{{> item}}</label>
+    {{/each}}
+  {{else if value}}
+    <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="curr-{{value}}" name="{{prop}}" value="{{value}}" checked><label for="curr-{{value}}">{{> item}}</label>
+  {{/if}}
+</div>
+<div class="form-group">
+  <label for="editor-popup-input">{{label}}</label>
+  <label for="editor-popup-search">请输入关键词：</label>
+  <div class="input-group">
+    <input type="search" class="form-control" id="editor-popup-search" autofocus>
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-default search-button"><i class="fa fa-search"></i></button>
+    </span>
+  </div>
+</div>
+<div class="form-group search-result select-button">
+  <script type="text/x-handlebars-template">
+  {{{{raw-helper}}}}
+  <input type="{{#if multiple}}checkbox{{else}}radio{{/if}}" id="prop-{{id}}" name="{{prop}}" value="{{id}}"><label for="prop-{{id}}">{{> item}}</label>
+  {{{{/raw-helper}}}}
+  </script>
+</div>
+<hr>
+<h4>其它信息</h4>
+<div class="form-group">
+  <input type="checkbox" name="is_correct" value="1" id="is_correct">
+  <label for="is_correct">修改关联合同</label>
+  <p class="help-block">
+    如果此广告合同关联有误，请勾选此处。若需要添加新的关联合同，请勿勾选。
+  </p>
+</div>
+<div class="form-group">
+  <label for="date">生效时间</label>
+  <div class="input-group">
+    <input type="date" name="date" class="form-control datetimepicker" id="date" value="{{to_date}}" data-format="YYYY-MM-DD" data-widget-parent=".modal-dialog">
+    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+  </div>
+</div>
+<div class="form-group">
+  <label for="agreement_comment">备注</label>
+  <textarea name="agreement_comment" id="agreement_comment" rows="2" class="form-control"></textarea>
+</div>
