@@ -40,7 +40,7 @@
           table.find('#rmb,#reason,#income-total').attr('colspan', function () {
             return $(this).data('colspan');
           });
-          table.find('th,td').css('border', '1px solid #ddd');
+          table.find('th,td').attr('style', 'border:1px solid #ddd; mso-number-format:"\@";');
         }
         if (i === 2) {
           tableList.eq(i).find('#accept-account').text(acceptAccount);
