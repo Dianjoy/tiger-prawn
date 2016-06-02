@@ -187,11 +187,32 @@
           <td>
             <a href="#agreement_id" class="edit" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{#if aid}}{{aid}}{{else}}{{agreement_id}}{{/if}}{{{{/raw-helper}}}}）" data-template="ad/popup/agreement-edit">{{channel}}</a>
             {{#if other_agreements}}
-            <ul>
+            <hr>
+            <table class="table">
+              <caption>合同关联记录</caption>
+              <thead>
+              <tr>
+                <th>合同主体</th>
+                <th>合同编号</th>
+                <th>操作类型</th>
+                <th>生效时间</th>
+                <th>操作人</th>
+                <th>操作时间</th>
+              </tr>
+              </thead>
+              <tbody>
               {{#each other_agreements}}
-              <li>{{company}} {{agreement_id}}</li>
+              <tr>
+                <td>{{company}}</td>
+                <td>{{agreement_id}}</td>
+                <td>{{#if is_correct}}修改关联合同{{else}}添加新的关联合同{{/if}}</td>
+                <td>{{date}}</td>
+                <td>{{admin}}</td>
+                <td>{{create_time}}</td>
+              </tr>
               {{/each}}
-            </ul>
+              </tbody>
+            </table>
             {{/if}}
           </td>
         </tr>
