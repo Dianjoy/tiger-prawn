@@ -179,7 +179,7 @@
         {{#if sales}}
         <tr>
           <th>负责人</th>
-          <td><a href="#owner" class="edit" data-type="select" data-options="sales">{{pick owner sales}}</a></td>
+          <td><a href="#owner" class="edit" data-type="select" data-options="sales">{{#pick_with owner sales key="key"}}{{value}}{{/pick_with}}</a></td>
         </tr>
         {{/if}}
         <tr>
