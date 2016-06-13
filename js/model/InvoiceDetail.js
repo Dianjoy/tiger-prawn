@@ -104,15 +104,15 @@
             quote_rmb_after: element.quote_rmb,
             cpa_after: element.cpa,
             income_after: element.income,
-            rate: (1 - element.cpa * element.quote_rmb / element.income) * 100,
-            money_cut: element.income - element.income,
+            rate: element.income ? (1 - element.cpa * element.quote_rmb / element.income) * 100 : 0,
+            money_cut: 0,
             remark: ''
           });
         } else {
           _.extend(element, {
-            income_after: (element.quote_rmb_after * element.cpa_after),
-            rate: (1 - element.cpa_after * element.quote_rmb_after / element.income) * 100,
-            money_cut: (element.income - element.quote_rmb_after * element.cpa_after)
+            income_after: element.quote_rmb_after * element.cpa_after,
+            rate: element.income ? (1 - element.cpa_after * element.quote_rmb_after / element.income) * 100 : 0,
+            money_cut: element.income - element.quote_rmb_after * element.cpa_after
           });
         }
         var income_type = element.ad_app_type == 1 ? 'ad_income' : 'ios_income';
