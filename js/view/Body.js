@@ -124,13 +124,31 @@
       this.trigger('load:complete');
     },
     requestButton_clickHandler: function (event) {
-      var href = event.target.getAttribute('href');
-      href = /https?:\/\//.test(href) ? href : tp.API + href;
-      $.get(href, function (response) {
+      var button = $(event.currentTarget)
+        , href = button.attr('href')
+        , method = button.data('method') || 'get'
+        , msg = button.data('msg');
+      if (msg && !confirm(msg)) {
+        return;
+      }
+      href = /^(https?:)?\/\//.test(href) ? href : tp.API + href;
+      $.ajax({
+        url: href,
+        dataType: 'json',
+        method: method,
+        xhrFields: {
+          withCredentials: true
+        }
+      }).done(function (response) {
         if (response.code === 0) {
           alert(response.msg);
         }
-      }, 'json');
+        if (method === 'delete') {
+          button.closest(button.data('item')).fadeOut(function () {
+            $(this).remove();
+          });
+        }
+      });
       event.preventDefault();
     },
     page_loadCompleteHandler: function () {

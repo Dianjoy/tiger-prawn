@@ -185,11 +185,7 @@
         <tr>
           <th width="10%">关联合同</th>
           <td>
-            <a href="#agreement_id" class="edit" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{#if aid}}{{aid}}{{else}}{{agreement_id}}{{/if}}{{{{/raw-helper}}}}）" data-template="ad/popup/agreement-edit">{{channel}}</a>
-            {{#if other_agreements}}
-            <hr>
             <table class="table">
-              <caption>合同关联记录</caption>
               <thead>
               <tr>
                 <th>合同主体</th>
@@ -198,22 +194,33 @@
                 <th>生效时间</th>
                 <th>操作人</th>
                 <th>操作时间</th>
+                <th></th>
               </tr>
               </thead>
               <tbody>
-              {{#each other_agreements}}
               <tr>
                 <td>{{company}}</td>
-                <td>{{agreement_id}}</td>
+                <td>{{aid}}</td>
+                <td></td>
+                <td>{{substring create_time 0 10}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              {{#each link_agreements}}
+              <tr>
+                <td>{{company}}</td>
+                <td>{{aid}}</td>
                 <td>{{#if is_correct}}修改关联合同{{else}}添加新的关联合同{{/if}}</td>
                 <td>{{date}}</td>
                 <td>{{admin}}</td>
                 <td>{{create_time}}</td>
+                <td><a href="{{API}}ad/{{ad_id}}/agreement/{{agreement_id}}" class="btn request-button btn-danger" data-method="delete" data-msg="确定不再关联这个合同么？" data-item="tr"><i class="fa fa-times"></i></a></td>
               </tr>
               {{/each}}
               </tbody>
             </table>
-            {{/if}}
+            <a href="#agreement_id" class="edit btn btn-info" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{#if aid}}{{aid}}{{else}}{{agreement_id}}w{{/if}}{{{{/raw-helper}}}}）" data-template="ad/popup/agreement-edit"><i class="fa fa-edit"></i> 新增/修改关联合同</a>
           </td>
         </tr>
         {{#unless agreement_id}}
