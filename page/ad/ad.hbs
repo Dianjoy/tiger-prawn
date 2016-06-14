@@ -220,13 +220,13 @@
               {{/each}}
               </tbody>
             </table>
-            <a href="#agreement_id" class="edit btn btn-info" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{#if aid}}{{aid}}{{else}}{{agreement_id}}w{{/if}}{{{{/raw-helper}}}}）" data-template="ad/popup/agreement-edit"><i class="fa fa-edit"></i> 新增/修改关联合同</a>
+            <a href="#agreement_id" class="edit btn btn-info" data-type="search" data-url="agreement/" data-item-label="{{{{raw-helper}}}}{{company}}（{{company_short}} {{#if aid}}{{aid}}{{else}}{{agreement_id}}{{/if}}{{{{/raw-helper}}}}）" data-template="ad/popup/agreement-edit"><i class="fa fa-edit"></i> 新增/修改关联合同</a>
           </td>
         </tr>
         {{#unless agreement_id}}
         <tr>
           <th>渠道名称</th>
-          <td><a href="#channel" class="edit" data-type="select" data-add-new="true" data-options="channels" data-template="ad/popup/channel-edit" data-url="channel/">{{channel}}</a></td>
+          <td>{{channel}}</td>
         </tr>
         {{/unless}}
         <tr>
