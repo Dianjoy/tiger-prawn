@@ -80,7 +80,7 @@
       var button = $(event.currentTarget)
         , msg = button.data('msg') || '确定删除么？'
         , channel = button.parent().find('.check-all').val().slice(8)
-        , models = this.collection.where({channel: channel});
+        , models = this.collection.where({channel: Number(channel) || channel.toString()});
       if (!confirm(msg)) {
         return;
       }

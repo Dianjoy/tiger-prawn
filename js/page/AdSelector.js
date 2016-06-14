@@ -35,12 +35,10 @@
       if (element.value) {
         return $(element).is(':checked') ? [element.value] : [];
       }
-      var value = _.chain(element)
+      return _.chain(element)
         .filter(function (item) { return item.checked; })
         .map(function (item) { return item.value; })
         .value();
-
-      return value;
     },
     flyAnimation: function () {
       var modal = this.$el.parents('.modal')
@@ -53,7 +51,7 @@
         width: '0px'
       }, 1000, 'swing', function () {
         self.$invoiceList.fetch({reset: true});
-        self.$el.trigger('success', 1000);
+        self.$el.trigger('success');
       });
     }
   })
