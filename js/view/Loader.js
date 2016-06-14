@@ -40,7 +40,9 @@
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
-      this.model.off();
+      if (this.model) {
+        this.model.off();
+      }
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
       if (this.refresh) {
         this.refresh = false;
