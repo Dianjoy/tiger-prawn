@@ -295,7 +295,11 @@
         // 空白的复选框有时候也有保存的必要
         var empty = {};
         this.$(':checkbox[name]:not(:checked)').each(function () {
-          empty[this.name] = '';
+          var key = this.name.replace('[]', '');
+          if (key in attr) {
+            return;
+          }
+          empty[key] = '';
         });
         attr = _.defaults(attr, empty);
         // 开关类的值需要特殊处理
