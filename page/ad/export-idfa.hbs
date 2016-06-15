@@ -46,5 +46,14 @@
       {{/equal}}
     </div>
   </div>
-  <label class="col-md-12 col-xs-12">注：仅能查询一周内的数据，若有其他需求，请联系技术。</label>
+  {{#equal ad_app_type 1}}
+    <label class="col-md-12 col-xs-12">注：仅能查询一周内的数据，若有其他需求，请联系技术。</label>
+  {{/equal}}
+  {{#equal ad_app_type 2}}
+    <p>
+      <label class="col-md-12 col-xs-12">提示：</label>
+      <label class="col-md-12 col-xs-12">1.仅能查询一周内的数据，若有其他需求，请联系技术；</label>
+      <label class="col-md-12 col-xs-12">2.每日早上10点后，才能点击下载前一日的完整数据。</label>
+    </p>
+  {{/equal}}
 </form>
