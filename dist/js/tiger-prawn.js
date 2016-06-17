@@ -1737,7 +1737,11 @@
         // 空白的复选框有时候也有保存的必要
         var empty = {};
         this.$(':checkbox[name]:not(:checked)').each(function () {
-          empty[this.name] = '';
+          var key = this.name.replace('[]', '');
+          if (key in attr) {
+            return;
+          }
+          empty[key] = '';
         });
         attr = _.defaults(attr, empty);
         // 开关类的值需要特殊处理
@@ -3037,6 +3041,9 @@
       Backbone.View.prototype.remove.call(this);
     },
     render: function () {
+      if (this.model instanceof Backbone.Model) {
+        this.model.off();
+      }
       this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
       if (this.refresh) {
         this.refresh = false;
@@ -3223,13 +3230,31 @@
       this.trigger('load:complete');
     },
     requestButton_clickHandler: function (event) {
-      var href = event.target.getAttribute('href');
-      href = /https?:\/\//.test(href) ? href : tp.API + href;
-      $.get(href, function (response) {
+      var button = $(event.currentTarget)
+        , href = button.attr('href')
+        , method = button.data('method') || 'get'
+        , msg = button.data('msg');
+      if (msg && !confirm(msg)) {
+        return;
+      }
+      href = /^(https?:)?\/\//.test(href) ? href : tp.API + href;
+      $.ajax({
+        url: href,
+        dataType: 'json',
+        method: method,
+        xhrFields: {
+          withCredentials: true
+        }
+      }).done(function (response) {
         if (response.code === 0) {
           alert(response.msg);
         }
-      }, 'json');
+        if (method === 'delete') {
+          button.closest(button.data('item')).fadeOut(function () {
+            $(this).remove();
+          });
+        }
+      });
       event.preventDefault();
     },
     page_loadCompleteHandler: function () {
@@ -4280,12 +4305,17 @@
       }
     },
     selected_addHandler: function (model) {
-      var html = this.result_template(model.toJSON());
-      this.result.append(html);
+      var html = this.result_template(model.toJSON())
+        , item = $(html);
+      this.result.append(item);
+      item.trigger('change');
     },
     selected_removeHandler: function (model) {
-      var id = model.id;
-      this.$('#selected-' + id + ',[for=selected-' + id + ']').remove();
+      var id = model.id
+        , item = this.$('#selected-' + id + ',[for=selected-' + id + ']');
+      item
+        .prop('checked', false)
+        .remove();
     },
     errorHandler: function () {
       this.spinner.hide();

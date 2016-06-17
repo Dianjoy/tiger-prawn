@@ -102,12 +102,17 @@
       }
     },
     selected_addHandler: function (model) {
-      var html = this.result_template(model.toJSON());
-      this.result.append(html);
+      var html = this.result_template(model.toJSON())
+        , item = $(html);
+      this.result.append(item);
+      item.trigger('change');
     },
     selected_removeHandler: function (model) {
-      var id = model.id;
-      this.$('#selected-' + id + ',[for=selected-' + id + ']').remove();
+      var id = model.id
+        , item = this.$('#selected-' + id + ',[for=selected-' + id + ']');
+      item
+        .prop('checked', false)
+        .remove();
     },
     errorHandler: function () {
       this.spinner.hide();
