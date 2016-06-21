@@ -12,6 +12,16 @@
         ns.BaseList.prototype.refresh.call(this, options);
       }
     },
+    render: function () {
+      ns.BaseList.prototype.render.call(this);
+      this.$el
+        .val(function () {
+          var value = $(this).data('value');
+          value = value || this.value;
+          return value;
+        })
+        .prop('disabled', false);
+    },
     collection_addHandler: function (model, collection, options) {
       var item = ns.BaseList.prototype.collection_addHandler.call(this, model, collection, options);
       if (item) {

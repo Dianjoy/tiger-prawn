@@ -736,7 +736,7 @@
     }
   };
 }(Nervenet.createNameSpace('tp')));;
-(function (ns) {
+(function (ns, _) {
   /**
    *
    * @param {Backbone.Model} model
@@ -755,11 +755,13 @@
   }
 
   ns.editModelCommand = function (model, prop, options) {
-    options = _.extend({}, options);
+    options = _.extend({
+      API: tp.API
+    }, options);
     options.value = options.defaultValue ? options.defaultValue : model.get(prop);
     callPopup(model, prop, options);
   }
-}(Nervenet.createNameSpace('tp.controller')));;
+}(Nervenet.createNameSpace('tp.controller'), _));;
 (function (ns) {
   ns.addModelCommand = function (options, context) {
     var collection = tp.model.ListCollection.getInstance(options)
@@ -1828,7 +1830,7 @@
       $(target).removeClass(classes).addClass(className);
     });
 }(Nervenet.createNameSpace('tp.component'), jQuery, _, Backbone));;
-(function (ns) {
+(function (ns, Backbone) {
   /**
    * @class
    */
@@ -1929,7 +1931,7 @@
       this.render();
     }
   });
-}(Nervenet.createNameSpace('tp.component')));;
+}(Nervenet.createNameSpace('tp.component'), Backbone));;
 (function (ns) {
   ns.FileFetcher = Backbone.View.extend({
     timeout: 0,
@@ -2257,6 +2259,16 @@
       } else {
         ns.BaseList.prototype.refresh.call(this, options);
       }
+    },
+    render: function () {
+      ns.BaseList.prototype.render.call(this);
+      this.$el
+        .val(function () {
+          var value = $(this).data('value');
+          value = value || this.value;
+          return value;
+        })
+        .prop('disabled', false);
     },
     collection_addHandler: function (model, collection, options) {
       var item = ns.BaseList.prototype.collection_addHandler.call(this, model, collection, options);

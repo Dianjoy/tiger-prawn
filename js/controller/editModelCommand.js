@@ -2,7 +2,7 @@
  * Created by meathill on 14-3-19.
  */
 'use strict';
-(function (ns) {
+(function (ns, _) {
   /**
    *
    * @param {Backbone.Model} model
@@ -21,8 +21,10 @@
   }
 
   ns.editModelCommand = function (model, prop, options) {
-    options = _.extend({}, options);
+    options = _.extend({
+      API: tp.API
+    }, options);
     options.value = options.defaultValue ? options.defaultValue : model.get(prop);
     callPopup(model, prop, options);
   }
-}(Nervenet.createNameSpace('tp.controller')));
+}(Nervenet.createNameSpace('tp.controller'), _));

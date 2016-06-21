@@ -23,3 +23,19 @@ form
 
         &:after
           content: $fa-var-caret-right
+
+  .form-group.pos-rel
+    position: relative
+
+  select
+    &.loading
+      width: 95%
+
+      + .spinner
+        display: block
+
+    + .spinner
+      display: none
+      position: absolute
+      right: 0
+      bottom: $gap-s
