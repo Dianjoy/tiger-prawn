@@ -2587,7 +2587,8 @@
     initialize: function (options) {
       this.model = this.model || this.$context.getValue('model');
       if (options.isRemote) {
-        var url = options.content + '?v=' + tp.VERSION;
+        var url = options.content;
+        url = url.indexOf('?') === -1 ? url + '?v=' + tp.VERSION : url;
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
         if (/\.hbs$/.test(options.content)) {
@@ -3036,8 +3037,10 @@
         this.isModelReady = true;
       }
 
+      var url = options.template;
+      url = url.indexOf('?') === -1 ? url + '?v=' + tp.VERSION : url;
       $.ajax({
-        url: options.template + '?v=' + tp.VERSION,
+        url: url,
         success: _.bind(this.template_getHandler, this),
         error: _.bind(this.template_errorHandler, this),
         contentType: 'html'
