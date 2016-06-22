@@ -95,7 +95,9 @@
     },
     form_successHandler: function () {
       var channel = this.model.get('channel')
-        , models = this.$invoiceList.where({channel: Number(channel) || channel.toString()});
+        , models = this.$invoiceList.filter(function (model) {
+          return model.get('channel') == channel;
+        });
       this.$invoiceList.remove(models);
     },
     header_blurHandler: function (event) {
