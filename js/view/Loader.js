@@ -23,8 +23,10 @@
         this.isModelReady = true;
       }
 
+      var url = options.template;
+      url = url.indexOf('?') === -1 ? url + '?v=' + tp.VERSION : url;
       $.ajax({
-        url: options.template + '?v=' + tp.VERSION,
+        url: url,
         success: _.bind(this.template_getHandler, this),
         error: _.bind(this.template_errorHandler, this),
         contentType: 'html'

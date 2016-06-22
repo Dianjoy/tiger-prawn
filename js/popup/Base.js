@@ -26,7 +26,8 @@
     initialize: function (options) {
       this.model = this.model || this.$context.getValue('model');
       if (options.isRemote) {
-        var url = options.content + '?v=' + tp.VERSION;
+        var url = options.content;
+        url = url.indexOf('?') === -1 ? url + '?v=' + tp.VERSION : url;
         this.$el.addClass('loading')
           .find('.modal-body').html(placeholder);
         if (/\.hbs$/.test(options.content)) {
