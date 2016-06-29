@@ -4,7 +4,7 @@
  * @since 2013-08-08
  */
 'use strict';
-(function (ns) {
+(function (ns, Backbone, $, _) {
   var IOS_PREFIX = 'itms-apps://'
     , option_template = '{{#each list}}<option value="{{id}}">{{agreement}} {{channel}} {{ad_name}} {{cid}}</option>{{/each}}'
     , aso_desc = 'App Store搜索关键字“XX”，找到“XXX”（约第X位）\n下载并注册帐号后，二次登录体验可得奖励。'
@@ -125,7 +125,7 @@
     feedback_changeHandler: function (event) {
       this.$el.toggleClass('show-feedback-detail', event.target.value === '2' || event.target.value === '3');
     },
-    fetchAD_errorHandler: function (xhr, status, err) {
+    fetchAD_errorHandler: function () {
       alert('加载已有广告失败');
       this.$('#replace-ad').prop('disabled', false)
         .next().removeClass('spin');
@@ -231,4 +231,4 @@
       $('#ad_desc').val(not_offer ? aso_desc : this.model.get('ad_url'));
     }
   });
-}(Nervenet.createNameSpace('tp.page')));
+}(Nervenet.createNameSpace('tp.page'), Backbone, jQuery, _));

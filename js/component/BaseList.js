@@ -74,8 +74,10 @@
       }
     },
     collection_changeHandler: function (model) {
-      var html = this.template(model.toJSON());
-      $(document.getElementById(model.id || model.cid)).replaceWith(html); // 因为id里可能有.
+      var html = this.template(model.toJSON())
+        , id = model.id || model.cid;
+      this.$('.relate-to-' + id).remove();
+      $(document.getElementById(id)).replaceWith(html); // 因为id里可能有.
     },
     collection_errorHandler: function (collection, response, options) {
       console.log('error', collection, response, options);

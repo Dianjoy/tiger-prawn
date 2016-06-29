@@ -2,7 +2,7 @@
  * Created by 路佳 on 2014/11/15.
  */
 'use strict';
-(function (ns) {
+(function (ns, Backbone, _) {
   var CONFIRM_MSG = '您刚刚上传的包和之前的报名不同，可能有误。您确定要保存么？';
 
   /**
@@ -32,6 +32,13 @@
         this.on('sync', this.syncHandler, this);
       }
     },
+    /**
+     *
+     * @param {object} response
+     * @param {object} response.ad
+     * @param {object} response.options
+     * @returns {*}
+     */
     parse: function (response) {
       if (response.options) {
         this.options = response.options;
@@ -68,4 +75,4 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.model')));
+}(Nervenet.createNameSpace('tp.model'), Backbone, _));

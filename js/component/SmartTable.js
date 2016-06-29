@@ -1,5 +1,5 @@
 'use strict';
-(function (ns) {
+(function (ns, _) {
   var filterLabel = Handlebars.compile('<a href="#/{{key}}/{{value}}" class="filter label label-{{key}}">{{#if label}}{{label}}{{else}}{{value}}{{/if}}</a>');
 
   /**
@@ -236,11 +236,20 @@
         , data = target.data()
         , index = target.closest('td').index()
         , prop = event.currentTarget.hash.substr(1)
-        , id = target.closest('tr').attr('id')
-        , model = this.collection.get(id)
+        , tr = target.closest('tr')
+        , id = tr.attr('id')
         , options = _.extend({
           label: this.$('thead th').eq(index).text()
         }, data);
+      if (!id) {
+        var relate = tr.attr('class').match(/\brelate-to-(\w+)\b/);
+        id = relate ? relate[1] : false;
+      }
+      if (!id) {
+        alert('未查询到对象id，无法启动编辑。');
+        return;
+      }
+      var model = this.collection.get(id);
       options.type = data.type || 'short-text';
       this.$context.trigger('edit-model', model, prop, options);
       event.stopPropagation();
@@ -323,4 +332,4 @@
       event.preventDefault();
     }
   });
-}(Nervenet.createNameSpace('tp.component')));
+}(Nervenet.createNameSpace('tp.component'), _));
