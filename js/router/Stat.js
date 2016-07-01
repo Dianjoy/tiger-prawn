@@ -2,22 +2,24 @@
  * Created by meathill on 14/11/16.
  */
 'use strict';
-(function (ns) {
+(function (ns, _, Backbone) {
   ns.Stat = Backbone.Router.extend({
     $body: null,
     $me: null,
     $context: null,
     routes: {
-      'stat/(:ad_type)': 'showStat',
       'stat/:id/:start/:end': 'showADStat',
       'stat/:id/:date': 'showADStatDate',
-      'stat-dj/(:start/:end)': 'showDianjoyStat',      
       'invoice/': 'showInvoice',
       'invoice/:id': 'invoiceDetail',
       'invoice/apply/:channel/:ids': 'applyInvoice',
       'stat/analyse/': 'showAdminADStat',
       'analyse/:start/:end': 'showAdminADStatTime',
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
+    },
+    initialize: function () {
+      this.route(/^stat\/[12]$/, this.showStat);
+      this.route(/^stat\/([0-9a-f]{32})$/, this.showADStat);
     },
     showADStat: function (id, start, end) {
       var page = this.$me.isCP() ? '_cp' : ''
@@ -31,7 +33,7 @@
       this.$body.load('page/stat/daily' + page + '.hbs', model, {
         className: 'stat stat-ad'
       });
-      this.$body.setFramework('has-date-range', '单个广告按日期统计');
+      this.$body.setFramework(this.$me.isCP() ? '' : 'has-date-range', '单个广告按日期统计');
     },
     showADStatDate: function (id, date) {
       if (this.$body.page && this.$body.page.$el.is('.stat.stat-date')) {
@@ -58,16 +60,6 @@
         });
       this.$body.load('page/stat/list' + page + '.hbs', obj);
       this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type + '-stat'), '我的投放效果');
-    },
-    showDianjoyStat: function (start, end) {
-      var range = moment.createRange(start, end, true)
-        , obj = _.extend(range, {
-          API: tp.API,
-          isDianjoy: true,
-          has_export: this.$me.get('has_export')
-        });
-      this.$body.load('page/stat/list_cp.hbs', obj);
-      this.$body.setFramework('has-date-range stat-dj', '点乐投放效果');
     },
     showInvoice: function () {
       this.$body.load('page/stat/invoice.html');
@@ -123,4 +115,4 @@
       this.$body.setFramework('has-date-range daily-ad', '广告统计/广告数据分析');
     }
   });
-}(Nervenet.createNameSpace('tp.router')));
+}(Nervenet.createNameSpace('tp.router'), _, Backbone));

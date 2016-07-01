@@ -1,15 +1,29 @@
-<div class="page-header">
-  <h1>{{ad_name}}</h1>
-</div>
+<table class="table table-bordered">
+  <thead>
+  <tr>
+    <th>广告名</th>
+    <th>平台</th>
+    <th>状态</th>
+    <th>开始时间</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{{ad_name}}</td>
+    <td>{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
+    <td>{{pick status '投放中' '已完成'}}</td>
+    <td>{{moment create_time}}</td>
+  </tr>
+  </tbody>
+</table>
 
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-id-attribute="date" data-defaults="{{#if has_export}}has_export=1&{{/if}}ad_name={{ad_name}}&ad_id={{id}}">
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-start="{{substring create_time 0 10}}" data-id-attribute="date">
   <thead>
   <tr>
     <th>日期</th>
     <th>关键词</th>
     <th>激活数</th>
     <th>总计</th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -23,11 +37,6 @@
       <td data-title="激活数">{{readable_n num}}</td>
       {{#if @first}}
       <td data-title="总计" rowspan="{{../count}}">{{readable_n ../total}}</td>
-      <td rowspan="{{../count}}">
-        {{#if ../has_export}}
-        <a href="page/ad/export-idfa_cp.hbs" class="btn btn-primary popup" title="导出数据" data-confirm="导出CSV" data-popup="tp.page.DateRange" data-start="{{../date}}" data-ad_name="{{../ad_name}}"><i class="fa fa-download"></i></a>
-        {{/if}}
-      </td>
       {{else}}
       </tr>
       {{/if}}

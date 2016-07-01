@@ -1,0 +1,86 @@
+<div class="form-inline table-header">
+  <div class="form-group">
+    <label for="search-query">搜索：</label>
+    <input type="search" class="form-control" id="search-query">
+  </div>
+</div>
+
+<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query" data-model="tp.model.AD" data-collection-id="ad" data-start="{{start}}" data-end="{{end}}" data-ranger=".date-range">
+  <thead>
+  <tr>
+    <th class="filters">广告名称</th>
+    <th>平台</th>
+    <th><a class="order active inverse" href="#create_time">开始时间</a></th>
+    <th>状态</th>
+    <th>激活数</th>
+    <th>操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}} {{pack_name}}" id="{{id}}">
+      <td data-title="管理名">
+        <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
+      </td>
+      <td>{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
+      <td data-title="开始时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
+      <td data-title="状态">
+        <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
+      </td>
+      <td data-title="激活数">{{transfer}}</td>
+      <td data-title="操作">
+        <div class="btn-group">
+          <a class="btn btn-info" title="分日统计" href="#/stat/{{id}}"><i class="fa fa-line-chart"></i> 分日统计</a>
+          {{#if has_export}}
+          <a href="page/ad/export-idfa_cp.hbs" class="btn btn-primary popup" title="导出数据" data-id="{{id}}" data-confirm="导出CSV" data-popup="tp.page.DateRange" data-collection-id="stat" data-type="{{#if has_api}}3{{else}}0{{/if}}"><i class="fa fa-download"></i></a>
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+    {{{{/raw-helper}}}}
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
+  </tr>
+  </tfoot>
+</table>
+
+
+<script type="text/x-handlebars-template" class="editor-info">
+  {{{{raw-helper}}}}
+  <table class="table table-bordered">
+    <tbody>
+    <tr>
+      <th>广告名称</th>
+      <td>{{ad_name}}</td>
+    </tr>
+    <tr></tr>
+    </tbody>
+  </table>
+  {{{{/raw-helper}}}}
+</script>
+
+<nav class="pull-right table-footer">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+      <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+      {{{{/raw-helper}}}}
+    </script>
+  </ul>
+  <div class="form-group">
+    <label for="pagesize">每页显示：</label>
+    <select class="form-control" id="pagesize">
+      <option selected>10</option>
+      <option>20</option>
+      <option>50</option>
+    </select>
+  </div>
+</nav>

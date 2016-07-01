@@ -1,7 +1,7 @@
 [
   {
-    "title": "点乐投放结果",
-    "icon": "line-chart",
-    "link": "#/stat-dj/"
+    "title": "广告管理",
+    "icon": "flag",
+    "link": "#/ad/"
   }
 ]

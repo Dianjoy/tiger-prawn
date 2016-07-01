@@ -2,7 +2,7 @@
  * Created by 路佳 on 2015/12/11.
  */
 'use strict';
-(function (ns, $) {
+(function (ns, $, Backbone, _) {
   /**
    * @class
    */
@@ -159,4 +159,4 @@
       event.stopPropagation();
     }
   });
-}(Nervenet.createNameSpace('tp.view'), jQuery));
+}(Nervenet.createNameSpace('tp.view'), jQuery, Backbone, _));

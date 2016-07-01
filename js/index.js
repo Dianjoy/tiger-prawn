@@ -1,5 +1,5 @@
 'use strict';
-(function () {
+(function (Backbone, _, Nervenet) {
   // start here
   var context = Nervenet.createContext()
     , me = new tp.model.DIYUser()
@@ -72,7 +72,7 @@
 
   ga('create', 'UA-35957679-15', 'auto');
   ga('send', 'pageview');
-}());
+}(Backbone, _, Nervenet));
 
 // 防止被 iframe
 (function () {

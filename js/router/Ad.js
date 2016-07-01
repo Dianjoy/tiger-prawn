@@ -45,10 +45,13 @@
       this.$context.mapValue('model', model);
     },
     list: function () {
-      var page = 'page/ad/list' + (this.$me.isCP() ? '_cp' : '') + '.html';
+      var page = 'page/ad/list' + (this.$me.isCP() ? '_cp.hbs' : '.html')
+        , range = moment.createRange()
+        , classes = 'ad ad-list' + (this.$me.isCP() ? ' has-date-range' : '');
+      range.API = tp.API;
       this.$body
-        .load(page)
-        .setFramework('ad ad-list', '我的投放计划');
+        .load(page, range)
+        .setFramework(classes, '我的投放计划');
     },
     listApplies: function () {
       this.$body
