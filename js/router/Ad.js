@@ -16,6 +16,7 @@
       "apply/(:id)": "listApplies",
       "channel(/)": "listChannel",
       "channel/:id": "listChannelPrepaid",
+      "channel/:id/feedback/": "listChannelFeedback",
       "info/(:query)": "showHistoryInfo",
       "competitor_ad/": "listCompetitorAds",
       "payment/": "listAdPayments"
@@ -64,6 +65,17 @@
           API: tp.API
         })
         .setFramework('channel', '我的广告主');
+    },
+    listChannelFeedback: function (id) {
+      var Model = tp.model.Model.extend({
+          urlRoot: tp.API + 'channel/'
+        })
+        , model = new Model({
+          API: tp.API,
+          id: id
+        });
+      this.$body.load('page/channel/feedback.hbs', model)
+        .setFramework('channel feedback', '设置广告数据反馈');
     },
     listChannelPrepaid: function (id) {
       var Model = tp.model.Model.extend({

@@ -1,0 +1,48 @@
+<h2>设置广告数据反馈 <small>{{full_name}}</small></h2>
+<table class="table table-bordered table-striped smart-table responsive-table" data-url="{{API}}channel/{{id}}/feedback/" data-pagination=".pagination" data-pagesize="10" data-pagesize-controller="#pagesize" data-id-attribute="pack_name">
+  <thead>
+  <tr>
+    <th>广告名</th>
+    <th>平台</th>
+    <th>数据反馈形式</th>
+  </tr>
+  </thead>
+  <tbody>
+    <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <tr id="{{pack_name}}">
+      <td>{{ad_name}}</td>
+      <td>{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
+      <td><a href="#feedback" class="edit label label-info" data-type="select" data-options="feedbacks">{{pick feedback '' '截图' '官方后台' '渠道后台' 'API接口' '核对mac地址' '实时数据' '按点乐数据结算'}}</a></td>
+    </tr>
+    {{{{/raw-helper}}}}
+    </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="3"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
+  </tr>
+  </tfoot>
+</table>
+
+<nav class="pull-right table-footer">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+        <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+        {{#each pages}}
+        <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+        {{/each}}
+        <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+      {{{{/raw-helper}}}}
+    </script>
+  </ul>
+  <div class="form-group">
+    <label for="pagesize">每页显示：</label>
+    <select class="form-control" id="pagesize">
+      <option selected>10</option>
+      <option>20</option>
+      <option>50</option>
+    </select>
+  </div>
+</nav>
