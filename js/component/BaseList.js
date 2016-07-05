@@ -2,7 +2,7 @@
  * Created by meathill on 15/4/28.
  */
 'use strict';
-(function (ns, Backbone) {
+(function (ns, _, Backbone) {
   /**
    * @class
    */
@@ -105,4 +105,4 @@
       this.render();
     }
   });
-}(Nervenet.createNameSpace('tp.component'), Backbone));
+}(Nervenet.createNameSpace('tp.component'), _, Backbone));

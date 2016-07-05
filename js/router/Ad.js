@@ -3,7 +3,7 @@
  * router for ads
  */
 'use strict';
-(function (ns) {
+(function (ns, _, Backbone) {
   ns.AD = Backbone.Router.extend({
     $body: null,
     $context: null,
@@ -49,7 +49,10 @@
       var page = 'page/ad/list' + (this.$me.isCP() ? '_cp.hbs' : '.html')
         , range = moment.createRange()
         , classes = 'ad ad-list' + (this.$me.isCP() ? ' has-date-range' : '');
-      range.API = tp.API;
+      range = _.extend(range, {
+        API: tp.API,
+        has_export: this.$me.get('has_export')
+      });
       this.$body
         .load(page, range)
         .setFramework(classes, '我的投放计划');
@@ -114,4 +117,4 @@
         .setFramework('agreement has-date-range', '我的回款状况')
     }
   });
-}(Nervenet.createNameSpace('tp.router')));
+}(Nervenet.createNameSpace('tp.router'), _, Backbone));
