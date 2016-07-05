@@ -2,7 +2,7 @@
  * Created by meathill on 15/3/7.
  */
 'use strict';
-(function (ns) {
+(function (ns, _, Backbone) {
   /**
    * @class
    */
@@ -142,9 +142,16 @@
     render: function () {
       var data = this.model.toJSON();
       for (var prop in data) {
-        this.$('[name=' + prop + ']')
-          .val(data[prop])
-          .data('value', data[prop]);
+        var input = this.$('[name=' + prop + ']');
+        if (input.is('select')) {
+          input
+            .val(data[prop])
+            .data('value', data[prop]);
+        } else if (input.attr('type').match(/radio|checkbox/i)) {
+          input.filter('[value="' + data[prop] + '"]').prop('checked', true)
+            .parent('label').addClass('active')
+            .siblings().removeClass('active');
+        }
       }
     },
     remove: function () {
@@ -251,4 +258,4 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.component.table')));
+}(Nervenet.createNameSpace('tp.component.table'), _, Backbone));

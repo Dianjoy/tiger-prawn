@@ -47,15 +47,14 @@
     },
     list: function () {
       var page = 'page/ad/list' + (this.$me.isCP() ? '_cp.hbs' : '.html')
-        , range = moment.createRange()
-        , classes = 'ad ad-list' + (this.$me.isCP() ? ' has-date-range' : '');
+        , range = moment.createRange();
       range = _.extend(range, {
         API: tp.API,
         has_export: this.$me.get('has_export')
       });
       this.$body
         .load(page, range)
-        .setFramework(classes, '我的投放计划');
+        .setFramework('ad ad-list', '广告管理');
     },
     listApplies: function () {
       this.$body

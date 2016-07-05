@@ -1,11 +1,17 @@
-<div class="form-inline table-header">
-  <div class="form-group">
-    <label for="search-query">搜索：</label>
-    <input type="search" class="form-control" id="search-query">
+<div class="table-header">
+  <div class="btn-group" data-toggle="buttons">
+    <label class="btn btn-primary active">
+      <input type="radio" name="status" value=""> 全部
+    </label>
+    <label class="btn btn-primary">
+      <input type="radio" name="status" value="0"> 投放中
+    </label>
+    <label class="btn btn-primary">
+      <input type="radio" name="status" value="1"> 已完成
+    </label>
   </div>
 </div>
-
-<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query" data-collection-id="ad" data-start="{{start}}" data-end="{{end}}" data-ranger=".date-range" data-defaults="{{#if has_export}}has_export={{has_export}}{{/if}}">
+<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-collection-id="ad" data-defaults="{{#if has_export}}has_export={{has_export}}{{/if}}" data-filter=".table-header">
   <thead>
   <tr>
     <th class="filters">广告名称</th>
@@ -24,9 +30,9 @@
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
       </td>
       <td>{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
-      <td data-title="开始时间"><time datetime="{{create_time}}">{{moment create_time}}</time></td>
+      <td data-title="开始时间"><time datetime="{{create_time}}">{{create_time}}</time></td>
       <td data-title="状态">
-        <span class="label status-{{status}}">{{pick status 'ON' 'OFF' '等待审核' '等待审核' '被拒'}}</span>
+        <span class="label status-{{status}}">{{pick status '投放中' '已完成'}}</span>
       </td>
       <td data-title="激活数">{{transfer}}</td>
       <td data-title="操作">
