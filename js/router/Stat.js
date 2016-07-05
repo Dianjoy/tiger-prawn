@@ -18,7 +18,7 @@
       'stat/analyse/daily/:id/:start/:end': 'showDailyADStat'
     },
     initialize: function () {
-      this.route(/^stat\/[12]$/, this.showStat);
+      this.route(/^stat\/([12])$/, this.showStat);
       this.route(/^stat\/([0-9a-f]{32})$/, this.showADStat);
     },
     showADStat: function (id, start, end) {
@@ -53,13 +53,14 @@
     showStat: function (ad_type) {
       var page = this.$me.isCP() ? '_cp' : ''
         , range = moment.createRange(null, null, true)
+        , adType = ad_type == 1 ? 'android' : 'ios'
         , obj = _.extend(range, {
           API: tp.API,
-          ad_type: ad_type,
-          is_android: ad_type === 'android'
+          ad_type: adType,
+          is_android: ad_type == 1
         });
       this.$body.load('page/stat/list' + page + '.hbs', obj);
-      this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : ad_type + '-stat'), '我的投放效果');
+      this.$body.setFramework('has-date-range stat ' + (this.$me.isCP() ? 'stat-cp' : adType + '-stat'), '我的投放效果');
     },
     showInvoice: function () {
       this.$body.load('page/stat/invoice.html');
