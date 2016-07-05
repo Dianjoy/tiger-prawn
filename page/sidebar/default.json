@@ -38,11 +38,11 @@
     "sub": [
       {
         "title": "Android广告统计",
-        "link": "#/stat/android"
+        "link": "#/stat/1"
       },
       {
         "title": "iOS广告统计",
-        "link": "#/stat/ios"
+        "link": "#/stat/2"
       },
       {
         "title": "广告数据分析",
