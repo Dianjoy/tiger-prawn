@@ -33,7 +33,7 @@
       this.$body.load('page/stat/daily' + page + '.hbs', model, {
         className: 'stat stat-ad'
       });
-      this.$body.setFramework(this.$me.isCP() ? '' : 'has-date-range', '单个广告按日期统计');
+      this.$body.setFramework(this.$me.isCP() ? '' : 'has-date-range', '单个广告分日统计');
     },
     showADStatDate: function (id, date) {
       if (this.$body.page && this.$body.page.$el.is('.stat.stat-date')) {
