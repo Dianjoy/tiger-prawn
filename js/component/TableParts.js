@@ -147,7 +147,7 @@
           input
             .val(data[prop])
             .data('value', data[prop]);
-        } else if (input.attr('type').match(/radio|checkbox/i)) {
+        } else if (input.is('[type=radio], [type=checkbox]')) {
           input.filter('[value="' + data[prop] + '"]').prop('checked', true)
             .parent('label').addClass('active')
             .siblings().removeClass('active');
