@@ -1,14 +1,18 @@
 <div class="table-header">
-  <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-primary active">
-      <input type="radio" name="status" value=""> 全部
-    </label>
-    <label class="btn btn-primary">
-      <input type="radio" name="status" value="0"> 投放中
-    </label>
-    <label class="btn btn-primary">
-      <input type="radio" name="status" value="1"> 已完成
-    </label>
+  <div class="btn-group add-on-list" data-toggle="buttons" data-key="numbers" data-collection-id="ad" data-container="">
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+        <label class="btn btn-primary {{#equal status ''}}active{{/equal}}">
+          <input type="radio" name="status" value=""> 全部 ({{total}})
+        </label>
+        <label class="btn btn-primary {{#equal status '0'}}active{{/equal}}">
+          <input type="radio" name="status" value="0"> 投放中 ({{online}})
+        </label>
+        <label class="btn btn-primary {{#equal status '1'}}active{{/equal}}">
+          <input type="radio" name="status" value="1"> 已完成 ({{offline}})
+        </label>
+      {{{{/raw-helper}}}}
+    </script>
   </div>
 </div>
 <table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-collection-id="ad" data-defaults="{{#if has_export}}has_export={{has_export}}{{/if}}" data-filter=".table-header">

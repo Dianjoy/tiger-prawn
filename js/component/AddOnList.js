@@ -2,12 +2,18 @@
  * Created by meathill on 15/7/3.
  */
 'use strict';
-(function (ns) {
+(function (ns, _, Backbone) {
   /**
    * @class
    */
   ns.AddOnList = ns.BaseList.extend({
     autoFetch: false,
+    /**
+     *
+     * @param {Object} options
+     * @param {Boolean} options.amount
+     * @param {Array} options.omits
+     */
     initialize: function (options) {
       options = _.extend({
         container: 'tbody'
@@ -36,4 +42,4 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.component')));
+}(Nervenet.createNameSpace('tp.component'), _, Backbone));
