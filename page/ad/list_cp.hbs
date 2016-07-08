@@ -20,7 +20,9 @@
   <tr>
     <th class="filters">广告名称</th>
     <th>平台</th>
-    <th><a class="order active inverse" href="#create_time">开始时间</a></th>
+    <th><a class="order active inverse" href="#create_time">创建时间</a></th>
+    <th><a class="order" href="#start_time">开始时间</a></th>
+    <th><a class="order" href="#end_time">结束时间</a></th>
     <th>状态</th>
     <th>激活数</th>
     <th>操作</th>
@@ -34,9 +36,11 @@
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
       </td>
       <td>{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
-      <td data-title="开始时间"><time datetime="{{create_time}}">{{create_time}}</time></td>
+      <td data-title="创建时间"><time datetime="{{create_time}}">{{create_time}}</time></td>
+      <td data-title="开始时间">{{#if start_time}}<time datetime="{{start_time}}">{{start_time}}</time>{{else}}--{{/if}}</td>
+      <td data-title="结束时间">{{#if end_time}}<time datetime="{{end_time}}">{{end_time}}</time>{{else}}--{{/if}}</td>
       <td data-title="状态">
-        <span class="label status-{{status}}">{{pick status '投放中' '已完成'}}</span>
+        <span class="label status-{{status}}">{{pick status '投放中' '已完成' '待投放'}}</span>
       </td>
       <td data-title="激活数">{{transfer}}</td>
       <td data-title="操作">
