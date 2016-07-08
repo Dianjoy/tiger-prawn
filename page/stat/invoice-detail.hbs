@@ -43,15 +43,14 @@
             {{#if view}}
               {{readable_n quote_rmb_after}}
             {{else}}
-              <a href="#quote_rmb_after" data-step="0.01" class="edit" title="单价（核减后）" data-template="stat/cut-type">{{readable_n quote_rmb_after}}</a>
+              <a href="#quote_rmb_after" data-step="0.01" class="edit" title="单价（核减后）" data-type="number">{{readable_n quote_rmb_after}}</a>
             {{/if}}
           </td>
           <td data-title="渠道CPA（核减后）">
             {{#if view}}
               {{cpa_after}}
             {{else}}
-              <a href="#cpa_after" data-type="number" class="edit" title="渠道CPA（核减后）" data-template="stat/cut-type">{{cpa_after}}</a>
-              <span class="warning-info">{{pick cut_type cut_types}}</span>
+              <a href="#cpa_after" data-type="number" class="edit" title="渠道CPA（核减后）" data-type="number">{{cpa_after}}</a>
             {{/if}}
           </td>
           <td data-title="实际结算收入（核减后）" class="income-after">&yen; {{readable_n income_after}}</td>
@@ -123,15 +122,15 @@
         <tr>
           <th>规格型号</th>
           <td colspan="7">
-            {{#in kind 1 2}}<div class="col-sm-4 padding-zero">ios</div>{{/in}}
             {{#in kind 0 2}}<div class="col-sm-4 padding-zero">android</div>{{/in}}
+            {{#in kind 1 2}}<div class="col-sm-4 padding-zero">ios</div>{{/in}}
           </td>
         </tr>
         <tr>
           <th>开票金额</th>
           <td colspan="7">
-            {{#if ad_income}}<div class="col-sm-4 padding-zero" id="ad_income">&yen; {{ad_income}}</div>{{/if}}
-            {{#if ios_income}}<div class="col-sm-4 padding-zero" id="ios_income">&yen; {{ios_income}}</div>{{/if}}
+            {{#in kind 0 2}}<div class="col-sm-4 padding-zero" id="ad_income">&yen; {{ad_income}}</div>{{/in}}
+            {{#in kind 1 2}}<div class="col-sm-4 padding-zero" id="ios_income">&yen; {{ios_income}}</div>{{/in}}
           </td>
         </tr>
         <tr>

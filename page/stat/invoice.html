@@ -8,15 +8,6 @@
     </select>
   </div>
   <div class="form-group">
-    <label>核减审查：</label>
-    <select class="form-control" name="status">
-      <option value="11">全部</option>
-      <option value="10">通过</option>
-      <option value="9">未通过</option>
-      <option value="8">审核中</option>
-    </select>
-  </div>
-  <div class="form-group">
     <label>结算组核对：</label>
     <select class="form-control" name="status">
       <option value="21">全部</option>
@@ -65,7 +56,6 @@
     <th>付款方</th>
     <th>合同编号</th>
     <th>金额</th>
-    <th>核减审查</th>
     <th>结算组核对</th>
     <th>特批</th>
     <th>财务审核</th>
@@ -85,18 +75,6 @@
       <td data-title="金额">
         {{d100 income}}
         {{#if is_notice}} <a data-toggle="popover" data-content="有渠道CPA为0" data-title="提醒"><i class="fa fa-info-circle fa-lg"></i></a>{{/if}}
-      </td>
-      <td data-title="核减审查">
-        {{#if is_active}}
-        {{#equal op_cut_result 3}}
-        <a data-toggle="popover" data-content="{{#each products}}{{ad_name}} {{pick cut_type ../cut_types}} {{#in cut_type '1' '2'}}{{pick reply_type ../reply_types}}{{/in}}<br>{{/each}}{{reply_comment}}" data-html="true">{{pick op_cut_result op_cut_results}}</a><br>
-        {{else}}
-        {{pick op_cut_result op_cut_results}}<br>
-        {{/equal}}
-        {{#equal status 8}}审核中{{/equal}}
-        {{#equal status 9}}<button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{manager_pifu_comment}}" data-title="未通过原因">未通过</button>{{/equal}}
-        {{#greater status 9}}<a data-toggle="popover" data-content="{{manager_pifu_comment}}" data-title="通过原因">通过</a>{{/greater}}
-        {{/if}}
       </td>
       <td data-title="结算组核对">
         {{#if is_show}}

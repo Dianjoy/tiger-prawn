@@ -38,10 +38,10 @@
         <td data-title="渠道CPA（核减前）" class="cpa-before">{{cpa}}</td>
         <td data-title="应结算收入（核减前）" class="income-before">&yen; {{readable_n income}}</td>
         <td data-title="单价（核减后）">
-          <a href="#quote_rmb_after" data-step="0.01" class="edit" title="单价（核减后）" data-template="stat/cut-type">{{readable_n quote_rmb_after}}</a>
+          <a href="#quote_rmb_after" data-step="0.01" class="edit" title="单价（核减后）" data-type="number">{{readable_n quote_rmb_after}}</a>
         </td>
         <td data-title="渠道CPA（核减后）">
-          <a href="#cpa_after" class="edit" title="渠道CPA（核减后）" data-template="stat/cut-type">{{cpa_after}}</a>
+          <a href="#cpa_after" class="edit" title="渠道CPA（核减后）" data-type="number">{{cpa_after}}</a>
           <p class="warning-info">{{pick cut_type cut_types}}</p>
         </td>
         <td data-title="实际结算收入（核减后）" class="income-after">&yen; {{readable_n income_after}}</td>
@@ -130,16 +130,16 @@
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">开票金额：</label>
-        {{#if ad_income}}
+        {{#in kind 0 2}}
           <div class="col-sm-4">
             <p class="form-control-static">&yen;<span id="ad_income">{{readable_n ad_income}}</span></p>
           </div>
-        {{/if}}
-        {{#if ios_income}}
+        {{/in}}
+        {{#in kind 1 2}}
         <div class="col-sm-4">
           <p class="form-control-static">&yen;<span id="ios_income">{{readable_n ios_income}}</span></p>
         </div>
-        {{/if}}
+        {{/in}}
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">业务负责人：</label>
