@@ -5,6 +5,9 @@
         <label class="btn btn-primary {{#equal status ''}}active{{/equal}}">
           <input type="radio" name="status" value=""> 全部 ({{total}})
         </label>
+        <label class="btn btn-primary {{#equal status '10'}}active{{/equal}}">
+          <input type="radio" name="status" value="10"> 待投放 ({{wait}})
+        </label>
         <label class="btn btn-primary {{#equal status '0'}}active{{/equal}}">
           <input type="radio" name="status" value="0"> 投放中 ({{online}})
         </label>
