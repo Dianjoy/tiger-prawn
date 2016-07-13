@@ -1830,7 +1830,7 @@
       $(target).removeClass(classes).addClass(className);
     });
 }(Nervenet.createNameSpace('tp.component'), jQuery, _, Backbone));;
-(function (ns, Backbone) {
+(function (ns, _, Backbone) {
   /**
    * @class
    */
@@ -1933,7 +1933,7 @@
       this.render();
     }
   });
-}(Nervenet.createNameSpace('tp.component'), Backbone));;
+}(Nervenet.createNameSpace('tp.component'), _, Backbone));;
 (function (ns) {
   ns.FileFetcher = Backbone.View.extend({
     timeout: 0,
@@ -2002,7 +2002,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-(function (ns) {
+(function (ns, _, Backbone) {
   /**
    * @class
    */
@@ -2142,9 +2142,16 @@
     render: function () {
       var data = this.model.toJSON();
       for (var prop in data) {
-        this.$('[name=' + prop + ']')
-          .val(data[prop])
-          .data('value', data[prop]);
+        var input = this.$('[name=' + prop + ']');
+        if (input.is('select')) {
+          input
+            .val(data[prop])
+            .data('value', data[prop]);
+        } else if (input.is('[type=radio], [type=checkbox]')) {
+          input.filter('[value="' + data[prop] + '"]').prop('checked', true)
+            .parent('label').addClass('active')
+            .siblings().removeClass('active');
+        }
       }
     },
     remove: function () {
@@ -2251,7 +2258,7 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.component.table')));;
+}(Nervenet.createNameSpace('tp.component.table'), _, Backbone));;
 (function (ns) {
   ns.CollectionSelect = ns.BaseList.extend({
     autoFetch: true,
@@ -3518,7 +3525,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.view')));;
-(function (ns, $) {
+(function (ns, $, Backbone, _) {
   /**
    * @class
    */
@@ -3675,13 +3682,19 @@
       event.stopPropagation();
     }
   });
-}(Nervenet.createNameSpace('tp.view'), jQuery));;
-(function (ns) {
+}(Nervenet.createNameSpace('tp.view'), jQuery, Backbone, _));;
+(function (ns, _, Backbone) {
   /**
    * @class
    */
   ns.AddOnList = ns.BaseList.extend({
     autoFetch: false,
+    /**
+     *
+     * @param {Object} options
+     * @param {Boolean} options.amount
+     * @param {Array} options.omits
+     */
     initialize: function (options) {
       options = _.extend({
         container: 'tbody'
@@ -3710,7 +3723,7 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.component')));;
+}(Nervenet.createNameSpace('tp.component'), _, Backbone));;
 (function(ns) {
   /**
    * @class
@@ -4179,7 +4192,11 @@
     },
     pagesize_changeHandler: function (event) {
       this.collection.setPagesize(event.target.value);
-      this.model.set('page', 0);
+      if (this.model.get('page') === 0) {
+        this.model.trigger('change', this.model);
+      } else {
+       this.model.set('page', 0);
+      }
     },
     refreshButton_clickHandler: function (event) {
       this.refresh();
