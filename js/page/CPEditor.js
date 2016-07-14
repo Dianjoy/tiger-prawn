@@ -2,58 +2,65 @@
  * Created by meathill on 15/9/8.
  */
 'use strict';
-(function (ns) {
+(function (ns, _, Backbone) {
+  /**
+   * @class
+   * @type Backbone.View
+   */
+  var Model = Backbone.Model.extend({
+      toJSON: function () {
+        var json = Backbone.Model.prototype.toJSON.call(this);
+        json.cid = this.cid;
+        return json;
+      }
+    })
+    , Collection = Backbone.Collection.extend({
+      model: Model
+    });
+
   ns.CPEditor = Backbone.View.extend({
     $me: null,
     events: {
       'submit': 'submitHandler',
-      'change [name=job_num],[name=total_num]': 'jobNum_changerHandler',
-      'dp.change [name=start_time],[name=end_time]': 'jobNum_changerHandler',
-      'change [name=quote_rmb]': 'quoteRMB_changeHandler'
+      'click .add-button': 'addButton_clickHandler',
+      'click .delete-button': 'deleteButton_clickHandler',
+      'change .num': 'num_changeHandler'
     },
-    checkBalance: function (total) {
-      var quote_rmb = this.$('[name=quote_rmb]').val();
-      total = total || this.$('[name=total_num]').val();
-      if (!quote_rmb || !total) {
-        return;
-      }
-      if (quote_rmb * total > this.$me.get('balance')) {
-        this.$('[name=total_num]')
-          .popover({
-            container: 'body',
-            content: '您的余额不足以完成这份计划，请先充值，或调低计划。',
-            trigger: 'manual'
-          })
-          .popover('show')
-          .focus()
-          .closest('.form-group').addClass('has-error');
-        this.$('button').prop('disabled', true);
-      } else {
-        this.$('[name=total_num]')
-          .popover('destroy')
-          .closest('.form-group').removeClass('has-error');
-        this.$('button').prop('disabled', false);
-      }
+    initialize: function () {
+      this.plans = new Collection();
+      this.plans.on('add', this.plan_addHandler, this);
+      this.plans.on('remove', this.plan_removeHandler, this);
+
+      this.template = Handlebars.compile(this.$('script').remove().html());
+      var model = new Model();
+      this.plans.add(model);
     },
-    jobNum_changerHandler: function () {
-      var job_num = this.$('[name=job_num]').val()
-        , start = this.$('[name=start_time]').val()
-        , end = this.$('[name=end_time]').val()
-        , total;
-      if (!start || !end || !job_num) {
-        return;
-      }
-      start = new Date(start).getTime();
-      end = new Date(end).getTime();
-      total = ((end - start) /  86400000 >> 0) * job_num;
+    addButton_clickHandler: function (event) {
+      this.plans.add(new Model());
+      event.stopPropagation();
+    },
+    num_changeHandler: function () {
+      var total = _.reduce(this.$('.num'), function (memo, input) {
+        return memo + Number(input.value);
+      }, 0);
       this.$('[name=total_num]').val(total);
-      this.checkBalance(total);
     },
-    quoteRMB_changeHandler: function () {
-      this.checkBalance();
+    plan_addHandler: function (model) {
+      this.$('tbody').append(this.template(model.toJSON()));
+      this.$('#' + model.cid + ' .datetimepicker').datetimepicker({
+        'minDate': new moment(),
+        'format': moment.DATETIME_FORMAT
+      });
+    },
+    plan_removeHandler: function (model) {
+      this.$('#' + model.cid).remove();
+    },
+    deleteButton_clickHandler: function (event) {
+      var model = this.plans.get($(event.currentTarget).closest('tr').attr('id'));
+      this.plans.remove(model);
     },
     submitHandler: function (event) {
-      
+
     }
   });
-}(Nervenet.createNameSpace('tp.page')));
+}(Nervenet.createNameSpace('tp.page'), _, Backbone));

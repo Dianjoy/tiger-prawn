@@ -1,0 +1,108 @@
+<div class="table-header">
+  <div class="btn-group add-on-list" data-toggle="buttons" data-key="numbers" data-collection-id="diy" data-container="">
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+      <label class="btn btn-primary {{#equal status ''}}active{{/equal}}">
+        <input type="radio" name="status" value=""> 全部 ({{total}})
+      </label>
+      <label class="btn btn-primary {{#equal status '0'}}active{{/equal}}">
+        <input type="radio" name="status" value="0"> 待审核 ({{wait}})
+      </label>
+      <label class="btn btn-primary {{#equal status '1'}}active{{/equal}}">
+        <input type="radio" name="status" value="1"> 审核中 ({{in_review}})
+      </label>
+      <label class="btn btn-primary {{#equal status '2'}}active{{/equal}}">
+        <input type="radio" name="status" value="2"> 已投放 ({{success}})
+      </label>
+      <label class="btn btn-primary {{#equal status '3'}}active{{/equal}}">
+        <input type="radio" name="status" value="3"> 审核失败 ({{failed}})
+      </label>
+      {{{{/raw-helper}}}}
+    </script>
+  </div>
+  <div class="pull-right">
+    <a href="#/diy/create/" class="btn btn-primary"><i class="fa fa-plus"></i> 添加投放计划</a>
+  </div>
+</div>
+<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}diy/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-collection-id="diy" data-filter=".table-header">
+  <thead>
+  <tr>
+    <th class="filters">广告名称</th>
+    <th><a class="order" href="#start_time">开始时间</a></th>
+    <th><a class="order" href="#end_time">结束时间</a></th>
+    <th>总份数</th>
+    <th>单价/元</th>
+    <th>平台</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <script type="text/x-handlebars-template">
+    {{{{raw-helper}}}}
+    <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}}" id="{{id}}">
+      <td data-title="广告名称">
+        <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
+      </td>
+      <td data-title="开始时间"><time datetime="{{start_time}}">{{start_time}}</time></td>
+      <td data-title="结束时间"><time datetime="{{end_time}}">{{end_time}}</time></td>
+      <td data-title="总份数">{{total_num}}</td>
+      <td data-title="单价/元">&yen;{{d100 quote_rmb}}</td>
+      <td data-title="投放平台">{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
+      <td data-title="状态">
+        <span class="label status-{{status}}">{{pick status '待审核' '审核中' '已投放' '审核失败'}}</span>
+      </td>
+      <td data-title="操作">
+        <div class="btn-group">
+          <button type="button" class="delete-button btn btn-danger"><i class="fa fa-times"> 删除</i></button>
+          <a href="#/diy/{{id}}" class="btn btn-primary"><i class="fa fa-edit"></i> 编辑</a>
+          <a href="diy/popup/info.hbs" data-id="{{id}}" data-collection-id="diy" class="btn btn-primary popup"><i class="fa fa-info-circle"></i> 详情</a>
+        </div>
+      </td>
+    </tr>
+    {{{{/raw-helper}}}}
+  </script>
+  </tbody>
+  <tfoot class="waiting">
+  <tr>
+    <td colspan="10"><p align="center"><i class="fa fa-spinner fa-spin fa-2x"></i><br>加载中，请稍候</p></td>
+  </tr>
+  </tfoot>
+</table>
+
+
+<script type="text/x-handlebars-template" class="editor-info">
+  {{{{raw-helper}}}}
+  <table class="table table-bordered">
+    <tbody>
+    <tr>
+      <th>广告名称</th>
+      <td>{{ad_name}}</td>
+    </tr>
+    <tr></tr>
+    </tbody>
+  </table>
+  {{{{/raw-helper}}}}
+</script>
+
+<nav class="pull-right table-footer">
+  <ul class="pagination">
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+      <li><a href="#/to/{{prev}}"><i class="fa fa-chevron-left"></i></a></li>
+      {{#each pages}}
+      <li class="hidden-xs"><a href="#/to/{{index}}">{{label}}</a></li>
+      {{/each}}
+      <li><a href="#/to/{{next}}"><i class="fa fa-chevron-right"></i></a></li>
+      {{{{/raw-helper}}}}
+    </script>
+  </ul>
+  <div class="form-group">
+    <label for="pagesize">每页显示：</label>
+    <select class="form-control" id="pagesize">
+      <option selected>10</option>
+      <option>20</option>
+      <option>50</option>
+    </select>
+  </div>
+</nav>

@@ -2,12 +2,12 @@
   <table class="table table-hover">
     <caption>基础信息</caption>
     <tr>
-      <th width="30%">账号</th>
+      <th width="10%">账号</th>
       <td>{{email}}</td>
     </tr>
     <tr>
       <th>公司名称</th>
-      <td><a href="#corp" class="edit">{{corp}}</a></td>
+      <td>{{fullname}}</td>
     </tr>
     <tr>
       <th>联系人</th>
@@ -37,29 +37,27 @@
 
   <hr>
 
-  <table class="table table-striped">
-    <caption>财务状况</caption>
-    <tr>
-      <th width="30%">累计充值</th>
-      <td>{{rmb_in}}</td>
-    </tr>
-    <tr>
-      <th>累积消费</th>
-      <td>{{rmb_out}}</td>
-    </tr>
-    <tr>
-      <th>当前余额</th>
-      <td>{{balance}}</td>
-    </tr>
-    <tr>
-      <th>预扣</th>
-      <td>{{precost}}</td>
-    </tr>
-    <tr>
-      <th></th>
-      <td>
-        <a href="#/my/finance/" class="btn btn-info"><i class="fa fa-list"></i> 充值历史</a>
-      </td>
-    </tr>
-  </table>
+  <form action="{{API}}user/" method="PATCH" class="ajax">
+    <table class="table">
+      <caption>修改密码</caption>
+      <tr>
+        <th width="10%"><label class="control-label" for="oldpassword">原始密码</label></th>
+        <td><input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="请输入当前密码"></td>
+      </tr>
+      <tr>
+        <th><label for="newpassword">新密码</label></th>
+        <td><input type="password" name="newpassword" id="newpassword" class="form-control" placeholder="请输入新的密码"></td>
+      </tr>
+      <tr>
+        <th><label for="repassword">确认密码</label></th>
+        <td><input type="password" name="repassword" id="repassword" class="form-control" placeholder="请在输入一次新密码"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td>
+          <button class="btn btn-primary"><i class="fa fa-save"></i> 更新密码</button>
+        </td>
+      </tr>
+    </table>
+  </form>
 </div>

@@ -1,11 +1,11 @@
 <div class="row">
-  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" id="ad-editor" data-mediator-class="tp.page.CPEditor">
+  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" data-mediator-class="tp.page.CPEditor">
     <input type="hidden" name="id" value="">
     <fieldset class="collapsible">
       <a name="basic-info"></a>
       <legend>基础信息</legend>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="ad_name">广告名</label>
+        <label class="col-sm-2 control-label" for="ad_name">广告名称</label>
         <div class="col-sm-6">
           <input type="text" name="ad_name" id="ad_name" class="form-control" required />
         </div>
@@ -13,7 +13,7 @@
       <div class="form-group">
         <label class="col-sm-2 control-label" for="ad_url">iTunes地址</label>
         <div class="col-sm-10">
-          <input type="url" name="ad_url" id="ad_url" class="form-control" required>
+          <input type="url" name="ad_url" id="ad_url" class="form-control" required pattern="^https://itunes.apple.com/(\.*)">
         </div>
       </div>
     </fieldset>
@@ -21,84 +21,65 @@
     <fieldset>
       <a name="tou"></a>
       <legend>投放信息</legend>
-      <div class="form-group iPhone">
-        <label class="col-sm-2 control-label">投放类型</label>
-        <div class="col-sm-10 select-button">
-          <input type="radio" name="search_flag" value="0" id="search_flag-1" checked data-toggle-class="offer" data-group="search_flag" data-target="#ad-editor">
-          <label for="search_flag-1">普通广告</label>
-          <input type="radio" name="search_flag" value="2" id="search_flag-3" data-toggle-class="aso" data-group="search_flag" data-target="#ad-editor">
-          <label for="search_flag-3">ASO广告 - 手动搜索</label>
-        </div>
-      </div>
-      <div class="form-group iPhone aso">
-        <label class="col-sm-2 control-label" for="keywords">ASO搜索词</label>
-        <div class="col-sm-6">
-          <input type="text" name="keywords" class="form-control" id="keywords">
-          <p class="help-block">
-            搜索ASO搜索词时，对应的应用排序需要在1-1000名以内。
-          </p>
-        </div>
-      </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="quote_rmb">投放单价</label>
-        <div class="col-sm-10 select-button">
-          <input type="radio" name="quote_rmb" value="300" id="quote_rmb-1" checked>
-          <label for="quote_rmb-1">免费应用 - <strong>&yen;3.00</strong></label>
-          <input type="radio" name="quote_rmb" value="600" id="quote_rmb-2">
-          <label for="quote_rmb-2">付费应用 - <strong>&yen;6.00</strong></label>
+        <label class="col-sm-2 control-label">投放计划</label>
+        <div class="col-sm-10">
+          <table class="table">
+            <thead>
+            <tr>
+              <th width="30%">开始时间</th>
+              <th width="30%">结束时间</th>
+              <th>关键词</th>
+              <th>份数</th>
+              <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <script type="text/x-handlebars-template">
+              {{{{raw-helper}}}}
+                <tr id="{{cid}}">
+                  <td>
+                    <div class="input-group">
+                      <input type="datetime" class="datetimepicker start_time form-control" id="start_time-{{cid}}" name="start_time-{{cid}}">
+                      <label class="input-group-addon" for="start_time-{{cid}}"><i class="fa fa-calendar"></i></label>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <input type="datetime" class="datetimepicker end_time form-control" id="end_time-{{cid}}" name="end_time-{{cid}}">
+                      <label class="input-group-addon" for="end_time-{{cid}}"><i class="fa fa-calendar"></i></label>
+                    </div>
+                  </td>
+                  <td><input class="form-control" name="keyword-{{cid}}" placeholder="关键词"></td>
+                  <td><input type="number" class="form-control num" name="num-{{cid}}" placeholder="份数"></td>
+                  <td><button type="button" class="btn btn-danger delete-button"><i class="fa fa-times"></i></button></td>
+                </tr>
+              {{{{/raw-helper}}}}
+            </script>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5">
+                <button type="button" class="add-button btn btn-info"><i class="fa fa-plus"></i> 添加</button>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label" for="total_num">总计投放</label>
         <div class="col-sm-6">
-          <input type="number" name="total_num" id="total_num" class="form-control">
-          <p class="help-block">投放量范围1000-30000</p>
+          <input type="number" name="total_num" id="total_num" class="form-control" readonly>
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label" for="start_time">开始时间</label>
+        <label class="col-sm-2 control-label" for="quote_rmb">投放单价</label>
         <div class="col-sm-6">
           <div class="input-group">
-            <input type="datetime" name="start_time" id="start_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true" data-min-date="0" data-default-date="1">
-            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+            <span class="input-group-addon">&yen;</span>
+            <input type="number" name="quote_rmb" class="form-control" id="quote_rmb">
           </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="end_time">结束时间</label>
-        <div class="col-sm-6">
-          <div class="input-group">
-            <input type="datetime" name="end_time" id="end_time" class="form-control datetimepicker" data-format="YYYY-MM-DD HH:mm:ss" data-side-by-side="true" data-min-date="1" data-default-date="2">
-            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label">投放运营商</label>
-        <div class="col-sm-10 select-button isp">
-          {{#each net_types}}
-            <input type="checkbox" name="net_type[]" value="{{@key}}" id="net-type-{{@key}}" {{#equal @key ../net_type}}checked{{/equal}} />
-            <label for="net-type-{{@key}}">{{.}}</label>
-          {{/each}}
-        </div>
-      </div>
-      <div class="form-group domestic">
-        <label class="col-sm-2 control-label">投放区域</label>
-        <div class="col-sm-10 select-button">
-          <input type="radio" name="province_type" value="0" data-toggle-class="" data-group="province-type" data-target="#ad-editor" id="province_type-1" checked />
-          <label for="province_type-1">全国</label>
-          <input type="radio" name="province_type" value="1" data-toggle-class="show-provinces" data-group="province-type" data-target="#ad-editor" id="province_type-2" />
-          <label for="province_type-2">分省</label>
-        </div>
-      </div>
-      <div class="form-group provinces">
-        <label class="col-sm-2 control-label">省份选择</label>
-        <div class="col-sm-10 select-button select-button-group">
-          {{#each provinces}}
-            <input type="checkbox" name="provinces[]" value="{{@key}}" id="province-{{@key}}" {{checked}} />
-            <label for="province-{{@key}}">{{.}}</label>
-          {{/each}}
-          <hr />
         </div>
       </div>
       <div class="form-group iPhone">
@@ -114,23 +95,13 @@
       </div>
     </fieldset>
 
-    <fieldset>
-      <legend>杂项</legend>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="others">其它投放要求</label>
-        <div class="col-sm-10">
-          <textarea name="others" class="form-control" rows="2" id="others">{{others}}</textarea>
-        </div>
-      </div>
-    </fieldset>
-
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <div class="alert alert-msg" style="display: none;"></div>
         <div class="alert alert-info hide">
-          将于3秒后跳转到广告列表页。[<a href="#/ad/">立刻跳转</a>]
+          将于3秒后跳转到广告列表页。[<a href="#/diy/">立刻跳转</a>]
         </div>
-        <button class="btn btn-block btn-lg btn-primary" disabled><i class="fa fa-save"></i> 提交</button>
+        <button class="btn btn-block btn-lg btn-primary"><i class="fa fa-save"></i> 提交</button>
       </div>
     </div>
   </form>
@@ -142,12 +113,8 @@
       <div id="notice" class="panel-collapse collapse in">
         <div class="panel-body">
           <ul>
-            <li>如需要做技术对接，请联系点乐技术。</li>
-            <li>ASO广告多个关键词请建立多个投放计划。</li>
-            <li>如果有特殊需求，可以在“其它投放要求”中描述，我们会尽量满足您。</li>
-            <li>创建广告后，会锁定相应额度。要释放这部分额度，可以选择撤销计划；如果广告已经上线，可以提前下线。</li>
-            <li>广告下线后，我们会对其进行结算，大约一小时后，剩余的费用会回到您的账户中。</li>
-            <li>您不需要为结算后的余量支付费用。</li>
+            <li>创建投放计划后，您会收到一封确认邮件，请将这份邮件转发到指定邮箱。点乐运营将在收到邮件后立刻开始审批。</li>
+            <li>未开始审核的投放计划可以进行修改。</li>
           </ul>
         </div>
       </div>

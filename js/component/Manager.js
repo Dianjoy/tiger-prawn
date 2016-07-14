@@ -2,7 +2,7 @@
  * Created by meathill on 14-5-14.
  */
 'use strict';
-(function (ns) {
+(function (ns, _) {
   ns.Manager = {
     $context: null,
     $me: null,
@@ -174,4 +174,4 @@
     '<h4><i class="fa fa-warning"></i> 加载数据出错</h4>' +
     '<p>{{msg}}</p>' +
     '<button type="button" class="btn btn-primary refresh-button"><i class="fa fa-refresh"></i> 再试一次</button></div>')
-}(Nervenet.createNameSpace('tp.component')));
+}(Nervenet.createNameSpace('tp.component'), _));

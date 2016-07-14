@@ -3,7 +3,7 @@
  */
 
 'use strict';
-(function (ns) {
+(function (ns, _, Backbone) {
   /**
    * @class
    */
@@ -15,7 +15,6 @@
       'user/:page': 'showUserPage',
       'oauth/:from/': 'oauth',
       'dashboard(/:start/:end)': 'showDashboard',
-      'my/profile/': 'showMyProfile'
     },
     oauth: function (from) {
       var oauth = tp.config.oauth[from];
@@ -51,15 +50,6 @@
       });
       this.$body.setFramework('dashboard dashboard-cp', '欢迎你，' + this.$me.get('fullname'));
     },
-    showMyProfile: function () {
-      this.$body.load('page/cp/profile.hbs', this.$me, {
-        data: {
-          full: true
-        },
-        refresh: true
-      });
-      this.$body.setFramework('me profile', '我的账户');
-    },
     showUserPage: function (page, options) {
       if (page === 'logout') {
         return this.$me.destroy({
@@ -82,4 +72,4 @@
       this.$body.setFramework('login', '登录');
     }
   });
-}(Nervenet.createNameSpace('tp.router')));
+}(Nervenet.createNameSpace('tp.router'), _, Backbone));

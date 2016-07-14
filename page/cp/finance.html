@@ -1,21 +1,23 @@
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}user/finance/" data-pagesize="50" data-pagination=".pagination">
+<table class="table table-bordered smart-table responsive-table" data-url="{{API}}finance/" data-pagesize="50" data-pagination=".pagination">
   <thead>
   <tr>
     <th>充值时间</th>
-    <th>发票</th>
-    <th>状态</th>
+    <th>是否到帐</th>
     <th>付款金额</th>
+    <th>奖励金额</th>
     <th>实充</th>
   </tr>
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
     <tr>
-      <td>{{add_time}}</td>
-      <td>{{invoice}}</td>
-      <td>{{status}}</td>
-      <td>&yen;{{d100 balance}}</td>
-      <td>&yen;{{d100 total}}</td>
+      <td data-title="充值时间">{{add_time}}</td>
+      <td data-title="是否到账">
+        <span class="text-{{pick rmb_ready 'warning' 'success'}} fa fa-{{pick rmb_ready 'warning' 'check'}}" > {{pick rmb_ready '未到账' '到账'}}</span>
+      </td>
+      <td data-title="付款金额">&yen;{{d100 balance}}</td>
+      <td data-title="奖励金额">&yen;{{d100 reward}}</td>
+      <td data-title="实充">&yen;{{d100 total}}</td>
     </tr>
   </script>
   </tbody>
