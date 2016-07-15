@@ -1,19 +1,18 @@
 <div class="row">
-  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" data-mediator-class="tp.page.CPEditor">
-    <input type="hidden" name="id" value="">
-    <fieldset class="collapsible">
+  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" data-mediator-class="tp.page.CPEditor" data-target="diy">
+    <fieldset>
       <a name="basic-info"></a>
       <legend>基础信息</legend>
-      <div class="form-group">
+      <div class="form-group has-feedback">
         <label class="col-sm-2 control-label" for="ad_name">广告名称</label>
         <div class="col-sm-6">
           <input type="text" name="ad_name" id="ad_name" class="form-control" required />
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group has-feedback">
         <label class="col-sm-2 control-label" for="ad_url">iTunes地址</label>
         <div class="col-sm-10">
-          <input type="url" name="ad_url" id="ad_url" class="form-control" required pattern="^https://itunes.apple.com/(\.*)">
+          <input type="url" name="ad_url" id="ad_url" class="form-control" required pattern="^https://itunes.apple.com/(.*)">
         </div>
       </div>
     </fieldset>
@@ -51,7 +50,7 @@
                     </div>
                   </td>
                   <td><input class="form-control" name="keyword-{{cid}}" placeholder="关键词"></td>
-                  <td><input type="number" class="form-control num" name="num-{{cid}}" placeholder="份数"></td>
+                  <td><input type="number" class="form-control num" name="num-{{cid}}" placeholder="份数" min="1"></td>
                   <td><button type="button" class="btn btn-danger delete-button"><i class="fa fa-times"></i></button></td>
                 </tr>
               {{{{/raw-helper}}}}
@@ -79,6 +78,7 @@
           <div class="input-group">
             <span class="input-group-addon">&yen;</span>
             <input type="number" name="quote_rmb" class="form-control" id="quote_rmb">
+            <span class="input-group-addon">元</span>
           </div>
         </div>
       </div>

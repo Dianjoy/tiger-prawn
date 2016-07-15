@@ -4,6 +4,7 @@
 'use strict';
 (function (ns, Backbone) {
   ns.CP = Backbone.Router.extend({
+    $context: null,
     $body: null,
     routes: {
       "diy/": "showDiyList",
@@ -12,7 +13,8 @@
     },
     createDiy: function () {
       var model = new tp.model.DIY();
-      this.$body.load('page/ad/edit_cp.hbs', model)
+      this.$context.mapValue('diy', model, true);
+      this.$body.load('page/ad/edit_cp.hbs', model, {hasData: true})
         .setFramework('diy create', '添加投放计划');
     },
     showDiyInfo: function (id) {

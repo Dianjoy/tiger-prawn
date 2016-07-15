@@ -1,6 +1,8 @@
 'use strict';
 (function (ns, $, _, Backbone) {
-  var history = 'history-recorder';
+  var history = 'history-recorder'
+    , successSign = '<i class="fa fa-check form-control-feedback"></i>'
+    , errorSign = '<i class="fa fa-times form-control-feedback"></i>';
 
   function showErrorPopup(target, msgs) {
     if (msgs.length === 0) {
@@ -192,14 +194,24 @@
     },
     input_blurHandler: function (event) {
       var target = $(event.currentTarget)
-        , msg = this.checkInput(target);
+        , msg = this.checkInput(target)
+        , formGroup = target.closest('.form-group');
       if (msg) {
         this.$('input').tooltip('destroy');
-        target.tooltip({
-          title: msg,
-          placement: 'bottom',
-          trigger: 'manual'
-        }).tooltip('show');
+        target
+          .tooltip({
+            title: msg,
+            placement: 'bottom',
+            trigger: 'manual'
+          }).tooltip('show');
+      }
+      if (formGroup.length) {
+        formGroup.removeClass('has-error has-success')
+          .addClass(msg ? 'has-error' : 'has-success');
+        if (formGroup.hasClass('has-feedback')) {
+          formGroup.find('.form-control-feedback').remove();
+          target.after(msg ? errorSign : successSign);
+        }
       }
     },
     input_focusHandler: function (event) {

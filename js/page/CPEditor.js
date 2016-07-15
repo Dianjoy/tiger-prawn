@@ -21,7 +21,6 @@
   ns.CPEditor = Backbone.View.extend({
     $me: null,
     events: {
-      'submit': 'submitHandler',
       'click .add-button': 'addButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'change .num': 'num_changeHandler'
@@ -58,9 +57,6 @@
     deleteButton_clickHandler: function (event) {
       var model = this.plans.get($(event.currentTarget).closest('tr').attr('id'));
       this.plans.remove(model);
-    },
-    submitHandler: function (event) {
-
     }
   });
 }(Nervenet.createNameSpace('tp.page'), _, Backbone));

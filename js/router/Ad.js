@@ -23,14 +23,13 @@
     },
     create: function () {
       var model = this.$context.createInstance(tp.model.AD)
-        , page = this.$me.isCP() ? '_cp' : ''
         , options = {
           className: 'ad ad-new',
-          loader: this.$me.isCP() ? null : tp.page.AdEditor
+          loader: tp.page.AdEditor
         };
       this.$context.mapValue('ad', model, true);
       this.$body
-        .load('page/ad/edit' + page + '.hbs', model, options)
+        .load('page/ad/edit.hbs', model, options)
         .setFramework('ad ad-new', '创建投放计划');
     },
     edit: function (id) {
