@@ -50,13 +50,19 @@
       <td data-title="单价/元">&yen;{{d100 quote_rmb}}</td>
       <td data-title="投放平台">{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
       <td data-title="状态">
-        <span class="label status-{{status}}">{{pick status '待审核' '审核中' '已投放' '审核失败'}}</span>
+        <span class="label label-{{pick status 'default' 'info' 'success' 'danger'}}">{{pick status '待审核' '审核中' '已投放' '审核失败'}}</span>
       </td>
       <td data-title="操作">
         <div class="btn-group">
+          {{#equal status '0'}}
           <button type="button" class="delete-button btn btn-danger"><i class="fa fa-times"> 删除</i></button>
-          <a href="#/diy/{{id}}" class="btn btn-primary"><i class="fa fa-edit"></i> 编辑</a>
-          <a href="diy/popup/info.hbs" data-id="{{id}}" data-collection-id="diy" class="btn btn-primary popup"><i class="fa fa-info-circle"></i> 详情</a>
+          {{else equal status '2'}}
+          <a href="#/diy/{{id}}/renew" class="btn btn-success"><i class="fa fa-flash"></i> 续单</a>
+          {{/equal}}
+          {{#in status '0' '3'}}
+          <a href="#/diy/{{id}}/edit" class="btn btn-primary"><i class="fa fa-edit"></i> 修改</a>
+          {{/in}}
+          <a href="#/diy/{{id}}" class="btn btn-info"><i class="fa fa-info-circle"></i> 详情</a>
         </div>
       </td>
     </tr>

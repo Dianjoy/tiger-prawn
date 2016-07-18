@@ -25,11 +25,12 @@
         dateFields.each(function () {
           var options = $(this).data();
           options = _.mapObject(options, function (value, key) {
+            value = value || 0;
             switch (key) {
               case 'maxDate':
               case 'minDate':
               case 'defaultDate':
-                return moment().add(value, 'days');
+                return _.isNumber(value) ? moment().add(value, 'days') : moment(value);
                 break;
               default:
                 return value;

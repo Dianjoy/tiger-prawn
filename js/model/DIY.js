@@ -3,6 +3,10 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   * @type {any}
+   */
   ns.DIY = ns.Model.extend({
     urlRoot: tp.API + 'diy/'
   });

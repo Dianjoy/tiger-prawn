@@ -31,8 +31,10 @@
       this.plans.on('remove', this.plan_removeHandler, this);
 
       this.template = Handlebars.compile(this.$('script').remove().html());
-      var model = new Model();
-      this.plans.add(model);
+      if (!this.$el.hasClass('renew') && !this.$el.hasClass('edit')) {
+        var model = new Model();
+        this.plans.add(model);
+      }
     },
     addButton_clickHandler: function (event) {
       this.plans.add(new Model());

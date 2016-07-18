@@ -1,18 +1,18 @@
 <div class="row">
-  <form class="form-horizontal model-editor iPhone offer col-sm-8 col-xs-12" method="post" data-mediator-class="tp.page.CPEditor" data-target="diy">
+  <form class="form-horizontal model-editor iPhone {{#if renew}}renew{{/if}} {{#if edit}}edit{{/if}} col-sm-8 col-xs-12" method="post" data-mediator-class="tp.page.CPEditor" data-target="diy">
     <fieldset>
       <a name="basic-info"></a>
       <legend>基础信息</legend>
       <div class="form-group has-feedback">
         <label class="col-sm-2 control-label" for="ad_name">广告名称</label>
         <div class="col-sm-6">
-          <input type="text" name="ad_name" id="ad_name" class="form-control" required />
+          <input type="text" name="ad_name" id="ad_name" class="form-control" required value="{{ad_name}}" />
         </div>
       </div>
       <div class="form-group has-feedback">
         <label class="col-sm-2 control-label" for="ad_url">iTunes地址</label>
         <div class="col-sm-10">
-          <input type="url" name="ad_url" id="ad_url" class="form-control" required pattern="^https://itunes.apple.com/(.*)">
+          <input type="url" name="ad_url" id="ad_url" class="form-control" required pattern="^https://itunes.apple.com/(.*)" value="{{ad_url}}">
         </div>
       </div>
     </fieldset>
@@ -34,6 +34,25 @@
             </tr>
             </thead>
             <tbody>
+            {{#each plans}}
+              <tr id="{{id}}">
+                <td>
+                  <div class="input-group">
+                    <input type="datetime" class="datetimepicker start_time form-control" id="start_time-{{id}}" name="start_time-{{id}}" data-default-date="{{start_time}}">
+                    <label class="input-group-addon" for="start_time-{{id}}"><i class="fa fa-calendar"></i></label>
+                  </div>
+                </td>
+                <td>
+                  <div class="input-group">
+                    <input type="datetime" class="datetimepicker end_time form-control" id="end_time-{{id}}" name="end_time-{{id}}" data-default-date="{{end_time}}">
+                    <label class="input-group-addon" for="end_time-{{cid}}"><i class="fa fa-calendar"></i></label>
+                  </div>
+                </td>
+                <td><input class="form-control" name="keyword-{{id}}" placeholder="关键词" value="{{keyword}}"></td>
+                <td><input type="number" class="form-control num" name="num-{{id}}" placeholder="份数" min="1" value="{{num}}"></td>
+                <td><button type="button" class="btn btn-danger delete-button"><i class="fa fa-times"></i></button></td>
+              </tr>
+            {{/each}}
             <script type="text/x-handlebars-template">
               {{{{raw-helper}}}}
                 <tr id="{{cid}}">
@@ -69,7 +88,7 @@
       <div class="form-group">
         <label class="col-sm-2 control-label" for="total_num">总计投放</label>
         <div class="col-sm-6">
-          <input type="number" name="total_num" id="total_num" class="form-control" readonly>
+          <input type="number" name="total_num" id="total_num" class="form-control" readonly value="{{total_num}}">
         </div>
       </div>
       <div class="form-group">
@@ -77,7 +96,7 @@
         <div class="col-sm-6">
           <div class="input-group">
             <span class="input-group-addon">&yen;</span>
-            <input type="number" name="quote_rmb" class="form-control" id="quote_rmb">
+            <input type="number" name="quote_rmb" class="form-control" id="quote_rmb" value="{{quote_rmb}}">
             <span class="input-group-addon">元</span>
           </div>
         </div>
