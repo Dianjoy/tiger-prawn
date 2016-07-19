@@ -19,13 +19,14 @@
     });
 
   ns.CPEditor = Backbone.View.extend({
-    $me: null,
+    $context: null,
     events: {
       'click .add-button': 'addButton_clickHandler',
       'click .delete-button': 'deleteButton_clickHandler',
       'change .num': 'num_changeHandler'
     },
     initialize: function () {
+      this.model = this.$context.getValue('diy');
       this.plans = new Collection();
       this.plans.on('add', this.plan_addHandler, this);
       this.plans.on('remove', this.plan_removeHandler, this);
@@ -34,6 +35,9 @@
       if (!this.$el.hasClass('renew') && !this.$el.hasClass('edit')) {
         var model = new Model();
         this.plans.add(model);
+      }
+      if (this.model.has('plans')) {
+        this.plans.set(this.model.get('plans'));
       }
     },
     addButton_clickHandler: function (event) {

@@ -34,25 +34,6 @@
             </tr>
             </thead>
             <tbody>
-            {{#each plans}}
-              <tr id="{{id}}">
-                <td>
-                  <div class="input-group">
-                    <input type="datetime" class="datetimepicker start_time form-control" id="start_time-{{id}}" name="start_time-{{id}}" data-default-date="{{start_time}}">
-                    <label class="input-group-addon" for="start_time-{{id}}"><i class="fa fa-calendar"></i></label>
-                  </div>
-                </td>
-                <td>
-                  <div class="input-group">
-                    <input type="datetime" class="datetimepicker end_time form-control" id="end_time-{{id}}" name="end_time-{{id}}" data-default-date="{{end_time}}">
-                    <label class="input-group-addon" for="end_time-{{cid}}"><i class="fa fa-calendar"></i></label>
-                  </div>
-                </td>
-                <td><input class="form-control" name="keyword-{{id}}" placeholder="关键词" value="{{keyword}}"></td>
-                <td><input type="number" class="form-control num" name="num-{{id}}" placeholder="份数" min="1" value="{{num}}"></td>
-                <td><button type="button" class="btn btn-danger delete-button"><i class="fa fa-times"></i></button></td>
-              </tr>
-            {{/each}}
             <script type="text/x-handlebars-template">
               {{{{raw-helper}}}}
                 <tr id="{{cid}}">
@@ -68,8 +49,8 @@
                       <label class="input-group-addon" for="end_time-{{cid}}"><i class="fa fa-calendar"></i></label>
                     </div>
                   </td>
-                  <td><input class="form-control" name="keyword-{{cid}}" placeholder="关键词"></td>
-                  <td><input type="number" class="form-control num" name="num-{{cid}}" placeholder="份数" min="1"></td>
+                  <td><input class="form-control" name="keyword-{{cid}}" placeholder="关键词" value="{{keyword}}"></td>
+                  <td><input type="number" class="form-control num" name="num-{{cid}}" placeholder="份数" min="1" value="{{num}}"></td>
                   <td><button type="button" class="btn btn-danger delete-button"><i class="fa fa-times"></i></button></td>
                 </tr>
               {{{{/raw-helper}}}}
@@ -104,11 +85,11 @@
       <div class="form-group iPhone">
         <label class="col-sm-2 control-label">目标平台</label>
         <div class="col-sm-10 select-button">
-          <input type="radio" name="put_ipad" value="2" id="put-ipad-iphone" checked />
+          <input type="radio" name="put_ipad" value="2" id="put-ipad-iphone" {{#unless put_ipad}}checked{{/unless}}{{#equal put_ipad '2'}}checked{{/equal}} />
           <label for="put-ipad-iphone">只投iPhone</label>
-          <input type="radio" name="put_ipad" value="1" id="put-ipad-ipad" />
+          <input type="radio" name="put_ipad" value="1" id="put-ipad-ipad" {{#equal put_ipad '1'}}checked{{/equal}} />
           <label for="put-ipad-ipad">只投iPad</label>
-          <input type="radio" name="put_ipad" value="0" id="put-ipad-all" />
+          <input type="radio" name="put_ipad" value="0" id="put-ipad-all" {{#equal put_ipad '0'}}checked{{/equal}} />
           <label for="put-ipad-all">iPad + iPhone</label>
         </div>
       </div>

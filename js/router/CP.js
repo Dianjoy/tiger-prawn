@@ -13,27 +13,28 @@
       "diy/:id/edit": "editDiy",
       "diy/:id/renew": "renewDiy"
     },
-    createDiy: function () {
-      var model = new tp.model.DIY();
+    createDiy: function (id, type, title) {
+      var init = null
+        , options = null
+        , className = 'create';
+      if (id) {
+        init = {id: id};
+        init[type] = true;
+        className = type;
+      } else {
+        options = {hasData: true};
+        title = '添加投放计划';
+      }
+      var model = new tp.model.DIY(init);
       this.$context.mapValue('diy', model, true);
-      this.$body.load('page/ad/edit_cp.hbs', model, {hasData: true})
-        .setFramework('diy create', '添加投放计划');
+      this.$body.load('page/ad/edit_cp.hbs', model, options)
+        .setFramework('diy ' + className, title);
     },
     editDiy: function (id) {
-      var model = new tp.model.DIY({
-        edit: true,
-        id: id
-      });
-      this.$body.load('page/ad/edit_cp.hbs', model)
-        .setFramework('diy edit', '编辑投放计划');
+      this.createDiy(id, 'edit', '编辑投放计划');
     },
     renewDiy: function (id) {
-      var model = new tp.model.DIY({
-        id: id,
-        renew: true
-      });
-      this.$body.load('page/ad/edit_cp.hbs', model)
-        .setFramework('diy renew', '续单');
+      this.createDiy(id, 'renew', '续单');
     },
     showDiyInfo: function (id) {
       var model = new tp.model.DIY({
