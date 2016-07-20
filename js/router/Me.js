@@ -15,6 +15,7 @@
       this.$body.setFramework('my finance', '充值历史');
     },
     showMyProfile: function () {
+      this.$me.set('API', tp.API);
       this.$body.load('page/cp/profile.hbs', this.$me, {
         data: {
           full: true
