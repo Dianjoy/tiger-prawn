@@ -77,7 +77,7 @@
         <div class="col-sm-6">
           <div class="input-group">
             <span class="input-group-addon">&yen;</span>
-            <input type="number" name="quote_rmb" class="form-control" id="quote_rmb" value="{{quote_rmb}}">
+            <input type="number" name="quote_rmb" class="form-control" id="quote_rmb" step="0.01" value="{{quote_rmb}}">
             <span class="input-group-addon">元</span>
           </div>
         </div>
@@ -98,8 +98,8 @@
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <div class="alert alert-msg" style="display: none;"></div>
-        <div class="alert alert-info hide">
-          将于3秒后跳转到广告列表页。[<a href="#/diy/">立刻跳转</a>]
+        <div class="alert alert-info success-info hide">
+          将于<span>3</span>秒后跳转到投放计划列表页。[<a href="#/diy/">立刻跳转</a>]
         </div>
         <button class="btn btn-block btn-lg btn-primary"><i class="fa fa-save"></i> 提交</button>
       </div>

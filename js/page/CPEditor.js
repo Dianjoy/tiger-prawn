@@ -27,6 +27,7 @@
     },
     initialize: function () {
       this.model = this.$context.getValue('diy');
+      this.model.on('change:id', this.createdHandler, this);
       this.plans = new Collection();
       this.plans.on('add', this.plan_addHandler, this);
       this.plans.on('remove', this.plan_removeHandler, this);
@@ -38,6 +39,16 @@
       }
       if (this.model.has('plans')) {
         this.plans.set(this.model.get('plans'));
+      }
+      this.countDown = _.bind(this.countDown, this);
+    },
+    countDown: function () {
+      this.$('.success-info span').text(this.count);
+      this.count -= 1;
+      if (this.count === 0) {
+        location.hash = '#/diy/';
+      } else {
+        setTimeout(this.countDown, 1000);
       }
     },
     addButton_clickHandler: function (event) {
@@ -63,6 +74,17 @@
     deleteButton_clickHandler: function (event) {
       var model = this.plans.get($(event.currentTarget).closest('tr').attr('id'));
       this.plans.remove(model);
+    },
+    createdHandler: function (model, id) {
+      if (id) {
+        this.$('.success-info')
+          .html(function (i, html) {
+            return html.replace('{{id}}', id);
+          })
+          .removeClass('hide');
+        this.count = 3;
+        this.countDown();
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.page'), _, Backbone));
