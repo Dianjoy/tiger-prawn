@@ -33,7 +33,7 @@
       this.plans.on('remove', this.plan_removeHandler, this);
 
       this.template = Handlebars.compile(this.$('script').remove().html());
-      if (!this.$el.hasClass('renew') && !this.$el.hasClass('edit')) {
+      if (!this.$el.hasClass('renew') && !this.$el.hasClass('in_edit')) {
         var model = new Model();
         this.plans.add(model);
       }
@@ -63,9 +63,18 @@
     },
     plan_addHandler: function (model) {
       this.$('tbody').append(this.template(model.toJSON()));
-      this.$('#' + model.cid + ' .datetimepicker').datetimepicker({
+      var options = {
         'minDate': new moment(),
-        'format': moment.DATETIME_FORMAT
+        'format': moment.DATETIME_FORMAT,
+      };
+      this.$('#' + model.cid + ' .datetimepicker').each(function () {
+        var init
+          , datetime = $(this).data('default-date');
+        init = datetime ? _.defaults({
+          'defaultDate': datetime,
+          'minDate': datetime
+        }, options) : _.clone(options);
+        $(this).datetimepicker(init);
       });
     },
     plan_removeHandler: function (model) {

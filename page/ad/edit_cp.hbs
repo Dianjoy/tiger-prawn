@@ -1,5 +1,5 @@
 <div class="row">
-  <form class="form-horizontal model-editor iPhone {{#if renew}}renew{{/if}} {{#if edit}}edit{{/if}} col-sm-8 col-xs-12" method="post" data-mediator-class="tp.page.CPEditor" data-target="diy">
+  <form class="form-horizontal model-editor iPhone {{#if renew}}renew{{/if}} {{#if edit}}in_edit{{/if}} col-sm-8 col-xs-12" method="post" data-mediator-class="tp.page.CPEditor" data-target="diy">
     <fieldset>
       <a name="basic-info"></a>
       <legend>基础信息</legend>
@@ -39,13 +39,13 @@
                 <tr id="{{cid}}">
                   <td>
                     <div class="input-group">
-                      <input type="datetime" class="datetimepicker start_time form-control" id="start_time-{{cid}}" name="start_time-{{cid}}">
+                      <input type="datetime" class="datetimepicker start_time form-control" id="start_time-{{cid}}" name="start_time-{{cid}}" data-default-date="{{start_time}}">
                       <label class="input-group-addon" for="start_time-{{cid}}"><i class="fa fa-calendar"></i></label>
                     </div>
                   </td>
                   <td>
                     <div class="input-group">
-                      <input type="datetime" class="datetimepicker end_time form-control" id="end_time-{{cid}}" name="end_time-{{cid}}">
+                      <input type="datetime" class="datetimepicker end_time form-control" id="end_time-{{cid}}" name="end_time-{{cid}}" data-default-date="{{end_time}}">
                       <label class="input-group-addon" for="end_time-{{cid}}"><i class="fa fa-calendar"></i></label>
                     </div>
                   </td>

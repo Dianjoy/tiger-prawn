@@ -18,9 +18,9 @@
     toJSON: function (options) {
       var json = ns.Model.prototype.toJSON.call(this);
       if (options) {
-        json = _.omit(json, 'plans');
+        json = _.omit(json, 'plans', 'renew', 'edit');
       }
-      return _.omit(json, 'renew', 'edit');
+      return json;
     }
   });
 }(Nervenet.createNameSpace('tp.model'), _));
