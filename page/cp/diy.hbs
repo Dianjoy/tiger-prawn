@@ -40,7 +40,7 @@
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
-    <tr class="{{pick ad_app_type '' 'Android' 'iPhone'}}" id="{{id}}">
+    <tr class="{{pick put_ipad 'iPad iPhone' 'iPad' 'iPhone'}}" id="{{id}}">
       <td data-title="广告名称">
         <a href="#/ad_name/{{ad_name}}" class="label label-ad_name filter">{{ad_name}}</a>
       </td>
@@ -48,7 +48,7 @@
       <td data-title="结束时间"><time datetime="{{end_time}}">{{end_time}}</time></td>
       <td data-title="总份数">{{total_num}}</td>
       <td data-title="单价/元">&yen;{{d100 quote_rmb}}</td>
-      <td data-title="投放平台">{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
+      <td data-title="投放平台">{{pick put_ipad 'iPad + iPhone' 'iPad' 'iPhone'}}</td>
       <td data-title="状态">
         <span class="label label-{{pick status 'default' 'info' 'success' 'danger'}}">{{pick status '待审核' '审核中' '已投放' '审核失败'}}</span>
       </td>
