@@ -24,7 +24,8 @@
     <th><a class="order" href="#start_time">开始时间</a></th>
     <th><a class="order" href="#end_time">结束时间</a></th>
     <th>状态</th>
-    <th>激活数</th>
+    <th>今日激活数</th>
+    <th>总激活数</th>
     <th>操作</th>
   </tr>
   </thead>
@@ -42,7 +43,8 @@
       <td data-title="状态">
         <span class="label status-{{status}}">{{pick status '投放中' '已完成' '待投放'}}</span>
       </td>
-      <td data-title="激活数">{{transfer}}</td>
+      <td data-title="今日激活数">{{today_transfer}}</td>
+      <td data-title="总激活数">{{transfer}}</td>
       <td data-title="操作">
         <a class="btn btn-info" title="分日统计" href="#/stat/{{id}}"><i class="fa fa-line-chart"></i> 分日统计</a>
         {{#if has_export}}
