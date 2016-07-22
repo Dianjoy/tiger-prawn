@@ -322,7 +322,7 @@
     };
   }
 }());;
-(function (ns) {
+(function (ns, _, Backbone) {
   /**
    * @class
    */
@@ -334,7 +334,6 @@
       'user/:page': 'showUserPage',
       'oauth/:from/': 'oauth',
       'dashboard(/:start/:end)': 'showDashboard',
-      'my/profile/': 'showMyProfile'
     },
     oauth: function (from) {
       var oauth = tp.config.oauth[from];
@@ -370,15 +369,6 @@
       });
       this.$body.setFramework('dashboard dashboard-cp', '欢迎你，' + this.$me.get('fullname'));
     },
-    showMyProfile: function () {
-      this.$body.load('page/cp/profile.hbs', this.$me, {
-        data: {
-          full: true
-        },
-        refresh: true
-      });
-      this.$body.setFramework('me profile', '我的账户');
-    },
     showUserPage: function (page, options) {
       if (page === 'logout') {
         return this.$me.destroy({
@@ -401,7 +391,7 @@
       this.$body.setFramework('login', '登录');
     }
   });
-}(Nervenet.createNameSpace('tp.router')));;
+}(Nervenet.createNameSpace('tp.router'), _, Backbone));;
 (function (ns) {
   var defaults = {
     dataType: 'json',
@@ -788,7 +778,7 @@
     });
   };
 }(Nervenet.createNameSpace('tp.controller')));;
-(function (ns) {
+(function (ns, _, Backbone) {
   /**
    * @class
    */
@@ -812,8 +802,8 @@
       return _.extend({}, this.collection && this.collection.options ? this.collection.options : {}, this.options, json);
     }
   })
-}(Nervenet.createNameSpace('tp.model')));;
-(function (ns) {
+}(Nervenet.createNameSpace('tp.model'), _, Backbone));;
+(function (ns, _, Backbone) {
   /**
    * @class
    */
@@ -869,6 +859,9 @@
         
         this.$body.start(true);
         tp.notification.Manager.start();
+        zhuge.identify(this.id, {
+          role: this.get('role')
+        });
 
         // 延迟10ms，避免事件顺序导致问题
         setTimeout(function () {
@@ -913,7 +906,7 @@
       });
     }
   });
-}(Nervenet.createNameSpace('tp.model')));;
+}(Nervenet.createNameSpace('tp.model'), _, Backbone));;
 (function (ns, $) {
   /**
    * @class
@@ -1444,7 +1437,9 @@
   });
 }(Nervenet.createNameSpace('tp.notification')));;
 (function (ns, $, _, Backbone) {
-  var history = 'history-recorder';
+  var history = 'history-recorder'
+    , successSign = '<i class="fa fa-check form-control-feedback"></i>'
+    , errorSign = '<i class="fa fa-times form-control-feedback"></i>';
 
   function showErrorPopup(target, msgs) {
     if (msgs.length === 0) {
@@ -1636,14 +1631,24 @@
     },
     input_blurHandler: function (event) {
       var target = $(event.currentTarget)
-        , msg = this.checkInput(target);
+        , msg = this.checkInput(target)
+        , formGroup = target.closest('.form-group');
       if (msg) {
         this.$('input').tooltip('destroy');
-        target.tooltip({
-          title: msg,
-          placement: 'bottom',
-          trigger: 'manual'
-        }).tooltip('show');
+        target
+          .tooltip({
+            title: msg,
+            placement: 'bottom',
+            trigger: 'manual'
+          }).tooltip('show');
+      }
+      if (formGroup.length) {
+        formGroup.removeClass('has-error has-success')
+          .addClass(msg ? 'has-error' : 'has-success');
+        if (formGroup.hasClass('has-feedback')) {
+          formGroup.find('.form-control-feedback').remove();
+          target.after(msg ? errorSign : successSign);
+        }
       }
     },
     input_focusHandler: function (event) {
@@ -2400,7 +2405,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-(function (ns) {
+(function (ns, _) {
   ns.Manager = {
     $context: null,
     $me: null,
@@ -2423,11 +2428,12 @@
         dateFields.each(function () {
           var options = $(this).data();
           options = _.mapObject(options, function (value, key) {
+            value = value || 0;
             switch (key) {
               case 'maxDate':
               case 'minDate':
               case 'defaultDate':
-                return moment().add(value, 'days');
+                return _.isNumber(value) ? moment().add(value, 'days') : moment(value);
                 break;
               default:
                 return value;
@@ -2572,7 +2578,7 @@
     '<h4><i class="fa fa-warning"></i> 加载数据出错</h4>' +
     '<p>{{msg}}</p>' +
     '<button type="button" class="btn btn-primary refresh-button"><i class="fa fa-refresh"></i> 再试一次</button></div>')
-}(Nervenet.createNameSpace('tp.component')));;
+}(Nervenet.createNameSpace('tp.component'), _));;
 (function (ns, $, _, Backbone, tp) {
 
   var timeout
@@ -2607,7 +2613,7 @@
           $.get(url, _.bind(this.onLoadComplete, this));
         }
 
-        ga('send', 'pageview', options.content);
+        zhuge.track('pageview', {url: options.content});
       } else {
         this.onLoadComplete(options.content);
       }
@@ -3197,7 +3203,7 @@
       this.$sidebarEditor.getBreadcrumb();
 
       this.trigger('load:start', url);
-      ga('send', 'pageview', url);
+      zhuge.track('pageview', {url: url});
 
       return this;
     },
@@ -3317,7 +3323,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.view'), Backbone, _, jQuery));;
-(function (ns) {
+(function (ns, Backbone) {
   /**
    * @class
    */
@@ -3340,7 +3346,7 @@
       this.render();
     }
   });
-}(Nervenet.createNameSpace('tp.view')));;
+}(Nervenet.createNameSpace('tp.view'), Backbone));;
 (function (ns) {
   var HIDDEN_ITEMS = tp.PROJECT + '-hidden-items'
     , COLLAPSED_STATUS = tp.PROJECT + '-sidebar-collapsed';
