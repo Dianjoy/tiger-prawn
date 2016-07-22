@@ -67,7 +67,7 @@
       this.$sidebarEditor.getBreadcrumb();
 
       this.trigger('load:start', url);
-      ga('send', 'pageview', url);
+      zhuge.track('pageview', {url: url});
 
       return this;
     },

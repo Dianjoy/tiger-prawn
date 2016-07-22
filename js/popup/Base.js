@@ -37,7 +37,7 @@
           $.get(url, _.bind(this.onLoadComplete, this));
         }
 
-        ga('send', 'pageview', options.content);
+        zhuge.track('pageview', {url: options.content});
       } else {
         this.onLoadComplete(options.content);
       }

@@ -63,15 +63,38 @@
     }
   });
 
-  // GA
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o);m=m[m.length - 1];
-    a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  // 诸葛io
+  window.zhuge = window.zhuge || [];
+  window.zhuge.methods = "_init debug identify track trackLink trackForm page".split(" ");
+  window.zhuge.factory = function(b) {
+    return function() {
+      var a = Array.prototype.slice.call(arguments);
+      a.unshift(b);
+      window.zhuge.push(a);
+      return window.zhuge;
+    }
+  };
+  for (var i = 0; i < window.zhuge.methods.length; i++) {
+    var key = window.zhuge.methods[i];
+    window.zhuge[key] = window.zhuge.factory(key);
+  }
+  window.zhuge.load = function(b, x) {
+    if (!document.getElementById("zhuge-js")) {
+      var a = document.createElement("script");
+      var verDate = new Date();
+      var verStr = verDate.getFullYear().toString()
+        + verDate.getMonth().toString() + verDate.getDate().toString();
 
-  ga('create', 'UA-35957679-15', 'auto');
-  ga('send', 'pageview');
+      a.type = "text/javascript";
+      a.id = "zhuge-js";
+      a.async = !0;
+      a.src = (location.protocol == 'http:' ? "http://sdk.zhugeio.com/zhuge-lastest.min.js?v=" : 'https://zgsdk.zhugeio.com/zhuge-lastest.min.js?v=') + verStr;
+      var c = document.getElementsByTagName("script")[0];
+      c.parentNode.insertBefore(a, c);
+      window.zhuge._init(b, x)
+    }
+  };
+  window.zhuge.load('dd8b74d2fbfe45318fbcef7755c8e077');
 }(Backbone, _, Nervenet));
 
 // 防止被 iframe

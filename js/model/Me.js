@@ -58,6 +58,9 @@
         
         this.$body.start(true);
         tp.notification.Manager.start();
+        zhuge.identify(this.id, {
+          role: this.get('role')
+        });
 
         // 延迟10ms，避免事件顺序导致问题
         setTimeout(function () {
