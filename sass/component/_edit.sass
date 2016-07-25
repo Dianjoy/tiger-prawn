@@ -1,17 +1,12 @@
 .edit
-  text-decoration: underline
-  text-decoration-style: dashed
-  -webkit-text-decoration-style: dashed
-
-  &.label
-    text-decoration: none
+  border-bottom: 1px dashed
 
   &:empty:before
     content: '[edit]'
-    border-bottom: 1px dashed
 
-  &:not(.btn,.label)
-    border-bottom: 1px dashed
+  &.btn,
+  &.label
+    border-bottom: none
 
   &:hover
     text-decoration: none

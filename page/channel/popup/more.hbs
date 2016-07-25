@@ -1,0 +1,40 @@
+<div class="form-group">
+  <label class="control-label">是否 API 对接</label>
+  <div class="select-button">
+    <input type="radio" name="is_api" value="1" id="is_api-1" {{#equal is_api 1}}checked{{/equal}}>
+    <label for="is_api-1">是</label>
+    <input type="radio" name="is_api" value="0" id="is_api-0" {{#equal is_api 0}}checked{{/equal}}>
+    <label for="is_api-0">否 </label>
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label">激活条件</label>
+  <div class="select-button">
+    <input type="radio" name="cate" value="0" id="cate-0" {{#equal cate 0}}checked{{/equal}}>
+    <label for="cate-1">联网激活</label>
+    <input type="radio" name="cate" value="1" id="cate-1" {{#equal cate 1}}checked{{/equal}}>
+    <label for="cate-2">注册登录</label>
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label">结算周期</label>
+  <div class="select-button">
+    <input type="radio" name="settle_cycle" value="0" id="settle_cycle-0" {{#equal settle_cycle 0}}checked{{/equal}}>
+    <label for="settle_cycle-0">预付</label>
+    <input type="radio" name="settle_cycle" value="1" id="settle_cycle-1" {{#equal settle_cycle 1}}checked{{/equal}}>
+    <label for="settle_cycle-1">双周付</label>
+    <input type="radio" name="settle_cycle" value="2" id="settle_cycle-2" {{#equal settle_cycle 2}}checked{{/equal}}>
+    <label for="settle_cycle-2">月付</label>
+    <input type="radio" name="settle_cycle" value="3" id="settle_cycle-3" {{#equal settle_cycle 3}}checked{{/equal}}>
+    <label for="settle_cycle-3">季付</label>
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label">数据结算方式</label>
+  <div class="select-button">
+    <input type="radio" name="settle_type" value="7" id="settle_type-7" {{#equal settle_type 7}}checked{{/equal}}>
+    <label for="settle_type-7">以点乐数据买量结算</label>
+    <input type="radio" name="settle_type" value="4" id="settle_type-4" {{#equal settle_type 4}}checked{{/equal}}>
+    <label for="settle_type-4">以 API 接口回调数据结算</label>
+  </div>
+</div>
