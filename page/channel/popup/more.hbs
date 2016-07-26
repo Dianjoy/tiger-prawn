@@ -33,8 +33,10 @@
   <label class="control-label">数据结算方式</label>
   <div class="select-button">
     <input type="radio" name="settle_type" value="7" id="settle_type-7" {{#equal settle_type 7}}checked{{/equal}}>
-    <label for="settle_type-7">以点乐数据买量结算</label>
+    <label for="settle_type-7">以点乐数据买量结算，保结算不核减</label>
     <input type="radio" name="settle_type" value="4" id="settle_type-4" {{#equal settle_type 4}}checked{{/equal}}>
     <label for="settle_type-4">以 API 接口回调数据结算</label>
+    <input type="radio" name="settle_type" value="10" id="settle_type-10" {{#equal settle_type 10}}checked{{/equal}}>
+    <label for="settle_type-10">点乐数据买量，次日核对idfa</label>
   </div>
 </div>
