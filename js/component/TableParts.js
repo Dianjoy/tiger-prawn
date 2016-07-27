@@ -151,6 +151,8 @@
           input.filter('[value="' + data[prop] + '"]').prop('checked', true)
             .parent('label').addClass('active')
             .siblings().removeClass('active');
+        } else {
+          input.val(data[prop]);
         }
       }
     },
