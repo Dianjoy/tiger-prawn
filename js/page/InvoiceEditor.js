@@ -78,8 +78,8 @@
       products.push({amount: true});
       data.collection.reset(products);
       products.pop();
-      this.$('#ad_income').text(model.get('ad_income'));
-      this.$('#ios_income').text(model.get('ios_income'));
+      this.$('#ad_income').text(model.get('ad_income').toFixed(2));
+      this.$('#ios_income').text(model.get('ios_income').toFixed(2));
       this.tableToExcel(this.excelTemplate);
       if (model.isNew()) {
         $('.modal').modal('hide');
