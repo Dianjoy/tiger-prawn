@@ -129,8 +129,8 @@
         <tr>
           <th>开票金额</th>
           <td colspan="7">
-            {{#in kind 0 2}}<div class="col-sm-4 padding-zero" id="ad_income">&yen; {{ad_income}}</div>{{/in}}
-            {{#in kind 1 2}}<div class="col-sm-4 padding-zero" id="ios_income">&yen; {{ios_income}}</div>{{/in}}
+            {{#in kind 0 2}}<div class="col-sm-4 padding-zero" id="ad_income">&yen; {{readable_n ad_income}}</div>{{/in}}
+            {{#in kind 1 2}}<div class="col-sm-4 padding-zero" id="ios_income">&yen; {{readable_n ios_income}}</div>{{/in}}
           </td>
         </tr>
         <tr>
