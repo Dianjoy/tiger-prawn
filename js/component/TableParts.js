@@ -132,7 +132,8 @@
    */
   ns.Filter = Backbone.View.extend({
     events: {
-      'change': 'changeHandler'
+      'change': 'changeHandler',
+      'dp.change .filter': 'changeHandler'
     },
     initialize: function () {
       this.model.on('change', this.model_changeHandler, this);
