@@ -113,6 +113,7 @@
     },
     menuSearchInput_blurHandler: function (event) {
       if (!event.target.value.trim()) {
+        this.$('.collapse').collapse('hide');
         this.$el.removeClass('sidebar-search');
         this.$('#navbar-side-inner').removeClass('search-typing');
       }
