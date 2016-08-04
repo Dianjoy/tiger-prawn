@@ -93,6 +93,35 @@
           <label for="put-ipad-all">iPhone + iPad</label>
         </div>
       </div>
+      <div class="form-group iPhone">
+        <label class="col-sm-2 control-label">是否 API 对接</label>
+        <div class="col-sm-10 select-button">
+          <input type="radio" name="is_api" value="1" id="is_api-1" {{#if is_api}}checked{{/if}}>
+          <label for="is_api-1">是</label>
+          <input type="radio" name="is_api" value="0" id="is_api-0" {{#unless is_api}}checked{{/unless}}>
+          <label for="is_api-0">否</label>
+        </div>
+      </div>
+      <div class="form-group iPhone">
+        <label class="col-sm-2 control-label">激活条件</label>
+        <div class="col-sm-10 select-button">
+          <input type="radio" name="cate" value="0" id="cate-0" {{#unless cate}}checked{{/unless}}>
+          <label for="cate-0">联网激活</label>
+          <input type="radio" name="cate" value="1" id="cate-1" {{#if cate}}checked{{/if}}>
+          <label for="cate-1">注册登录</label>
+        </div>
+      </div>
+      <div class="form-group iPhone">
+        <label class="col-sm-2 control-label">数据结算方式</label>
+        <div class="col-sm-10 select-button">
+          <input type="radio" name="settle_type" value="7" id="settle_type-7" {{#equal settle_type 7}}checked{{/equal}}>
+          <label for="settle_type-7">以点乐数据买量结算，保结算不核减</label>
+          <input type="radio" name="settle_type" value="4" id="settle_type-4" {{#equal settle_type 4}}checked{{/equal}}>
+          <label for="settle_type-4">以 API 接口回调数据结算</label>
+          <input type="radio" name="settle_type" value="10" id="settle_type-10" {{#equal settle_type 10}}checked{{/equal}}>
+          <label for="settle_type-10">点乐数据买量，次日核对</label>
+        </div>
+      </div>
     </fieldset>
 
     <div class="form-group">

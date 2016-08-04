@@ -6,6 +6,7 @@
   ns.CP = Backbone.Router.extend({
     $context: null,
     $body: null,
+    $me: null,
     routes: {
       "diy/": "showDiyList",
       "diy/create/": "createDiy",
@@ -22,6 +23,7 @@
         init[type] = true;
         className = type;
       } else {
+        init = this.$me.pick('is_api', 'cate', 'settle_type');
         options = {hasData: true};
         title = '添加投放计划';
       }
