@@ -3520,6 +3520,7 @@
       ns.Loader.prototype.render.call(this);
       this.$el.removeClass('loading');
       this.$('.fa').remove('fa-spin fa-spinner');
+      this.refresh = true;
     },
     model_changeHandler: function (model) {
       var range = _.pick(model.changed, 'start', 'end');
