@@ -139,7 +139,7 @@
         </tr>
         <tr>
           <th>手机号码</th>
-          <td colspan="7">{{#if view}}{{pay_telephone}}{{else}}<a class="edit" href="#pay_telephone">{{pay_telephone}}</a>{{/if}}</td>
+          <td colspan="7">{{#if view}}{{pay_telephone}}{{else}}<a class="edit" href="#pay_telephone" data-pattern="\d+[-]*\d+">{{pay_telephone}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>地址</th>
@@ -191,7 +191,7 @@
         </tr>
         <tr>
           <th>手机号码</th>
-          <td colspan="7">{{#if view}}{{accept_telephone}}{{else}}<a class="edit" href="#accept_telephone">{{accept_telephone}}</a>{{/if}}</td>
+          <td colspan="7">{{#if view}}{{accept_telephone}}{{else}}<a class="edit" href="#accept_telephone" data-pattern="\d+[-]*\d+">{{accept_telephone}}</a>{{/if}}</td>
         </tr>
         <tr>
           <th>地址</th>
