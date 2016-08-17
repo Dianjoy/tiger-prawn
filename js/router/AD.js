@@ -49,7 +49,8 @@
         , range = moment.createRange();
       range = _.extend(range, {
         API: tp.API,
-        has_export: this.$me.get('has_export')
+        has_export: this.$me.get('has_export'),
+        is_ios: this.$me.get('type') === '2'
       });
       this.$body
         .load(page, range)
@@ -61,10 +62,12 @@
         .setFramework('apply', '我的申请');
     },
     listChannel: function () {
+      var init = {
+        API: tp.API,
+        is_ios: this.$me.get('location') === 'iOS'
+      };
       this.$body
-        .load('page/channel/list.hbs', {
-          API: tp.API
-        })
+        .load('page/channel/list.hbs', init)
         .setFramework('channel', '我的广告主');
     },
     listChannelFeedback: function (id) {

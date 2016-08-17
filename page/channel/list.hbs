@@ -19,7 +19,9 @@
     <th>广告主全称</th>
     <th>广告主简称</th>
     <th>预收款余额</th>
+    {{#if is_ios}}
     <th>自助导数据</th>
+    {{/if}}
     <th>查看实时数据</th>
     <th></th>
   </tr>
@@ -31,6 +33,7 @@
       <td data-title="广告主全称">{{full_name}}</td>
       <td data-title="广告主简称">{{alias}}</td>
       <td data-title="预收款余额">&yen;{{d100 prepaid}}</td>
+      {{#if is_ios}}
       <td data-title="自助导数据">
         {{#if diy_id}}
         <a href="#has_export" data-type="status" class="edit label label-{{#if has_export}}success{{else}}danger{{/if}}"><i class="fa fa-{{#if has_export}}check-square{{else}}ban{{/if}}"></i> {{#if has_export}}已开启{{else}}未开启{{/if}}</a>
@@ -38,6 +41,7 @@
         <span class="label label-default"><i class="fa fa-times"></i> 未开启自助后台</span>
         {{/if}}
       </td>
+      {{/if}}
       <td data-title="查看实时数据">
         {{#if diy_id}}
         <a href="#has_today" data-type="status" class="edit label label-{{#if has_today}}success{{else}}danger{{/if}}"><i class="fa fa-{{#if has_today}}check-square{{else}}ban{{/if}}"></i> {{#if has_today}}已开启{{else}}未开启{{/if}}</a>
@@ -48,7 +52,9 @@
       <td>
         <a href="#/channel/{{id}}/feedback/" class="btn btn-primary"><i class="fa fa-edit"></i> 设置数据反馈</a>
         <a href="#/channel/{{id}}" class="btn btn-info"><i class="fa fa-list"></i> 预收款明细</a>
+        {{#if is_ios}}
         <a href="#more" class="btn btn-info edit" data-template="channel/popup/more"><i class="fa fa-edit"></i> 合作信息</a>
+        {{/if}}
       </td>
     </tr>
     {{{{/raw-helper}}}}

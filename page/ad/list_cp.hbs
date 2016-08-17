@@ -21,11 +21,17 @@
     <th class="filters">广告名称</th>
     <th>投放平台</th>
     <th><a class="order active inverse" href="#create_time">创建时间</a></th>
+    {{#if is_ios}}
     <th><a class="order" href="#start_time">开始时间</a></th>
     <th><a class="order" href="#end_time">结束时间</a></th>
+    {{/if}}
     <th>状态</th>
     <th>今日激活数</th>
     <th>总激活数</th>
+    {{#unless is_ios}}
+    <th>单价</th>
+    <th>支出</th>
+    {{/unless}}
     <th>操作</th>
   </tr>
   </thead>
@@ -38,13 +44,25 @@
       </td>
       <td data-title="投放平台">{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
       <td data-title="创建时间"><time datetime="{{create_time}}">{{create_time}}</time></td>
+      {{#if is_ios}}
       <td data-title="开始时间">{{#if start_time}}<time datetime="{{start_time}}">{{start_time}}</time>{{else}}--{{/if}}</td>
       <td data-title="结束时间">{{#if end_time}}<time datetime="{{end_time}}">{{end_time}}</time>{{else}}--{{/if}}</td>
+      {{/if}}
       <td data-title="状态">
         <span class="label status-{{status}}">{{pick status '投放中' '已完成' '待投放'}}</span>
       </td>
       <td data-title="今日激活数">{{today_transfer}}</td>
       <td data-title="总激活数">{{transfer}}</td>
+      {{#unless is_ios}}
+      <td data-title="单价">
+        {{#if only}}
+        &yen;{{d100 only}}
+        {{else}}
+        &yen;{{d100 min}} ~ &yen;{{d100 max}}
+        {{/if}}
+      </td>
+      <td data-title="支出">&yen;{{d100 income}}</td>
+      {{/unless}}
       <td data-title="操作">
         <a class="btn btn-info" title="分日统计" href="#/stat/{{id}}"><i class="fa fa-line-chart"></i> 分日统计</a>
         {{#if has_export}}
