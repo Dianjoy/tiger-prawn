@@ -21,15 +21,23 @@
   <thead>
   <tr>
     <th>日期</th>
+    {{#if is_ios}}
     <th>关键词</th>
+    {{else}}
+    <th>单价</th>
+    <th>支出</th>
+    {{/if}}
     <th>激活数</th>
+    {{#if is_ios}}
     <th>总计</th>
+    {{/if}}
   </tr>
   </thead>
   <tbody>
   <script type="text/x-handlebars-template">
     {{{{raw-helper}}}}
     <tr id="{{date}}">
+      {{#if is_ios}}
       <td data-title="日期" rowspan="{{count}}">{{date}}</td>
       {{#each keywords}}
       {{#unless @first}}<tr>{{/unless}}
@@ -41,6 +49,11 @@
       </tr>
       {{/if}}
       {{/each}}
+      {{else}}
+      <td data-title="日期">{{date}}</td>
+      <td data-title="单价">{{quote_rmb}}</td>
+      <td data-title="支出">{{income}}</td>
+      <td data-title="激活数">{{nums}}</td>
     </tr>
     {{{{/raw-helper}}}}
   </script>
