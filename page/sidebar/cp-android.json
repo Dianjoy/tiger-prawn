@@ -1,0 +1,12 @@
+[
+  {
+    "title": "广告管理",
+    "icon": "flag",
+    "link": "#/ad/"
+  },
+  {
+    "title": "帐号信息",
+    "icon": "user",
+    "link": "#/my/profile/"
+  }
+]

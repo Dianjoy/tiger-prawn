@@ -1,0 +1,11 @@
+<div class="form-group select-button">
+  {{#each options}}
+    {{#if key}}
+      <input type="radio" name="{{../prop}}" value="{{key}}" id="{{../prop}}-{{key}}" {{#in key ../value}}checked{{/in}}>
+      <label for="{{../prop}}-{{key}}">{{value}}</label>
+    {{else}}
+      <input type="radio" name="{{../prop}}" value="{{@key}}" id="{{../prop}}-{{@key}}" {{#in @key ../value}}checked{{/in}}>
+      <label for="{{../prop}}-{{@key}}">{{.}}</label>
+    {{/if}}
+  {{/each}}
+</div>

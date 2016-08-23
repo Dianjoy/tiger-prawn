@@ -91,6 +91,10 @@
           popup = context.createInstance(ns.CheckboxEditor, options);
           break;
 
+        case 'radio':
+          popup = context.createInstance(ns.CheckboxEditor, options);
+          break;
+
         case 'date':
         case 'time':
         case 'datetime':

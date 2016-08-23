@@ -546,6 +546,10 @@
           popup = context.createInstance(ns.CheckboxEditor, options);
           break;
 
+        case 'radio':
+          popup = context.createInstance(ns.CheckboxEditor, options);
+          break;
+
         case 'date':
         case 'time':
         case 'datetime':
@@ -3350,9 +3354,12 @@
     }
   });
 }(Nervenet.createNameSpace('tp.view'), Backbone));;
-(function (ns) {
+(function (ns, $, _, Backbone) {
   var HIDDEN_ITEMS = tp.PROJECT + '-hidden-items'
     , COLLAPSED_STATUS = tp.PROJECT + '-sidebar-collapsed';
+  /**
+   * @class
+   */
   ns.SidebarEditor = Backbone.View.extend({
     events: {
       'click .eye-edit-button': 'eyeEditButton_clickHandler',
@@ -3512,7 +3519,7 @@
       this.$('.view').removeClass('view');
     }
   });
-}(Nervenet.createNameSpace('tp.view')));;
+}(Nervenet.createNameSpace('tp.view'), jQuery, _, Backbone));;
 (function (ns) {
   ns.Dashboard = ns.Loader.extend({
     className: 'dashboard',
