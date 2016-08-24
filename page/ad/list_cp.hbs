@@ -15,7 +15,7 @@
     </script>
   </div>
 </div>
-<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-collection-id="ad" data-defaults="is_ios={{#if is_ios}}1{{else}}0{{/if}}&{{#if has_export}}has_export={{has_export}}{{/if}}" data-filter=".table-header">
+<table class="table table-bordered table-hover responsive-table smart-table" data-url="{{API}}ad/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-collection-id="ad" data-defaults="is_ios={{#if is_ios}}1{{/if}}&{{#if has_export}}has_export={{has_export}}{{/if}}" data-filter=".table-header">
   <thead>
   <tr>
     <th class="filters">广告名称</th>
@@ -55,10 +55,12 @@
       <td data-title="总激活数">{{transfer}}</td>
       {{#unless is_ios}}
       <td data-title="单价">
+        {{#if income}}
         {{#if only}}
         &yen;{{d100 only}}
         {{else}}
         &yen;{{d100 min}} ~ &yen;{{d100 max}}
+        {{/if}}
         {{/if}}
       </td>
       <td data-title="支出">&yen;{{d100 income}}</td>

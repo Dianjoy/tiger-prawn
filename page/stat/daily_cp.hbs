@@ -51,8 +51,8 @@
       {{/each}}
       {{else}}
       <td data-title="日期">{{date}}</td>
-      <td data-title="单价">{{quote_rmb}}</td>
-      <td data-title="支出">{{income}}</td>
+      <td data-title="单价">&yen;{{d100 quote_rmb}}</td>
+      <td data-title="支出">&yen;{{d100 income}}</td>
       <td data-title="激活数">{{nums}}</td>
       {{/if}}
     </tr>
