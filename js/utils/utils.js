@@ -7,6 +7,7 @@
     if (!str) {
       return {};
     }
+    str = str.replace(/&amp;/g, '&');
     var params = str.split('&')
       , result = {};
     for (var i = 0, len = params.length; i < len; i++) {

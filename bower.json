@@ -37,6 +37,6 @@
   },
   "devDependencies": {
     "bootstrap-sass": "~3.3.6",
-    "qunit": "^1.23.0"
+    "qunit": "^2.0.1"
   }
 }

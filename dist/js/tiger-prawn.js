@@ -574,6 +574,7 @@
     if (!str) {
       return {};
     }
+    str = str.replace(/&amp;/g, '&');
     var params = str.split('&')
       , result = {};
     for (var i = 0, len = params.length; i < len; i++) {
@@ -2304,7 +2305,12 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component')));;
-(function (ns) {
+(function (ns, _, Backbone) {
+  /**
+   * @class
+   *
+   * @type Backbone.View
+   */
   ns.DateRanger = Backbone.View.extend({
     events: {
       'click .shortcut': 'shortcut_clickHandler',
@@ -2333,8 +2339,8 @@
       this.$('.this-season').data('start', moment().startOf('quarter').format(moment.DATE_FORMAT));
       this.$('.shortcut').each(function () {
         var data = $(this).data();
+        data.end = self.formatDate(data.end, date.getDate(), data.start);
         data.start = self.formatDate(data.start);
-        data.end = self.formatDate(data.end, date.getDate());
         $(this).data(data)
           .attr('data-start', data.start)
           .attr('data-end', data.end);
@@ -2372,11 +2378,11 @@
       options.reset = true;
       this.model.set(range, options);
     },
-    formatDate: function (date, today) {
+    formatDate: function (date, today, start) {
       if (isNaN(date)) {
         return date;
       }
-      if (today && today === 1 && date === -1) {
+      if (today && today === 1 && date === -1 && isNaN(start)) {
         date = 0;
       }
       return moment().add(date, 'days').format(moment.DATE_FORMAT);
@@ -2411,7 +2417,7 @@
       event.preventDefault();
     }
   });
-}(Nervenet.createNameSpace('tp.component')));;
+}(Nervenet.createNameSpace('tp.component'), _, Backbone));;
 (function (ns, _) {
   ns.Manager = {
     $context: null,

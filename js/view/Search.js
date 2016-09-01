@@ -1,4 +1,6 @@
 /**
+ * 全局搜索
+ * 
  * Created by 路佳 on 2015/12/11.
  */
 'use strict';
