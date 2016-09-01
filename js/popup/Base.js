@@ -78,8 +78,8 @@
       this.$el.modal('hide');
       this.trigger('cancel', this);
     },
-    form_successHandler: function () {
-      this.hide();
+    form_successHandler: function (event, delay) {
+      this.hide(delay);
       this.trigger('success');
     },
     model_errorHandler: function (model, response) {
