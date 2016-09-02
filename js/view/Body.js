@@ -102,7 +102,7 @@
       this.$('#page-preloader').remove();
       if (showFramework) {
         this.createSidebar();
-        this.$el.removeClass('full-page')
+        this.$el.removeClass('full-page login')
           .find('.login').remove();
       }
       if (this.isStart) {
