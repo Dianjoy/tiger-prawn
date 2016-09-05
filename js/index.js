@@ -1,5 +1,5 @@
 'use strict';
-(function (Backbone, _, Nervenet) {
+(function (Backbone, _, Nervenet, tp) {
   // start here
   var context = Nervenet.createContext()
     , me = new tp.model.DIYUser()
@@ -44,11 +44,17 @@
   _.each(tp.router, context.createInstance, context);
 
   // 全局处理取得数据后的操作
-  Backbone.on('backbone-sync', function (response) {
-    if ('me' in response) {
-      me.set(response.me);
-    }
-  });
+  Backbone
+    .on('backbone:sync', function (response) {
+      if ('me' in response) {
+        me.set(response.me);
+      }
+    })
+    .on('backbone:route-error', function () {
+      body
+        .load(tp.path + 'page/404.hbs')
+        .setFramework('error error-404', '路径无效');
+    });
 
   // 验证用户身份
   me.fetch();
@@ -95,7 +101,7 @@
     }
   };
   window.zhuge.load('dd8b74d2fbfe45318fbcef7755c8e077');
-}(Backbone, _, Nervenet));
+}(Backbone, _, Nervenet, tp));
 
 // 防止被 iframe
 (function () {
