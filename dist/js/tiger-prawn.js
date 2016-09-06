@@ -1,6 +1,6 @@
 "use strict";
 (function () {
-(function (b) {
+(function (b, _) {
   var sync = b.sync;
 
   // add withCredential
@@ -10,11 +10,10 @@
     if ('success' in options) {
       var success = options.success;
       options.success = function (response) {
-        b.trigger('backbone-sync', response);
+        b.trigger('backbone:sync', response);
         success.call(options.context, response);
       };
     }
-
 
     if ('xhrField' in options) {
       options.xhrFields.withCredentials = true;
@@ -30,7 +29,22 @@
   b.Model.prototype.isNew = function () {
     return !this.id;
   };
-}(Backbone));;
+
+  // `Backbone.history.checkUrl()` 执行后进行检查,如果当前 url 不符合要求则广播失败
+  b.history.checkUrl = _.bind(function (e) {
+    var current = this.getFragment();
+    if (current === this.fragment && this.iframe) {
+      current = this.getHash(this.iframe.contentWindow);
+    }
+
+    if (current === this.fragment) return false;
+    if (this.iframe) this.navigate(current);
+
+    if (!this.loadUrl()) {
+      b.trigger('backbone:route-error', 404);
+    }
+  }, b.history);
+}(Backbone, _));;
 (function (h) {
   function d100(value) {
     value = value || 0;
@@ -922,7 +936,7 @@
     total: 0,
     pagesize: 10,
     isLoading: false,
-    initialize: function(models, options) {
+    initialize: function(models, options, init) {
       this.key = options.key || 'data';
       this.save = tp.PROJECT + location.hash + '-pagesize';
       Backbone.Collection.prototype.initialize.call(this, models, options);
@@ -933,7 +947,7 @@
         } else {
           var self = this;
           $.getScript(tp.component.Manager.getPath(this.model), function () {
-            self.model = Nervenet.parseNamespace(self.model);
+            self.model = Nervenet.parseNamespace(self.model).extend(init);
             if (self.cache) {
               if (self.cache.options.reset) {
                 self.reset(self.cache.response, self.cache.options);
@@ -1088,9 +1102,8 @@
         return collection;
       }
 
-      var params = _.extend({}, options);
-      if (!params.model) {
-        var init = _.chain(params)
+      var params = _.extend({}, options)
+        , init = _.chain(params)
           .pick('idAttribute', 'defaults')
           .mapObject(function (value, key) {
             if (key === 'defaults' && !_.isObject(value)) {
@@ -1099,6 +1112,7 @@
             return value;
           })
           .value();
+      if (!params.model) {
         if (!_.isEmpty(init)) {
           params.model = ns.Model.extend(init);
         }
@@ -1107,7 +1121,7 @@
         var klass = Nervenet.parseNamespace(params.collectionType);
         collection = klass ? new klass(null, params) : new ns.ProxyCollection(params);
       } else {
-        collection = new ns.ListCollection(null, params);
+        collection = new ns.ListCollection(null, params, init);
       }
       if (params.collectionId) {
         collections[params.collectionId] = collection;
@@ -2667,8 +2681,8 @@
       this.$el.modal('hide');
       this.trigger('cancel', this);
     },
-    form_successHandler: function () {
-      this.hide();
+    form_successHandler: function (event, delay) {
+      this.hide(delay);
       this.trigger('success');
     },
     model_errorHandler: function (model, response) {

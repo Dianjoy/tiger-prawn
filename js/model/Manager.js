@@ -21,9 +21,8 @@
         return collection;
       }
 
-      var params = _.extend({}, options);
-      if (!params.model) {
-        var init = _.chain(params)
+      var params = _.extend({}, options)
+        , init = _.chain(params)
           .pick('idAttribute', 'defaults')
           .mapObject(function (value, key) {
             if (key === 'defaults' && !_.isObject(value)) {
@@ -32,6 +31,7 @@
             return value;
           })
           .value();
+      if (!params.model) {
         if (!_.isEmpty(init)) {
           params.model = ns.Model.extend(init);
         }
@@ -40,7 +40,7 @@
         var klass = Nervenet.parseNamespace(params.collectionType);
         collection = klass ? new klass(null, params) : new ns.ProxyCollection(params);
       } else {
-        collection = new ns.ListCollection(null, params);
+        collection = new ns.ListCollection(null, params, init);
       }
       if (params.collectionId) {
         collections[params.collectionId] = collection;

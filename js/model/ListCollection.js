@@ -12,7 +12,7 @@
     total: 0,
     pagesize: 10,
     isLoading: false,
-    initialize: function(models, options) {
+    initialize: function(models, options, init) {
       this.key = options.key || 'data';
       this.save = tp.PROJECT + location.hash + '-pagesize';
       Backbone.Collection.prototype.initialize.call(this, models, options);
@@ -23,7 +23,7 @@
         } else {
           var self = this;
           $.getScript(tp.component.Manager.getPath(this.model), function () {
-            self.model = Nervenet.parseNamespace(self.model);
+            self.model = Nervenet.parseNamespace(self.model).extend(init);
             if (self.cache) {
               if (self.cache.options.reset) {
                 self.reset(self.cache.response, self.cache.options);
