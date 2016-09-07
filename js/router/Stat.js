@@ -29,7 +29,7 @@
           start: start,
           end: end,
           has_export: this.$me.get('has_export'),
-          is_ios: this.$me.get('type') === '2'
+          is_ios: this.$me.get('type') === 2
         }, { simple: true });
       this.$body.load('page/stat/daily' + page + '.hbs', model, {
         className: 'stat stat-ad'

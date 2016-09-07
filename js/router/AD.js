@@ -50,7 +50,7 @@
       range = _.extend(range, {
         API: tp.API,
         has_export: this.$me.get('has_export'),
-        is_ios: this.$me.get('type') === '2'
+        is_ios: this.$me.get('type') === 2
       });
       this.$body
         .load(page, range)
