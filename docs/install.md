@@ -21,7 +21,12 @@
     bower install
     npm install
     ```
-3. 修改配置文件 `js/config.js` ，将 API 和 UPLOAD 的值修改为 API 地址，和上传文件访问路径
+3. 修改配置文件 `js/config.js` 
+    ```javascript
+    ns.API = '真实 API 地址';
+    ns.UPLOAD = '上传文件访问路径';
+    ns.BASE = '此项目的访问路径，比如 /';
+    ```
 4. 编译压缩生成执行文件
     ```bash
     gulp
