@@ -7,36 +7,32 @@
         var range = []
           , param = attrs.ids.split(',')
           , products =  _.map(param, function (element) {
-            var url = element.split('|')
-              , obj = {
-                ad_id: url[0],
-                start: url[1],
-                end: url[2]
-              };
-            return obj;
-        });
+            var url = element.split('|');
+            return {
+              ad_id: url[0],
+              start: url[1],
+              end: url[2]
+            };
+          });
         _.each(products, function (element) {
           var sameRange =  _.find(range, {start: element.start, end: element.end})
-            , obj = {
+            , data = {
               start: element.start,
               end: element.end,
               ad_ids: [element.ad_id]
             };
           if (!sameRange) {
-            range.push(obj);
+            range.push(data);
           } else if (!_.contains(sameRange.ad_ids, element.ad_id)) {
             sameRange.ad_ids.push(element.ad_id);
           }
         });
-        this.urlRoot += 'init'
-          + '?adids=' + JSON.stringify({range: range});
+        this.urlRoot += 'init' + '?adids=' + JSON.stringify({range: range});
         this.on('sync', this.syncHandler, this);
       }
     },
     fetch: function (options) {
-      Backbone.Model.prototype.fetch.call(this, _.extend({
-        error: _.bind(this.onError, this)
-      }, options));
+      Backbone.Model.prototype.fetch.call(this, _.extend({ error: _.bind(this.onError, this) }, options));
     },
     parse: function (response) {
       if (response.options) {
@@ -68,7 +64,7 @@
         , archive = Number(agreementInfo.archive) === 1 ? '是' : '否'
         , range = agreementInfo.start + '/' + agreementInfo.end + (agreementInfo.over ? ' 到期' : '')
         , products = json.products
-        , obj = {
+        , stat = {
           ad_income: 0,
           ios_income: 0,
           income_before_total: 0,
@@ -116,19 +112,19 @@
           });
         }
         var income_type = element.ad_app_type == 1 ? 'ad_income' : 'ios_income';
-        obj[income_type] += Number(element.income_after);
-        obj.income_after_total += Number(element.income_after);
-        obj.income_before_total += Number(element.income);
-        obj.rmb = tp.utils.convertCurrency(obj.income_after_total);
+        stat[income_type] += Number(element.income_after);
+        stat.income_after_total += Number(element.income_after);
+        stat.income_before_total += Number(element.income);
+        stat.rmb = tp.utils.convertCurrency(stat.income_after_total);
         return element;
       });
       this.set({
-        income: obj.income_after_total,
-        income_first: obj.income_before_total,
-        ad_income: obj.ad_income,
-        ios_income: obj.ios_income
+        income: stat.income_after_total,
+        income_first: stat.income_before_total,
+        ad_income: stat.ad_income,
+        ios_income: stat.ios_income
       }, {silent: true});
-      _.extend(this.options, obj);
+      _.extend(this.options, stat);
       return _.extend(json, this.options);
     },
     syncHandler: function () {
