@@ -167,6 +167,7 @@
       }
     },
     items_hideHandler: function () {
+      this.$el.removeClass('view');
       this.$('.view').removeClass('view');
     }
   });
