@@ -167,7 +167,7 @@
       this.$('select').prop('disabled', false);
 
       // 用options里的值填充select
-      var options = this.collection.options;
+      var options = this.collection.real ? this.collection.real.options : this.collection.options;
       if (!options) {
         return;
       }

@@ -149,12 +149,18 @@
       }
     },
     accordionToggle_clickHandler: function (event) {
-      var body = $('body');
+      var body = $('body')
+        , self = this;
       if (body.hasClass('sidebar-collapsed')) {
         body.one('click', _.bind(this.items_hideHandler, this));
         this.$('.accordion-toggle').each(function () {
           var ul = $(this).siblings('ul');
-          this === event.currentTarget ? ul.toggleClass('view').height('auto') : ul.removeClass('view');
+          if (this === event.currentTarget) {
+            ul.toggleClass('view').height('auto');
+            self.$el.addClass('view');
+          } else {
+            ul.removeClass('view');
+          }
         });
         event.preventDefault();
         event.stopPropagation();
