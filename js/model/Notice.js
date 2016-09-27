@@ -2,12 +2,16 @@
  * Created by meathill on 14/12/23.
  */
 'use strict';
-(function (ns) {
+(function (ns, _, Backbone) {
   var TIMEOUT = 60000
     , autoNext = false // 60s取一次
     , key = tp.PROJECT + '-notice-cache'
     , cache = null;
 
+  /**
+   * @class
+   * @type Backbone.Collection
+   */
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
     url: tp.API + 'notice/',
@@ -60,4 +64,4 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.model')));
+}(Nervenet.createNameSpace('tp.model'), _, Backbone));

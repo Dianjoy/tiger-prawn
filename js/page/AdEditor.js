@@ -14,11 +14,13 @@
    * @class
    */
   ns.AdEditor = tp.view.Loader.extend({
+    $me: null,
     events: {
       'blur [name=ad_url]': 'adURL_blurHandler',
       'change [name=ad_name]': 'adName_changeHandler',
       'change [name=ad_app_type]': 'platform_changeHandler',
       'change [name=search_flag]': 'searchFlag_changeHandler',
+      'change [name=agreement_id]': 'agreementID_changeHandler',
       'change .ad-source-list': 'adSource_changeHandler',
       'change #replace-ad': 'replaceAD_changeHandler',
       'change .domestic input': 'area_changeHandler',
@@ -46,6 +48,9 @@
       this.agreements.on('reset', function () {
         this.$('.agreement').find('input').prop('disabled', false);
         this.$('.search-agreement-button').spinner(false);
+        _.defer(function (select) {
+          select.change();
+        }, this.$('[name=agreement_id]'));
       }, this);
 
       this.model.on('change:id', this.ad_createdHandler, this);
@@ -115,6 +120,19 @@
     area_changeHandler: function (event) {
       var target = $(event.target);
       this.$el.toggleClass(target.data('class'), target.val() === '1');
+    },
+    agreementID_changeHandler: function (event) {
+      var id = event.target.value
+        , agreement = this.agreements.get(id);
+      if (agreement && agreement.get('is_vip') && agreement.get('owner') != this.$me.id) {
+        var owner = this.$('[name=owner]');
+        if (owner.find('[value=' + agreement.get('owner') + ']').length) {
+          owner.val(agreement.get('owner'));
+        } else {
+          owner.append('<option value="' + agreement.get('owner') + '">' + agreement.get('owner_name') + '</option>')
+            .val(agreement.get('owner'));
+        }
+      }
     },
     agreementKeyword_keyDownHandler: function (event) {
       if (event.keyCode === 13) {

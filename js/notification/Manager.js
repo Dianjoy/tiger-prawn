@@ -2,7 +2,7 @@
  * Created by meathill on 14/12/25.
  */
 'use strict';
-(function (ns) {
+(function (ns, Backbone) {
   var hidden
     , notification = 'Notification' in window ? Notification : new MockNotification();
   if ('hidden' in document) {
@@ -80,4 +80,4 @@
   ns.Manager = new Manager({
     collection: collection
   });
-}(Nervenet.createNameSpace('tp.notification')));
+}(Nervenet.createNameSpace('tp.notification'), Backbone));

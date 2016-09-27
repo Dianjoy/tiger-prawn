@@ -101,8 +101,10 @@
       }, this);
       this.render();
     },
-    collection_syncHandler: function () {
-      this.render();
+    collection_syncHandler: function (collection, response, options) {
+      if (!options || !options.reset) {
+        this.render();
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.component'), _, Backbone));

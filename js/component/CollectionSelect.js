@@ -3,6 +3,10 @@
  */
 'use strict';
 (function (ns) {
+  /**
+   * @class
+   * @type Backbone.View
+   */
   ns.CollectionSelect = ns.BaseList.extend({
     autoFetch: true,
     refresh: function (options) {
