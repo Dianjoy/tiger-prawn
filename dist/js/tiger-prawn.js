@@ -1025,46 +1025,35 @@
     }
   });
 }(Nervenet.createNameSpace('tp.model'), jQuery, _, Backbone));;
-(function (ns) {
+(function (ns, _, $, Backbone) {
+  /**
+   * @class
+   * @type {tp.model.ProxyCollection}
+   */
   var proxy = ns.ProxyCollection = function (options) {
     var klass = options.collectionType
       , self = this;
     $.getScript(tp.component.Manager.getPath(klass), function () {
       klass = Nervenet.parseNamespace(klass);
       var real = self.real = new klass(this.models, options);
-      self.delegateEvents(real);
+      real.on('all', self.real_allHandler, self);
       if (self.fetchOptions) {
         real.fetch(self.fetchOptions);
       }
+      self.trigger('ready');
     });
   };
 
-  proxy.prototype = {
+  _.extend(proxy.prototype, Backbone.Events, {
     events: {},
     fetchOptions: null,
     models: null,
     real: null,
-    delegateEvents: function (real) {
-      _.each(this.events, function (handler, event) {
-        real.on(event, handler.method, handler.context);
-      }, this);
-      real.on('sync', this.onSync, this);
-      this.events = null;
-    },
     fetch: function (options) {
       if (this.real) {
         this.real.fetch(options);
       }
       this.fetchOptions = options;
-    },
-    on: function (type, method, context) {
-      if (this.real) {
-        return this.real.on(type, method, context);
-      }
-      this.events[type] = {
-        method: method,
-        context: context
-      }
     },
     set: function (models, options) {
       if (this.real) {
@@ -1072,17 +1061,20 @@
       }
       this.models = models;
     },
-    onSync: function () {
-      this.length = this.real.length;
+    real_allHandler: function () {
+      if (arguments[0] === 'sync') {
+        this.length = this.real.length;
+      }
+      Backbone.Events.trigger.apply(this, Array.prototype.slice.call(arguments));
     }
-  };
+  });
 
-  _.each(['create', 'each', 'find', 'get', 'map', 'off', 'remove', 'reset', 'toJSON', 'getAmount'], function (method) {
+  _.each(['create', 'each', 'find', 'get', 'map', 'remove', 'reset', 'toJSON', 'getAmount'], function (method) {
     proxy.prototype[method] = function () {
       return ns.ListCollection.prototype[method].apply(this.real, arguments);
     };
   });
-}(Nervenet.createNameSpace('tp.model')));;
+}(Nervenet.createNameSpace('tp.model'), _, jQuery, Backbone));;
 (function (ns) {
   var collections = {};
 
@@ -1138,12 +1130,16 @@
   // 为了兼容以前的写法
   _.extend(ns.ListCollection, manager);
 }(Nervenet.createNameSpace('tp.model')));;
-(function (ns) {
+(function (ns, _, Backbone) {
   var TIMEOUT = 60000
     , autoNext = false // 60s取一次
     , key = tp.PROJECT + '-notice-cache'
     , cache = null;
 
+  /**
+   * @class
+   * @type Backbone.Collection
+   */
   ns.Notice = Backbone.Collection.extend({
     latest: 0,
     url: tp.API + 'notice/',
@@ -1196,7 +1192,7 @@
       }
     }
   });
-}(Nervenet.createNameSpace('tp.model')));;
+}(Nervenet.createNameSpace('tp.model'), _, Backbone));;
 (function (ns) {
   /**
    * @class
@@ -1376,7 +1372,7 @@
     }
   });
 }(Nervenet.createNameSpace('tp.notification')));;
-(function (ns) {
+(function (ns, Backbone) {
   var hidden
     , notification = 'Notification' in window ? Notification : new MockNotification();
   if ('hidden' in document) {
@@ -1454,7 +1450,7 @@
   ns.Manager = new Manager({
     collection: collection
   });
-}(Nervenet.createNameSpace('tp.notification')));;
+}(Nervenet.createNameSpace('tp.notification'), Backbone));;
 (function (ns, $, _, Backbone) {
   var history = 'history-recorder'
     , successSign = '<i class="fa fa-check form-control-feedback"></i>'
@@ -1953,8 +1949,10 @@
       }, this);
       this.render();
     },
-    collection_syncHandler: function () {
-      this.render();
+    collection_syncHandler: function (collection, response, options) {
+      if (!options || !options.reset) {
+        this.render();
+      }
     }
   });
 }(Nervenet.createNameSpace('tp.component'), _, Backbone));;
@@ -2191,7 +2189,7 @@
       this.$('select').prop('disabled', false);
 
       // 用options里的值填充select
-      var options = this.collection.options;
+      var options = this.collection.real ? this.collection.real.options : this.collection.options;
       if (!options) {
         return;
       }
@@ -2287,6 +2285,10 @@
   });
 }(Nervenet.createNameSpace('tp.component.table'), _, Backbone));;
 (function (ns) {
+  /**
+   * @class
+   * @type Backbone.View
+   */
   ns.CollectionSelect = ns.BaseList.extend({
     autoFetch: true,
     refresh: function (options) {
@@ -2548,7 +2550,7 @@
       if (arr[0] === tp.NAME_SPACE) {
         arr = arr.slice(1);
       }
-      return 'js/' + arr.join('/') + '.js';
+      return tp.BASE + '/js/' + arr.join('/') + '.js';
     },
     loadMediatorClass: function (components, className, dom, callback) {
       if (!className) {
@@ -3524,18 +3526,25 @@
       }
     },
     accordionToggle_clickHandler: function (event) {
-      var body = $('body');
+      var body = $('body')
+        , self = this;
       if (body.hasClass('sidebar-collapsed')) {
         body.one('click', _.bind(this.items_hideHandler, this));
         this.$('.accordion-toggle').each(function () {
           var ul = $(this).siblings('ul');
-          this === event.currentTarget ? ul.toggleClass('view').height('auto') : ul.removeClass('view');
+          if (this === event.currentTarget) {
+            ul.toggleClass('view').height('auto');
+            self.$el.addClass('view');
+          } else {
+            ul.removeClass('view');
+          }
         });
         event.preventDefault();
         event.stopPropagation();
       }
     },
     items_hideHandler: function () {
+      this.$el.removeClass('view');
       this.$('.view').removeClass('view');
     }
   });
