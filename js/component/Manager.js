@@ -118,7 +118,7 @@
       if (arr[0] === tp.NAME_SPACE) {
         arr = arr.slice(1);
       }
-      return 'js/' + arr.join('/') + '.js';
+      return tp.BASE + '/js/' + arr.join('/') + '.js';
     },
     loadMediatorClass: function (components, className, dom, callback) {
       if (!className) {
