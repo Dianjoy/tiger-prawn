@@ -1046,6 +1046,7 @@
 
   _.extend(proxy.prototype, Backbone.Events, {
     events: {},
+    pagesize: 10,
     fetchOptions: null,
     models: null,
     real: null,
@@ -1064,12 +1065,14 @@
     real_allHandler: function () {
       if (arguments[0] === 'sync') {
         this.length = this.real.length;
+        this.options = this.real.options;
+        this.total = this.real.total;
       }
       Backbone.Events.trigger.apply(this, Array.prototype.slice.call(arguments));
     }
   });
 
-  _.each(['create', 'each', 'find', 'get', 'map', 'remove', 'reset', 'toJSON', 'getAmount'], function (method) {
+  _.each(['create', 'each', 'find', 'get', 'map', 'remove', 'reset', 'toJSON', 'getAmount', 'setPagesize'], function (method) {
     proxy.prototype[method] = function () {
       return ns.ListCollection.prototype[method].apply(this.real, arguments);
     };
