@@ -118,13 +118,13 @@
         <td data-title="收入">&yen;{{d100 income}}</td>
         <td data-title="CPA">
           {{readable_n transfer}}
-          {{#equal cpc_cpa cpc}}
+          {{#equal cpc_cpa "cpc"}}
             <hr/>cpc: {{readable_n click}}
           {{/equal}}
         </td>
         <td data-title="渠道CPA">
           {{readable_n cpa}}
-          {{#equal cpc_cpa cpc}}
+          {{#equal cpc_cpa "cpc"}}
             <hr/>渠道cpc: {{readable_n cpc}}
           {{/equal}}
         </td>
