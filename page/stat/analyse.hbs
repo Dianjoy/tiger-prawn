@@ -136,6 +136,16 @@
           &yen;{{d100 min}} ~ &yen;{{d100 max}}
           {{/if}}
           {{/with}}
+          {{#equal cpc_cpa "cpc"}}
+            <hr/>
+            {{#with cpc_quote}}
+              {{#if only}}
+                &yen;{{d100 only}}
+              {{else}}
+                &yen;{{d100 min}} ~ &yen;{{d100 max}}
+              {{/if}}
+            {{/with}}
+          {{/equal}}
         </td>
         <td data-title="实际价格">&yen;{{d100 real_price}}</td>
         <td data-title="毛利润">&yen;{{d100 profit}}</td>
