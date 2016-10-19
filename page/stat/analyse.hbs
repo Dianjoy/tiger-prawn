@@ -185,7 +185,7 @@
   </tfoot>
 </table>
 
-<nav class="pull-right">
+<nav class="pull-right table-footer">
   <ul class="pagination">
     <script type="text/x-handlebars-template">
       {{{{raw-helper}}}}
@@ -197,4 +197,12 @@
       {{{{/raw-helper}}}}
     </script>
   </ul>
+  <div class="form-group">
+    <label for="pagesize">每页显示：</label>
+    <select class="form-control" id="pagesize">
+      <option>10</option>
+      <option selected>20</option>
+      <option>50</option>
+    </select>
+  </div>
 </nav>
