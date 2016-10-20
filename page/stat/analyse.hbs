@@ -96,6 +96,7 @@
       <th><a class="order" href="#real">实际价格</a></th>
       <th><a class="order" href="#profit">毛利润</a></th>
       <th><a class="order" href="#profit_radio">毛利润率</a></th>
+      <th>结算率</th>
       <th>操作</th>
     </tr>
   </thead>
@@ -150,6 +151,7 @@
         <td data-title="实际价格">&yen;{{d100 real_price}}</td>
         <td data-title="毛利润">&yen;{{d100 profit}}</td>
         <td data-title="毛利润率">{{d100 profit_ratio}}%</td>
+        <td data-title="结算率">{{d100 ratio}}%</td>
         <td data-title="操作">
           <div class="btn-group"  style="position:static">
             <a href="#/stat/analyse/daily/{{ad_id}}/{{start}}/{{end}}" class="btn btn-default" title="多日详情">
