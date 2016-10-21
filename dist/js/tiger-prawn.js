@@ -45,7 +45,7 @@
     }
   }, b.history);
 }(Backbone, _));;
-(function (h) {
+(function (h, $, _) {
   function d100(value) {
     value = value || 0;
     return toReadableNumber(Math.round(value) / 100);
@@ -247,7 +247,13 @@
     counter[key] = 1;
     return '';
   });
-}(Handlebars));
+
+  // 注册通用的自模板，用于各处渲染，可以减少模板数量，提高代码复用效率
+  $('script.partials').each(function () {
+    var name = $(this).data('name');
+    h.registerPartial(name, this.innerHTML);
+  }).remove();
+}(Handlebars, jQuery, _));
 ;
 (function ($) {
   $.fn.spinner = function (roll) {

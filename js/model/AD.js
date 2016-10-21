@@ -32,6 +32,14 @@
         this.on('sync', this.syncHandler, this);
       }
     },
+    fetch: function (options) {
+      if (this.get('start') || this.get('end')) {
+        options = options || {};
+        options.data = options.data || {};
+        _.extend(options.data, this.pick('start', 'end'));
+      }
+      Backbone.Model.prototype.fetch.call(this, options);
+    },
     /**
      *
      * @param {object} response

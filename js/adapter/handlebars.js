@@ -3,7 +3,7 @@
  * Created by meathill on 14/11/15.
  */
 'use strict';
-(function (h) {
+(function (h, $, _) {
   function d100(value) {
     value = value || 0;
     return toReadableNumber(Math.round(value) / 100);
@@ -205,4 +205,10 @@
     counter[key] = 1;
     return '';
   });
-}(Handlebars));
+
+  // 注册通用的自模板，用于各处渲染，可以减少模板数量，提高代码复用效率
+  $('script.partials').each(function () {
+    var name = $(this).data('name');
+    h.registerPartial(name, this.innerHTML);
+  }).remove();
+}(Handlebars, jQuery, _));
