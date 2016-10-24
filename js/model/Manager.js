@@ -2,7 +2,7 @@
  * Created by meathill on 15/11/12.
  */
 'use strict';
-(function (ns) {
+(function (ns, _) {
   var collections = {};
 
   var manager = ns.ListManager = {
@@ -56,4 +56,4 @@
 
   // 为了兼容以前的写法
   _.extend(ns.ListCollection, manager);
-}(Nervenet.createNameSpace('tp.model')));
+}(Nervenet.createNameSpace('tp.model'), _));

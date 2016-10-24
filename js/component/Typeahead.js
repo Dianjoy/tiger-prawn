@@ -27,7 +27,7 @@
       this.spinner = this.$('.fa-spinner');
       this.input = this.$('.keyword');
 
-      this.collection = tp.model.ListCollection.getInstance(options);
+      this.collection = tp.model.ListManager.getInstance(options);
       this.collection.on('sync', this.collection_syncHandler, this);
       this.selected = new Backbone.Collection();
       this.selected.on('add', this.selected_addHandler, this);
