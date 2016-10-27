@@ -12,7 +12,7 @@
     </select>
   </div>
   <div class="btn-group pull-right">
-    <a data-uri="stat/export_payment/" data-mediator-class="tp.view.HandlerView" class="btn btn-primary export-button" target="_blank"><i class="fa fa-download"></i>导出回款信息</a>
+    <a href="{{API}}stat/export_payment/" class="btn btn-primary export-button" target="_blank"><i class="fa fa-download"></i>导出回款信息</a>
   </div>
 </div>
 
@@ -83,7 +83,7 @@
   </tfoot>
 </table>
 
-<table class="smart-table table table-bordered table-hover responsive-table" data-search="#search-query" data-filter=".table-header"  data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list" data-model="tp.model.AnalyseModel" data-id-attribute="ad_id">
+<table class="smart-table table table-bordered table-hover responsive-table" data-search="#search-query" data-filter=".table-header"  data-url="{{API}}stat/analyse/" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="20" data-ranger=".date-range" data-start="{{start}}" data-end="{{end}}" data-collection-id="admin-list" data-model="tp.model.AnalyseModel" data-id-attribute="ad_id" data-export-button=".export-button">
   <thead>
     <tr>
       <th class="filters">管理名</th>
