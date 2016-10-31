@@ -23,13 +23,12 @@
     <th>日期</th>
     {{#if is_ios}}
     <th>关键词</th>
+    <th>激活数</th>
+    <th>总计</th>
     {{else}}
+    <th>激活数</th>
     <th>单价</th>
     <th>支出</th>
-    {{/if}}
-    <th>激活数</th>
-    {{#if is_ios}}
-    <th>总计</th>
     {{/if}}
   </tr>
   </thead>
@@ -51,9 +50,9 @@
       {{/each}}
       {{else}}
       <td data-title="日期">{{date}}</td>
+      <td data-title="激活数">{{nums}}</td>
       <td data-title="单价">&yen;{{d100 quote_rmb}}</td>
       <td data-title="支出">&yen;{{d100 income}}</td>
-      <td data-title="激活数">{{nums}}</td>
       {{/if}}
     </tr>
     {{{{/raw-helper}}}}
