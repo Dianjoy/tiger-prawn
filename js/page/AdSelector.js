@@ -7,7 +7,7 @@
       'submit': 'submitHandler'
     },
     submitHandler: function (event) {
-      var id = this.$('table').data('collection-id')
+      var id = this.$('#settle-table').data('collection-id')
         , store = localStorage.getItem(key)
         , ids = this.getValue(this.el.elements['ids'])
         , collection = tp.model.ListCollection.getInstance({collectionId: id})

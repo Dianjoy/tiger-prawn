@@ -1,0 +1,9 @@
+<div class="well" style="max-height:15em; overflow-y:scroll;">
+  {{#each comments}}
+    <p>{{handler}} {{create_time}} {{#equal type 1}}<strong class="text-danger">{{comment}}</strong>{{else}}{{comment}}{{/equal}}</p>
+  {{/each}}
+</div>
+<div class="form-group" data-mediator-class="tp.page.InvoiceNoticeEditor" data-collection-id="invoice-list" data-id="{{id}}">
+  <label for="editor-comment">附言</label>
+  <textarea class="form-control" id="editor-comment" name="invoice_comment" rows="2"></textarea>
+</div>

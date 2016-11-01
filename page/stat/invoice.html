@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<table class="table table-bordered table-hover responsive-table smart-table" data-ranger=".date-range" data-url="{{API}}invoice/" data-start="-31" data-end="0" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query" data-filter=".table-header">
+<table class="table table-bordered table-hover responsive-table smart-table" data-ranger=".date-range" data-url="{{API}}invoice/" data-start="-31" data-end="0" data-pagination=".pagination" data-pagesize-controller="#pagesize" data-pagesize="10" data-search="#search-query" data-filter=".table-header" data-collection-id="invoice-list">
   <thead>
   <tr>
     <th>申请日期</th>
@@ -59,23 +59,15 @@
       <td data-title="财务审核">
         {{#if is_show}}
         {{#in status 30 38}}审核中{{/in}}
-        {{#equal status 39}}
-        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{finance_comment}}" data-title="未通过原因">未通过</button>
-        {{/equal}}
-        {{#greater status 39}}
-        <a data-toggle="popover" data-content="{{finance_comment}}" data-title="通过原因">通过</a>
-        {{/greater}}
+        {{#equal status 39}}<span class="label label-danger">未通过</span>{{/equal}}
+        {{#greater status 39}}通过{{/greater}}
         {{/if}}
       </td>
       <td data-title="业务线负责人审批/特批">
         {{#if is_show}}
-        {{#in status 40 48}}审核中{{/in}}
-        {{#equal status 49}}
-        <button type="button" class="btn btn-primary" data-toggle="popover" data-content="{{manager_comment}}" data-title="未通过原因">未通过</button>
-        {{/equal}}
-        {{#greater status 49}}
-        <a data-toggle="popover" data-content="{{manager_comment}}" data-title="通过原因">通过</a>
-        {{/greater}}
+          {{#in status 40 48}}审核中{{/in}}
+          {{#equal status 49}}<span class="label label-danger">未通过</span>{{/equal}}
+          {{#greater status 49}}通过{{/greater}}
         {{/if}}
       </td>
       <td data-title="快递单号">
@@ -86,7 +78,9 @@
       <td data-title="发票号码">{{number}}</td>
       <td data-title="发票日期">{{handle_time}}</td>
       <td data-title="操作">
+        {{#unless is_read}}<div class="invoice-notice" style="width:8px;height:8px;background:red;border-radius: 4px;position:relative;top:5px;left:35px;z-index:999;"></div>{{/unless}}
         <div class="btn-group">
+          <a href="#comment" class="edit btn btn-success" data-template="stat/invoice-comment" data-title="批注" data-has-components="true" data-id="{{id}}" title="批注"><i class="fa fa-comments"></i></a>
           {{#in status 38 40 48}}
           <a href="#/invoice/{{id}}" class="btn btn-primary" title="编辑"><i class="fa fa-edit"></i></a>
           <button class="btn btn-danger delete-button" title="删除"><i class="fa fa-trash-o fa-fw"></i></button>

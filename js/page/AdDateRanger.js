@@ -5,33 +5,28 @@
       this.adList.remove();
       this.adList = null;
       this.ranger = null;
-      if (this.storage) {
-        localStorage.setItem(this.key, this.storage);
-      }
       tp.popup.Base.prototype.remove.call(this);
     },
     onLoadComplete: function (response) {
+      if (response) {
+        if (this.options && this.options.isMD) {
+          response = marked(response);
+        }
+        this.$('.modal-body').html(response);
+      }
       this.getAdList = _.bind(this.getAdList, this);
-      this.key = tp.PROJECT + location.hash;
-      this.storage = localStorage.getItem(this.key);
-      var range = {
-        start: this.model.defaults.start,
-        end: this.model.defaults.end
-      } ;
-      localStorage.setItem(this.key, JSON.stringify(range));
-      tp.popup.Base.prototype.onLoadComplete.call(this, response);
-      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', this.$('table'), this.getAdList);
+      this.$el.removeClass('loading').find('.modal-footer .btn-primary').prop('disabled', false);
+      tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', this.$('#settle-table'), this.getAdList);
     },
     getAdList: function (components) {
       this.adList = components[0];
-      this.ranger = new tp.component.DateRanger({
-        el: this.el
-      });
+      this.ranger = new tp.component.DateRanger({ el: this.$('form') });
       this.adList.model.set({
         start: this.model.defaults.start,
         end: this.model.defaults.end
-      }, {silent: true});
+      }, { silent: true });
       this.ranger.use(this.adList.model);
+      tp.component.Manager.check(this.$el, this.model);
     }
   });
 }(Nervenet.createNameSpace('tp.page')));
