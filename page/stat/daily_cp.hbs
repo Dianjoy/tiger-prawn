@@ -1,68 +1,71 @@
-<table class="table table-bordered">
-  <thead>
-  <tr>
-    <th>广告名</th>
-    <th>平台</th>
-    <th>状态</th>
-    <th>开始时间</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>{{ad_name}} {{cid}}</td>
-    <td>{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
-    <td>{{pick status '投放中' '已完成' '待投放'}}</td>
-    <td>{{create_time}}</td>
-  </tr>
-  </tbody>
-</table>
+<div data-mediator-class="tp.page.FixedTable">
+  <table class="table table-bordered fix-table">
+    <thead>
+    <tr>
+      <th>广告名</th>
+      <th>平台</th>
+      <th>状态</th>
+      <th>开始时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ad_name}} {{cid}}</td>
+      <td>{{pick ad_app_type '' 'Android' 'iPhone'}}</td>
+      <td>{{pick status '投放中' '已完成' '待投放'}}</td>
+      <td>{{create_time}}</td>
+    </tr>
+    </tbody>
+  </table>
 
-<table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-params="start={{substring create_time 0 10}}" data-id-attribute="date" data-defaults="{{#if is_ios}}is_ios=1{{/if}}">
-  <thead>
-  <tr>
-    <th>日期</th>
-    {{#if is_ios}}
-    <th>关键词</th>
-    <th>激活数</th>
-    <th>总计</th>
-    {{else}}
-    <th>激活数</th>
-    <th>单价</th>
-    <th>支出</th>
-    {{/if}}
-  </tr>
-  </thead>
-  <tbody>
-  <script type="text/x-handlebars-template">
-    {{{{raw-helper}}}}
-    <tr id="{{date}}">
+  <table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/c2c8b43c01b81c7eb7c786145b9fc432" data-params="start=2016-10-24" data-id-attribute="date" data-defaults="{{#if is_ios}}is_ios=1{{/if}}">
+    <thead>
+    <tr>
+      <th>日期</th>
       {{#if is_ios}}
-      <td data-title="日期" rowspan="{{count}}">{{date}}</td>
-      {{#each keywords}}
-      {{#unless @first}}<tr>{{/unless}}
-      <td data-title="关键词">{{#if search_key}}{{search_key}}{{else}}<span class="text-muted">（无）</span>{{/if}}</td>
-      <td data-title="激活数">{{readable_n num}}</td>
-      {{#if @first}}
-      <td data-title="总计" rowspan="{{../count}}">{{readable_n ../total}}</td>
+        <th>关键词</th>
+        <th>激活数</th>
+        <th>总计</th>
       {{else}}
-      </tr>
-      {{/if}}
-      {{/each}}
-      {{else}}
-      <td data-title="日期">{{date}}</td>
-      <td data-title="激活数">{{nums}}</td>
-      <td data-title="单价">&yen;{{d100 quote_rmb}}</td>
-      <td data-title="支出">&yen;{{d100 income}}</td>
+        <th>激活数</th>
+        <th>单价</th>
+        <th>支出</th>
       {{/if}}
     </tr>
-    {{{{/raw-helper}}}}
-  </script>
-  </tbody>
-  <tfoot class="waiting">
-  <tr>
-    <td colspan="5">
-      <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
-    </td>
-  </tr>
-  </tfoot>
-</table>
+    </thead>
+    <tbody>
+    <script type="text/x-handlebars-template">
+      {{{{raw-helper}}}}
+    <tr id="{{date}}">
+      {{#if is_ios}}
+        <td data-title="日期" rowspan="{{count}}">{{date}}</td>
+        {{#each keywords}}
+          {{#unless @first}}<tr>{{/unless}}
+          <td data-title="关键词">{{#if search_key}}{{search_key}}{{else}}<span class="text-muted">（无）</span>{{/if}}</td>
+          <td data-title="激活数">{{readable_n num}}</td>
+          {{#if @first}}
+            <td data-title="总计" rowspan="{{../count}}">{{readable_n ../total}}</td>
+          {{else}}
+          </tr>
+          {{/if}}
+        {{/each}}
+      {{else}}
+        <td data-title="日期">{{date}}</td>
+        <td data-title="激活数">{{nums}}</td>
+        <td data-title="单价">&yen;{{d100 quote_rmb}}</td>
+        <td data-title="支出">&yen;{{d100 income}}</td>
+      {{/if}}
+      </tr>
+      {{{{/raw-helper}}}}
+    </script>
+    </tbody>
+    <tfoot class="waiting">
+    <tr>
+      <td colspan="5">
+        <p align="center"><i class="fa fa-spin fa-spinner fa-2x"></i><br>加载中，请稍候</p>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
