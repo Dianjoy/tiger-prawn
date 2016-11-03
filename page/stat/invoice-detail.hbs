@@ -215,19 +215,19 @@
             {{#if view}}
               {{#if attachment}}
                 {{#each attachment}}
-                  <a href="{{../UPLOAD}}{{fileName}}" download="{{../UPLOAD}}{{fileName}}">{{fileName}}
+                  <a href="//dev.dianjoy.com/{{fileName}}" download="//dev.dianjoy.com/{{fileName}}">{{fileName}}
                     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                   </a><br>
-                  {{#if isImage}}<img src="{{../UPLOAD}}{{fileName}}"><br>{{/if}}
+                  {{#if isImage}}<img src="//dev.dianjoy.com/{{fileName}}"><br>{{/if}}
                 {{/each}}
               {{/if}}
             {{else}}
               {{#if attachment}}
                 {{#each attachment}}
-                  <a href="{{../UPLOAD}}{{fileName}}" download="{{../UPLOAD}}{{fileName}}">{{fileName}}
+                  <a href="//dev.dianjoy.com/{{fileName}}" download="//dev.dianjoy.com/{{fileName}}">{{fileName}}
                     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                   </a><br>
-                  {{#if isImage}}<img src="{{../UPLOAD}}{{fileName}}"><br>{{/if}}
+                  {{#if isImage}}<img src="//dev.dianjoy.com/{{fileName}}"><br>{{/if}}
                 {{/each}}
                 <a class="edit btn btn-primary" href="#attachment" data-type="file" data-template="stat/invoice-file" data-append="true" data-refresh="true" data-removable="true" data-multiple="true">
                   修改上传文件
