@@ -18,7 +18,7 @@
     </tbody>
   </table>
 
-  <table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/c2c8b43c01b81c7eb7c786145b9fc432" data-params="start=2016-10-24" data-id-attribute="date" data-defaults="{{#if is_ios}}is_ios=1{{/if}}">
+  <table class="table table-bordered smart-table responsive-table" data-url="{{API}}stat/{{id}}" data-params="start={{substring create_time 0 10}}" data-id-attribute="date" data-defaults="{{#if is_ios}}is_ios=1{{/if}}">
     <thead>
     <tr>
       <th>日期</th>
