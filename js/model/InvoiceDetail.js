@@ -65,7 +65,7 @@
       var start = json.start ? json.start.split('-') : moment().format('YYYY-MM').split('-')
         , agreementInfo = json.agreement_info
         , archive = Number(agreementInfo.archive) === 1 ? '是' : '否'
-        , range = agreementInfo.start + '/' + agreementInfo.end + (agreementInfo.over ? ' 到期' : '')
+        , range = agreementInfo.start + '/' + agreementInfo.end + (agreementInfo.over ? ' <span class="label label-danger">到期</span>' : '')
         , products = json.products
         , stat = {
           ad_income: 0,
