@@ -93,7 +93,7 @@
             , type = item.substr(index + 1).toLocaleLowerCase();
           return {
             fileName: item,
-            isImage: _.contains(['jpg','png'], type)
+            isImage: _.contains(['jpg','png','JPG','PNG'], type)
           }
         });
       }

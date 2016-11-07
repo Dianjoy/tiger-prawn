@@ -209,13 +209,13 @@
             {{#if attachment}}
               <a class="edit btn btn-primary" href="#attachment" data-type="file" data-template="stat/invoice-file" data-append="true" data-refresh="true" data-removable="true" data-multiple="true">
                 修改上传文件
-              </a>
+              </a><br>
               {{#each attachment}}
                 <a href="//dev.dianjoy.com/{{fileName}}" download="//dev.dianjoy.com/{{fileName}}">{{fileName}}
                   <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
                 </a><br>
               {{/each}}
-              {{#each attchment}}
+              {{#each attachment}}
                 {{#if isImage}}<img src="//dev.dianjoy.com/{{fileName}}"><br>{{/if}}
               {{/each}}
             {{else}}
