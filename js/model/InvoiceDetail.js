@@ -93,7 +93,7 @@
             , type = item.substr(index + 1).toLocaleLowerCase();
           return {
             fileName: item,
-            isImage: type === 'jpg' || type === 'png'
+            isImage: _.contains(['jpg','png'], type)
           }
         });
       }
@@ -132,8 +132,7 @@
     },
     syncHandler: function () {
       if ('id' in this.changed) {
-        var hash = '#/invoice/' + this.id;
-        location.hash = hash;
+        location.hash = '#/invoice/' + this.id;
         this.urlRoot = tp.API + 'invoice/';
       }
     },
