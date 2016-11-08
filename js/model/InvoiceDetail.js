@@ -62,8 +62,7 @@
       if (!_.isEmpty(previous)) {
         json.previous = previous;
       }
-      var start = json.start ? json.start.split('-') : moment().format('YYYY-MM').split('-')
-        , agreementInfo = json.agreement_info
+      var agreementInfo = json.agreement_info
         , archive = Number(agreementInfo.archive) === 1 ? '是' : '否'
         , range = agreementInfo.start + '/' + agreementInfo.end + (agreementInfo.over ? ' <span class="label label-danger">到期</span>' : '')
         , products = json.products
@@ -74,7 +73,6 @@
           income_after_total: 0,
           rmb: ''
         };
-      json.start = start[0] + '年' + start[1] + '月';
       json.agreement_info = {
         company: '客户名称: ' + agreementInfo.company,
         business_license_record: '是否备案营业执照: ' + this.options.business_license_records[agreementInfo.business_license_record],

@@ -1,4 +1,4 @@
-<h3 class="tac">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐{{start}}结算单及开票申请单</h3>
+<h3 class="tac">{{#if company}}{{company}}{{else}}{{full_name}}{{/if}}-点乐{{#if start}}{{start}}{{/if}}{{#if end}}~{{end}}{{/if}}结算单及开票申请单</h3>
 <h4 class="tac">
   <a data-toggle="popover" data-content="{{#each agreement_info}}{{@this}}<br>{{/each}}" data-html="true" data-title="合同信息" id="agreement-number">点乐合同编号：{{agreement_number}}</a>
 </h4>
