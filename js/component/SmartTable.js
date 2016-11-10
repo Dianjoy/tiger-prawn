@@ -211,21 +211,46 @@
     },
     deleteButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
-        , msg = button.data('msg') || '确定删除么？';
-      if (!confirm(msg)) {
-        return;
-      }
-      var id = button.closest('tr').attr('id');
-      button.spinner();
-      this.collection.get(id).destroy({
-        fadeOut: true,
-        wait: true,
-        error: function (model, xhr) {
-          var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
-          button.spinner(false);
-          alert(response.msg || '删除失败');
+        , id = button.closest('tr').attr('id')
+        , data = button.data()
+        , msg = data.msg || '确定删除么？'
+        , hasPopup = data.hasPopup
+        , destroy = function (popup) {
+          var param = {};
+          if (!popup && !confirm(msg)) {
+            return;
+          }
+          if (popup) {
+            _.each(popup.$el.find('form').serializeArray(), function(element) {
+              param[element.name] = element.value
+            });
+          }
+          button.spinner();
+          this.collection.get(id).destroy({
+            fadeOut: true,
+            data: JSON.stringify(param),
+            contentType: 'application/json',
+            wait: true,
+            error: function (model, xhr) {
+              var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
+              button.spinner(false);
+              alert(response.msg || '删除失败');
+            }
+          });
+        };
+      if (hasPopup) {
+        if (data.collectionId) {
+          var collection = tp.model.ListCollection.getInstance(data);
+          data.model = collection.get(data.id);
         }
-      });
+        var popup = tp.popup.Manager.popup(_.extend({
+          isRemote: true,
+          content: button.attr('href')
+        }, data));
+        popup.on('confirm', destroy, this);
+      } else {
+        destroy();
+      }
       event.preventDefault();
     },
     edit_clickHandler: function (event) {
