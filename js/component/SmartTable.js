@@ -215,7 +215,7 @@
         , data = button.data()
         , msg = data.msg || '确定删除么？'
         , hasPopup = data.hasPopup
-        , destroy = function (popup) {
+        , destroy = _.bind(function (popup) {
           var param = {};
           if (!popup && !confirm(msg)) {
             return;
@@ -237,7 +237,7 @@
               alert(response.msg || '删除失败');
             }
           });
-        };
+        }, this);
       if (hasPopup) {
         if (data.collectionId) {
           var collection = tp.model.ListCollection.getInstance(data);
