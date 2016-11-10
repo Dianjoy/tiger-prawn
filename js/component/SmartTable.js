@@ -236,11 +236,11 @@
           });
         }, this);
       if (hasPopup) {
-        var popup = tp.popup.Manager.popup(_.defaults({
+        var popup = tp.popup.Manager.popup(_.defaults(data, {
           isRemote: true,
           content: button.attr('href'),
           model: this.collection.get(id)
-        }, data));
+        }));
         popup.on('confirm', destroy, this);
       } else if (confirm(msg)) {
         destroy();
