@@ -239,7 +239,7 @@
         var popup = tp.popup.Manager.popup(_.defaults({
           isRemote: true,
           content: button.attr('href'),
-          model: this.collection.get(data.id)
+          model: this.collection.get(id)
         }, data));
         popup.on('confirm', destroy, this);
       } else if (confirm(msg)) {
