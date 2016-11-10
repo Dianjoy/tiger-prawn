@@ -1460,6 +1460,52 @@
     collection: collection
   });
 }(Nervenet.createNameSpace('tp.notification'), Backbone));;
+(function(ns) {
+  /**
+   * @class
+   */
+  ns.ExportButton = Backbone.View.extend({
+    events: {
+      'click': 'clickHandler'
+    },
+    initialize: function () {
+      if (this.$el.attr('download')) {
+        this.template = Handlebars.compile(this.$el.attr('download').replace(/\${(\w+)}/g, '{{$1}}'));
+      }
+    },
+    clickHandler: function () {
+      if (this.model) {
+        return this.onClick();
+      }
+      this.onClick_withoutModel();
+    },
+    onClick: function () {
+      this.el.search = tp.utils.encodeURLParam(this.model.toJSON());
+    },
+    onClick_withoutModel: function () {
+      var start = ''
+        , end = ''
+        , href = this.$el.attr('href')
+        , hasDate = $('.date-range').is(':visible');
+      if (!/^(https?:)?\/\//.test(href)) {
+        href = href.indexOf('{{API}}') === -1 ? tp.API + href : href.replace('{{API}}', tp.API);
+        this.el.href = href;
+      }
+      if (hasDate) {
+        start = $("#stat-range-start-date").val();
+        end = $("#stat-range-end-date").val();
+        this.el.search = 'start=' + start + '&end=' + end;
+      }
+      if (this.template) {
+        this.$el.attr('download', this.template({
+          start: start,
+          end: end
+        }));
+      }
+    }
+  });
+}(Nervenet.createNameSpace ('tp.component')));
+;
 (function (ns, $, _, Backbone) {
   var history = 'history-recorder'
     , successSign = '<i class="fa fa-check form-control-feedback"></i>'
@@ -3780,52 +3826,6 @@
     }
   });
 }(Nervenet.createNameSpace('tp.component'), _, Backbone));;
-(function(ns) {
-  /**
-   * @class
-   */
-  ns.ExportButton = Backbone.View.extend({
-    events: {
-      'click': 'clickHandler'
-    },
-    initialize: function () {
-      if (this.$el.attr('download')) {
-        this.template = Handlebars.compile(this.$el.attr('download').replace(/\${(\w+)}/g, '{{$1}}'));
-      }
-    },
-    clickHandler: function () {
-      if (this.model) {
-        return this.onClick();
-      }
-      this.onClick_withoutModel();
-    },
-    onClick: function () {
-      this.el.search = tp.utils.encodeURLParam(this.model.toJSON());
-    },
-    onClick_withoutModel: function () {
-      var start = ''
-        , end = ''
-        , href = this.$el.attr('href')
-        , hasDate = $('.date-range').is(':visible');
-      if (!/^(https?:)?\/\//.test(href)) {
-        href = href.indexOf('{{API}}') === -1 ? tp.API + href : href.replace('{{API}}', tp.API);
-        this.el.href = href;
-      }
-      if (hasDate) {
-        start = $("#stat-range-start-date").val();
-        end = $("#stat-range-end-date").val();
-        this.el.search = 'start=' + start + '&end=' + end;
-      }
-      if (this.template) {
-        this.$el.attr('download', this.template({
-          start: start,
-          end: end
-        }));
-      }
-    }
-  });
-}(Nervenet.createNameSpace ('tp.component')));
-;
 (function (ns) {
   ns.LoginForm = Backbone.View.extend({
     events: {
@@ -4178,21 +4178,40 @@
     },
     deleteButton_clickHandler: function (event) {
       var button = $(event.currentTarget)
-        , msg = button.data('msg') || '确定删除么？';
-      if (!confirm(msg)) {
-        return;
+        , id = button.closest('tr').attr('id')
+        , data = button.data()
+        , msg = data.msg || '确定删除么？'
+        , hasPopup = data.hasPopup
+        , destroy = _.bind(function (popup) {
+          var param = {};
+          if (popup) {
+            _.each(popup.$el.find('form').serializeArray(), function(element) {
+              param[element.name] = element.value
+            });
+          }
+          button.spinner();
+          this.collection.get(id).destroy({
+            fadeOut: true,
+            data: JSON.stringify(param),
+            contentType: 'application/json',
+            wait: true,
+            error: function (model, xhr) {
+              var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
+              button.spinner(false);
+              alert(response.msg || '删除失败');
+            }
+          });
+        }, this);
+      if (hasPopup) {
+        var popup = tp.popup.Manager.popup(_.defaults(data, {
+          isRemote: true,
+          content: button.attr('href'),
+          model: this.collection.get(id)
+        }));
+        popup.on('confirm', destroy, this);
+      } else if (confirm(msg)) {
+        destroy();
       }
-      var id = button.closest('tr').attr('id');
-      button.spinner();
-      this.collection.get(id).destroy({
-        fadeOut: true,
-        wait: true,
-        error: function (model, xhr) {
-          var response = 'responseJSON' in xhr ? xhr.responseJSON : xhr;
-          button.spinner(false);
-          alert(response.msg || '删除失败');
-        }
-      });
       event.preventDefault();
     },
     edit_clickHandler: function (event) {
