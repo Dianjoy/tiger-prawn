@@ -10,7 +10,19 @@
     $context: null,
     render: function () {
       this.getProductList = _.bind(this.getProductList, this);
-      tp.view.Loader.prototype.render.call(this);
+      this.$el.html(this.template(this.model instanceof Backbone.Model ? this.model.toJSON() : this.model));
+      if (this.refresh) {
+        this.refresh = false;
+        this.model.on('change', this.model_changeHandler, this);
+      }
+      var self = this
+        , $el = this.$el
+        , model = this.model;
+      setTimeout(function () {
+        tp.component.Manager.check($el, model);
+        self.trigger('complete');
+      }, 0);
+      this.options = null;
       tp.component.Manager.loadMediatorClass([], 'tp.component.SmartTable', this.$('#ad_table'), this.getProductList);
       $('.invalid-' + this.model.get('channel')).addClass('invalid');
       $('.invoice-list form').removeClass('processing');
