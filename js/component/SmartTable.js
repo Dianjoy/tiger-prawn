@@ -217,9 +217,6 @@
         , hasPopup = data.hasPopup
         , destroy = _.bind(function (popup) {
           var param = {};
-          if (!popup && !confirm(msg)) {
-            return;
-          }
           if (popup) {
             _.each(popup.$el.find('form').serializeArray(), function(element) {
               param[element.name] = element.value
@@ -240,15 +237,14 @@
         }, this);
       if (hasPopup) {
         if (data.collectionId) {
-          var collection = tp.model.ListCollection.getInstance(data);
-          data.model = collection.get(data.id);
+          data.model = this.collection.get(data.id);
         }
-        var popup = tp.popup.Manager.popup(_.extend({
+        var popup = tp.popup.Manager.popup(_.defaults({
           isRemote: true,
           content: button.attr('href')
         }, data));
         popup.on('confirm', destroy, this);
-      } else {
+      } else if (confirm(msg)) {
         destroy();
       }
       event.preventDefault();
