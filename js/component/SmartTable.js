@@ -236,12 +236,10 @@
           });
         }, this);
       if (hasPopup) {
-        if (data.collectionId) {
-          data.model = this.collection.get(data.id);
-        }
         var popup = tp.popup.Manager.popup(_.defaults({
           isRemote: true,
-          content: button.attr('href')
+          content: button.attr('href'),
+          model: this.collection.get(data.id)
         }, data));
         popup.on('confirm', destroy, this);
       } else if (confirm(msg)) {
