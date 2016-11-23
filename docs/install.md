@@ -19,7 +19,7 @@
 2. 安装依赖
     ```bash
     bower install --production
-    npm install --production
+    npm install
     ```
 3. 修改配置文件 `js/config.js` 
     ```javascript
@@ -41,7 +41,7 @@
     ```
 2. 更新依赖
     ```bash
-    npm install --production
+    npm install
     bower install --production
     ```
 3. 编译压缩
